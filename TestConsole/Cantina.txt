@@ -1,0 +1,1438 @@
+
+/*
+Copyright (c) 2008, 2011, Oracle and/or its affiliates. All rights reserved.
+
+The MySQL Connector/C++ is licensed under the terms of the GPLv2
+<http://www.gnu.org/licenses/old-licenses/gpl-2.0.html>, like most
+MySQL Connectors. There are special exceptions to the terms and
+conditions of the GPLv2 as it is applied to this software, see the
+FLOSS License Exception
+<http://www.mysql.com/about/legal/licensing/foss-exception.html>.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published
+by the Free Software Foundation; version 2 of the License.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
+
+//
+//
+///**
+//* Example of statements - not to be confused with prepared statements
+//*
+//* NOTE: The MySQL Server does not support each and every SQL statement
+//* to be prepared. The list of statements which can be prepared is available
+//* in the MySQL Server documentation and the C API documentation:
+//* http://dev.mysql.com/doc/refman/5.1/en/c-api-prepared-statements.html
+//* (Link to the MySQL Server 5.1 documentation!)
+//*
+//* Connector/C++ is based on the C API and C library "libmysql". Therefore
+//* it inherits all limitations from the MySQL Server and the MySQL C API.
+//*
+//* MySQL 5.1.12 can prepare the following statements:
+//*
+//* - CREATE TABLE, DELETE, DO, INSERT, REPLACE, SELECT, SET, UPDATE
+//* - most SHOW commands
+//* - ANALYZE TABLE, OPTIMIZE TABLE, REPAIR TABLE
+//* - CACHE INDEX, CHANGE MASTER, CHECKSUM {TABLE | TABLES},
+//* - {CREATE | RENAME | DROP} DATABASE, {CREATE | RENAME | DROP} USER
+//* - FLUSH {TABLE | TABLES | TABLES WITH READ LOCK | HOSTS | PRIVILEGES | LOGS | STATUS | MASTER | SLAVE | DES_KEY_FILE | USER_RESOURCES}
+//* - GRANT, REVOKE, KILL, LOAD INDEX INTO CACHE, RESET {MASTER | SLAVE | QUERY CACHE}
+//* - SHOW BINLOG EVENTS, SHOW CREATE {PROCEDURE | FUNCTION | EVENT | TABLE | VIEW}
+//* - SHOW {AUTHORS | CONTRIBUTORS | WARNINGS | ERRORS}
+//* - SHOW {MASTER | BINARY} LOGS, SHOW {MASTER | SLAVE} STATUS
+//* - SLAVE {START | STOP}, INSTALL PLUGIN, UNINSTALL PLUGIN
+//*
+//*  ... that's pretty much every *core* SQL statement - but not USE as you'll see below.
+//*
+//* Connector/C++ does not include a prepared statement emulation
+//*
+//* @link http://dev.mysql.com/doc/refman/5.1/en/c-api-prepared-statements.html
+//*/
+//
+///* Standard C++ includes */
+//#include <stdlib.h>
+//#include <iostream>
+//#include <sstream>
+//#include <stdexcept>
+//
+///*
+//  Public interface of the MySQL Connector/C++.
+//  You might not use it but directly include directly the different
+//  headers from cppconn/ and mysql_driver.h + mysql_util.h
+//  (and mysql_connection.h). This will reduce your build time!
+//*/
+//#include <driver/mysql_public_iface.h>
+///* Connection parameter and sample data */
+//#include "examples.h"
+//
+//bool prepare_execute(std::auto_ptr< sql::Connection > & con, const char *sql);
+//sql::Statement* emulate_prepare_execute(std::auto_ptr< sql::Connection > & con, const char *sql);
+//
+//using namespace std;
+//
+//int prepareExample(int argc, const char **argv)
+//{
+//	static const string url(argc >= 2 ? argv[1] : EXAMPLE_HOST);
+//	static const string user(argc >= 3 ? argv[2] : EXAMPLE_USER);
+//	static const string pass(argc >= 4 ? argv[3] : EXAMPLE_PASS);
+//	static const string database(argc >= 5 ? argv[4] : EXAMPLE_DB);
+//
+//	/* Driver Manager */
+//	sql::Driver *driver;
+//	/* sql::ResultSet.rowsCount() returns size_t */
+//	size_t row;
+//	stringstream sql;
+//	stringstream msg;
+//	int i, num_rows;
+//
+//	cout << boolalpha;
+//	cout << "1..1" << endl;;
+//	cout << "# Connector/C++ prepared statement example.." << endl;
+//
+//	try {
+//		/* Using the Driver to create a connection */
+//		driver = sql::mysql::get_driver_instance();
+//		std::auto_ptr< sql::Connection > con(driver->connect(url, user, pass));
+//
+//		/* The usage of USE is not supported by the prepared statement protocol */
+//		std::auto_ptr< sql::Statement > stmt(con->createStatement());
+//		stmt->execute("USE " + database);
+//
+//		/*
+//		Prepared statement are unhandy for queries which you execute only once!
+//
+//		prepare() will send your SQL statement to the server. The server
+//		will do a SQL syntax check, perform some static rewriting like eliminating
+//		dead expressions such as "WHERE 1=1" and simplify expressions
+//		like "WHERE a > 1 AND a > 2" to "WHERE a > 2". Then control gets back
+//		to the client and the server waits for execute() (or close()).
+//		On execute() another round trip to the server is done.
+//
+//		In case you execute your prepared statement only once - like shown below -
+//		you get two round trips. But using "simple" statements - like above - means
+//		only one round trip.
+//
+//		Therefore, the below is *bad* style. WARNING: Although its *bad* style,
+//		the example program will continue to do it to demonstrate the (ab)use of
+//		prepared statements (and to prove that you really can do more than SELECT with PS).
+//		*/
+//		std::auto_ptr< sql::PreparedStatement > prep_stmt(con->prepareStatement("DROP TABLE IF EXISTS test"));
+//		prep_stmt->execute();
+//
+//		prepare_execute(con, "CREATE TABLE test(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, label CHAR(1))");
+//		cout << "#\t Test table created" << endl;
+//
+//		/*
+//		The first useful example - prepare() once, execute() n + 1 times
+//		NOTE: The MySQL Server does not support named parameters. You have to use
+//		the placeholder syntax shown below. There is no emulation which would you
+//		allow to use named parameter like ':param1'. Use '?'. Parameters are 1-based.
+//		*/
+//		num_rows = 0;
+//		prep_stmt.reset(con->prepareStatement("INSERT INTO test(id, label) VALUES (?, ?)"));
+//		for (i = 0; i < EXAMPLE_NUM_TEST_ROWS; i++) {
+//			prep_stmt->setInt(1, test_data[i].id);
+//			prep_stmt->setString(2, test_data[i].label);
+//			/* executeUpdate() returns the number of affected = inserted rows */
+//			num_rows += prep_stmt->executeUpdate();
+//		}
+//
+//		if (EXAMPLE_NUM_TEST_ROWS != num_rows) {
+//			msg.str("");
+//			msg << "Expecting " << EXAMPLE_NUM_TEST_ROWS << "rows, reported " << num_rows;
+//			throw runtime_error(msg.str());
+//		}
+//		cout << "#\t Test table populated" << endl;
+//
+//		/* We will reuse the SELECT a bit later... */
+//		std::auto_ptr< sql::PreparedStatement > prep_select(con->prepareStatement("SELECT id, label FROM test ORDER BY id ASC"));
+//		cout << "#\t Running 'SELECT id, label FROM test ORDER BY id ASC'" << endl;
+//		std::auto_ptr< sql::ResultSet > res(prep_select->executeQuery());
+//		row = 0;
+//		while (res->next()) {
+//			cout << "#\t\t Row " << row << " - id = " << res->getInt("id");
+//			cout << ", label = '" << res->getString("label") << "'" << endl;
+//			row++;
+//		}
+//		res.reset(NULL);
+//
+//		if (EXAMPLE_NUM_TEST_ROWS != row) {
+//			msg.str("");
+//			msg << "Expecting " << EXAMPLE_NUM_TEST_ROWS << "rows, reported " << row;
+//			throw runtime_error(msg.str());
+//		}
+//
+//		cout << "#\t Simple PS 'emulation' for USE and another SELECT" << endl;
+//		stmt.reset(emulate_prepare_execute(con, string("USE " + database).c_str()));
+//		stmt.reset(emulate_prepare_execute(con, string("USE " + database).c_str()));
+//
+//		stmt.reset(emulate_prepare_execute(con, "SELECT id FROM test ORDER BY id ASC"));
+//		res.reset(stmt->getResultSet());
+//		if (res.get() != NULL) {
+//			row = 0;
+//			while (res->next()) {
+//				cout << "#\t\t Row " << row << " - id = " << res->getInt("id") << endl;
+//				row++;
+//			}
+//			res.reset(NULL);
+//		}
+//		stmt.reset(NULL);
+//
+//		/* Running the SELECT again but fetching in reverse order */
+//		cout << "#\t SELECT and fetching in reverse order" << endl;
+//
+//		res.reset(prep_select->executeQuery());
+//		row = res->rowsCount();
+//		cout << "#\t\t res->getRowsCount() = " << res->rowsCount() << endl;
+//		if (res->rowsCount() != EXAMPLE_NUM_TEST_ROWS) {
+//			msg.str("");
+//			msg << "Expecting " << EXAMPLE_NUM_TEST_ROWS << "rows, found " << res->rowsCount();
+//			throw runtime_error(msg.str());
+//		}
+//
+//		/* Position the cursor after the last row */
+//		cout << "#\t\t Position the cursor after the last row\n";
+//		res->afterLast();
+//		cout << "#\t\t res->isafterLast()\t= " << res->isAfterLast() << endl;
+//		cout << "#\t\t res->isLast()\t\t= " << res->isLast() << endl;
+//		if (!res->isAfterLast() || res->isLast())
+//			throw runtime_error("Moving the cursor after the last row failed");
+//
+//		while (res->previous()) {
+//			cout << "#\t\t res->previous()\n";
+//			cout << "#\t\t Row " << row << " - id = " << res->getInt("id");
+//			cout << ", label = '" << res->getString("label") << "'" << endl;
+//			row--;
+//		}
+//		cout << "#\t\t Should be before the first\n";
+//		cout << "#\t\t res->isFirst()\t\t= " << res->isFirst() << endl;
+//		cout << "#\t\t res->isBeforeFirst()\t= " << res->isBeforeFirst() << endl;
+//		if (res->isFirst() || !res->isBeforeFirst())
+//			throw runtime_error("Cursor should be before first row");
+//
+//		/* Now that the cursor is before the first, fetch the first */
+//		cout << "#\t\t Now that the cursor is before the first, fetch the first\n";
+//		cout << "#\t\t calling next() to fetch first row" << endl;
+//		row++;
+//		res->next();
+//		cout << "#\t\t res->isFirst()\t\t= " << res->isFirst() << endl;
+//		cout << "#\t\t Row " << row << " - id = " << res->getInt("id");
+//		cout << ", label = '" << res->getString("label") << "'" << endl;
+//		row--;
+//
+//		/* For more on cursors see resultset.cpp example */
+//
+//		/* Clean up */
+//		res.reset(NULL);
+//		stmt.reset(con->createStatement());
+//		stmt->execute("DROP TABLE IF EXISTS test");
+//		cout << "#done!" << endl;
+//
+//	} catch (sql::SQLException &e) {
+//		/*
+//		The MySQL Connector/C++ throws three different exceptions:
+//
+//		- sql::MethodNotImplementedException (derived from sql::SQLException)
+//		- sql::InvalidArgumentException (derived from sql::SQLException)
+//		- sql::SQLException (derived from std::runtime_error)
+//		*/
+//		cout << endl;
+//		cout << "# ERR: DbcException in " << __FILE__;
+//		cout << "(" << EXAMPLE_FUNCTION << ") on line " << __LINE__ << endl;
+//		/* Use what(), getErrorCode() and getSQLState() */
+//		cout << "# ERR: " << e.what();
+//		cout << " (MySQL error code: " << e.getErrorCode();
+//		cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+//
+//		if (e.getErrorCode() == 1047) {
+//			/*
+//			Error: 1047 SQLSTATE: 08S01 (ER_UNKNOWN_COM_ERROR)
+//			Message: Unknown command
+//			*/
+//			cout << "# ERR: Your server seems not to support PS at all because its MYSQL <4.1" << endl;
+//		}
+//		cout << "not ok 1 - examples/prepared_statement.cpp" << endl;
+//
+//		return EXIT_FAILURE;
+//	} catch (std::runtime_error &e) {
+//
+//		cout << endl;
+//		cout << "# ERR: runtime_error in " << __FILE__;
+//		cout << "(" << EXAMPLE_FUNCTION << ") on line " << __LINE__ << endl;
+//		cout << "# ERR: " << e.what() << endl;
+//		cout << "not ok 1 - examples/prepared_statement.cpp" << endl;
+//
+//		return EXIT_FAILURE;
+//	}
+//
+//	cout << "ok 1 - examples/prepared_statement.cpp" << endl;
+//	return EXIT_SUCCESS;
+//}
+//
+//
+//bool prepare_execute(std::auto_ptr< sql::Connection > & con, const char *sql)
+//{
+//	sql::PreparedStatement * prep_stmt;
+//
+//	prep_stmt = con->prepareStatement(sql);
+//	prep_stmt->execute();
+//	delete prep_stmt;
+//
+//	return true;
+//}
+//
+//
+//sql::Statement* emulate_prepare_execute(std::auto_ptr< sql::Connection > & con, const char *sql)
+//{
+//	sql::PreparedStatement *prep_stmt;
+//	sql::Statement *stmt = NULL;
+//
+//	cout << "#\t\t 'emulation': " << sql << endl;
+//
+//	try {
+//
+//		prep_stmt = con->prepareStatement(sql);
+//		prep_stmt->execute();
+//		cout << "#\t\t 'emulation': use of sql::PreparedStatement possible" << endl;
+//		/* safe upcast - PreparedStatement is derived from Statement */
+//		stmt = prep_stmt;
+//
+//	} catch (sql::SQLException &e) {
+//		/*
+//		Maybe the command is not supported by the MySQL Server?
+//
+//		http://dev.mysql.com/doc/refman/5.1/en/error-messages-server.html
+//		Error: 1295 SQLSTATE: HY000 (ER_UNSUPPORTED_PS)
+//
+//		Message: This command is not supported in the prepared statement protocol yet
+//		*/
+//
+//		if (e.getErrorCode() != 1295) {
+//			// The MySQL Server should be able to prepare the statement
+//			// but something went wrong. Let the caller handle the error.
+//			throw ;
+//		}
+//		cout << "#\t\t 'emulation': ER_UNSUPPORTED_PS and fallback to sql::Statement" << endl;
+//		cout << "#\t\t ERR: " << e.what();
+//		cout << " (MySQL error code: " << e.getErrorCode();
+//		cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+//
+//		stmt = con->createStatement();
+//		stmt->execute(sql);
+//	}
+//
+//	return stmt;
+//}
+
+void sqlParameters()
+{
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement *prep_stmt = nullptr;
+    //
+    driver = get_driver_instance();// get the driver
+    con = driver->connect("tcp://127.0.0.1:3306", "root", "Riemann0");
+    //
+    sql::SQLString * mySqlString = new sql::SQLString("cantiere");
+    prep_stmt = con->prepareStatement( "INSERT INTO cantiere.sede(Baustelle_name, role, set_by) VALUES ( ?, ?, ?)");
+    //
+    //--preparing for first usage:
+    prep_stmt->setString(1, "nomeCantiere_uno");
+    prep_stmt->setString(2, "ruoloSede_uno");
+    prep_stmt->setString(3, "collaboratoreSottoscrittore_uno");
+    prep_stmt->execute();//-- first usage.
+    //
+    //--preparing for second usage:
+    prep_stmt->setString(1, "nomeCantiere_due");
+    prep_stmt->setString(2, "ruoloSede_due");
+    prep_stmt->setString(3, "collaboratoreSottoscrittore_due");
+    prep_stmt->execute();//-- second usage.
+    //
+    // ready : clean up now.
+//    delete prep_stmt;
+    delete con;
+}// end sqlParameters()
+
+
+
+void preparedStatement()
+{
+cout << endl;
+cout << "Let's have MySQL count from 10 to 1..." << endl;
+
+try {
+  sql::Driver *driver;
+  sql::Connection *con;
+  sql::Statement *stmt;
+  sql::ResultSet *res;
+  sql::PreparedStatement *pstmt;
+
+  //  Create a connection
+  driver = get_driver_instance();
+  con = driver->connect("tcp://127.0.0.1:3306", "root", "Riemann0");
+  // Connect to the MySQL test database
+//con->setSchema("test");
+
+  stmt = con->createStatement();
+  stmt->execute("DROP TABLE IF EXISTS cantiere.test");
+  stmt->execute("CREATE TABLE cantiere.test(id INT)");
+  delete stmt;
+
+  /* '?' is the supported placeholder syntax */
+  pstmt = con->prepareStatement("INSERT INTO cantiere.test(id) VALUES (?)");
+  for (int i = 1; i <= 10; i++) {
+    pstmt->setInt(1, i);
+    pstmt->executeUpdate();
+  }
+  delete pstmt;
+
+  /* Select in ascending order */
+  pstmt = con->prepareStatement("SELECT id FROM test ORDER BY id ASC");
+  res = pstmt->executeQuery();
+
+  /* Fetch in reverse = descending order! */
+  res->afterLast();
+  while (res->previous())
+    cout << "\t... MySQL counts: " << res->getInt("id") << endl;
+  delete res;
+
+  delete pstmt;
+  delete con;
+
+} catch (sql::SQLException &e) {
+  cout << "# ERR: SQLException in " << __FILE__;
+  cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+  cout << "# ERR: " << e.what();
+  cout << " (MySQL error code: " << e.getErrorCode();
+  cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+}
+
+cout << endl;
+}
+
+//
+//int OracleSuggests()
+//{
+//    cout << endl;
+//    cout << "Running 'SELECT 'Hello World!' AS _message'..." << endl;
+//
+//    try
+//    {
+//        sql::Driver *driver;
+//        sql::Connection *con;
+//        sql::Statement *stmt;
+//        sql::ResultSet *res;
+//
+//        // Create a connection : steps follow:
+//        driver = get_driver_instance();// get the driver
+//        con = driver->connect( "tcp://127.0.0.1:3306", "root", "Riemann0");// get the connection to the specified instance.
+//        //con = driver->connect( "tcp://Eulero:3306", "root", "Riemann0");// get the connection to the specified instance.
+//        // con->setAutoCommit( false);
+//        //con->setAutoCommit( true);
+//        //con->setSchema("cantiere");// choose which database, within the instance.
+//        //
+//        // execute something, with the current connection:
+//        stmt = con->createStatement();// prepare a statement
+//        res = stmt->executeQuery("SELECT 'Hello World!' AS _message");// execute the statement
+//        //
+//        //-------fetch the resultset--------------------
+//        while (res->next())
+//        {
+//            cout << "\t... MySQL replies: ";
+//            // Access column data by alias or column name
+//            cout << res->getString("_message") << endl;
+//            cout << "\t... MySQL says it again: ";
+//            // Access column data by numeric offset, 1 is the first column
+//            cout << res->getString(1) << endl;
+//        }//--END-----fetch the resultset--------------------
+//        //--- cleanup------
+//        delete res;
+//        delete stmt;
+//        delete con;
+//    }// END try
+//    catch( sql::SQLException &e)
+//    {
+//        cout << "# ERR: SQLException in " << __FILE__;
+//        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+//        cout << "# ERR: " << e.what();
+//        cout << " (MySQL error code: " << e.getErrorCode();
+//        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+//    }// END catch( sql::SQLException &e)
+//    catch( const std::exception& ex)
+//    {
+//        std::string HappenedException = ex.what();
+//    }
+//    catch (const std::string& ex)
+//    {
+//        std::string HappenedException = ex.c_str();
+//    }
+//    catch(...)
+//    {
+//        std::string HappenedException = "this was (sadly) an unnamed exception, which -therefore- has no content.";
+//    }// END catch(...)
+//
+//    // ready.
+//    cout << endl;
+//    getchar();
+//    return EXIT_SUCCESS;
+//}// end OracleSuggests.
+//
+//
+//
+//
+//int cantiere_sede_SELECT_MULTI_(void)
+//{
+//    cout << endl;
+//    cout << " cantiere_sede_SELECT_MULTI_ : " << endl;
+//    int rowCard  = 0;
+//
+//    try
+//    {
+//        sql::Driver *driver;
+//        sql::Connection *con;
+//        sql::Statement *stmt;
+//        sql::ResultSet *res;
+//
+//        // Create a connection : steps follow:
+//        driver = get_driver_instance();// get the driver
+//        con = driver->connect( "tcp://127.0.0.1:3306", "root", "Riemann0");// get the connection to the specified instance.
+//        //con = driver->connect( "tcp://Eulero:3306", "root", "Riemann0");// get the connection to the specified instance.
+//        // con->setAutoCommit( false);
+//        //con->setAutoCommit( true);
+//        //con->setSchema("cantiere");// choose which database, within the instance.
+//        //
+//        // execute something, with the current connection:
+//        stmt = con->createStatement();// prepare a statement
+////res = stmt->executeQuery("SELECT * from cantiere.sede");// execute the statement
+//        res = stmt->executeQuery("call cantiere.usp_SEDE_LOAD_MULTI");// execute the statement
+//        //
+//        //-------fetch the resultset--------------------
+//        while( res->next() )
+//        {
+//            cout << "\t... MySQL replies: ";
+//            cout << res->getString("id") << "   ";// Access column data by alias or column name
+//            cout << res->getString("Baustelle_name") << "   ";// Access column data by alias or column name
+//            cout << res->getString("role") << "   ";// Access column data by alias or column name
+//            cout << res->getString("set_time") << "   ";// Access column data by alias or column name
+//            cout << res->getString("set_by") << endl;// Access column data by alias or column name // NewLine on end of Record (which is a table's line).
+//            //cout << res->getString(1) << endl;// Access column data by numeric offset, 1 is the first column
+//            ++rowCard;// done a line.
+//        }//--END-----fetch the resultset--------------------
+//        //
+//        std::cout << "\n\n\t Processed lines # " << rowCard << std::endl;
+//        //--- cleanup------
+//        delete res;
+//        delete stmt;
+//        if( ! con->isClosed() )
+//        {
+//            con->close();
+//        }// else already closed.
+//        delete con;
+//    }// END try
+//    catch( sql::SQLException &e)
+//    {
+//        cout << "# ERR: SQLException in " << __FILE__;
+//        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+//        cout << "# ERR: " << e.what();
+//        cout << " (MySQL error code: " << e.getErrorCode();
+//        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+//    }// END catch( sql::SQLException &e)
+//    catch( const std::exception& ex)
+//    {
+//        std::string HappenedException = ex.what();
+//    }
+//    catch (const std::string& ex)
+//    {
+//        std::string HappenedException = ex.c_str();
+//    }
+//    catch(...)
+//    {
+//        std::string HappenedException = "this was (sadly) an unnamed exception, which -therefore- has no content.";
+//    }// END catch(...)
+//
+//    // ready.
+//    cout << endl;
+//    return rowCard;
+//}// end cantiere_sede_SELECT_MULTI_
+//
+//
+//
+//
+//int cantiere_sede_INSERT_SINGLE(void)
+//{
+//    cout << endl;
+//    cout << " cantiere_sede_INSERT_SINGLE : " << endl;
+//    bool insertionHasError;// insertion result
+//
+//    try
+//    {
+//        sql::Driver *driver;
+//        sql::Connection *con;
+//        sql::Statement *stmt;
+//
+//        // Create a connection : steps follow:
+//        driver = get_driver_instance();// get the driver
+//        con = driver->connect( "tcp://127.0.0.1:3306", "root", "Riemann0");// get the connection to the specified instance.
+//        //
+//        // execute something, with the current connection:
+//        stmt = con->createStatement();// prepare a statement
+//        const std::string theStatement = "call cantiere.usp_SEDE_INSERT_SINGLE ('sixth_fromCPP','sixth_fromCPP','sixth_fromCPP')";
+////con->
+////stmt->
+////driver->
+//        insertionHasError = stmt->execute( theStatement);// execute the statement
+//        //
+//        //--- cleanup------
+//        delete stmt;
+//        if( ! con->isClosed() )
+//        {
+//            con->close();
+//        }// else already closed.
+//        delete con;
+//    }// END try
+//    catch( sql::SQLException &e)
+//    {
+//        cout << "# ERR: SQLException in " << __FILE__;
+//        cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << endl;
+//        cout << "# ERR: " << e.what();
+//        cout << " (MySQL error code: " << e.getErrorCode();
+//        cout << ", SQLState: " << e.getSQLState() << " )" << endl;
+//    }// END catch( sql::SQLException &e)
+//    catch( const std::exception& ex)
+//    {
+//        std::string HappenedException = ex.what();
+//    }
+//    catch (const std::string& ex)
+//    {
+//        std::string HappenedException = ex.c_str();
+//    }
+//    catch(...)
+//    {
+//        std::string HappenedException = "this was (sadly) an unnamed exception, which -therefore- has no content.";
+//    }// END catch(...)
+//
+//    // ready.
+//    cout << endl;
+//    return insertionHasError;// false on insertionSuccess( 1 row i.e. INSERT_SINGLE), ture on error.
+//}// end cantiere_sede_INSERT_SINGLE
+
+
+
+//class HandledProto
+//{
+//private:
+//    int * handledData;
+//    const int dataCard = 16;
+//
+//public:
+//    HandledProto()
+//    {
+//        handledData = (int *)new int[dataCard];
+//        for(int c=0; c<dataCard; c++)
+//        {
+//            handledData[c] = c;
+//        }
+//    }
+//
+//    HandledProto( const HandledProto &other)
+//    {
+//        this->handledData = other.handledData;
+//    }
+//
+//    /*
+//    HandledProto( HandledProto &&ancestor)
+//    {
+//        this->handledData = std::move( ancestor);
+//    }*/
+//};
+//
+//
+//void testExcept()
+//{
+//    try
+//    {
+//        int i=5;
+//        ++i;
+//        throw i;
+//    }
+//    catch(int i)
+//    {
+//        std::cout << "caught " << i << std::endl;
+//    }
+//    catch(...)
+//    {
+//        std::cout << "caught generic exception." << std::endl;
+//    }
+//}
+
+
+//    std::string original = "Nel mezzo #f# #f# #f#  #f# del cammin #f# di nostra vita #f# #f# mi ritrovai per una selva oscura #f# #f# #f#.";
+//    std::cout << "original = ";
+//    std::cout << original << std::endl;
+//
+//    std::string * tmp = Common::StrManipul::replaceAllOccurencesOf("#f#",
+//        original,
+//        "_thisWasAToken_" );
+//    std::cout << "after replacement = " << *tmp << std::endl;
+//    delete tmp;
+//    std::cout << "original = ";
+//    std::cout << original << std::endl;
+//
+//    std::vector<std::string> * theDirtyTokens = Common::StrManipul::stringSplit(
+//     "#f#", "Nel mezzo #f# #f# #f#  #f# del cammin #f# di nostra vita #f# #f# mi ritrovai per una selva oscura #f# #f# #f#.",
+//     false);
+//    for( std::vector<std::string>::iterator it=theDirtyTokens->begin();
+//         it != theDirtyTokens->end();
+//         it++
+//    )
+//    {
+//        std::cout << *it << std::endl;
+//    }
+//    delete theDirtyTokens;
+//    //
+//    std::cout << "\n\n" << std::endl;
+//    std::vector<std::string> * theTokens = Common::StrManipul::stringSplit(
+//     "#f#", "Nel mezzo #f# #f# #f#  #f# del cammin #f# di nostra vita #f# #f# mi ritrovai per una selva oscura #f# #f# #f#.",
+//     true);
+//    for( std::vector<std::string>::iterator it=theTokens->begin();
+//         it != theTokens->end();
+//         it++
+//    )
+//    {
+//        std::cout << Common::StrManipul::trimBoth( *it) << std::endl;
+//    }
+//    delete theTokens;
+//
+//
+//    // testExcept();
+//
+//    Process::testMonteCarlo();
+
+
+
+//
+//    TestSplit::MemCaleeCaller * m = new TestSplit::MemCaleeCaller();
+//    std::vector<std::string> * res = m->stringSplit_withAllocation("#","Nel # mezzo # del # cammin", false);
+//    for( std::vector<std::string>::iterator it=res->begin(); it!=res->end(); it++)
+//    {
+//        std::cout << *it << "\n";
+//    }
+//    //--------------------
+//    std::cout << "\n\n\n";
+//    std::vector<std::string> * IOres = new std::vector<std::string>();
+//    m->stringSplit_withoutAlloc("#","Nel # mezzo # del # cammin", *IOres, false);
+//    for( std::vector<std::string>::iterator it=IOres->begin(); it!=IOres->end(); it++)
+//    {
+//        std::cout << *it << "\n";
+//    }
+//    //
+//    delete res;
+//    delete IOres;
+//    delete m;
+//
+//    logTest_monothread_();// mono_thread.
+//    //
+//    int nThreads = 3;
+//    std::thread threads[nThreads];
+//    // spawn nThreads threads:
+//    for (int i=0; i<nThreads; ++i)
+//    {
+//        threads[i] = std::thread(EntryPointThreadSpawn_TraceOnly_, i+1);
+//    }
+//    //
+//    for (auto& th : threads)
+//    {
+//        th.join();
+//    }
+//
+
+//
+//    configFileTestGenerator();
+//
+//    Common::ConfigurationService * cs = Process::getDefaultConfiguration();// AppConfig.txt
+//    if( nullptr == cs)
+//    {
+//        return -1;
+//    }
+//    std::vector<std::string> * theKeys = cs->getAllKeys();
+//    int ckey=0;
+//    for( std::vector<std::string>::iterator keysIter=theKeys->begin(); keysIter!=theKeys->end(); keysIter++)
+//    {
+//        std::cout<<" chiave nr. "<< ++ckey <<"  "<< (*keysIter).c_str() << std::endl;
+//    }
+//    theKeys->clear();
+//    delete theKeys;
+//    //
+//    std::string * obtainedVal = nullptr;
+//    for(std::string user_key="start"; 0!=std::string("exit").compare(user_key); )
+//    {
+//        std::cout <<"\n\t Enter a key (type exit to leave). ";
+//        std::cin >> user_key;
+//        obtainedVal = cs->getValue( user_key);
+//        std::cout<<"\t user_key \t"<< user_key << " value= " << *obtainedVal << std::endl;
+//        delete obtainedVal;// because it's NEW at every loop-step.
+//    }
+//    // ready.
+//    delete cs;// del Configuration instance.
+//
+//
+//
+////    std::string test = "       Una vita in vacanza pazza       Nel mezzo del cammin di pazza    pazza    pazza pazza nostra vita pazza       Integral massa raggio quadro     ";
+////    std::cout << "_";
+////    std::cout << test;
+////    std::cout << "_" << std::endl;
+//
+//
+//    bool isInvisible = isInvisibleString( test);
+//    isInvisible = isInvisibleString( "           ");
+//
+//    std::cout << "_";
+//    std::cout << trimBoth( test);
+//    std::cout << "_" << std::endl;
+//
+//
+////
+////    std::vector<std::string> * res = stringSplit( "pazza", test );// NB. original passed by value, to be preserved.
+////
+////    for( std::vector<std::string>::iterator vecPtr=res->begin(); vecPtr!=res->end(); vecPtr++)
+////    {
+////        std::cout << "\n\t " << *vecPtr << std::endl;
+////    }
+////    std::cout << "\n######   withNoEmpties   ######\n" << std::endl;
+////    std::vector<std::string> * withNoEmpties = stringSplit( "pazza", test, true );// NB. original passed by value, to be preserved.
+////    for( std::vector<std::string>::iterator withNoEmptiesPtr=withNoEmpties->begin(); withNoEmptiesPtr!=withNoEmpties->end(); withNoEmptiesPtr++)
+////    {
+////        std::cout << "\n\t " <<   *withNoEmptiesPtr << std::endl;
+////    }
+////    std::cout << "\n######   withNoEmpties neither Invisibles  ######\n" << std::endl;
+////    for( std::vector<std::string>::iterator withNoEmptiesPtr=withNoEmpties->begin(); withNoEmptiesPtr!=withNoEmpties->end(); withNoEmptiesPtr++)
+////    {
+////        std::cout << "\n\t " <<   trimBoth(*withNoEmptiesPtr) << std::endl;
+////    }
+////
+////    delete res;
+////    delete withNoEmpties;
+//
+//
+//
+////    std::string tokenToBeReplaced = "pazza";
+////    std::cout << replaceAllOccurencesOf( "pazza", test, "#" ) << std::endl;
+//
+//
+//
+////    std::string modif_1 = test.replace( test.find("pazza") , 5, "#");
+////    std::cout << modif_1 << std::endl;
+////    //
+////    std::string modif_2 = test.replace( test.find("pazza") , 5, "#");
+////    std::cout << modif_2 << std::endl;
+//
+//     // Process_LogWrappers::JustConstructTEST("mmm", 0);
+//
+//    // logTest_monothread_();// mono_thread.
+//
+//
+//	std::string thePath("./AppConfig.txt");
+//	std::fstream theStream;
+//	//
+//    instream_getToken( thePath, theStream);
+//
+//
+//    //OsservatoSpeciale();
+//
+//
+//
+//
+//    /*
+//	std::string thePath("./testConfig20180128_.txt");
+//	std::fstream theStream;
+//	//
+//    instream_getToken( thePath, theStream);
+//    */
+//
+//    /*
+//    logTest_monothread_();// mono_thread.
+//    //
+//    int nThreads = 3;
+//    std::thread threads[nThreads];
+//    // spawn nThreads threads:
+//    for (int i=0; i<nThreads; ++i)
+//    {
+//        threads[i] = std::thread(EntryPointThreadSpawn_TraceOnly_, i+1);
+//    }
+//    //
+//    for (auto& th : threads)
+//    {
+//        th.join();
+//    }
+//    */
+//
+//
+////namespace TestSplit
+////{
+////
+////
+////class MemCaleeCaller
+////{
+////    public:
+////    std::vector<std::string> * stringSplit_withAllocation( const std::string &tokenToSplitOn, std::string original, bool removeEmptyEntries )// NB. original passed by value, to be preserved.
+////    {
+////        unsigned where = 0;
+////        unsigned whereWeWere = 0;
+////        // the return value is a vector, which contains as many strings, as there are in "original" between the occurences of "tokenToSplitOn".
+////        std::vector<std::string> * returnValue = new std::vector<std::string>();
+////        // core
+////        do// core
+////        {
+////            where = original.find( tokenToSplitOn);
+////            std::string tmp = original.substr( whereWeWere, where );
+////            if( true==removeEmptyEntries)
+////            {
+////                if( false==Common::StrManipul::isInvisibleString( tmp) )
+////                {
+////                    returnValue->push_back( tmp );
+////                }// END if( false==isInvisibleString( tmp) ) : else : skip an emptyEntry.
+////            }// END if( true==removeEmptyEntries) : else : do not check for emptyEntries : just push them back along with the other entries.
+////            else// else : do not check for emptyEntries : just push them back along with the other entries.
+////            {// else : do not check for emptyEntries : just push them back along with the other entries.
+////                returnValue->push_back( tmp );
+////            }// END else : do not check for emptyEntries : just push them back along with the other entries.
+////            original.replace( whereWeWere, where+tokenToSplitOn.size(), "");// eliminate the token that has been detached: do this anyway( i.e. removeEmptyEntries true or false).
+////        }// END core
+////        while( -1 != where);
+////        // ready.
+////        return returnValue;
+////    }// END stringSplit_withAllocation
+////
+////
+////    std::vector<std::string> & stringSplit_withoutAlloc(
+////        const std::string &tokenToSplitOn,
+////        std::string original,
+////        std::vector<std::string> & preAllocatedReturnVal,
+////        bool removeEmptyEntries )// NB. original passed by value, to be preserved.
+////    {
+////        unsigned where = 0;
+////        unsigned whereWeWere = 0;
+////        // the return value is a vector, which contains as many strings, as there are in "original" between the occurences of "tokenToSplitOn".
+//////std::vector<std::string> * returnValue = new std::vector<std::string>(); NO MORE
+////        // core
+////        do// core
+////        {
+////            where = original.find( tokenToSplitOn);
+////            std::string tmp = original.substr( whereWeWere, where );
+////            if( true==removeEmptyEntries)
+////            {
+////                if( false==Common::StrManipul::isInvisibleString( tmp) )
+////                {
+////                    preAllocatedReturnVal.push_back( tmp );
+////                }// END if( false==isInvisibleString( tmp) ) : else : skip an emptyEntry.
+////            }// END if( true==removeEmptyEntries) : else : do not check for emptyEntries : just push them back along with the other entries.
+////            else// else : do not check for emptyEntries : just push them back along with the other entries.
+////            {// else : do not check for emptyEntries : just push them back along with the other entries.
+////                preAllocatedReturnVal.push_back( tmp );
+////            }// END else : do not check for emptyEntries : just push them back along with the other entries.
+////            original.replace( whereWeWere, where+tokenToSplitOn.size(), "");// eliminate the token that has been detached: do this anyway( i.e. removeEmptyEntries true or false).
+////        }// END core
+////        while( -1 != where);
+////        // ready.
+////        return preAllocatedReturnVal;
+////    }// END stringSplit_withoutAlloc
+////
+////};
+////
+////}// end nmsp TestSplit
+//
+////
+/////   TODO : cercare il separatore '#'
+////    controllare che siano uguali le cardinalita' di key e value
+////    predisporre due vector<string> , una per key e una per value (stessa cardinalita' ! )
+////    popolare la mappa, mediante le corrispondenze biunivoche [key, value]
+////    comportarsi camera sterile
+////
+////
+////bool OsservatoSpeciale()
+////{
+////    bool result = true; //instreamOpener( fullPath , theInStream );
+////    std::fstream theInStream;
+////    std::map<std::string, std::string> * this_key_val_map;
+////    std::vector<std::string> * this_key_all_together;
+////    theInStream.open( "./AppConfig.txt" , std::ios::in );
+////    std::vector<std::string> * tokenArray = new std::vector<std::string>;
+////    bool this_isHealtlyConstructed = true;
+////    //
+////    for( int c=0; !theInStream.eof();  )
+////    {
+////        std::string buf;// tmp for current token.
+////        theInStream >> buf;// cosi' va per WORD separate da blank o TAB o new line
+////        std::cout<<buf<<std::endl;
+////        tokenArray->push_back( buf );
+////        ++c;
+////    }
+////
+////    int cardToken = tokenArray->size();// keys + '#' + values : must be n + 1 + n ==2*n+1 so odd (dispari).
+////    double ratio = (double)cardToken / 2.0;
+////    double fractionalPart = ratio - (int)ratio;
+////    if( fabs(fractionalPart) < +1.0E-16 )// was even (pari) -> errore di configurazione (must be 2*n+1).
+////    {
+////        this_isHealtlyConstructed = false;
+////        return (this_isHealtlyConstructed);
+////    }// else can continue.
+////    int candidateSeparatorPosition = (int)ratio+1;
+////    if( ! ((std::string)((*tokenArray)[candidateSeparatorPosition])).compare("#") )
+////    {
+////        this_isHealtlyConstructed = false;
+////        return (this_isHealtlyConstructed);
+////    }// else can continue.
+////    int c=0;
+////    this_key_all_together = new std::vector<std::string>((int)ratio);// how many keys.
+////    this_key_val_map = new std::map<std::string, std::string>();
+////    int n = (int)ratio;
+////    for(std::vector<std::string>::iterator curToken=tokenArray->begin(); curToken!=tokenArray->end(); curToken++)
+////    {// indici [c] e [c+n+1] rispettivamente {chiave, valore} nel vector tokenArray.
+////        this_key_all_together->push_back( *curToken );// push a key
+////        (*(this_key_val_map))[*curToken] = (*(curToken+n+1)).c_str();// push such key together with its corresponding value, in the map.
+////        c++;
+////        if( n == c)// fondo corsa
+////        {
+////            break;// keys are over; their corresponfing values, have already been treated.
+////        }// else have to continue.
+////    }// end for each key.
+////    // final usage of bool_result
+////    result =instreamCloser( theInStream );
+////    result &= (c>0);
+////    std::cout<<"\n\n"<<std::endl;
+////    for(std::vector<std::string>::iterator curToken=tokenArray->begin(); curToken!=tokenArray->end(); curToken++)
+////    {
+////        std::cout<<" key = "<< *curToken ;
+////        std::cout<<" its value is "<< (*this_key_val_map)[(*curToken).c_str()]<<std::endl;
+////        if( ! ((std::string)(*curToken)).compare("#") )
+////        {
+////            break;// END keys
+////        }
+////    }
+////    std::cout<<"\n\n"<<std::endl;
+////    delete tokenArray;
+////    //
+////    return result;
+////}// end  OsservatoSpeciale
+//
+//
+////    bool isConstructorStillAlive = true;
+////    //
+////    if(isConstructorStillAlive)
+////    {// se esiste
+////        if(2==2)//(exists)
+////        {
+////            isConstructorStillAlive = true;
+////        }
+////        else
+////        {
+////            isConstructorStillAlive = false;
+////        }
+////        if(isConstructorStillAlive)
+////        {// se riesco ad aprirlo in lettura
+////            if(2==2)//(getsOpen_read)
+////            {
+////                isConstructorStillAlive = true;
+////            }
+////            else
+////            {
+////                isConstructorStillAlive = false;
+////            }
+////            if(isConstructorStillAlive)
+////            {// se la sua sintassi e' valida
+////                if(2==3)//(has_valid_content)
+////                {
+////                    isConstructorStillAlive = true;
+////                }
+////                else
+////                {
+////                    isConstructorStillAlive = false;
+////                }
+////                if(isConstructorStillAlive)
+////                {// popola la mappa
+////                    if(2==2)//if(wasAbleToPopulateTheMap)
+////                    {
+////                        isConstructorStillAlive = true;
+////                    }
+////                    else
+////                    {
+////                        isConstructorStillAlive = false;
+////                    }
+////                }// END popola la mappa
+////            }// END  se la sua sintassi e' valida
+////        }// END   se riesco ad aprirlo in lettura
+////    }// END  se esiste
+////
+//
+///*
+//
+//int recursionLevel=0;
+//
+//void logTest_monothread_()
+//{
+//    Process_LogWrappers::SectionOpen("void logTest_1()", 0);
+//    //
+//    while(25>recursionLevel)
+//    {
+//        ++recursionLevel;
+//        std::stringstream sStream;
+//        sStream << recursionLevel;
+//        std::string LogText("this is some content, logged from inside the current function. Recursion== " + sStream.str() );
+//        Process_LogWrappers::SectionContent( LogText.c_str(), 0);
+//        logTest_monothread_();
+//    }
+//    //
+//    Process_LogWrappers::SectionClose();
+//}
+//
+//std::mutex open_phase;
+//std::mutex trace_phase_1_;
+//std::mutex trace_phase_2_;
+//std::mutex trace_phase_3_;
+//std::mutex close_phase;
+//
+//void EntryPointThreadSpawn( int par)
+//{
+//    open_phase.lock();
+//    {
+//        std::stringstream thread_number_open;
+//        thread_number_open << par;
+//        //
+//        std::vector<std::string> opener;
+//        opener.push_back("EntryPointThreadSpawn");
+//        opener.push_back(" thread_number= ");
+//        opener.push_back(thread_number_open.str());
+//        Process_LogWrappers::SectionOpen_multiMessage( opener, 0);
+//        opener.clear();
+//    }
+//    open_phase.unlock();
+//    //
+//    trace_phase_1_.lock();
+//    {
+//        std::stringstream thread_number_t1;
+//        thread_number_t1 << par;
+//        //
+//        std::vector<std::string> contentTracer_1;
+//        contentTracer_1.push_back("Nel mezzo del cammin di nostra vita");
+//        contentTracer_1.push_back(" thread_number= ");
+//        contentTracer_1.push_back(thread_number_t1.str());
+//        Process_LogWrappers::SectionContent_multiMessage( contentTracer_1 , 0);
+//        contentTracer_1.clear();
+//    }
+//    trace_phase_1_.unlock();
+//    //
+//    trace_phase_2_.lock();
+//    {
+//        std::stringstream thread_number_t2;
+//        thread_number_t2 << par;
+//        //
+//        std::vector<std::string>  contentTracer_2;
+//        contentTracer_2.push_back("Mi ritrovai per una selva oscura");
+//        contentTracer_2.push_back(" thread_number= ");
+//        contentTracer_2.push_back(thread_number_t2.str());
+//        Process_LogWrappers::SectionContent_multiMessage( contentTracer_2 , 0);
+//        contentTracer_2.clear();
+//    }
+//    trace_phase_2_.unlock();
+//    //
+//    trace_phase_3_.lock();
+//    {
+//        std::stringstream thread_number__t3;
+//        thread_number__t3 << par;
+//        //
+//        std::vector<std::string>  contentTracer_3;
+//        contentTracer_3.push_back("che la diritta via era smarrita");
+//        contentTracer_3.push_back(" thread_number= ");
+//        contentTracer_3.push_back(thread_number__t3.str());
+//        Process_LogWrappers::SectionContent_multiMessage( contentTracer_3 , 0);
+//        contentTracer_3.clear();
+//    }
+//    trace_phase_3_.unlock();
+//    //
+//    close_phase.lock();
+//    {
+//        Process_LogWrappers::SectionClose();
+//    }
+//    close_phase.unlock();
+//    // ready.
+//}// END EntryPointThreadSpawn
+//
+//
+//void EntryPointThreadSpawn_TraceOnly_( int par)
+//{
+//    //
+//    trace_phase_1_.lock();
+//    {
+//        std::stringstream thread_number_t1;
+//        thread_number_t1 << par;
+//        //
+//        std::vector<std::string> contentTracer_1;
+//        contentTracer_1.push_back("Nel mezzo del cammin di nostra vita");
+//        contentTracer_1.push_back(" thread_number= ");
+//        contentTracer_1.push_back(thread_number_t1.str());
+//        Process_LogWrappers::SectionContent_multiMessage( contentTracer_1 , 0);
+//        contentTracer_1.clear();
+//    }
+//    trace_phase_1_.unlock();
+//    //
+//    trace_phase_2_.lock();
+//    {
+//        std::stringstream thread_number_t2;
+//        thread_number_t2 << par;
+//        //
+//        std::vector<std::string>  contentTracer_2;
+//        contentTracer_2.push_back("Mi ritrovai per una selva oscura");
+//        contentTracer_2.push_back(" thread_number= ");
+//        contentTracer_2.push_back(thread_number_t2.str());
+//        Process_LogWrappers::SectionContent_multiMessage( contentTracer_2 , 0);
+//        contentTracer_2.clear();
+//    }
+//    trace_phase_2_.unlock();
+//    //
+//    trace_phase_3_.lock();
+//    {
+//        std::stringstream thread_number__t3;
+//        thread_number__t3 << par;
+//        //
+//        std::vector<std::string>  contentTracer_3;
+//        contentTracer_3.push_back("che la diritta via era smarrita");
+//        contentTracer_3.push_back(" thread_number= ");
+//        contentTracer_3.push_back(thread_number__t3.str());
+//        Process_LogWrappers::SectionContent_multiMessage( contentTracer_3 , 0);
+//        contentTracer_3.clear();
+//    }
+//    trace_phase_3_.unlock();
+//    // ready.
+//}// END EntryPointThreadSpawn_TraceOnly_
+//
+//
+//class SomeClass
+//{
+//private:
+//    int i;
+//    char c;
+//    char * s;
+//    int * ia;
+//    std::string stdString;
+//
+//public:
+//    SomeClass()
+//    {
+//        this->i = 1;
+//        this->c = '2';
+//        this->s = new char[10];
+//        sprintf(this->s,"%s","abc");
+//        this->s[3]=0;// terminate.
+//        this->ia = new int[3]{1, 2, 3};
+//        this->stdString = "this is a STL::string";
+//    }
+//    SomeClass(
+//                    int i_par,
+//                    char c_par,
+//                    char * s_par,
+//                    int * ia_par,
+//                    std::string &stdString_par
+//              )
+//    {
+//        this->i = i_par;
+//        this->c = c_par;
+//        this->s = s_par;
+//        this->ia = ia_par;
+//        this->stdString = stdString_par;
+//    }
+//    //
+//    SomeClass(
+//                bool wantInitList,// NB. #########################
+//                    int i_par,
+//                    char c_par,
+//                    char * s_par,
+//                    int * ia_par,
+//                    std::string &stdString_par
+//              ) :
+//        i( i_par)
+//        ,c( c_par)
+//        ,s( s_par)
+//        ,ia( ia_par)
+//        ,stdString( stdString_par)
+//    {
+//    }
+//
+//};
+//
+//
+////    bool isConstructorStillAlive=true;
+////    std::string reasonForNotBeingAlive;
+////
+////    if(isConstructorStillAlive)
+////    {//  first check
+////        int i=44;
+////        i++;
+////        //##
+////        if(isConstructorStillAlive)
+////        {// check Configuration existence
+////            --i;
+////            if(3==i)
+////            {
+////                isConstructorStillAlive=false;
+////                reasonForNotBeingAlive = "Configuration existence";
+////            }
+////            //##
+////            if(isConstructorStillAlive)
+////            {// check Configuration consistency
+////                i+=5;
+////                if(3==i)
+////                {
+////                    isConstructorStillAlive=false;
+////                    reasonForNotBeingAlive = "Configuration consistency";
+////                }
+////                //##
+////                if(isConstructorStillAlive)
+////                {// check Configuration::semaphore
+////                    i=3;
+////                    if(3==i)
+////                    {
+////                        isConstructorStillAlive=false;
+////                        reasonForNotBeingAlive = "Configuration::semaphore";
+////                    }
+////                    //##
+////                    if(isConstructorStillAlive)
+////                    {// check Configuration::verbosity
+////                        if(3==i)
+////                        {
+////                            isConstructorStillAlive=false;
+////                            reasonForNotBeingAlive = "Configuration::verbosity";
+////                        }
+////                        //##
+////                        if(isConstructorStillAlive)
+////                        {// check tryOpen
+////                            if(3==i)
+////                            {
+////                                isConstructorStillAlive=false;
+////                                reasonForNotBeingAlive = "tryOpen";
+////                            }
+////                        }// END check tryOpen
+////                    }// END check check Configuration::verbosity
+////                }// END check Configuration::semaphore
+////            }// END check Configuration consistency
+////        }// END check Configuration existence
+////    }// END first check
+//
+//
+////inline bool FileExists_test( const std::string& name)
+////{
+////  struct stat buffer;// local variable, whose address is taken to get an output parameter.
+////  int result = stat( name.c_str(), &buffer);// NB. buffer contains a lot of interesting fields after the call.
+////  bool FileExists = (result==0);
+////  return FileExists;
+////}
+//////bool result = FileExists_test("./LogSinkFsConfig.txt");
+//
+//
+////    // desinenza dinamica per log rotation.
+////    time_t now = time(0);// current date/time based on current system
+////    char * dynamicEnding = ctime(&now);// convert Operating System date to string form.
+////    std::string LogFsName(dynamicEnding);
+////    std::string dateStamp(LogFsName.substr(0,11) + LogFsName.substr(20,4) + "_" );
+////    std::string timeStamp(LogFsName.substr(11,8) );
+////    //
+////    std::string traceStamp = dateStamp + timeStamp;
+////    std::cout<<"traceStamp = "<<traceStamp<<std::endl;
+////    //
+//////dayName substr(0,3)
+//////month substr(5,3)
+//////day substr(8,2)
+//////year substr(11,4)
+//////    std::string     year = LogFsName.substr(20,4);
+//////    std::string     month = LogFsName.substr(20,4)
+//////    std::string     day
+//////    std::string     hour
+//////    std::string     min
+//////    std::string     sec
+////
+////
+////    string month = (DateTime.Now.Month  < 10) ? ("0" + DateTime.Now.Month.ToString()  ) : (DateTime.Now.Month.ToString()  );
+////    string   day = (DateTime.Now.Day    < 10) ? ("0" + DateTime.Now.Day.ToString()    ) : (DateTime.Now.Day.ToString()    );
+////    string hour =  (DateTime.Now.Hour   < 10) ? ("0" + DateTime.Now.Hour.ToString()   ) : (DateTime.Now.Hour.ToString()   );
+////    string min  =  (DateTime.Now.Minute < 10) ? ("0" + DateTime.Now.Minute.ToString() ) : (DateTime.Now.Minute.ToString() );
+////    string sec  =  (DateTime.Now.Second < 10) ? ("0" + DateTime.Now.Second.ToString() ) : (DateTime.Now.Second.ToString() );
+////    string timestamp =
+////        DateTime.Now.Year.ToString() +"_"+
+////        month +"_"+
+////        day +"_"+
+////        hour +"_"+
+////        min +"_"+
+////        sec;
+////
+//
+////                        // current date/time based on current system
+////                        time_t now = time(0);
+////                        // convert now to string form
+////                        char* dynamicEnding = ctime(&now);
+////                        printf("\n\tThe local date and time is: %s \n", dynamicEnding);
+////                        //std::cout << "The local date and time is: " << dt << endl;
+////
+////
+////                        std::string LogFsName(dynamicEnding);
+////                        int * dirtyPositions = new int[LogFsName.length()];
+////                        for(int c=0; c<LogFsName.length(); c++)
+////                        {
+////                            if(32==LogFsName[c])
+////                            {
+////                                dirtyPositions[c] = 1;// is blank
+////                            }
+////                            else if(':'==LogFsName[c])
+////                            {
+////                                dirtyPositions[c] = 2;// is semicolon
+////                            }
+////                            else if('\n'==LogFsName[c])
+////                            {
+////                                dirtyPositions[c] = 3;// is new line
+////                            }
+////                            else
+////                            {
+////                                dirtyPositions[c] = 0;// is OK.
+////                            }
+////                        }
+////                        for(int c=0; c<LogFsName.length(); c++)
+////                        {
+////                            if(1==dirtyPositions[c])// is blank
+////                            {
+////                                LogFsName[c] = '_';
+////                            }
+////                            else if(2==dirtyPositions[c])// is semicolon
+////                            {
+////                                LogFsName[c] = '#';
+////                            }
+////                            else if(3==dirtyPositions[c])// is new line
+////                            {
+////                                LogFsName[c] = '_';// eliminate the new line.
+////                            }// else  is NOT blank : leave it.
+////                        }
+////                        delete[] dirtyPositions;
+////
+////                        printf("\n\tThe local date and time is: %s \n", LogFsName.c_str() );
+////                        delete[] dynamicEnding;
+//
+//
+////Map_managment();
+//
+////StringStream_exercise();
+//
+////TestTSingleonWrapper();
+//
+////      ---- binary tree -----
+////    char * dataFilePath = (char *)calloc( 100, sizeof(char) ) ;
+////    sprintf(dataFilePath, "./treeData.txt");
+////    int treeRes = BinTree_wrapper_C_( dataFilePath );
+////    // on re-entry :
+////    free( dataFilePath);
+//

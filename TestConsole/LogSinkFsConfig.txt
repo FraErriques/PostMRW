@@ -1,0 +1,11 @@
+
+key_logFullPathPrefix
+key_semaphore
+key_verbosity
+
+#
+
+./log/cpp
+on
+0
+

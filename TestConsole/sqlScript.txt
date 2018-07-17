@@ -1,0 +1,86 @@
+
+database cantiere
+
+-- -----------------------------------
+
+CREATE TABLE `sede` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `Baustelle_name` varchar(128) NOT NULL,
+  `role` varchar(128) DEFAULT NULL,
+  `set_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `set_by` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+-- -----------------------------------
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_SEDE_INSERT_SINGLE`(
+  -- id 				integer NOT NULL AUTO_INCREMENT,
+  IN nomeCantiere  			varchar(128),
+  IN ruoloSede				varchar(128),
+  -- dataIscrizione 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  IN collaboratoreSottoscrittore  varchar(128)
+)
+BEGIN
+INSERT INTO cantiere.sede(
+-- id
+  Baustelle_name
+  ,role
+  ,set_time
+  ,set_by
+  ) VALUES (
+  -- id
+  nomeCantiere
+  ,ruoloSede
+  ,now() -- NB. system provided
+  ,collaboratoreSottoscrittore
+);
+END$$
+DELIMITER ;
+
+-- -----------------------------------
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_SEDE_LOAD_MULTI`(
+)
+BEGIN
+select * from cantiere.sede;
+END$$
+DELIMITER ;
+
+-- -----------------------------------
+
+-- -----------------------------------
+
+CREATE TABLE `intg_Sin_0_Pi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cumulatedIntg` double DEFAULT NULL,
+  `set_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+-- ------------------------------------------------
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_intg_Sin_0_Pi_INSERT_SINGLE`(
+  -- id 				integer NOT NULL AUTO_INCREMENT,
+  IN cumulatedIntg_par  	double
+  -- dataIscrizione 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+)
+BEGIN
+INSERT INTO cantiere.intg_Sin_0_Pi(
+-- id
+  cumulatedIntg
+  ,set_time
+  ) VALUES (
+  -- id
+  cumulatedIntg_par
+  ,now() -- NB. system provided
+);
+END$$
+DELIMITER ;
+
+-- -------------------------------------------------------
+-- truncate table  cantiere.intg_Sin_0_Pi
+select * from intg_Sin_0_Pi
