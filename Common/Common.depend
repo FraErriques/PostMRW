@@ -1,0 +1,624 @@
+# depslib dependency file v1.0
+1515692710 source:/home/francesco/src/PostMRW/Common/BinaryTree/BinaryTree.cpp
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"BinaryTree.h"
+
+1515686006 /home/francesco/src/PostMRW/Common/BinaryTree/BinaryTree.h
+
+1519420898 source:/home/francesco/src/PostMRW/Common/Config_wrap/Config_wrap.cpp
+	"Config_wrap.h"
+
+1521312218 /home/francesco/src/PostMRW/Common/Config_wrap/Config_wrap.h
+	"../../Common/ConfigurationService/ConfigurationService.h"
+
+1518364762 /home/francesco/src/PostMRW/Common/ConfigurationService/ConfigurationService.h
+	<map>
+	<vector>
+	<string>
+	<fstream>
+
+1518612032 source:/home/francesco/src/PostMRW/Common/ConfigurationService/ConfigurationService.cpp
+	<sys/stat.h>
+	<cmath>
+	<sstream>
+	"ConfigurationService.h"
+	"../StringBuilder/StringBuilder.h"
+
+1520854632 /home/francesco/src/PostMRW/Common/StringBuilder/StringBuilder.h
+	<string>
+	<vector>
+
+1521388743 source:/home/francesco/src/PostMRW/Common/DbConnectionService/dbCall.cpp
+	"../../Common/StringBuilder/StringBuilder.h"
+	<iostream>
+	<iterator>
+	<algorithm>
+	<exception>
+	<stdlib.h>
+	<boost/lambda/lambda.hpp>
+	"mysql_connection.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	"DbConnectionService.h"
+
+1519569405 /home/francesco/src/PostMRW/Common/DbConnectionService/mysql_connection.h
+	"cppconn/connection.h"
+	<boost/shared_ptr.hpp>
+
+1359258747 /home/francesco/src/PostMRW/Common/DbConnectionService/cppconn/connection.h
+	<map>
+	<boost/variant.hpp>
+	"build_config.h"
+	"warning.h"
+	"sqlstring.h"
+
+1359258747 /home/francesco/src/PostMRW/Common/DbConnectionService/cppconn/build_config.h
+
+1359258747 /home/francesco/src/PostMRW/Common/DbConnectionService/cppconn/warning.h
+	<stdexcept>
+	<string>
+	<memory>
+	"sqlstring.h"
+
+1359258747 /home/francesco/src/PostMRW/Common/DbConnectionService/cppconn/sqlstring.h
+	<string>
+	"build_config.h"
+	<iostream>
+
+1521388459 source:/home/francesco/src/PostMRW/Common/DbConnectionService/DbConnectionService.cpp
+	<iostream>
+	<iterator>
+	<algorithm>
+	<exception>
+	<stdlib.h>
+	<boost/lambda/lambda.hpp>
+	"mysql_connection.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	"../../Common/StringBuilder/StringBuilder.h"
+	"DbConnectionService.h"
+
+1521322155 source:/home/francesco/src/PostMRW/Common/LogFs_wrap/LogFs_wrap.cpp
+	<sstream>
+	<thread>
+	<mutex>
+	"LogFs_wrap.h"
+	"../TSingleton/Singleton.h"
+	"../LogSinkFs/SinkFs.h"
+	"../Stream/stream_io_.h"
+	"../StringBuilder/StringBuilder.h"
+
+1521321966 /home/francesco/src/PostMRW/Common/LogFs_wrap/LogFs_wrap.h
+	<vector>
+	<string>
+
+1520027427 /home/francesco/src/PostMRW/Common/TSingleton/Singleton.h
+	<iostream>
+	<thread>
+	<mutex>
+	<sstream>
+	<vector>
+
+1518529082 /home/francesco/src/PostMRW/Common/LogSinkFs/SinkFs.h
+	<fstream>
+	<string>
+	<stack>
+	<mutex>
+	<sys/stat.h>
+	<sstream>
+	<ctime>
+
+1517240378 /home/francesco/src/PostMRW/Common/Stream/stream_io_.h
+	<iostream>
+	<fstream>
+
+1518612056 source:/home/francesco/src/PostMRW/Common/LogSinkFs/SinkFs.cpp
+	"SinkFs.h"
+	"../StringBuilder/StringBuilder.h"
+	"../ConfigurationService/ConfigurationService.h"
+	<cstdlib>
+	<iostream>
+	<exception>
+
+1521306608 source:/home/francesco/src/PostMRW/Common/MonteCarlo/modernRand.cpp
+	"modernRand.h"
+
+1521306608 /home/francesco/src/PostMRW/Common/MonteCarlo/modernRand.h
+	<random>
+	<chrono>
+	<thread>
+
+1518524968 source:/home/francesco/src/PostMRW/Common/MonteCarlo/MonteCarlo.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"MonteCarlo.h"
+
+1518524368 /home/francesco/src/PostMRW/Common/MonteCarlo/MonteCarlo.h
+
+1514998814 source:/home/francesco/src/PostMRW/Common/Stream/RWtxtfile.cpp
+	"RWtxtfile.h"
+
+1514583430 /home/francesco/src/PostMRW/Common/Stream/RWtxtfile.h
+	<iostream>
+	<list>
+	<string>
+	<fstream>
+
+1517244284 source:/home/francesco/src/PostMRW/Common/Stream/stream_io_.cpp
+	<vector>
+	"stream_io_.h"
+
+1520854768 source:/home/francesco/src/PostMRW/Common/StringBuilder/StringBuilder.cpp
+	"StringBuilder.h"
+	<sstream>
+
+1521039244 source:/home/francesco/src/PostMRW/Common/ThreadForker/ThreadForker.cpp
+	"ThreadForker.h"
+
+1519944182 /home/francesco/src/PostMRW/Common/ThreadForker/ThreadForker.h
+	<thread>
+	<mutex>
+
+1521384635 /home/francesco/src/PostMRW/Common/DbConnectionService/DbConnectionService.h
+	<string>
+
+1515689110 source:/home/fra/src/PostMRW/Common/BinaryTree/BinaryTree.cpp
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"BinaryTree.h"
+
+1515682406 /home/fra/src/PostMRW/Common/BinaryTree/BinaryTree.h
+
+1519417298 source:/home/fra/src/PostMRW/Common/Config_wrap/Config_wrap.cpp
+	"Config_wrap.h"
+
+1521308618 /home/fra/src/PostMRW/Common/Config_wrap/Config_wrap.h
+	"../../Common/ConfigurationService/ConfigurationService.h"
+
+1518361162 /home/fra/src/PostMRW/Common/ConfigurationService/ConfigurationService.h
+	<map>
+	<vector>
+	<string>
+	<fstream>
+
+1518608432 source:/home/fra/src/PostMRW/Common/ConfigurationService/ConfigurationService.cpp
+	<sys/stat.h>
+	<cmath>
+	<sstream>
+	"ConfigurationService.h"
+	"../StringBuilder/StringBuilder.h"
+
+1526999918 /home/fra/src/PostMRW/Common/StringBuilder/StringBuilder.h
+	<string>
+	<vector>
+
+1521385142 source:/home/fra/src/PostMRW/Common/DbConnectionService/dbCall.cpp
+	"../../Common/StringBuilder/StringBuilder.h"
+	<iostream>
+	<iterator>
+	<algorithm>
+	<exception>
+	<stdlib.h>
+	<boost/lambda/lambda.hpp>
+	"mysql_connection.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	"DbConnectionService.h"
+
+1519565804 /home/fra/src/PostMRW/Common/DbConnectionService/mysql_connection.h
+	"cppconn/connection.h"
+	<boost/shared_ptr.hpp>
+
+1359255146 /home/fra/src/PostMRW/Common/DbConnectionService/cppconn/connection.h
+	<map>
+	<boost/variant.hpp>
+	"build_config.h"
+	"warning.h"
+	"sqlstring.h"
+
+1359255146 /home/fra/src/PostMRW/Common/DbConnectionService/cppconn/build_config.h
+
+1359255146 /home/fra/src/PostMRW/Common/DbConnectionService/cppconn/warning.h
+	<stdexcept>
+	<string>
+	<memory>
+	"sqlstring.h"
+
+1359255146 /home/fra/src/PostMRW/Common/DbConnectionService/cppconn/sqlstring.h
+	<string>
+	"build_config.h"
+	<iostream>
+
+1521381034 /home/fra/src/PostMRW/Common/DbConnectionService/DbConnectionService.h
+	<string>
+
+1521384858 source:/home/fra/src/PostMRW/Common/DbConnectionService/DbConnectionService.cpp
+	<iostream>
+	<iterator>
+	<algorithm>
+	<exception>
+	<stdlib.h>
+	<boost/lambda/lambda.hpp>
+	"mysql_connection.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	"../../Common/StringBuilder/StringBuilder.h"
+	"DbConnectionService.h"
+
+1525771725 source:/home/fra/src/PostMRW/Common/LogFs_wrap/LogFs_wrap.cpp
+	<sstream>
+	<thread>
+	<mutex>
+	"LogFs_wrap.h"
+	"../TSingleton/Singleton.h"
+	"../LogSinkFs/SinkFs.h"
+	"../Stream/stream_io_.h"
+	"../StringBuilder/StringBuilder.h"
+
+1521318366 /home/fra/src/PostMRW/Common/LogFs_wrap/LogFs_wrap.h
+	<vector>
+	<string>
+
+1520023826 /home/fra/src/PostMRW/Common/TSingleton/Singleton.h
+	<iostream>
+	<thread>
+	<mutex>
+	<sstream>
+	<vector>
+
+1518525482 /home/fra/src/PostMRW/Common/LogSinkFs/SinkFs.h
+	<fstream>
+	<string>
+	<stack>
+	<mutex>
+	<sys/stat.h>
+	<sstream>
+	<ctime>
+
+1525770060 /home/fra/src/PostMRW/Common/Stream/stream_io_.h
+	<iostream>
+	<fstream>
+
+1518608456 source:/home/fra/src/PostMRW/Common/LogSinkFs/SinkFs.cpp
+	"SinkFs.h"
+	"../StringBuilder/StringBuilder.h"
+	"../ConfigurationService/ConfigurationService.h"
+	<cstdlib>
+	<iostream>
+	<exception>
+
+1521303008 source:/home/fra/src/PostMRW/Common/MonteCarlo/modernRand.cpp
+	"modernRand.h"
+
+1521303008 /home/fra/src/PostMRW/Common/MonteCarlo/modernRand.h
+	<random>
+	<chrono>
+	<thread>
+
+1527001440 source:/home/fra/src/PostMRW/Common/MonteCarlo/MonteCarlo.cpp
+
+1525770060 /home/fra/src/PostMRW/Common/MonteCarlo/MonteCarlo.h
+	<string>
+
+1525770060 source:/home/fra/src/PostMRW/Common/Stream/RWtxtfile.cpp
+	"RWtxtfile.h"
+
+1525770062 /home/fra/src/PostMRW/Common/Stream/RWtxtfile.h
+	<iostream>
+	<list>
+	<string>
+	<fstream>
+
+1526847940 source:/home/fra/src/PostMRW/Common/Stream/stream_io_.cpp
+	<vector>
+	"stream_io_.h"
+	"../StringBuilder/StringBuilder.h"
+
+1527162023 source:/home/fra/src/PostMRW/Common/StringBuilder/StringBuilder.cpp
+	"StringBuilder.h"
+	<sstream>
+
+1521035644 source:/home/fra/src/PostMRW/Common/ThreadForker/ThreadForker.cpp
+	"ThreadForker.h"
+
+1519940582 /home/fra/src/PostMRW/Common/ThreadForker/ThreadForker.h
+	<thread>
+	<mutex>
+
+1527240690 source:/home/fra/src/PostMRW/Common/MonteCarlo/BaseConverter.cpp
+	"BaseConverter.h"
+	"../StringBuilder/StringBuilder.h"
+	<iostream>
+	<map>
+	<cmath>
+
+1527074638 /home/fra/src/PostMRW/Common/MonteCarlo/BaseConverter.h
+	<map>
+	<string>
+
+1527074754 source:/home/fra/src/PostMRW/Common/MonteCarlo/ClassicalGenerator.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"../StringBuilder/StringBuilder.h"
+	<cmath>
+	<iostream>
+
+1528712926 source:/home/fra/src/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<cmath>
+	<iostream>
+	"../StringBuilder/StringBuilder.h"
+	"ClassicalDiscreteGenerator.h"
+
+1528712926 /home/fra/src/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"../StringBuilder/StringBuilder.h"
+	"./DeltaOmega.h"
+	<cmath>
+	<iostream>
+
+1528712926 source:/home/fra/src/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<cmath>
+	<iostream>
+	"../StringBuilder/StringBuilder.h"
+	"ClassicalContinuousGenerator.h"
+
+1528712926 /home/fra/src/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"../StringBuilder/StringBuilder.h"
+	"./DeltaOmega.h"
+	<cmath>
+	<iostream>
+
+1528715219 /home/fra/src/PostMRW/Common/MonteCarlo/DeltaOmega.h
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/BinaryTree/BinaryTree.cpp
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"BinaryTree.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/BinaryTree/BinaryTree.h
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Config_wrap/Config_wrap.cpp
+	"Config_wrap.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/Config_wrap/Config_wrap.h
+	"../../Common/ConfigurationService/ConfigurationService.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/ConfigurationService/ConfigurationService.h
+	<map>
+	<vector>
+	<string>
+	<fstream>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/ConfigurationService/ConfigurationService.cpp
+	<sys/stat.h>
+	<cmath>
+	<sstream>
+	"ConfigurationService.h"
+	"../StringBuilder/StringBuilder.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/StringBuilder/StringBuilder.h
+	<string>
+	<vector>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/dbCall.cpp
+	"../../Common/StringBuilder/StringBuilder.h"
+	<iostream>
+	<iterator>
+	<algorithm>
+	<exception>
+	<stdlib.h>
+	<boost/lambda/lambda.hpp>
+	"mysql_connection.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	"DbConnectionService.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/mysql_connection.h
+	"cppconn/connection.h"
+	<boost/shared_ptr.hpp>
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/connection.h
+	<map>
+	<boost/variant.hpp>
+	"build_config.h"
+	"warning.h"
+	"sqlstring.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/build_config.h
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/warning.h
+	<stdexcept>
+	<string>
+	<memory>
+	"sqlstring.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/sqlstring.h
+	<string>
+	"build_config.h"
+	<iostream>
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/DbConnectionService.h
+	<string>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/DbConnectionService.cpp
+	<iostream>
+	<iterator>
+	<algorithm>
+	<exception>
+	<stdlib.h>
+	<boost/lambda/lambda.hpp>
+	"mysql_connection.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	"../../Common/StringBuilder/StringBuilder.h"
+	"DbConnectionService.h"
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/LogFs_wrap/LogFs_wrap.cpp
+	<sstream>
+	<thread>
+	<mutex>
+	"LogFs_wrap.h"
+	"../TSingleton/Singleton.h"
+	"../LogSinkFs/SinkFs.h"
+	"../Stream/stream_io_.h"
+	"../StringBuilder/StringBuilder.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/LogFs_wrap/LogFs_wrap.h
+	<vector>
+	<string>
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/TSingleton/Singleton.h
+	<iostream>
+	<thread>
+	<mutex>
+	<sstream>
+	<vector>
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/LogSinkFs/SinkFs.h
+	<fstream>
+	<string>
+	<stack>
+	<mutex>
+	<sys/stat.h>
+	<sstream>
+	<ctime>
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/Stream/stream_io_.h
+	<iostream>
+	<fstream>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/LogSinkFs/SinkFs.cpp
+	"SinkFs.h"
+	"../StringBuilder/StringBuilder.h"
+	"../ConfigurationService/ConfigurationService.h"
+	<cstdlib>
+	<iostream>
+	<exception>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/BaseConverter.cpp
+	"BaseConverter.h"
+	"../StringBuilder/StringBuilder.h"
+	<iostream>
+	<map>
+	<cmath>
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/BaseConverter.h
+	<map>
+	<string>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<cmath>
+	<iostream>
+	"../StringBuilder/StringBuilder.h"
+	"ClassicalContinuousGenerator.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"../StringBuilder/StringBuilder.h"
+	"./DeltaOmega.h"
+	<cmath>
+	<iostream>
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/DeltaOmega.h
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<cmath>
+	<iostream>
+	"../StringBuilder/StringBuilder.h"
+	"ClassicalDiscreteGenerator.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"../StringBuilder/StringBuilder.h"
+	"./DeltaOmega.h"
+	<cmath>
+	<iostream>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalGenerator.cpp
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"../StringBuilder/StringBuilder.h"
+	<cmath>
+	<iostream>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/modernRand.cpp
+	"modernRand.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/modernRand.h
+	<random>
+	<chrono>
+	<thread>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/MonteCarlo.cpp
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Stream/RWtxtfile.cpp
+	"RWtxtfile.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/Stream/RWtxtfile.h
+	<iostream>
+	<list>
+	<string>
+	<fstream>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Stream/stream_io_.cpp
+	<vector>
+	"stream_io_.h"
+	"../StringBuilder/StringBuilder.h"
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/StringBuilder/StringBuilder.cpp
+	"StringBuilder.h"
+	<sstream>
+
+1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/ThreadForker/ThreadForker.cpp
+	"ThreadForker.h"
+
+1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/ThreadForker/ThreadForker.h
+	<thread>
+	<mutex>
+

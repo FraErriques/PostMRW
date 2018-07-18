@@ -7,10 +7,8 @@ Release/
 log/
 
 #let's continue with file cathegories
-*.layout
-*.depend
 *.o
 *.a
 *.exe
 *.dll
-*.cbp
+

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Common" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Common" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Common" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-m64" />
+		</Compiler>
+		<Linker>
+			<Add option="-m64" />
+			<Add option="-lmysqlcppconn" />
+		</Linker>
+		<Unit filename="BinaryTree/BinaryTree.cpp" />
+		<Unit filename="BinaryTree/BinaryTree.h" />
+		<Unit filename="Config_wrap/Config_wrap.cpp" />
+		<Unit filename="Config_wrap/Config_wrap.h" />
+		<Unit filename="ConfigurationService/ConfigurationService.cpp" />
+		<Unit filename="ConfigurationService/ConfigurationService.h" />
+		<Unit filename="DbConnectionService/DbConnectionService.cpp" />
+		<Unit filename="DbConnectionService/DbConnectionService.h" />
+		<Unit filename="DbConnectionService/cppconn/build_config.h" />
+		<Unit filename="DbConnectionService/cppconn/connection.h" />
+		<Unit filename="DbConnectionService/cppconn/datatype.h" />
+		<Unit filename="DbConnectionService/cppconn/driver.h" />
+		<Unit filename="DbConnectionService/cppconn/exception.h" />
+		<Unit filename="DbConnectionService/cppconn/metadata.h" />
+		<Unit filename="DbConnectionService/cppconn/parameter_metadata.h" />
+		<Unit filename="DbConnectionService/cppconn/prepared_statement.h" />
+		<Unit filename="DbConnectionService/cppconn/resultset.h" />
+		<Unit filename="DbConnectionService/cppconn/resultset_metadata.h" />
+		<Unit filename="DbConnectionService/cppconn/sqlstring.h" />
+		<Unit filename="DbConnectionService/cppconn/statement.h" />
+		<Unit filename="DbConnectionService/cppconn/warning.h" />
+		<Unit filename="DbConnectionService/dbCall.cpp" />
+		<Unit filename="DbConnectionService/dbCall.h" />
+		<Unit filename="DbConnectionService/mysql_connection.h" />
+		<Unit filename="LogFs_wrap/LogFs_wrap.cpp" />
+		<Unit filename="LogFs_wrap/LogFs_wrap.h" />
+		<Unit filename="LogSinkFs/SinkFs.cpp" />
+		<Unit filename="LogSinkFs/SinkFs.h" />
+		<Unit filename="MonteCarlo/BaseConverter.cpp" />
+		<Unit filename="MonteCarlo/BaseConverter.h" />
+		<Unit filename="MonteCarlo/ClassicalContinuousGenerator.cpp" />
+		<Unit filename="MonteCarlo/ClassicalContinuousGenerator.h" />
+		<Unit filename="MonteCarlo/ClassicalDiscreteGenerator.cpp" />
+		<Unit filename="MonteCarlo/ClassicalDiscreteGenerator.h" />
+		<Unit filename="MonteCarlo/ClassicalGenerator.cpp" />
+		<Unit filename="MonteCarlo/DeltaOmega.h" />
+		<Unit filename="MonteCarlo/MonteCarlo.cpp" />
+		<Unit filename="MonteCarlo/MonteCarlo.h" />
+		<Unit filename="MonteCarlo/modernRand.cpp" />
+		<Unit filename="MonteCarlo/modernRand.h" />
+		<Unit filename="Stream/RWtxtfile.cpp" />
+		<Unit filename="Stream/RWtxtfile.h" />
+		<Unit filename="Stream/stream_io_.cpp" />
+		<Unit filename="Stream/stream_io_.h" />
+		<Unit filename="StringBuilder/StringBuilder.cpp" />
+		<Unit filename="StringBuilder/StringBuilder.h" />
+		<Unit filename="TSingleton/Singleton.h" />
+		<Unit filename="Template/template.h" />
+		<Unit filename="ThreadForker/ThreadForker.cpp" />
+		<Unit filename="ThreadForker/ThreadForker.h" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
