@@ -156,21 +156,16 @@ void ClassicalDiscreteGenerator::resetExtractionInterval( int left, int right )
 void ClassicalDiscreteGenerator::buildOmega(
     double partizioneLeft
     ,double partizioneRight
-    // unsigned n  by now assuming n==10.
     )
 {//this->frequencyDistribution has been built by Ctor.
-    unsigned n = 10;
-    double Omega = partizioneRight-partizioneLeft;
-    double DeltaOmega = Omega/(double)n;
-    double eta = DeltaOmega/+2.0;
-    //if(eta<+1.0){eta=+1.0/+2.0;}
-    double epsilon = +1.0E-80;
-    double position = partizioneLeft - epsilon + eta;
-    //
-    for( ; position<partizioneRight; position+=2.0*eta)
+    double eta = (partizioneRight-partizioneLeft)/20.0;//each DeltaOmega is 1/10*Omega. Eta is 1/2*DeltaOmega.
+    if(eta<+1.0){eta=+1.0/+2.0;}
+    double mediana = 0;// init
+    for( double position=partizioneLeft; mediana<partizioneRight; position+=2.0*eta)
     {
-        if(position>=partizioneRight){break;}
-        Common::MonteCarlo::DeltaOmega * curDeltaOmega = new Common::MonteCarlo::DeltaOmega( position, eta);// TODO think where to delete.
+        mediana = position;
+        //if(mediana>=partizioneRight){break;}
+        DeltaOmega * curDeltaOmega = new DeltaOmega( mediana, eta);// TODO verify
         this->frequencyDistribution->push_back( *curDeltaOmega );
     }//for
 }//buildOmega
