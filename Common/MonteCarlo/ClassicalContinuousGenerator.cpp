@@ -155,8 +155,8 @@ void ClassicalContinuousGenerator::buildOmega(
     double mediana = 0;// init
     for( double position=partizioneLeft-+1.0E-80; mediana<partizioneRight; position+=2.0*eta)
     {
-        mediana = position;
-        //if(mediana>=partizioneRight){break;}
+        mediana = position+eta;
+        if(mediana>=partizioneRight){break;}
         DeltaOmega * curDeltaOmega = new DeltaOmega( mediana, eta);// TODO verify
         this->frequencyDistribution->push_back( *curDeltaOmega );
     }//for

@@ -159,12 +159,12 @@ void ClassicalDiscreteGenerator::buildOmega(
     )
 {//this->frequencyDistribution has been built by Ctor.
     double eta = (partizioneRight-partizioneLeft)/20.0;//each DeltaOmega is 1/10*Omega. Eta is 1/2*DeltaOmega.
-    if(eta<+1.0){eta=+1.0/+2.0;}
+    if(eta<+0.5){eta=+1.0/+2.0;}
     double mediana = 0;// init
-    for( double position=partizioneLeft; mediana<partizioneRight; position+=2.0*eta)
+    for( double position=partizioneLeft-+1.0E-80; mediana<partizioneRight; position+=2.0*eta)
     {
-        mediana = position;
-        //if(mediana>=partizioneRight){break;}
+        mediana = position+eta;
+        if(mediana>=partizioneRight){break;}
         DeltaOmega * curDeltaOmega = new DeltaOmega( mediana, eta);// TODO verify
         this->frequencyDistribution->push_back( *curDeltaOmega );
     }//for
