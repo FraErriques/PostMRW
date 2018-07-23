@@ -1,5 +1,5 @@
 #include <iostream>
-#include <boost/lambda/lambda.hpp>
+//#include <boost/lambda/lambda.hpp>
 #include "../Common/DbConnectionService/dbCall.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
@@ -16,7 +16,6 @@ int main()
     double left  = -2.809;
     double right = +2.809;
     int populationCardinality = 9000;
- //   double eta = +0.9;
     //
     Common::MonteCarlo::ClassicalDiscreteGenerator * monteCGen =
     new Common::MonteCarlo::ClassicalDiscreteGenerator();// Ctor

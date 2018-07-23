@@ -43,7 +43,7 @@ private:
     double theIntervalMeasure;
     double Min, Sup;
     double omothetia;// it's rational since it contains a ratio, for proportion with default interval.
-    int translation;
+    double translation;
     std::vector<double> * continuousPopulation;
     std::vector<DeltaOmega> * frequencyDistribution;
 
