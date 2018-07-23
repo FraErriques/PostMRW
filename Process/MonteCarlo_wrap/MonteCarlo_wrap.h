@@ -1,7 +1,7 @@
 #ifndef MONTECARLO_WRAP_H_INCLUDED
 #define MONTECARLO_WRAP_H_INCLUDED
 
-#include "../../Common/MonteCarlo/MonteCarlo.h"
+
 #include "../../Common/MonteCarlo/modernRand.h"
 
 namespace Process

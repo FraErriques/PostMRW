@@ -66,7 +66,7 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
 
     void ClassicalContinuousGenerator::nextDoubleInInterval() const
     {
-        Common::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()", 0);
+        //Common::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()", 0);
         double originalExtracted = rand();
         double temp =  originalExtracted*this->omothetia + this->translation;
         if( this->Min<= temp
@@ -87,7 +87,7 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
             delete strOriginalExtracted;
             delete strAfterAffinity;
         }
-        Common::LogWrappers::SectionClose();
+        //Common::LogWrappers::SectionClose();
     }// END nextDoubleInInterval
 
 
@@ -142,7 +142,7 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
 
         void ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()
         {
-            Common::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()", 0);
+            //Common::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()", 0);
             int populationCardinality = this->continuousPopulation->size();
             double elementPresenceWeight = +1.0/populationCardinality;
             for( std::vector<double>::const_iterator populationReader=this->continuousPopulation->begin();
@@ -176,7 +176,7 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
                           delete strRepresentationOfPopulationReader;
                       }// end log.
                }// for populationReader
-               Common::LogWrappers::SectionClose();
+               //Common::LogWrappers::SectionClose();
         }// buildContinuousFrequencyDistribution()
 
 
