@@ -76,10 +76,7 @@
 		<Unit filename="MonteCarlo/ClassicalContinuousGenerator.h" />
 		<Unit filename="MonteCarlo/ClassicalDiscreteGenerator.cpp" />
 		<Unit filename="MonteCarlo/ClassicalDiscreteGenerator.h" />
-		<Unit filename="MonteCarlo/ClassicalGenerator.cpp" />
 		<Unit filename="MonteCarlo/DeltaOmega.h" />
-		<Unit filename="MonteCarlo/MonteCarlo.cpp" />
-		<Unit filename="MonteCarlo/MonteCarlo.h" />
 		<Unit filename="MonteCarlo/modernRand.cpp" />
 		<Unit filename="MonteCarlo/modernRand.h" />
 		<Unit filename="Stream/RWtxtfile.cpp" />
