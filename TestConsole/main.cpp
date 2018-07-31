@@ -14,7 +14,7 @@
 int main()
 {
     double left  = -2.809;
-    double right = +2.809;
+    double right = +2.395;
     int populationCardinality = 9000;
     //
     Common::MonteCarlo::ClassicalDiscreteGenerator * monteCGen =

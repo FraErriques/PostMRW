@@ -398,38 +398,38 @@
 
 1528715219 /home/fra/src/PostMRW/Common/MonteCarlo/DeltaOmega.h
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/BinaryTree/BinaryTree.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/BinaryTree/BinaryTree.cpp
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	"BinaryTree.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/BinaryTree/BinaryTree.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/BinaryTree/BinaryTree.h
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Config_wrap/Config_wrap.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Config_wrap/Config_wrap.cpp
 	"Config_wrap.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/Config_wrap/Config_wrap.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/Config_wrap/Config_wrap.h
 	"../../Common/ConfigurationService/ConfigurationService.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/ConfigurationService/ConfigurationService.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/ConfigurationService/ConfigurationService.h
 	<map>
 	<vector>
 	<string>
 	<fstream>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/ConfigurationService/ConfigurationService.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/ConfigurationService/ConfigurationService.cpp
 	<sys/stat.h>
 	<cmath>
 	<sstream>
 	"ConfigurationService.h"
 	"../StringBuilder/StringBuilder.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/StringBuilder/StringBuilder.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/StringBuilder/StringBuilder.h
 	<string>
 	<vector>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/dbCall.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/dbCall.cpp
 	"../../Common/StringBuilder/StringBuilder.h"
 	<iostream>
 	<iterator>
@@ -445,34 +445,34 @@
 	<cppconn/prepared_statement.h>
 	"DbConnectionService.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/mysql_connection.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/mysql_connection.h
 	"cppconn/connection.h"
 	<boost/shared_ptr.hpp>
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/connection.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/connection.h
 	<map>
 	<boost/variant.hpp>
 	"build_config.h"
 	"warning.h"
 	"sqlstring.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/build_config.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/build_config.h
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/warning.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/warning.h
 	<stdexcept>
 	<string>
 	<memory>
 	"sqlstring.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/sqlstring.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/cppconn/sqlstring.h
 	<string>
 	"build_config.h"
 	<iostream>
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/DbConnectionService.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/DbConnectionService.h
 	<string>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/DbConnectionService.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/DbConnectionService.cpp
 	<iostream>
 	<iterator>
 	<algorithm>
@@ -488,7 +488,7 @@
 	"../../Common/StringBuilder/StringBuilder.h"
 	"DbConnectionService.h"
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/LogFs_wrap/LogFs_wrap.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/LogFs_wrap/LogFs_wrap.cpp
 	<sstream>
 	<thread>
 	<mutex>
@@ -498,18 +498,18 @@
 	"../Stream/stream_io_.h"
 	"../StringBuilder/StringBuilder.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/LogFs_wrap/LogFs_wrap.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/LogFs_wrap/LogFs_wrap.h
 	<vector>
 	<string>
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/TSingleton/Singleton.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/TSingleton/Singleton.h
 	<iostream>
 	<thread>
 	<mutex>
 	<sstream>
 	<vector>
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/LogSinkFs/SinkFs.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/LogSinkFs/SinkFs.h
 	<fstream>
 	<string>
 	<stack>
@@ -518,11 +518,11 @@
 	<sstream>
 	<ctime>
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/Stream/stream_io_.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/Stream/stream_io_.h
 	<iostream>
 	<fstream>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/LogSinkFs/SinkFs.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/LogSinkFs/SinkFs.cpp
 	"SinkFs.h"
 	"../StringBuilder/StringBuilder.h"
 	"../ConfigurationService/ConfigurationService.h"
@@ -530,18 +530,18 @@
 	<iostream>
 	<exception>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/BaseConverter.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/BaseConverter.cpp
 	"BaseConverter.h"
 	"../StringBuilder/StringBuilder.h"
 	<iostream>
 	<map>
 	<cmath>
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/BaseConverter.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/BaseConverter.h
 	<map>
 	<string>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.cpp
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -549,8 +549,9 @@
 	<iostream>
 	"../StringBuilder/StringBuilder.h"
 	"ClassicalContinuousGenerator.h"
+	"../LogFs_wrap/LogFs_wrap.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalContinuousGenerator.h
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -559,9 +560,9 @@
 	<cmath>
 	<iostream>
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/DeltaOmega.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/DeltaOmega.h
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.cpp
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -570,7 +571,7 @@
 	"../StringBuilder/StringBuilder.h"
 	"ClassicalDiscreteGenerator.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/ClassicalDiscreteGenerator.h
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -587,38 +588,38 @@
 	<cmath>
 	<iostream>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/modernRand.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/modernRand.cpp
 	"modernRand.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/modernRand.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/modernRand.h
 	<random>
 	<chrono>
 	<thread>
 
 1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/MonteCarlo/MonteCarlo.cpp
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Stream/RWtxtfile.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Stream/RWtxtfile.cpp
 	"RWtxtfile.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/Stream/RWtxtfile.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/Stream/RWtxtfile.h
 	<iostream>
 	<list>
 	<string>
 	<fstream>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Stream/stream_io_.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/Stream/stream_io_.cpp
 	<vector>
 	"stream_io_.h"
 	"../StringBuilder/StringBuilder.h"
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/StringBuilder/StringBuilder.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/StringBuilder/StringBuilder.cpp
 	"StringBuilder.h"
 	<sstream>
 
-1531946104 source:/home/fra/src/GitHubSandBox/PostMRW/Common/ThreadForker/ThreadForker.cpp
+1532421723 source:/home/fra/src/GitHubSandBox/PostMRW/Common/ThreadForker/ThreadForker.cpp
 	"ThreadForker.h"
 
-1531946104 /home/fra/src/GitHubSandBox/PostMRW/Common/ThreadForker/ThreadForker.h
+1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/ThreadForker/ThreadForker.h
 	<thread>
 	<mutex>
 
