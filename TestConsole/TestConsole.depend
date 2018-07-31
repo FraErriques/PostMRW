@@ -171,3 +171,15 @@
 	<cmath>
 	<iostream>
 
+1532377916 source:/home/fra/projects/GitHubSandBox/PostMRW/TestConsole/Fantoccio.cpp
+	"../Common/LogFs_wrap/LogFs_wrap.h"
+	"../Common/StringBuilder/StringBuilder.h"
+
+1532377916 /home/fra/projects/GitHubSandBox/PostMRW/Common/LogFs_wrap/LogFs_wrap.h
+	<vector>
+	<string>
+
+1532377916 /home/fra/projects/GitHubSandBox/PostMRW/Common/StringBuilder/StringBuilder.h
+	<string>
+	<vector>
+
