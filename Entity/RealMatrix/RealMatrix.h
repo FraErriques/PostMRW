@@ -58,13 +58,12 @@ private:
    void      deallocate ( void );                                                   // non const: DE-allocates
    /// input-output /////////////////////////////////////////////////////////////////////////////////////////////////
    void generator          ( void ); // non const method; generates in RAM          // cannot be const
-   void input              (void); // non const method; reads in RAM                // cannot be const
+   void input              ( void ); // non const method; reads in RAM                // cannot be const
    bool readfile           ( const char * where );                                  // non const method; reads in RAM
-   bool validate           (const char * where)                                     const;
+   bool validate           ( const char * where )                                   const;
    bool writefile          ( const char * where )                                   const; // generate on a file
 };
 
 } // closing namespace Numerics
 
 #endif
-

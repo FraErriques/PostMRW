@@ -2,8 +2,11 @@
 # ifndef _COMMON_DATA_
 # define _COMMON_DATA_
 
-typedef short Domain; // type for throwing exceptions
+#include <cstddef>
 #include <cmath>
+
+typedef short Domain; // type for throwing exceptions
+
 #define PI M_PI // once I called it that, and now I don't want to alter the whole source.
 //const double PI = 3.1415926535897932384626433832795; // double PI = 6.0 * arctan ( pow (3.0, -0.5) );
 //const double E  = 2.7182818284590452353602874713527;

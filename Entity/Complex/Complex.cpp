@@ -1,13 +1,9 @@
 
-#include "complex.h"
-#include "../common_data/common_data.h"  // for PI and Domain
-
-
-
+#include "Complex.h" // which gives common_data.h
 
 //#define  USE_REAL_LIB
 #ifdef  USE_REAL_LIB
-   #include "../real/real.h"
+   #include "../RealAnalysis/Real.h"
 #else
    #define Nat_pow pow
    #define Pow     pow

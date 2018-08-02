@@ -6,7 +6,7 @@
 #include<ctime>      // for srand(time())
 #include<fstream>    // for the data files
 #include<cstdlib>    // for rand()
-#include<string>
+#include<string>     // used in ::validate() (i.e. a data file parser).
 
 namespace Numerics {
 
@@ -483,6 +483,3 @@ void RealMatrix::generator ( void )
 }
 
 } //closing namespace Numerics
-
-
-

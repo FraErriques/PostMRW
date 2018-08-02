@@ -1,6 +1,5 @@
 
 # include "ComplexMatrix.h"
-# include "../common_data/common_data.h"
 
 #include<cmath>      // for fabs() and pow()
 #include<ctime>      // for srand(time())
@@ -358,7 +357,7 @@ void ComplexMatrix::show ( size_t set_precision ) const
    if ( m == NULL ) return;
    if ( 20 < set_precision )
       { set_precision = 20; }
-   std::cout.precision (set_precision);      
+   std::cout.precision (set_precision);
    std::cout<<"\n\n";
    for (row=0; row<rows; row++)  //  show matrix
    {
@@ -501,4 +500,3 @@ void ComplexMatrix::generator ( void )
 }
 
 } // closing namespace Numerics
-
