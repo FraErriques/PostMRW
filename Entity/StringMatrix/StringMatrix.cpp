@@ -1,6 +1,6 @@
 
 # include "StringMatrix.h"
-# include "../common_data/common_data.h"
+# include "../common_data/common_data.h" // for throwing Exceptions.
 
 #include<ctime>      // for srand(time())
 #include<fstream>    // for the data files

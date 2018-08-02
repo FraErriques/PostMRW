@@ -11,8 +11,7 @@
 #define __COMPLEX_MATRIX_
 
 
-#include "../complex/complex.h"
-
+#include "../Complex/Complex.h"
 
 
 namespace Numerics   {
@@ -69,4 +68,3 @@ private:
 } // closing namespace Numerics
 
 #endif
-

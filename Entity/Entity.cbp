@@ -52,17 +52,19 @@
 			<Add option="-m64" />
 			<Add option="-lmysqlcppconn" />
 		</Linker>
+		<Unit filename="Complex/Complex.cpp" />
+		<Unit filename="Complex/Complex.h" />
 		<Unit filename="ComplexMatrix/ComplexMatrix.cpp" />
 		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
 		<Unit filename="Integration/Integration.cpp" />
 		<Unit filename="Integration/Integration.h" />
+		<Unit filename="RealAnalysis/Real.cpp" />
+		<Unit filename="RealAnalysis/Real.h" />
 		<Unit filename="RealMatrix/RealMatrix.cpp" />
 		<Unit filename="RealMatrix/RealMatrix.h" />
 		<Unit filename="StringMatrix/StringMatrix.cpp" />
 		<Unit filename="StringMatrix/StringMatrix.h" />
 		<Unit filename="common_data/common_data.h" />
-		<Unit filename="complex/complex.cpp" />
-		<Unit filename="complex/complex.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

@@ -1,4 +1,5 @@
 # depslib dependency file v1.0
+<<<<<<< HEAD
 1515688306 source:/home/francesco/src/PostMRW/Process/BinTree_wrap/BinTree_wrapper_.cpp
 	"../../Common/BinaryTree/BinaryTree.h"
 
@@ -58,3 +59,5 @@
 	<chrono>
 	<thread>
 
+=======
+>>>>>>> 5be7a187e61c9b66e72e299e3724160970f1c310

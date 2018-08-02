@@ -2,8 +2,7 @@
 #ifndef _MY_COMPLEX_
 #define _MY_COMPLEX_
 
-#include <cmath>
-
+#include "../common_data/common_data.h"
 
 namespace Numerics {
 
@@ -74,4 +73,3 @@ const Complex i(0.0, 1.0);
 } // closing namespace Numerics
 
 # endif
-

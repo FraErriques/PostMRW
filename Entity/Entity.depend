@@ -1,4 +1,6 @@
 # depslib dependency file v1.0
+0 <<<<<<< HEAD
+
 1521388821 source:/home/francesco/src/PostMRW/Entity/Integration/Integration.cpp
 	<cmath>
 	"Integration.h"
@@ -79,4 +81,58 @@
 	<vector>
 
 1532421723 /home/fra/src/GitHubSandBox/PostMRW/Common/DbConnectionService/dbCall.h
+
+1532421723 7a187e61c9b66e72e299e3724160970f1c310
+
+1533219765 source:/home/fra/src/GitHubSandBox/PostMRW/Entity/Complex/Complex.cpp
+	"Complex.h"
+	"../RealAnalysis/Real.h"
+	<cmath>
+
+1533219730 /home/fra/src/GitHubSandBox/PostMRW/Entity/Complex/Complex.h
+	"../common_data/common_data.h"
+
+1533219701 /home/fra/src/GitHubSandBox/PostMRW/Entity/common_data/common_data.h
+	<cstddef>
+	<cmath>
+	<iostream>
+	"vector.h"
+
+1533219405 /home/fra/src/GitHubSandBox/PostMRW/Entity/RealAnalysis/Real.h
+	"../common_data/common_data.h"
+
+1533219809 source:/home/fra/src/GitHubSandBox/PostMRW/Entity/ComplexMatrix/ComplexMatrix.cpp
+	"ComplexMatrix.h"
+	<cmath>
+	<ctime>
+	<fstream>
+	<cstdlib>
+	<string>
+
+1533219641 /home/fra/src/GitHubSandBox/PostMRW/Entity/ComplexMatrix/ComplexMatrix.h
+	"../Complex/Complex.h"
+
+1533219435 source:/home/fra/src/GitHubSandBox/PostMRW/Entity/RealAnalysis/Real.cpp
+	"Real.h"
+
+1533220006 source:/home/fra/src/GitHubSandBox/PostMRW/Entity/StringMatrix/StringMatrix.cpp
+	"StringMatrix.h"
+	"../common_data/common_data.h"
+	<ctime>
+	<fstream>
+
+1533053959 /home/fra/src/GitHubSandBox/PostMRW/Entity/StringMatrix/StringMatrix.h
+	<string>
+
+1533219342 source:/home/fra/src/GitHubSandBox/PostMRW/Entity/RealMatrix/RealMatrix.cpp
+	"RealMatrix.h"
+	"../common_data/common_data.h"
+	<cmath>
+	<ctime>
+	<fstream>
+	<cstdlib>
+	<string>
+
+1533219955 /home/fra/src/GitHubSandBox/PostMRW/Entity/RealMatrix/RealMatrix.h
+	<cstddef>
 
