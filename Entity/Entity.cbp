@@ -58,6 +58,8 @@
 		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
 		<Unit filename="Integration/Integration.cpp" />
 		<Unit filename="Integration/Integration.h" />
+		<Unit filename="Integration/Integrate.cpp" />
+		<Unit filename="Integration/Integrate.h" />		
 		<Unit filename="RealAnalysis/Real.cpp" />
 		<Unit filename="RealAnalysis/Real.h" />
 		<Unit filename="RealMatrix/RealMatrix.cpp" />
