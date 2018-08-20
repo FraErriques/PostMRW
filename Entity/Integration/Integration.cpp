@@ -60,6 +60,24 @@ double rettangoli( double inf
 }
 
 
+
+/*
+Trapezium is generally more accurate than rectangle.
+Only in case the interval is bounded from gaussian-zeroes, the calculations get equivalent.
+So, it's possible to compute Trapezium in the general case as Rectangle+correttivoAlContorno, where
+correttivoAlContorno==0 in gaussian conditions.
+Demonstration:
+for a Riemann-partition of cardinality #n Trapezium uses f(xi)[i=0->i=n]
+while Rectangle uses f(xi)[i=0->i=n-1]
+explicitly:
+Trapezium== Dx*Sum[f(xi)[i=0->i=n-1]]+Dx/2*(f(x0)+f(xn))
+Rectangle== Dx*f(x0)+Dx*Sum[f(xi)[i=0->i=n-1]]
+to verify that, just consider the Geometry here involved.
+Between the two formulas there is a common core, which consists in: Dx*Sum[f(xi)[i=0->i=n-1]]
+What else is contained in the two formulas is zero, whenever f(x0)==f(xn)==0 (i.e. null boundary condition, C.F.Gauss).
+Whene there's no null-boundary, the term CorrettivoAlContorno consists of Dx/2*(f(x0)+f(xn))-Dx*f(x0)==Dx/2*(f(xn)-f(x0)).
+Q.D.E.
+*/
 double correttivoAlContorno( double inf
                    ,double sup
                    ,double cardPartiz
@@ -69,7 +87,7 @@ double correttivoAlContorno( double inf
     Common::LogWrappers::SectionOpen("Entity::Integration::correttivoAlContorno()", 0);
     //
     double dx = (sup-inf) / cardPartiz;
-    double res = (+1.0/+2.0)*dx*(functionalForm(sup)-functionalForm(inf));
+    double res = (+1.0/+2.0)*dx*(functionalForm(sup)-functionalForm(inf));// see demostration above, to get that trapezium==rettangolo+correttivoAlContorno.
     std::string * tmpCorrettivo = Common::StrManipul::doubleToString( res);
     Common::LogWrappers::SectionContent( (*tmpCorrettivo).c_str() , 0);
     delete tmpCorrettivo;

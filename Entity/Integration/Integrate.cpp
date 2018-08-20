@@ -34,7 +34,7 @@ inline double  Integrate::profile ( Integrator ist_par )
 
 /// constructor
 // NB left_infinity MUST be set anyway. If You don't need it, set it to any value
-// a constructor that sets data members, to do not touch them any more
+// a constructor that sets data members, for not touching them any more
 Integrate::Integrate
 (
    Functional_Form initializer,
