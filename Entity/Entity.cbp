@@ -16,11 +16,9 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-std=c++11" />
-					<Add option="-m64" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add option="-m64" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
 				</Linker>
 			</Target>
@@ -35,11 +33,9 @@
 					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-std=c++11" />
-					<Add option="-m64" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-m64" />
 					<Add library="../Common/bin/Release/libCommon.a" />
 				</Linker>
 			</Target>
@@ -56,10 +52,10 @@
 		<Unit filename="Complex/Complex.h" />
 		<Unit filename="ComplexMatrix/ComplexMatrix.cpp" />
 		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
+		<Unit filename="Integration/Integrate.cpp" />
+		<Unit filename="Integration/Integrate.h" />
 		<Unit filename="Integration/Integration.cpp" />
 		<Unit filename="Integration/Integration.h" />
-		<Unit filename="Integration/Integrate.cpp" />
-		<Unit filename="Integration/Integrate.h" />		
 		<Unit filename="RealAnalysis/Real.cpp" />
 		<Unit filename="RealAnalysis/Real.h" />
 		<Unit filename="RealMatrix/RealMatrix.cpp" />
