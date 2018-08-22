@@ -35,12 +35,12 @@ public:
    double percentile ( double measure );
    double equi_log ( double a, double b, unsigned long n );
    /// systemistic
-   inline double profile ( Integrator ist_par );
+   double profile ( Integrator ist_par );
    double profile ( Integrator ist_par, double a, double b, unsigned long  n );
    void reset_parameters  ( double left_P, double right_P, const unsigned long parts_P );
    /// wrappers
-   inline double equi_trapezium ();
-   inline double equi_log ();
+   double equi_trapezium ();
+   double equi_log ();
    /// constructors
    Integrate ( Functional_Form initializer, double left_P, double right_P, const unsigned long parts_P, const double left_infinity_P );
    Integrate ( Functional_Form initializer, const double left_infinity_P );

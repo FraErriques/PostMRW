@@ -14,19 +14,19 @@ void  Integrate::reset_parameters
   }
 
 /// wrapper
-inline double Integrate::equi_trapezium ()
+double Integrate::equi_trapezium ()
 {
    return equi_trapezium ( left, right, parts );
 }
 
 /// wrapper
-inline double  Integrate::equi_log ()
+double  Integrate::equi_log ()
 {
    return equi_log ( left, right, parts );
 }
 
 /// wrapper
-inline double  Integrate::profile ( Integrator ist_par )
+double  Integrate::profile ( Integrator ist_par )
 {
    return profile ( ist_par, left, right, parts );
 }

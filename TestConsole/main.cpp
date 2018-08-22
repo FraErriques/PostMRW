@@ -1,19 +1,46 @@
 #include <iostream>
-//#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/lambda.hpp>
 #include "../Common/DbConnectionService/dbCall.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
-#include "../Entity/Integration/Integration.h"
 #include "../Common/MonteCarlo/BaseConverter.h"
 #include "../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
+#include "../Entity/Integration/Integration.h"
+#include "../Entity/Integration/Integrate.h"
 
 
+
+double asdrubale( double x)
+{
+  return 1000;
+}
 
 int main()
 {
+   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,2, -9.8E+99 );
+   double vogheraTrapezi = intgVoghera->equi_trapezium( );
+   delete intgVoghera;
 
+   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,2, asdrubale );
+
+   double errore = vogheraTrapezi - trapeziCorrettivoControrno;
+
+
+
+    //
+    std::cout<<"\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}
+
+
+
+/* --------------cantina----------------------------
+
+
+ // MonteCarlo
     double left  = -92.809;
     double right = +12.209;
 
@@ -50,20 +77,7 @@ int main()
     monteCGen_D->showCumulatedFrequency();
 
     delete monteCGen_D;
-
-
-
-
-    //
-    std::cout<<"\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}
-
-
-
-/* --------------cantina----------------------------
-
+ // MonteCarlo
 
 
   std::string s("Nel mezzo#@# del cammin#@# di nostra vita,#@# mi ritrovai#@#  #@# #@# #@# per una selva oscura#@#.");
