@@ -14,16 +14,17 @@
 
 double asdrubale( double x)
 {
-  return 1000;
+  return 1000*x*x*x*x+1000;
 }
 
 int main()
 {
-   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,2, -9.8E+99 );
+   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,999, -9.8E+99 );
    double vogheraTrapezi = intgVoghera->equi_trapezium( );
    delete intgVoghera;
 
-   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,2, asdrubale );
+   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,999, asdrubale );
+   double rettangoliSenzaCorrettivoCont = Entity::Integration::rettangoli( 2,4,999, asdrubale, false );
 
    double errore = vogheraTrapezi - trapeziCorrettivoControrno;
 
