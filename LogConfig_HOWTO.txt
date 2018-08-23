@@ -1,0 +1,8 @@
+Please create a file called LogSinkFsConfig.txt just in the directory where you find the current file. Then fill it as follows:
+key_logFullPathPrefix PARAGRAPH NAME (the first three rows are an index of the contents, they work as a memo)
+key_semaphore PARAGRAPH NAME (paragraph names and their order is compulsive) 
+key_verbosity PARAGRAPH NAME NB the delimiter compulsory char is one between {blank, TAB, '', '
+' .logFullPathPrefix ACTUAL VALUE (the second three rows contain the actual contents of the paragraphs announced in the index)
+semaphore ACTUAL VALUE (the order of the contents must respect the order in the index)
+verbosity ACTUAL VALUE n in [0..99] means levels from current verbosity up will be written: if I set verbosity==3, messages of level=2 will not be written
+
