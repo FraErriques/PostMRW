@@ -10,6 +10,7 @@ using namespace std;
 
 int RWtxtfile_demo_();
 bool writeFileByWords( double *data, int hm);
+bool writeVectorFieldR2Affine( double *ApplicationPoint, double *FreeBound, int hm);
 bool readFileByWords();
 bool readFileByLines();
 int readFileByChars();

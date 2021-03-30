@@ -9,9 +9,6 @@ namespace Entity
 namespace Integration
 {
 
-// const double M_PI = atan(+1.0) * +4.0;  needed only on Windows ,while on Linux it's a symbolic constant.
-
-
 
 
 double rettangoli( double inf

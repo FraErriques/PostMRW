@@ -36,36 +36,13 @@
 		</Build>
 		<Compiler>
 			<Add option="-std=c++11" />
-			<Add option="-m64" />
 		</Compiler>
-		<Linker>
-			<Add option="-m64" />
-			<Add option="-lmysqlcppconn" />
-		</Linker>
 		<Unit filename="BinaryTree/BinaryTree.cpp" />
 		<Unit filename="BinaryTree/BinaryTree.h" />
 		<Unit filename="Config_wrap/Config_wrap.cpp" />
 		<Unit filename="Config_wrap/Config_wrap.h" />
 		<Unit filename="ConfigurationService/ConfigurationService.cpp" />
 		<Unit filename="ConfigurationService/ConfigurationService.h" />
-		<Unit filename="DbConnectionService/DbConnectionService.cpp" />
-		<Unit filename="DbConnectionService/DbConnectionService.h" />
-		<Unit filename="DbConnectionService/cppconn/build_config.h" />
-		<Unit filename="DbConnectionService/cppconn/connection.h" />
-		<Unit filename="DbConnectionService/cppconn/datatype.h" />
-		<Unit filename="DbConnectionService/cppconn/driver.h" />
-		<Unit filename="DbConnectionService/cppconn/exception.h" />
-		<Unit filename="DbConnectionService/cppconn/metadata.h" />
-		<Unit filename="DbConnectionService/cppconn/parameter_metadata.h" />
-		<Unit filename="DbConnectionService/cppconn/prepared_statement.h" />
-		<Unit filename="DbConnectionService/cppconn/resultset.h" />
-		<Unit filename="DbConnectionService/cppconn/resultset_metadata.h" />
-		<Unit filename="DbConnectionService/cppconn/sqlstring.h" />
-		<Unit filename="DbConnectionService/cppconn/statement.h" />
-		<Unit filename="DbConnectionService/cppconn/warning.h" />
-		<Unit filename="DbConnectionService/dbCall.cpp" />
-		<Unit filename="DbConnectionService/dbCall.h" />
-		<Unit filename="DbConnectionService/mysql_connection.h" />
 		<Unit filename="LogFs_wrap/LogFs_wrap.cpp" />
 		<Unit filename="LogFs_wrap/LogFs_wrap.h" />
 		<Unit filename="LogSinkFs/SinkFs.cpp" />

@@ -1,8 +1,9 @@
 #include <iostream>
-#include <boost/lambda/lambda.hpp>
+//#include <boost/lambda/lambda.hpp>
 #include "../Common/DbConnectionService/dbCall.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
+#include "../Common/Stream/RWtxtfile.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
 #include "../Common/MonteCarlo/BaseConverter.h"
 #include "../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
@@ -12,22 +13,37 @@
 
 
 
-double asdrubale( double x)
-{
-  return 1000;
+double * VectorFieldImage( double *ApplicationPoint, int hm)
+{// NB. remember to specify of which scalar field, the present vector field is Nabla.
+    if(nullptr==ApplicationPoint)
+    {
+        return nullptr;
+    }// else continue
+    double * FreeBound = new double[2];
+    double Ximage = -2.0 * ApplicationPoint[0];// Nabla of scalar field f(x,y)==-x^2-y^2+1.0
+    FreeBound[0] = ApplicationPoint[0] + Ximage;// remember to add FreeBound to the respective ApplicationPoint so to obtain the affine image vector.
+    double Yimage = -2.0 * ApplicationPoint[1];
+    FreeBound[1] = ApplicationPoint[1] + Yimage;
+    return FreeBound;
 }
 
 int main()
 {
-   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,2, -9.8E+99 );
-   double vogheraTrapezi = intgVoghera->equi_trapezium( );
-   delete intgVoghera;
-
-   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,2, asdrubale );
-
-   double errore = vogheraTrapezi - trapeziCorrettivoControrno;
-
-
+    //RWtxtfile_demo_();
+    double * ApplicationPoint = new double[2];
+    double * FreeBound = nullptr;
+    for( double x=0.0; x<+1.0; x+=+0.3)
+    {
+        for( double y=0.0; y<+1.0; y+=+0.3)
+        {
+            ApplicationPoint[0] = x;
+            ApplicationPoint[1] = y;
+            FreeBound = VectorFieldImage( ApplicationPoint, 2);
+            bool res = writeVectorFieldR2Affine( ApplicationPoint, FreeBound, 2);
+        }//y
+    }//x
+    delete[] ApplicationPoint;
+    delete[] FreeBound;
 
     //
     std::cout<<"\n\t Strike Enter to leave\t";
@@ -39,6 +55,11 @@ int main()
 
 /* --------------cantina----------------------------
 
+   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,2, -9.8E+99 );
+   double vogheraTrapezi = intgVoghera->equi_trapezium( );
+   delete intgVoghera;
+   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,2, asdrubale );
+   double errore = vogheraTrapezi - trapeziCorrettivoControrno;
 
  // MonteCarlo
     double left  = -92.809;
