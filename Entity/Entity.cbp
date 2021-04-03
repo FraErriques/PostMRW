@@ -56,6 +56,12 @@
 		<Unit filename="Integration/Integrate.h" />
 		<Unit filename="Integration/Integration.cpp" />
 		<Unit filename="Integration/Integration.h" />
+		<Unit filename="PrimesFinder/ElementFullCalculation.cs" />
+		<Unit filename="PrimesFinder/Primes.cpp" />
+		<Unit filename="PrimesFinder/Primes.cs" />
+		<Unit filename="PrimesFinder/Primes.h" />
+		<Unit filename="PrimesFinder/TestsOnNumberTheory.cs" />
+		<Unit filename="PrimesFinder/dbPrimes.cs" />
 		<Unit filename="RealAnalysis/Real.cpp" />
 		<Unit filename="RealAnalysis/Real.h" />
 		<Unit filename="RealMatrix/RealMatrix.cpp" />

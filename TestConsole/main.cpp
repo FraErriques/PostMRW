@@ -1,6 +1,8 @@
 #include <iostream>
 #include <boost/lambda/lambda.hpp>
 #include "../Common/DbConnectionService/dbCall.h"
+#include "../Common/DbConnectionService/mysql_connection.h"
+#include "../Common/DbConnectionService/DbConnectionService.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
@@ -19,14 +21,20 @@ double asdrubale( double x)
 
 int main()
 {
-   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,999, -9.8E+99 );
-   double vogheraTrapezi = intgVoghera->equi_trapezium( );
-   delete intgVoghera;
 
-   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,999, asdrubale );
-   double rettangoliSenzaCorrettivoCont = Entity::Integration::rettangoli( 2,4,999, asdrubale, false );
+    //Common::dbCall::cantiere_sede_INSERT_SINGLE();
+    int res = Common::DbConnectionService::dbName_tableName_paramsList_INSERT_SINGLE("cantiere","`usp_cantiere_Primes_INSERT`","23");
+    //sql::ResultSet * resPrimes = Common::DbConnectionService::dbName_tableName_LOAD_MULTI_("cantiere","Primes");
 
-   double errore = vogheraTrapezi - trapeziCorrettivoControrno;
+//
+//   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,999, -9.8E+99 );
+//   double vogheraTrapezi = intgVoghera->equi_trapezium( );
+//   delete intgVoghera;
+//
+//   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,999, asdrubale );
+//   double rettangoliSenzaCorrettivoCont = Entity::Integration::rettangoli( 2,4,999, asdrubale, false );
+//
+//   double errore = vogheraTrapezi - trapeziCorrettivoControrno;
 
 
 
