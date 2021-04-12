@@ -25,6 +25,10 @@ class Primes
     //#region Data
     public:
        /// Constructors and Destructors
+       Primes(
+         unsigned long upper_threshold,
+         string desiredConfigSectionName // fullpath of the stream containing the results of a previous execution
+       );
        Primes(); // default Ctor
        // validate an existing file
        Primes   ( const size_t Prows, const size_t Pcols, const char * where );
@@ -39,8 +43,11 @@ class Primes
        ~Primes  ( void );
        // some methoda
        unsigned  getActualLength();
+       void dumper();
 
         private:
+         ofstream * appendStream = nullptr;
+         bool isHealthlyConstructed = false;
          unsigned ToBeDivided = 2;// start from two. One is invariant of the operator.
          fstream  previousShot;// the try-open act will initialize it.
          unsigned threshold;
@@ -67,18 +74,19 @@ class Primes
    */
 
 private:
-   /// data ////////////////////////////////////////////////////////////////////////////////////////////
-   const size_t rows, cols;
-   std::string ** m;
-   /// memory management ///////////////////////////////////////////////////////////////////////////////
-   std::string ** allocate   ( void );                                           // cannot be const
-   void deallocate ( void );                                                     // cannot be const
-   /// input-output ////////////////////////////////////////////////////////////////////////////////////
-   void generator ( void );                                                      // cannot be const; generates in RAM
-   void input (void);                                                            // cannot be const; reads in RAM
-   bool readfile  ( const char * where );                                        // cannot be const; reads in RAM
-   bool validate (const char * where)                                            const;
-   bool writefile ( const char * where )                                         const;
+    const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
+//   /// data ////////////////////////////////////////////////////////////////////////////////////////////
+//   const size_t rows, cols;
+//   std::string ** m;
+//   /// memory management ///////////////////////////////////////////////////////////////////////////////
+//   std::string ** allocate   ( void );                                           // cannot be const
+//   void deallocate ( void );                                                     // cannot be const
+//   /// input-output ////////////////////////////////////////////////////////////////////////////////////
+//   void generator ( void );                                                      // cannot be const; generates in RAM
+//   void input (void);                                                            // cannot be const; reads in RAM
+//   bool readfile  ( const char * where );                                        // cannot be const; reads in RAM
+//   bool validate (const char * where)                                            const;
+//   bool writefile ( const char * where )                                         const;
 };// class
 
 }// nmsp

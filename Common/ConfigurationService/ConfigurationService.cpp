@@ -98,6 +98,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
             else
             {
                 isConstructorStillAlive = false;
+                isHealtlyConstructed = false;
                 this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 84 : ConfigFile does not exist on FileSystem.";
             }
             if( isConstructorStillAlive)

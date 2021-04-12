@@ -1,11 +1,100 @@
 ﻿# include "Primes.h"
+#include "../../Common/Config_wrap/Config_wrap.h"
+#include "../../Common/StringBuilder/StringBuilder.h"
 
+
+    PrimesFinder::Primes::Primes(
+        unsigned long upper_threshold,
+        string desiredConfigSectionName // fullpath of the stream containing the results of a previous execution
+    )
+    {
+    Common::ConfigurationService * PrimeConfig = Process::getNamedConfiguration("./PrimeConfig.txt");// name for Prime-configuration.
+    std::vector<std::string> * healtStatus = nullptr;
+    std::vector<std::string> * theKeys = nullptr;
+    std::string * theVal = nullptr;
+    const char * theDumpPath = nullptr;
+    if(nullptr==PrimeConfig)
+    {
+        this->isHealthlyConstructed = false;
+    }
+    else
+    {
+        std::vector<std::string> * healtStatus = PrimeConfig->showInstanceHealtCondition();
+        std::vector<std::string> * theKeys = PrimeConfig->getAllKeys();
+        std::string * theVal = PrimeConfig->getValue("PrimeIntegral_fromOrigin_");
+        theDumpPath = theVal->c_str();
+    }
+    //----NB. create on first session, else append.
+    ofstream bidirStream( theDumpPath, std::ios::out | std::ios::app);//----NB. create on first session, else append.
+    bidirStream.close();
+    ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
+    // get last record
+    lastRecordReader.close();
+//ofstream appendStream( theDumpPath,  std::ios::app);//----NB. now we're sure it exists, just append.
+    appendStream = new ofstream( theDumpPath,  std::ios::app);//----NB. now we're sure it exists, just append.
+//    std::string buf("aaa");  do your job here.......
+//    appendStream.write( buf.c_str(), buf.length() );
+// in Dtor    appendStream.close();
+
+    }// Ctor(
+
+
+
+    PrimesFinder::Primes::~Primes()
+    {
+        if( nullptr != this->appendStream)
+        {
+            this->appendStream->close();
+            this->appendStream = nullptr;
+        }// else already closed.
+    }// Dtor(
+
+
+    void PrimesFinder::Primes::dumper()
+    {
+        if( nullptr != this->appendStream)
+        {
+            for( unsigned long ul=+99; ul<+199; ul++)
+            {
+                std::string * buf = Common::StrManipul::uLongToString(ul);
+                Common::StringBuilder strBuild(6000);
+                strBuild.append(buf->c_str());
+                strBuild.append("_");
+                strBuild.append(buf->c_str());
+                strBuild.append("\r");
+
+                const std::string & tmp = tokenEncoder(ul,ul).c_str();
+                int len = tmp.length();
+                appendStream->write( tmp.c_str(), len );
+                delete buf;
+                buf = nullptr;
+            }
+        }// else unable to write.
+    }// dumper(
+
+
+    /// caller DOES NOT have to delete.
+    const std::string & PrimesFinder::Primes::tokenEncoder( unsigned long ordinal, unsigned long prime ) const
+    {
+        std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
+        std::string * primeStr = Common::StrManipul::uLongToString(prime);
+        int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
+        Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
+        strBuild->append(ordinalStr->c_str());
+        strBuild->append("_");
+        strBuild->append(primeStr->c_str());
+        strBuild->append("\r");// choose one btw '\r' or '\n'
+        delete ordinalStr;
+        delete primeStr;
+        return strBuild->str();
+    }
 
 
         unsigned PrimesFinder::Primes::getActualLength()
         {
             return this->actualLength;
         }
+
 
 /*
         public unsigned getActualOrdinal()

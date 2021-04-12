@@ -11,11 +11,15 @@
 
 #include "../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../Common/StringBuilder/StringBuilder.h"
+#include "../Entity/PrimesFinder/Primes.h"
+#include "../Common/Config_wrap/Config_wrap.h"
 
 
 double rettangoli()
 {
     Common::LogWrappers::SectionOpen("Entity::Integration::rettangoli()", 0);
+    // NB. ci vuole !!! altimenti undefined_reference in Common:: !!
+    Common::ConfigurationService * PrimeConfig = Process::getNamedConfiguration("./PrimeConfig.txt");// name for Prime-configuration.
 
     for( double x=0.0; x<6; x+=1)
     {

@@ -2,6 +2,7 @@
 //#include <boost/lambda/lambda.hpp>
 #include "../Common/DbConnectionService/dbCall.h"
 #include "../Common/StringBuilder/StringBuilder.h"
+#include "../Common/Config_wrap/Config_wrap.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Common/Stream/RWtxtfile.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
@@ -10,6 +11,7 @@
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
+#include "../Entity/PrimesFinder/Primes.h"
 
 
 
@@ -113,62 +115,9 @@ void LoggerSinkFS_example( unsigned long inf, unsigned long sup)
 
 int main()
 {
-    //RWtxtfile_demo_();
-    //LoggerSinkFS_example( +2, +100);
-
-    fstream bidirStream( "./log/cpp_LogStream_Fri Apr 09 2021_.log", ios::in | ios::out);
-    if(bidirStream)
-    {
-
-        int length = bidirStream.tellp();
-          // allocate memory for file content
-        bidirStream.seekp( length/2, bidirStream.end);
-        std::string buf( "some text, IN THE MIDDLE__________________");
-        bidirStream.write( buf.c_str(), buf.length() );
-        //
-        bidirStream.seekp( 0, bidirStream.end);
-        buf = "some text, at the end.";
-        bidirStream.write( buf.c_str(), buf.length() );
-        //
-        bidirStream.close();
-    }
-
-  std::ifstream inputStream ("./log/cpp_LogStream_Fri Apr 09 2021_.log", std::ifstream::binary);
-  if (inputStream)
-  {
-    // get length of file:
-    inputStream.seekg( 0, inputStream.end);
-    int length = inputStream.tellg();
-    inputStream.seekg (0, inputStream.beg);
-    // allocate memory:
-    char * buffer = new char [length];
-    // read data as a block:
-    inputStream.read (buffer,length);
-    inputStream.close();
+    PrimesFinder::Primes prime(100 , "./PrimeConfig.txt" );
+    prime.dumper();
     //
-    // print content:
-    std::cout.write (buffer,length);
-    delete[] buffer;
-    //
-    //
-  }// test seek.
-
-
-//    std::fstream testPrimeTokenStream;
-//    std::string fullPath("./log/testPrimeTokenStream_.txt");
-//    bool isOpened = Common::Stream::outstreamOpener( fullPath, testPrimeTokenStream);
-//    if( isOpened)
-//    {
-//        testPrimeTokenStream.seekg( off64_t, ios_base);
-//        Common::Stream::putline(
-//            "ordinalExample_PrimeExample"
-//            ,testPrimeTokenStream
-//                                );
-//    }// else skip.
-//    //anyway close:
-//    bool isAppropriatelyClosed = Common::Stream::outstreamCloser( testPrimeTokenStream);
-
-
 
     //
     std::cout<<"\n\t Strike Enter to leave\t";
@@ -179,6 +128,89 @@ int main()
 
 
 /* --------------cantina----------------------------
+
+
+//    if(nullptr==PrimeConfig)
+//    {
+//        return -1;
+//    }
+//    else
+//    {
+//        std::vector<std::string> * healtStatus = PrimeConfig->showInstanceHealtCondition();
+//        std::vector<std::string> * theKeys = PrimeConfig->getAllKeys();
+//        std::string * theVal = PrimeConfig->getValue("PrimeIntegral_fromOrigin_");
+//        theDumpPath = theVal->c_str();
+//        int c=0;
+//        c++;
+//        c++;
+//        c--;
+//    }
+//
+//    //RWtxtfile_demo_();
+//    //LoggerSinkFS_example( +2, +100);
+//
+//    ofstream bidirStream( theDumpPath, std::ios::out | std::ios::app);//----NB. create on first session, else append.
+//    bidirStream.close();
+//    ifstream lastRecordReader( theDumpPath, std::ios::in );// readonly; to get tha last record.
+//    // get last record
+//    lastRecordReader.close();
+//    ofstream appendStream( theDumpPath,  std::ios::app);//----NB. now we're sure it exists, just append.
+//    std::string buf("aaa");
+//    appendStream.write( buf.c_str(), buf.length() );
+//    appendStream.close();
+//
+//
+//    if(bidirStream)
+//    {
+//
+//        int length = bidirStream.tellp();
+//          // allocate memory for file content
+//        bidirStream.seekp( length/2, bidirStream.end);
+//        std::string buf( "some text, IN THE MIDDLE__________________");
+//        bidirStream.write( buf.c_str(), buf.length() );
+//        //
+//        bidirStream.seekp( 0, bidirStream.end);
+//        buf = "some text, at the end.";
+//        bidirStream.write( buf.c_str(), buf.length() );
+//        //
+//        bidirStream.close();
+//    }
+//
+//  std::ifstream inputStream ("./log/cpp_LogStream_Fri Apr 09 2021_.log", std::ifstream::binary);
+//  if (inputStream)
+//  {
+//    // get length of file:
+//    inputStream.seekg( 0, inputStream.end);
+//    int length = inputStream.tellg();
+//    inputStream.seekg (0, inputStream.beg);
+//    // allocate memory:
+//    char * buffer = new char [length];
+//    // read data as a block:
+//    inputStream.read (buffer,length);
+//    inputStream.close();
+//    //
+//    // print content:
+//    std::cout.write (buffer,length);
+//    delete[] buffer;
+//    //
+//    //
+//  }// test seek.
+//
+//
+////    std::fstream testPrimeTokenStream;
+////    std::string fullPath("./log/testPrimeTokenStream_.txt");
+////    bool isOpened = Common::Stream::outstreamOpener( fullPath, testPrimeTokenStream);
+////    if( isOpened)
+////    {
+////        testPrimeTokenStream.seekg( off64_t, ios_base);
+////        Common::Stream::putline(
+////            "ordinalExample_PrimeExample"
+////            ,testPrimeTokenStream
+////                                );
+////    }// else skip.
+////    //anyway close:
+////    bool isAppropriatelyClosed = Common::Stream::outstreamCloser( testPrimeTokenStream);
+
 
 // VectorField example
 //    double * ApplicationPoint = new double[2];
