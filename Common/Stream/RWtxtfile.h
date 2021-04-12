@@ -1,10 +1,11 @@
 #ifndef RWTXTFILE_H_INCLUDED
 #define RWTXTFILE_H_INCLUDED
 
-#include <iostream>
+
 #include <list>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 

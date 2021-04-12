@@ -14,4 +14,7 @@ log/
 *.*~
 *.depend
 *.layout
-
+*.cbp
+.gitignore
+.workspace
+.layout

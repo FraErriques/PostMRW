@@ -99,7 +99,7 @@ bool outstreamOpener( std::string &fullPath, std::fstream &theOutStream)
 
 	try
 	{
-		theOutStream.open( fullPath.c_str() , std::ios::out );
+		theOutStream.open( fullPath.c_str() , std::ios::out | std::ios::app);//----NB. create if does not exist or append if exists.
 		if( theOutStream.is_open() )
 		{
 			result = true;

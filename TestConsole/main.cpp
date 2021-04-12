@@ -27,23 +27,148 @@ double * VectorFieldImage( double *ApplicationPoint, int hm)
     return FreeBound;
 }
 
+
+void LoggerSinkFS_example( unsigned long inf, unsigned long sup)
+{
+    Common::LogWrappers::SectionOpen("TestConsole::LoggerSinkFS_example()", 0);
+    bool isStillPrime = true;
+    double realQuotient;
+    unsigned long intQuotient;
+    std::string * realQuotientStr = nullptr;
+    std::string * intQuotientStr = nullptr;
+    for( unsigned long cursor=inf; cursor<=sup; cursor++)
+    {
+        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
+        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
+        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
+        unsigned long divisor=+2;
+        for( ; divisor<=soglia; divisor++)
+        {
+            realQuotient = (double)cursor/(double)divisor;
+            intQuotient = cursor/divisor;
+            realQuotientStr = Common::StrManipul::doubleToString(realQuotient);
+            intQuotientStr = Common::StrManipul::uLongToString(intQuotient);
+            if( realQuotient-intQuotient <+1.0E-80 )
+            {// divisione diofantea
+                Common::StringBuilder strBuild( 200);// on the stack
+                strBuild.append("divisione diofantea:");
+                strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+                strBuild.append("/");
+                strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+                std::string logBuf = strBuild.str();
+                const char* buf = logBuf.c_str();
+                Common::LogWrappers::SectionContent( buf, 0);
+                isStillPrime = false;// NB. #################
+                break;// NB. #################
+            }
+            else
+            {// continue searching for primality
+
+                Common::StringBuilder strBuild( 200);// on the stack
+                strBuild.append("searching-primality:");
+                strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+                strBuild.append("/");
+                strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+                strBuild.append("=");
+                strBuild.append( *realQuotientStr );
+                std::string logBuf = strBuild.str();
+                const char* buf = logBuf.c_str();
+                Common::LogWrappers::SectionContent( buf, 0);
+            }// else : // continue searching for primality
+            Common::StringBuilder strBuild( 200);// on the stack
+            strBuild.append("fine interno-divisori:");
+            strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+            strBuild.append("/");
+            strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+            std::string logBuf = strBuild.str();
+            const char* buf = logBuf.c_str();
+            Common::LogWrappers::SectionContent( buf, 0);
+            delete realQuotientStr;// a new step allocates new memory, for each of those pointers.
+            delete intQuotientStr;// a new step allocates new memory, for each of those pointers.
+        }// the internal for : the one from [+2, cursor]
+        Common::StringBuilder strBuild( 200);// on the stack
+        strBuild.append("fine esterno-dividendi:");
+        strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+        strBuild.append("/");
+        strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+        if(isStillPrime)
+        {
+            strBuild.append("  ## Primo individuato ## : ");
+            strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+            strBuild.append("  ###");
+        }// else ripristino.
+        else
+        {// ripristino della primalita', dopo un composto(i.e. non primo).
+            isStillPrime = true;
+        }// ripristino della primalita', dopo un composto(i.e. non primo).
+        std::string logBuf = strBuild.str();
+        const char* buf = logBuf.c_str();
+        Common::LogWrappers::SectionContent( buf, 0);
+    }// external for : the one where cursor cicles from inf to sup, on dividends.
+    // ready.
+    Common::LogWrappers::SectionClose();
+}// LoggerSinkFS_example()
+
+
+
 int main()
 {
     //RWtxtfile_demo_();
-    double * ApplicationPoint = new double[2];
-    double * FreeBound = nullptr;
-    for( double x=0.0; x<+1.0; x+=+0.3)
+    //LoggerSinkFS_example( +2, +100);
+
+    fstream bidirStream( "./log/cpp_LogStream_Fri Apr 09 2021_.log", ios::in | ios::out);
+    if(bidirStream)
     {
-        for( double y=0.0; y<+1.0; y+=+0.3)
-        {
-            ApplicationPoint[0] = x;
-            ApplicationPoint[1] = y;
-            FreeBound = VectorFieldImage( ApplicationPoint, 2);
-            bool res = writeVectorFieldR2Affine( ApplicationPoint, FreeBound, 2);
-        }//y
-    }//x
-    delete[] ApplicationPoint;
-    delete[] FreeBound;
+
+        int length = bidirStream.tellp();
+          // allocate memory for file content
+        bidirStream.seekp( length/2, bidirStream.end);
+        std::string buf( "some text, IN THE MIDDLE__________________");
+        bidirStream.write( buf.c_str(), buf.length() );
+        //
+        bidirStream.seekp( 0, bidirStream.end);
+        buf = "some text, at the end.";
+        bidirStream.write( buf.c_str(), buf.length() );
+        //
+        bidirStream.close();
+    }
+
+  std::ifstream inputStream ("./log/cpp_LogStream_Fri Apr 09 2021_.log", std::ifstream::binary);
+  if (inputStream)
+  {
+    // get length of file:
+    inputStream.seekg( 0, inputStream.end);
+    int length = inputStream.tellg();
+    inputStream.seekg (0, inputStream.beg);
+    // allocate memory:
+    char * buffer = new char [length];
+    // read data as a block:
+    inputStream.read (buffer,length);
+    inputStream.close();
+    //
+    // print content:
+    std::cout.write (buffer,length);
+    delete[] buffer;
+    //
+    //
+  }// test seek.
+
+
+//    std::fstream testPrimeTokenStream;
+//    std::string fullPath("./log/testPrimeTokenStream_.txt");
+//    bool isOpened = Common::Stream::outstreamOpener( fullPath, testPrimeTokenStream);
+//    if( isOpened)
+//    {
+//        testPrimeTokenStream.seekg( off64_t, ios_base);
+//        Common::Stream::putline(
+//            "ordinalExample_PrimeExample"
+//            ,testPrimeTokenStream
+//                                );
+//    }// else skip.
+//    //anyway close:
+//    bool isAppropriatelyClosed = Common::Stream::outstreamCloser( testPrimeTokenStream);
+
+
 
     //
     std::cout<<"\n\t Strike Enter to leave\t";
@@ -54,6 +179,23 @@ int main()
 
 
 /* --------------cantina----------------------------
+
+// VectorField example
+//    double * ApplicationPoint = new double[2];
+//    double * FreeBound = nullptr;
+//    for( double x=0.0; x<+1.0; x+=+0.3)
+//    {
+//        for( double y=0.0; y<+1.0; y+=+0.3)
+//        {
+//            ApplicationPoint[0] = x;
+//            ApplicationPoint[1] = y;
+//            FreeBound = VectorFieldImage( ApplicationPoint, 2);
+//            bool res = writeVectorFieldR2Affine( ApplicationPoint, FreeBound, 2);
+//        }//y
+//    }//x
+//    delete[] ApplicationPoint;
+//    delete[] FreeBound;
+
 
    Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,2, -9.8E+99 );
    double vogheraTrapezi = intgVoghera->equi_trapezium( );
