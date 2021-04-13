@@ -25,16 +25,18 @@ class Primes
     //#region Data
     public:
        /// Constructors and Destructors
-       Primes(
-         unsigned long upper_threshold,
-         string desiredConfigSectionName // fullpath of the stream containing the results of a previous execution
+       Primes( unsigned long upper_threshold
+         // fullpath of the standard-stream is assumed.
        );
-       Primes(); // default Ctor
-       // validate an existing file
-       Primes   ( const size_t Prows, const size_t Pcols, const char * where );
-       // create in RAM and, if desired, dump on a file. (where==NULL means no dump desired)
-       StringMatrix   ( const size_t Prows, const size_t Pcols, bool randomized, const char * where=NULL );
-       /// copying methoda
+       Primes(); // default Ctor TODO
+    Primes(
+        unsigned long lower_threshold,
+        unsigned long upper_threshold,
+        string desiredConfigSectionName // SectionName in "./PrimeConfig.txt" for the desiderd file
+    );
+
+
+       // copying methoda
        // Copy Constructor
        Primes   ( const Primes & original );
        // operator= only between isomorphic matrixes
@@ -44,7 +46,8 @@ class Primes
        // some methoda
        unsigned  getActualLength();
        void LoggerSinkFS_example( unsigned long inf, unsigned long sup) const;
-       void IntegralFileFromStartFSproducer( unsigned long inf, unsigned long sup) const;
+       void IntegralFileFromStartFSproducer( unsigned long sup) const;
+       void IntegralFileFromAnywhereFSproducer( unsigned long inf, unsigned long sup) const;
        void dumper();
        unsigned long   operator[]  ( const unsigned long & requiredOrdinal )         const;// it's a read-only utility; syntax: Prime[ordinal]==...
 
