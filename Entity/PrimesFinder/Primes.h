@@ -43,7 +43,10 @@ class Primes
        ~Primes  ( void );
        // some methoda
        unsigned  getActualLength();
+       void LoggerSinkFS_example( unsigned long inf, unsigned long sup) const;
+       void IntegralFileFromStartFSproducer( unsigned long inf, unsigned long sup) const;
        void dumper();
+       unsigned long   operator[]  ( const unsigned long & requiredOrdinal )         const;// it's a read-only utility; syntax: Prime[ordinal]==...
 
         private:
          ofstream * appendStream = nullptr;
@@ -75,15 +78,8 @@ class Primes
 
 private:
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
+    //
 //   /// data ////////////////////////////////////////////////////////////////////////////////////////////
-//   const size_t rows, cols;
-//   std::string ** m;
-//   /// memory management ///////////////////////////////////////////////////////////////////////////////
-//   std::string ** allocate   ( void );                                           // cannot be const
-//   void deallocate ( void );                                                     // cannot be const
-//   /// input-output ////////////////////////////////////////////////////////////////////////////////////
-//   void generator ( void );                                                      // cannot be const; generates in RAM
-//   void input (void);                                                            // cannot be const; reads in RAM
 //   bool readfile  ( const char * where );                                        // cannot be const; reads in RAM
 //   bool validate (const char * where)                                            const;
 //   bool writefile ( const char * where )                                         const;

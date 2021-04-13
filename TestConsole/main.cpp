@@ -1,6 +1,7 @@
-#include <iostream>
+
 //#include <boost/lambda/lambda.hpp>
-#include "../Common/DbConnectionService/dbCall.h"
+//#include "../Common/DbConnectionService/dbCall.h"
+#include <iostream>
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Config_wrap/Config_wrap.h"
 #include "../Common/Stream/stream_io_.h"
@@ -29,7 +30,7 @@ double * VectorFieldImage( double *ApplicationPoint, int hm)
     return FreeBound;
 }
 
-
+/*
 void LoggerSinkFS_example( unsigned long inf, unsigned long sup)
 {
     Common::LogWrappers::SectionOpen("TestConsole::LoggerSinkFS_example()", 0);
@@ -110,13 +111,15 @@ void LoggerSinkFS_example( unsigned long inf, unsigned long sup)
     // ready.
     Common::LogWrappers::SectionClose();
 }// LoggerSinkFS_example()
-
+*/
 
 
 int main()
 {
     PrimesFinder::Primes prime(100 , "./PrimeConfig.txt" );
-    prime.dumper();
+    prime.IntegralFileFromStartFSproducer( +2UL, +100UL );
+    unsigned long reqPrime = prime[+1UL];
+    //prime.dumper();
     //
 
     //

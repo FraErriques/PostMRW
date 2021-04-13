@@ -1,6 +1,8 @@
-﻿# include "Primes.h"
+﻿#include <math.h>
+#include "Primes.h"
 #include "../../Common/Config_wrap/Config_wrap.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
+#include "../../Common/LogFs_wrap/LogFs_wrap.h"
 
 
     PrimesFinder::Primes::Primes(
@@ -30,18 +32,15 @@
     ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
     // get last record
     lastRecordReader.close();
-//ofstream appendStream( theDumpPath,  std::ios::app);//----NB. now we're sure it exists, just append.
     appendStream = new ofstream( theDumpPath,  std::ios::app);//----NB. now we're sure it exists, just append.
-//    std::string buf("aaa");  do your job here.......
-//    appendStream.write( buf.c_str(), buf.length() );
-// in Dtor    appendStream.close();
-
-    }// Ctor(
+    // do your job in instance::methoda, which will have this append_handle available, until Dtor closes it.
+    // in Dtor    appendStream.close();
+    }// Ctor
 
 
-
+    /// Dtor()
     PrimesFinder::Primes::~Primes()
-    {
+    {/// Dtor() : closes the append_handle.
         if( nullptr != this->appendStream)
         {
             this->appendStream->close();
@@ -94,6 +93,147 @@
         {
             return this->actualLength;
         }
+
+   // it's a read-only utility; syntax: Prime[ordinal]==...
+   unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal )         const
+   {
+       return 2UL;// TODO
+   }
+
+
+void PrimesFinder::Primes::LoggerSinkFS_example( unsigned long inf, unsigned long sup) const
+{
+    Common::LogWrappers::SectionOpen("TestConsole::LoggerSinkFS_example()", 0);
+    bool isStillPrime = true;
+    double realQuotient;
+    unsigned long intQuotient;
+    std::string * realQuotientStr = nullptr;
+    std::string * intQuotientStr = nullptr;
+    for( unsigned long cursor=inf; cursor<=sup; cursor++)
+    {
+        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
+        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
+        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
+        unsigned long divisor=+2;
+        for( ; divisor<=soglia; divisor++)
+        {
+            realQuotient = (double)cursor/(double)divisor;
+            intQuotient = cursor/divisor;
+            realQuotientStr = Common::StrManipul::doubleToString(realQuotient);
+            intQuotientStr = Common::StrManipul::uLongToString(intQuotient);
+            if( realQuotient-intQuotient <+1.0E-80 )
+            {// divisione diofantea
+                Common::StringBuilder strBuild( 200);// on the stack
+                strBuild.append("divisione diofantea:");
+                strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+                strBuild.append("/");
+                strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+                std::string logBuf = strBuild.str();
+                const char* buf = logBuf.c_str();
+                Common::LogWrappers::SectionContent( buf, 0);
+                isStillPrime = false;// NB. #################
+                break;// NB. #################
+            }
+            else
+            {// continue searching for primality
+
+                Common::StringBuilder strBuild( 200);// on the stack
+                strBuild.append("searching-primality:");
+                strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+                strBuild.append("/");
+                strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+                strBuild.append("=");
+                strBuild.append( *realQuotientStr );
+                std::string logBuf = strBuild.str();
+                const char* buf = logBuf.c_str();
+                Common::LogWrappers::SectionContent( buf, 0);
+            }// else : // continue searching for primality
+            Common::StringBuilder strBuild( 200);// on the stack
+            strBuild.append("fine interno-divisori:");
+            strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+            strBuild.append("/");
+            strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+            std::string logBuf = strBuild.str();
+            const char* buf = logBuf.c_str();
+            Common::LogWrappers::SectionContent( buf, 0);
+            delete realQuotientStr;// a new step allocates new memory, for each of those pointers.
+            delete intQuotientStr;// a new step allocates new memory, for each of those pointers.
+        }// the internal for : the one from [+2, cursor]
+        Common::StringBuilder strBuild( 200);// on the stack
+        strBuild.append("fine esterno-dividendi:");
+        strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+        strBuild.append("/");
+        strBuild.append( *Common::StrManipul::uLongToString( divisor) );
+        if(isStillPrime)
+        {
+            strBuild.append("  ## Primo individuato ## : ");
+            strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+            strBuild.append("  ###");
+        }// else ripristino.
+        else
+        {// ripristino della primalita', dopo un composto(i.e. non primo).
+            isStillPrime = true;
+        }// ripristino della primalita', dopo un composto(i.e. non primo).
+        std::string logBuf = strBuild.str();
+        const char* buf = logBuf.c_str();
+        Common::LogWrappers::SectionContent( buf, 0);
+    }// external for : the one where cursor cicles from inf to sup, on dividends.
+    // ready.
+    Common::LogWrappers::SectionClose();
+}// LoggerSinkFS_example()
+
+
+
+void PrimesFinder::Primes::IntegralFileFromStartFSproducer( unsigned long inf, unsigned long sup) const
+{
+    Common::LogWrappers::SectionOpen("TestConsole::LoggerSinkFS_example()", 0);
+    bool isStillPrime = true;
+    double realQuotient;
+    unsigned long intQuotient;
+    std::string * realQuotientStr = nullptr;
+    std::string * intQuotientStr = nullptr;
+    for( unsigned long cursor=inf; cursor<=sup; cursor++)//NB. cursor==dividend.
+    {
+        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
+        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
+        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
+        unsigned long divisor=+2;
+        for( ; divisor<=soglia; divisor++)
+        {
+            realQuotient = (double)cursor/(double)divisor;
+            intQuotient = cursor/divisor;
+            realQuotientStr = Common::StrManipul::doubleToString(realQuotient);
+            intQuotientStr = Common::StrManipul::uLongToString(intQuotient);
+            if( realQuotient-intQuotient <+1.0E-80 )
+            {// divisione diofantea
+                isStillPrime = false;// NB. #################
+                break;// NB. #################
+            }
+            else
+            {// continue searching for primality
+            }// else : // continue searching for primality
+            delete realQuotientStr;// a new step allocates new memory, for each of those pointers.
+            delete intQuotientStr;// a new step allocates new memory, for each of those pointers.
+        }// the internal for : the one from [+2, cursor]
+        Common::StringBuilder strBuild( 200);// on the stack
+        if(isStillPrime)
+        {
+            strBuild.append("  ## Primo individuato ## : ");
+            strBuild.append( *Common::StrManipul::uLongToString( cursor) );
+            strBuild.append("  ###");
+        }// else ripristino.
+        else
+        {// ripristino della primalita', dopo un composto(i.e. non primo).
+            isStillPrime = true;
+        }// ripristino della primalita', dopo un composto(i.e. non primo).
+        std::string logBuf = strBuild.str();
+        const char* buf = logBuf.c_str();
+        Common::LogWrappers::SectionContent( buf, 0);
+    }// external for : the one where cursor cicles from inf to sup, on dividends.
+    // ready.
+    Common::LogWrappers::SectionClose();
+}// IntegralFileFromStartFSproducer
+
 
 
 /*
