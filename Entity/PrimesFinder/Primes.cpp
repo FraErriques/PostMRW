@@ -265,12 +265,12 @@ void PrimesFinder::Primes::IntegralFileFromStartFSproducer( unsigned long sup) c
             delete primeStr;
             // instead of returning it, dump it on the file.
             appendStream->write( strBuild->str().c_str(), strBuild->str().length() );
+            delete strBuild;// clean up the token-buffer.
+            strBuild = nullptr;
         }// else ripristino del flag-primalita' per il candidato divisore successivo.
         else
         {// ripristino della primalita', dopo un composto(i.e. non primo).
             isStillPrime = true;
-            delete strBuild;// clean up the token-buffer.
-            strBuild = nullptr;
         }// ripristino della primalita', dopo un composto(i.e. non primo).
     }// external for : the one where cursor cicles from inf to sup, on dividends.
     // ready.
