@@ -36,40 +36,62 @@
     bidirStream.close();
 
     // get last record START
+    char * buf = new char[21];
+    for(int w=0;w<21;w++)buf[w]=0;
     ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
     bool isDumpFileInGoodCondition = lastRecordReader.good();
     if( isDumpFileInGoodCondition)
     {
-        lastRecordReader.seekg( 0, lastRecordReader.end);// position right before EOF.
+        lastRecordReader.seekg( -1, lastRecordReader.end);// position right before EOF, i.e. -1,end.
+        isDumpFileInGoodCondition = lastRecordReader.good();
         bool isTokenStart = true;
         bool isHalfToken = false;
         bool isTokenEnd = false;
         char singleChar;
-        for( singleChar='a'; ;)
+        int hmUnderscore = 0;
+        int c=0, acc=0;
+        for( ; hmUnderscore<2 ; c++)
         {
             lastRecordReader.get( singleChar);
-            lastRecordReader.seekg( -3, lastRecordReader.cur);// position right before EOF.
+            isDumpFileInGoodCondition = lastRecordReader.good();
+            lastRecordReader.seekg( -2, lastRecordReader.cur);// position right before EOF.
+            isDumpFileInGoodCondition = lastRecordReader.good();
             if( singleChar<48 || singleChar>57 )// invalid char->skip.
             {
+                buf[acc++] = '#';// substitute invalid chars with '#'
                 // invalid char->skip.
-                isTokenStart = false;
-                isHalfToken = false;
-                isTokenEnd = true;
+//                isTokenStart = false;
+//                isHalfToken = false;
+//                isTokenEnd = true;
             }
-            else if( singleChar>=48 && singleChar<=57 )
+            if( singleChar>=48 && singleChar<=57 )
             {
                 // is_digit
-                isTokenStart = false;
-                isHalfToken = false;
-                isTokenEnd = false;
+                buf[acc++] = singleChar;
+//                isTokenStart = false;
+//                isHalfToken = false;
+//                isTokenEnd = false;
             }
-            else if( singleChar==95) // isHalfToken
+            if( singleChar==95) // isHalfToken
             {
                 // isHalfToken
-                isTokenStart = false;
-                isHalfToken = true;
-                isTokenEnd = false;
+                buf[acc++] = singleChar;
+                hmUnderscore++;// count the separators
+//                isTokenStart = false;
+//                isHalfToken = true;
+//                isTokenEnd = false;
             }// no else.
+        }
+        buf[c]=0;// terminate.
+        char * cleanToken = new char[acc];
+        for(int w=0;w<acc;w++)cleanToken[w]=0;
+        int w=0;
+        for( int d=acc; d>=0; d--)
+        {
+            if( buf[d]>=48 && buf[d]<=57 )
+            {
+               cleanToken[w++]=buf[d];
+            }// else skip
         }
     }// else skip reading last-record.
     lastRecordReader.close();

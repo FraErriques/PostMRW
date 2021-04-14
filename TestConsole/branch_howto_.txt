@@ -1,0 +1,6 @@
+ git fetch
+ git stash
+ git checkout branchName
+---
+Switched to a new branch 'WinPlatf'
+Branch 'WinPlatf' set up to track remote branch 'WinPlatf' from 'origin'.
