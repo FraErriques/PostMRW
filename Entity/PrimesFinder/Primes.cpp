@@ -34,9 +34,47 @@
     //----NB. create on first session, else append.
     ofstream bidirStream( theDumpPath, std::ios::out | std::ios::app);//----NB. create on first session, else append.
     bidirStream.close();
+
+    // get last record START
     ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
-    // get last record
+    bool isDumpFileInGoodCondition = lastRecordReader.good();
+    if( isDumpFileInGoodCondition)
+    {
+        lastRecordReader.seekg( 0, lastRecordReader.end);// position right before EOF.
+        bool isTokenStart = true;
+        bool isHalfToken = false;
+        bool isTokenEnd = false;
+        char singleChar;
+        for( singleChar='a'; ;)
+        {
+            lastRecordReader.get( singleChar);
+            lastRecordReader.seekg( -3, lastRecordReader.cur);// position right before EOF.
+            if( singleChar<48 || singleChar>57 )// invalid char->skip.
+            {
+                // invalid char->skip.
+                isTokenStart = false;
+                isHalfToken = false;
+                isTokenEnd = true;
+            }
+            else if( singleChar>=48 && singleChar<=57 )
+            {
+                // is_digit
+                isTokenStart = false;
+                isHalfToken = false;
+                isTokenEnd = false;
+            }
+            else if( singleChar==95) // isHalfToken
+            {
+                // isHalfToken
+                isTokenStart = false;
+                isHalfToken = true;
+                isTokenEnd = false;
+            }// no else.
+        }
+    }// else skip reading last-record.
     lastRecordReader.close();
+    // get last record END
+
     appendStream = new ofstream( theDumpPath,  std::ios::app);//----NB. now we're sure it exists, just append.
     // do your job in instance::methoda, which will have this append_handle available, until Dtor closes it.
     // in Dtor    appendStream.close();
@@ -46,7 +84,7 @@
     PrimesFinder::Primes::Primes(
         unsigned long lower_threshold,
         unsigned long upper_threshold,
-        string desiredConfigSectionName // SectionName in "./PrimeConfig.txt" for the desiderd file
+        string & desiredConfigSectionName // SectionName in "./PrimeConfig.txt" for the desiderd file
     )
     {
     Common::ConfigurationService * PrimeConfig = Process::getNamedConfiguration("./PrimeConfig.txt");// name for Prime-configuration.

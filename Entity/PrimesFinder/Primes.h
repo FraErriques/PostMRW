@@ -22,25 +22,30 @@ namespace PrimesFinder
 
 class Primes
 {
-    //#region Data
+
     public:
-       /// Constructors and Destructors
-       Primes( unsigned long upper_threshold
-         // fullpath of the standard-stream is assumed.
+    /// Data
+    /// Constructors and Destructors
+       Primes(// span upper_threshold-lastRecordOrdinal Integers, in default IntegralFile.
+              unsigned long upper_threshold
+         // ConfigFile for class Primes is "./PrimeConfig.txt"
+         // ConfigSectionName for standard-dump is assumed to be "PrimeIntegral_fromOrigin_" and dump-fullpath is in the ConfigSection.
        );
-       Primes(); // default Ctor TODO
+       Primes(); // default Ctor : span 100_Int, from lastRecord, in default IntegralFile.
     Primes(
         unsigned long lower_threshold,
         unsigned long upper_threshold,
-        string desiredConfigSectionName // SectionName in "./PrimeConfig.txt" for the desiderd file
+        string & desiredConfigSectionName // SectionName in "./PrimeConfig.txt" for the desiderd file
     );
+    // db-Ctor
+    Primes( string & DbConnectionStringConfigSectionName
+            ,string & tableName
+            ,unsigned long lower_threshold// only on custom intervals; no default table, on db.
+            ,unsigned long upper_threshold
+           );
 
 
-       // copying methoda
-       // Copy Constructor
-       Primes   ( const Primes & original );
-       // operator= only between isomorphic matrixes
-       Primes & operator=   ( const Primes & second );
+
        // Destructor
        ~Primes  ( void );
        // some methoda
@@ -52,10 +57,9 @@ class Primes
        unsigned long   operator[]  ( const unsigned long & requiredOrdinal )         const;// it's a read-only utility; syntax: Prime[ordinal]==...
 
         private:
-         ofstream * appendStream = nullptr;
+         ofstream * appendStream = nullptr;// let it a ptr, so to annichilate it, as needed.
          bool isHealthlyConstructed = false;
          unsigned ToBeDivided = 2;// start from two. One is invariant of the operator.
-         fstream  previousShot;// the try-open act will initialize it.
          unsigned threshold;
          unsigned primeOrdinal = 0L; // meglio non fare(after test). exTODO switch to System.Uunsigned everywhere. It leads from 9*10^18 to 18*10^18
          unsigned actualLength = 0L;
@@ -67,6 +71,11 @@ class Primes
         // Riemann exponent s in C; s=:(sigma + i*t).
         double sigma;
         double t;
+       /// copying methoda : not usable->private.
+       // Copy Constructor
+       Primes   ( const Primes & original );
+       // operator= only between isomorphic matrixes
+       Primes & operator=   ( const Primes & second );
 
    /// algo ////////////////////////////////////////////////////////////////////////////////////////////////////
    /*

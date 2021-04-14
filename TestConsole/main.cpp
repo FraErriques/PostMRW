@@ -15,13 +15,11 @@
 #include "../Entity/PrimesFinder/Primes.h"
 
 
-
-
 int main()
 {
     PrimesFinder::Primes prime(100  );
-    prime.IntegralFileFromStartFSproducer(  +100UL );
-    unsigned long reqPrime = prime[+1UL];
+//    prime.IntegralFileFromStartFSproducer(  +100UL );
+//    unsigned long reqPrime = prime[+1UL];
     //prime.dumper();
     //
 
