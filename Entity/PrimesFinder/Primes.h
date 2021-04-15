@@ -43,13 +43,10 @@ class Primes
             ,unsigned long lower_threshold// only on custom intervals; no default table, on db.
             ,unsigned long upper_threshold
            );
-
-
-
        // Destructor
        ~Primes  ( void );
        // some methoda
-       unsigned  getActualLength();
+       unsigned long getActualLength();
        void LoggerSinkFS_example( unsigned long inf, unsigned long sup) const;
        void IntegralFileFromStartFSproducer( unsigned long sup) const;
        void IntegralFileFromAnywhereFSproducer( unsigned long inf, unsigned long sup) const;
@@ -57,17 +54,22 @@ class Primes
        unsigned long   operator[]  ( const unsigned long & requiredOrdinal )         const;// it's a read-only utility; syntax: Prime[ordinal]==...
 
         private:
+         /// Data
+         unsigned long ordinal;
+         unsigned long prime;
          ofstream * appendStream = nullptr;// let it a ptr, so to annichilate it, as needed.
          bool isHealthlyConstructed = false;
-         unsigned ToBeDivided = 2;// start from two. One is invariant of the operator.
-         unsigned threshold;
-         unsigned primeOrdinal = 0L; // meglio non fare(after test). exTODO switch to System.Uunsigned everywhere. It leads from 9*10^18 to 18*10^18
-         unsigned actualLength = 0L;
-         unsigned desiredLength = 0L;
-         unsigned actualOrdinal = 0L;
-         unsigned desiredOrdinal = 0L;
-         unsigned actualPrime = 0L;
-         bool canOperate = false;
+//         unsigned ToBeDivided = 2;// start from two. One is invariant of the operator.
+//         unsigned threshold;
+//         unsigned primeOrdinal = 0L; // meglio non fare(after test). exTODO switch to System.Uunsigned everywhere. It leads from 9*10^18 to 18*10^18
+
+         unsigned long actualLength = 0L;
+
+//         unsigned desiredLength = 0L;
+//         unsigned actualOrdinal = 0L;
+//         unsigned desiredOrdinal = 0L;
+//         unsigned actualPrime = 0L;
+//         bool canOperate = false;
         // Riemann exponent s in C; s=:(sigma + i*t).
         double sigma;
         double t;
@@ -90,6 +92,8 @@ class Primes
 
 private:
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
+    void lastRecordReader();// cannot be const: fills members.
+    const char * theDumpPath = nullptr;
     //
 //   /// data ////////////////////////////////////////////////////////////////////////////////////////////
 //   bool readfile  ( const char * where );                                        // cannot be const; reads in RAM

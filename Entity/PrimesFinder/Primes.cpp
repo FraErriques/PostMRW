@@ -37,6 +37,12 @@
 
     // get last record START
     char * buf = new char[21];
+    char * cleanToken = nullptr;
+    Common::StringBuilder * unusefulToken = new Common::StringBuilder(100);// TODO forecast a size.
+    Common::StringBuilder * primeToken = new Common::StringBuilder(100);// TODO forecast a size.
+    Common::StringBuilder * ordinalToken = new Common::StringBuilder(100);// TODO forecast a size.
+    int underscoreSymbolAccumulator=0;
+    int hashSymbolAccumulator=0;
     for(int w=0;w<21;w++)buf[w]=0;
     ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
     bool isDumpFileInGoodCondition = lastRecordReader.good();
@@ -54,46 +60,68 @@
         {
             lastRecordReader.get( singleChar);
             isDumpFileInGoodCondition = lastRecordReader.good();
-            lastRecordReader.seekg( -2, lastRecordReader.cur);// position right before EOF.
+            lastRecordReader.seekg( -2, lastRecordReader.cur);// each "get()" call seeks(+1), so to get a char backwards do a seek(-2).
             isDumpFileInGoodCondition = lastRecordReader.good();
-            if( singleChar<48 || singleChar>57 )// invalid char->skip.
-            {
-                buf[acc++] = '#';// substitute invalid chars with '#'
+            if( singleChar<48 || singleChar>57 )// is-NOT-digit
+            {// is-NOT-digit
+                if( singleChar==95) // isHalfToken=='_'==underscore
+                {// isHalfToken
+                    buf[acc++] = singleChar;
+                    hmUnderscore++;// count the separators
+                }
+                else// new line or invalid chars: \r \n ...
+                {// new line or invalid chars: \r \n ...
+                    buf[acc++] = '#';
+                }// else// new line or invalid chars: \r \n ...
                 // invalid char->skip.
-//                isTokenStart = false;
-//                isHalfToken = false;
-//                isTokenEnd = true;
-            }
-            if( singleChar>=48 && singleChar<=57 )
-            {
-                // is_digit
+            }// if is NOT-digit
+            if( singleChar>=48 && singleChar<=57 )// is digit
+            {// is_digit
                 buf[acc++] = singleChar;
-//                isTokenStart = false;
-//                isHalfToken = false;
-//                isTokenEnd = false;
-            }
-            if( singleChar==95) // isHalfToken
-            {
-                // isHalfToken
-                buf[acc++] = singleChar;
-                hmUnderscore++;// count the separators
-//                isTokenStart = false;
-//                isHalfToken = true;
-//                isTokenEnd = false;
             }// no else.
-        }
+        }// for: exit on hmUnderscore==2.
         buf[c]=0;// terminate.
-        char * cleanToken = new char[acc];
+        cleanToken = new char[acc];
         for(int w=0;w<acc;w++)cleanToken[w]=0;
         int w=0;
         for( int d=acc; d>=0; d--)
         {
+            if( buf[d]=='_' )
+            {
+                underscoreSymbolAccumulator++;
+            }
+            else if( buf[d]=='#' )
+            {
+                hashSymbolAccumulator++;
+            }
             if( buf[d]>=48 && buf[d]<=57 )
             {
+                if( +1==underscoreSymbolAccumulator && 0==hashSymbolAccumulator)
+                {
+                    unusefulToken->append(buf[d]);
+                }
+                else if( +1==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
+                {
+                    ordinalToken->append(buf[d]);
+                }
+                else if( +2==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
+                {
+                    primeToken->append(buf[d]);
+                }
+               //####
                cleanToken[w++]=buf[d];
             }// else skip
         }
     }// else skip reading last-record.
+    int v=0;
+    const char * unusefulTokenResult = unusefulToken->str().c_str();
+    const char * ordinalTokenResult = ordinalToken->str().c_str();
+    const char * primeTokenResult = primeToken->str().c_str();
+    this->ordinal = Common::StrManipul::stringToUnsignedLong( ordinalTokenResult);
+    this->prime = Common::StrManipul::stringToUnsignedLong( primeTokenResult);
+    delete unusefulToken;
+    delete ordinalToken;
+    delete primeToken;
     lastRecordReader.close();
     // get last record END
 
@@ -113,7 +141,7 @@
     std::vector<std::string> * healtStatus = nullptr;
     std::vector<std::string> * theKeys = nullptr;
     std::string * theVal = nullptr;
-    const char * theDumpPath = nullptr;
+
     if(nullptr==PrimeConfig)
     {
         this->isHealthlyConstructed = false;
@@ -123,8 +151,8 @@
         std::vector<std::string> * healtStatus = PrimeConfig->showInstanceHealtCondition();
         std::vector<std::string> * theKeys = PrimeConfig->getAllKeys();
         std::string * theVal = PrimeConfig->getValue( desiredConfigSectionName.c_str() );// custom-file, named in desiredConfigSectionName
-        // names for secondary files are deduced form the ConfigSectionName.
-        theDumpPath = theVal->c_str();
+        // names for secondary files are deduced from the ConfigSectionName.
+        this->theDumpPath = theVal->c_str();// NB. this code line is needed before calling "lastRecordReader".
     }
     //----NB. create on first session, else append.
     ofstream bidirStream( theDumpPath, std::ios::out | std::ios::app);//----NB. create on first session, else append.
@@ -146,6 +174,100 @@
             this->appendStream = nullptr;
         }// else already closed.
     }// Dtor(
+
+
+    void PrimesFinder::Primes::lastRecordReader()
+    {
+        // get last record START
+        char * buf = new char[21];
+        char * cleanToken = nullptr;
+        Common::StringBuilder * unusefulToken = new Common::StringBuilder(100);// TODO forecast a size.
+        Common::StringBuilder * primeToken = new Common::StringBuilder(100);// TODO forecast a size.
+        Common::StringBuilder * ordinalToken = new Common::StringBuilder(100);// TODO forecast a size.
+        int underscoreSymbolAccumulator=0;
+        int hashSymbolAccumulator=0;
+        for(int w=0;w<21;w++)buf[w]=0;
+        ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
+        bool isDumpFileInGoodCondition = lastRecordReader.good();
+        if( isDumpFileInGoodCondition)
+        {
+            lastRecordReader.seekg( -1, lastRecordReader.end);// position right before EOF, i.e. -1,end.
+            isDumpFileInGoodCondition = lastRecordReader.good();
+            bool isTokenStart = true;
+            bool isHalfToken = false;
+            bool isTokenEnd = false;
+            char singleChar;
+            int hmUnderscore = 0;
+            int c=0, acc=0;
+            for( ; hmUnderscore<2 ; c++)
+            {
+                lastRecordReader.get( singleChar);
+                isDumpFileInGoodCondition = lastRecordReader.good();
+                lastRecordReader.seekg( -2, lastRecordReader.cur);// each "get()" call seeks(+1), so to get a char backwards do a seek(-2).
+                isDumpFileInGoodCondition = lastRecordReader.good();
+                if( singleChar<48 || singleChar>57 )// is-NOT-digit
+                {// is-NOT-digit
+                    if( singleChar==95) // isHalfToken=='_'==underscore
+                    {// isHalfToken
+                        buf[acc++] = singleChar;
+                        hmUnderscore++;// count the separators
+                    }
+                    else// new line or invalid chars: \r \n ...
+                    {// new line or invalid chars: \r \n ...
+                        buf[acc++] = '#';
+                    }// else// new line or invalid chars: \r \n ...
+                    // invalid char->skip.
+                }// if is NOT-digit
+                if( singleChar>=48 && singleChar<=57 )// is digit
+                {// is_digit
+                    buf[acc++] = singleChar;
+                }// no else.
+            }// for: exit on hmUnderscore==2.
+            buf[c]=0;// terminate.
+            cleanToken = new char[acc];
+            for(int w=0;w<acc;w++)cleanToken[w]=0;
+            int w=0;
+            for( int d=acc; d>=0; d--)
+            {
+                if( buf[d]=='_' )
+                {
+                    underscoreSymbolAccumulator++;
+                }
+                else if( buf[d]=='#' )
+                {
+                    hashSymbolAccumulator++;
+                }
+                if( buf[d]>=48 && buf[d]<=57 )
+                {
+                    if( +1==underscoreSymbolAccumulator && 0==hashSymbolAccumulator)
+                    {
+                        unusefulToken->append(buf[d]);
+                    }
+                    else if( +1==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
+                    {
+                        ordinalToken->append(buf[d]);
+                    }
+                    else if( +2==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
+                    {
+                        primeToken->append(buf[d]);
+                    }
+                   //####
+                   cleanToken[w++]=buf[d];
+                }// else skip
+            }
+        }// else skip reading last-record.
+        int v=0;
+        const char * unusefulTokenResult = unusefulToken->str().c_str();
+        const char * ordinalTokenResult = ordinalToken->str().c_str();
+        const char * primeTokenResult = primeToken->str().c_str();
+        this->ordinal = Common::StrManipul::stringToUnsignedLong( ordinalTokenResult);
+        this->prime = Common::StrManipul::stringToUnsignedLong( primeTokenResult);
+        delete unusefulToken;
+        delete ordinalToken;
+        delete primeToken;
+        lastRecordReader.close();
+        // get last record END
+    }//  PrimesFinder::Primes::lastRecordReader()
 
 
     void PrimesFinder::Primes::dumper()
@@ -188,7 +310,7 @@
     }
 
 
-        unsigned PrimesFinder::Primes::getActualLength()
+        unsigned long PrimesFinder::Primes::getActualLength()
         {
             return this->actualLength;
         }

@@ -264,6 +264,13 @@ namespace StrManipul
         return res;
     }
 
+    int stringToUnsignedLong( const std::string &par)
+    {// recover an unsigned long from a string.
+        unsigned long res;
+        std::stringstream( par) >> res;
+        return res;
+    }// recover an unsigned long from a string.
+
     double stringToDouble( const std::string &par)
     {
         double res;
