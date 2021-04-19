@@ -60,16 +60,27 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
      int streamSize = lastrecReader.tellg();
      bool ifstreamStatus;
      int readChars = 0;
-     for(  lastrecReader.seekg( -1, lastrecReader.end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
-           streamSize>=readChars;
-        )
+     lastrecReader.seekg( -1, ios_base::end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
+     for( readChars = 0; streamSize*3>=readChars; readChars++ )
      {
-         ifstreamStatus = lastrecReader.good();
-         lastrecReader.get( curChar);
-         readChars++;
-         ifstreamStatus = lastrecReader.good();
-         lastrecReader.seekg( -2, lastrecReader.cur);//####### NB. each stream.get() seeks(+1,cur) so to read backwards I need seek(-2,cur).
-         ifstreamStatus = lastrecReader.good();
+        // functions to check state flags
+        bool isGood = lastrecReader.good();
+        bool isEOF = lastrecReader.eof();
+        bool isFailure = lastrecReader.fail();
+        bool isBad = lastrecReader.bad();
+        bool isRdState = lastrecReader.rdstate();
+        //
+         int readASCIIcode = lastrecReader.get();
+         lastrecReader.seekg( -3, ios_base::cur);//####### NB. each stream.get() seeks(+1,cur) so to read backwards I need seek(-2,cur).
+         curChar = (char)readASCIIcode;
+        // functions to check state flags
+        isGood = lastrecReader.good();
+        isEOF = lastrecReader.eof();
+        isFailure = lastrecReader.fail();
+        isBad = lastrecReader.bad();
+        isRdState = lastrecReader.rdstate();
+        ifstreamStatus = (isGood && !isEOF &&!isFailure && !isBad && !isRdState);
+        //
          buf->append( 1, curChar);// append #one time, character curChar.
          if( !ifstreamStatus)
          {
@@ -89,10 +100,10 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
 
 
 
-        unsigned long PrimesFinder::Primes::getActualLength()
-        {
-            return this->actualPrimaryFileLength;
-        }
+    unsigned long PrimesFinder::Primes::getActualLength()
+    {
+        return this->actualPrimaryFileLength;
+    }
 
    // it's a read-only utility; syntax: Prime[ordinal]==...
    unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal ) const

@@ -20,10 +20,10 @@ int main()
   PrimesFinder::Primes * p = new PrimesFinder::Primes();
      const char * primeDefaultFile = p->getDefaultPrimeDumpFullPath( "primeDefaultFile");
      p->createOrAppend( primeDefaultFile);
-     const char * revertedContent = p->lastRecordReader( primeDefaultFile);
-     std::cout<<"\n\n"<< revertedContent;
+     const char * straightContent = p->lastRecordReader( primeDefaultFile);
+     std::cout<<"\n\n"<< straightContent;
      delete primeDefaultFile;
-     delete revertedContent;
+     delete straightContent;
 
 
     //
@@ -31,4 +31,3 @@ int main()
     getchar();
     return 0;
 }
-
