@@ -116,6 +116,22 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
 
 
 
+
+char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & fullPath)
+{
+     ifstream lastrecReader(fullPath, std::fstream::in );
+     lastrecReader.seekg( -20, lastrecReader.end);
+     int streamSize = lastrecReader.tellg();
+     std::cout<<"file length=="<<streamSize<<std::endl;
+     char * buffer = new char[21];
+     lastrecReader.read( buffer, 20);
+     buffer[21]=0;//terminate.
+     std::cout<<"file length=="<<buffer<<std::endl;
+     return buffer;
+}// lastRecordReaderByString
+
+
+
     unsigned long PrimesFinder::Primes::getActualLength()
     {
         return this->actualPrimaryFileLength;
@@ -126,6 +142,107 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
    {// TODO linear bisection on IntegralFile.
        return 2UL;// TODO
    }
+
+
+    void PrimesFinder::Primes::old_lastRecordReader( const std::string & theDumpPath)
+    {// get last record START
+        //char * buf = new char[200];// stay huge.
+        Common::StringBuilder * buf = new Common::StringBuilder(900);
+        char * cleanToken = nullptr;
+        Common::StringBuilder * unusefulToken = new Common::StringBuilder(100);// TODO forecast a size.
+        Common::StringBuilder * primeToken = new Common::StringBuilder(100);// TODO forecast a size.
+        Common::StringBuilder * ordinalToken = new Common::StringBuilder(100);// TODO forecast a size.
+        int underscoreSymbolAccumulator=0;
+        int hashSymbolAccumulator=0;
+        ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
+        lastRecordReader.seekg (-1, lastRecordReader.end);
+        int length = lastRecordReader.tellg();
+        bool isDumpFileInGoodCondition = lastRecordReader.good();
+        if( ! isDumpFileInGoodCondition || length<3)
+        {// if file does not contain a single record, skip reading last-record.
+            this->lastOrdinal=0;
+            this->lastPrime=0;
+        }
+        else// can read last record
+        {
+            lastRecordReader.seekg( -1, lastRecordReader.end);// position right before EOF, i.e. -1,end.
+            isDumpFileInGoodCondition = lastRecordReader.good();
+            bool isTokenStart = true;
+            bool isHalfToken = false;
+            bool isTokenEnd = false;
+            char singleChar;
+            int hmUnderscore = 0;
+            int c=0, acc=0;
+            for( ; hmUnderscore<2 ; c++)
+            {
+                lastRecordReader.get( singleChar);
+                isDumpFileInGoodCondition = lastRecordReader.good();
+                lastRecordReader.seekg( -2, lastRecordReader.cur);// each "get()" call seeks(+1), so to get a char backwards do a seek(-2).
+                isDumpFileInGoodCondition = lastRecordReader.good();
+                if( singleChar<48 || singleChar>57 )// is-NOT-digit
+                {// is-NOT-digit
+                    if( singleChar==95) // isHalfToken=='_'==underscore
+                    {// isHalfToken
+                        buf->append(singleChar);
+                        //buf[acc++] = singleChar;
+                        hmUnderscore++;// count the separators
+                    }
+                    else// new line or invalid chars: \r \n ...
+                    {// new line or invalid chars: \r \n ...
+                        buf->append('#');
+                        //buf[acc++] = '#';
+                    }// else// new line or invalid chars: \r \n ...
+                    // invalid char->skip.
+                }// if is NOT-digit
+                if( singleChar>=48 && singleChar<=57 )// is digit
+                {// is_digit
+                    buf->append(singleChar);
+                    //buf[acc++] = singleChar;
+                }// no else.
+            }// for: exit on hmUnderscore==2.
+            //
+            for( int d=acc; d>=0; d--)
+            {
+                if( buf->str()[d]=='_' )
+                {
+                    underscoreSymbolAccumulator++;
+                }
+                else if( buf->str()[d]=='#' )
+                {
+                    hashSymbolAccumulator++;
+                }
+                if( buf->str()[d]>=48 && buf->str()[d]<=57 )
+                {
+                    if( +1==underscoreSymbolAccumulator && 0==hashSymbolAccumulator)
+                    {
+                        unusefulToken->append(buf->str()[d]);
+                    }
+                    else if( +1==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
+                    {
+                        ordinalToken->append(buf->str()[d]);
+                    }
+                    else if( +2==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
+                    {
+                        primeToken->append(buf->str()[d]);
+                    }
+                }// else skip non inherent char, in parsing.
+            }// reparse the reverted string, which contains one and half token.
+        }// read last record activity
+        const char * unusefulTokenResult = unusefulToken->str().c_str();
+        const char * ordinalTokenResult = ordinalToken->str().c_str();
+        const char * primeTokenResult = primeToken->str().c_str();
+        this->lastOrdinal = Common::StrManipul::stringToUnsignedLong( ordinalTokenResult);
+        this->lastPrime = Common::StrManipul::stringToUnsignedLong( primeTokenResult);
+        delete unusefulToken;
+        delete ordinalToken;
+        delete primeToken;
+        delete buf;
+        lastRecordReader.close();// close input stream.
+        // get last record END
+    }//  PrimesFinder::Primes::old_lastRecordReader()
+
+
+
 
 
 /*

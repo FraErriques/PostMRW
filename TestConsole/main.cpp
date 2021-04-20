@@ -22,7 +22,9 @@ int main()
   PrimesFinder::Primes * p = new PrimesFinder::Primes();
      const char * primeDefaultFile = p->getDefaultPrimeDumpFullPath( "primeDefaultFile");
      p->createOrAppend( primeDefaultFile);
-     const char * straightContent = p->lastRecordReader( primeDefaultFile);
+     //const char * straightContent = p->lastRecordReader( primeDefaultFile);
+     //p->old_lastRecordReader(primeDefaultFile );
+     const char * straightContent  = p->lastRecordReaderByString( primeDefaultFile);
      std::cout<<"\n\n"<< straightContent;
      delete primeDefaultFile;
      delete straightContent;

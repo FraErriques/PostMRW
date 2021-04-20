@@ -36,7 +36,9 @@ class Primes
     // to be tested:
     const char * getDefaultPrimeDumpFullPath( const std::string & sectionNameInFile);
     void  createOrAppend( const std::string & );
-    const char * lastRecordReader( const std::string & fullPath);
+    const char * lastRecordReader( const std::string & fullPath);// cannot be const: fills members.
+    void old_lastRecordReader( const std::string & );
+    char * lastRecordReaderByString( const std::string & fullPath);
 
 
    /// algo ///////////////////////////////////////////////////////////////////////
@@ -49,7 +51,7 @@ private:
     unsigned long desiredOrdinal;
     unsigned long desiredPrime;
     unsigned long actualPrimaryFileLength;
-    const char * theDumpPath = nullptr;
+//const char * theDumpPath = nullptr;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     // Riemann exponent s in C; s=:(sigma + i*t).
@@ -64,7 +66,8 @@ private:
     /// method
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void IntegralFileFromStartFSproducer( unsigned long sup) const;
-    void lastRecordReader();// cannot be const: fills members.
+
+
 
 };// class
 
