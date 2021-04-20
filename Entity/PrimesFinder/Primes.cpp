@@ -1,4 +1,6 @@
-﻿#include <math.h>
+﻿#include <iostream>
+#include <string>
+#include <math.h>
 #include "Primes.h"
 #include "../../Common/Config_wrap/Config_wrap.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
@@ -58,10 +60,12 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
      char curChar;
      lastrecReader.seekg( 0, lastrecReader.end);
      int streamSize = lastrecReader.tellg();
-     bool ifstreamStatus;
+     std::cout<<"file length=="<<streamSize<<std::endl;
+     bool ifstreamStatus = true;// TODO dbg
      int readChars = 0;
+     int curPositionInStream = -1;
      lastrecReader.seekg( -1, ios_base::end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
-     for( readChars = 0; streamSize*3>=readChars; readChars++ )
+     for( readChars = 0; streamSize>=readChars; readChars++ )
      {
         // functions to check state flags
         bool isGood = lastrecReader.good();
@@ -69,9 +73,21 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
         bool isFailure = lastrecReader.fail();
         bool isBad = lastrecReader.bad();
         bool isRdState = lastrecReader.rdstate();
+        // ### dbg ####
+        //
+        curPositionInStream = lastrecReader.tellg();
+        std::cout<<"position before Get()  "<<curPositionInStream<<std::endl;
         //
          int readASCIIcode = lastrecReader.get();
-         lastrecReader.seekg( -3, ios_base::cur);//####### NB. each stream.get() seeks(+1,cur) so to read backwards I need seek(-2,cur).
+        //
+        curPositionInStream = lastrecReader.tellg();
+        std::cout << "position after Get()" << curPositionInStream << std::endl;
+        //
+         lastrecReader.seekg( -2, ios_base::cur);//####### NB. each stream.get() seeks(+1,cur) so to read backwards I need seek(-2,cur).
+        //
+        curPositionInStream = lastrecReader.tellg();
+        std::cout << "position after Seek(-3,cur)" << curPositionInStream << std::endl;
+        //
          curChar = (char)readASCIIcode;
         // functions to check state flags
         isGood = lastrecReader.good();

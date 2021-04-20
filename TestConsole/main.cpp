@@ -15,6 +15,8 @@
 #include "../Entity/PrimesFinder/Primes.h"
 
 
+
+
 int main()
 {
   PrimesFinder::Primes * p = new PrimesFinder::Primes();
