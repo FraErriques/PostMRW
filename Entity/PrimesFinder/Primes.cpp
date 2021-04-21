@@ -119,15 +119,15 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
 
 char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & fullPath)
 {
-     ifstream lastrecReader(fullPath, std::fstream::in );
-     lastrecReader.seekg( -20, lastrecReader.end);
-     int streamSize = lastrecReader.tellg();
-     std::cout<<"file length=="<<streamSize<<std::endl;
-     char * buffer = new char[21];
-     lastrecReader.read( buffer, 20);
-     buffer[21]=0;//terminate.
-     std::cout<<"file length=="<<buffer<<std::endl;
-     return buffer;
+    ifstream lastrecReader(fullPath, std::fstream::in );
+    lastrecReader.seekg( 0, lastrecReader.end);
+    int streamSize = lastrecReader.tellg();
+    const int lastTokenHypothesizedLength = 10;// TODO f(streamSize) xor costante;
+    lastrecReader.seekg( -1*lastTokenHypothesizedLength, lastrecReader.end);
+    char * buffer = new char[lastTokenHypothesizedLength+1];
+    lastrecReader.read( buffer, lastTokenHypothesizedLength);
+    buffer[lastTokenHypothesizedLength]=0;//terminate.
+    return buffer;
 }// lastRecordReaderByString
 
 
@@ -170,20 +170,22 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
             bool isTokenStart = true;
             bool isHalfToken = false;
             bool isTokenEnd = false;
-            char singleChar;
+            char singleChar[2];// one used, the other for termination.
             int hmUnderscore = 0;
             int c=0, acc=0;
             for( ; hmUnderscore<2 ; c++)
             {
-                lastRecordReader.get( singleChar);
+                //lastRecordReader.get( singleChar);
+                lastRecordReader.read( singleChar,1);
+                singleChar[2]=0;// term.
                 isDumpFileInGoodCondition = lastRecordReader.good();
                 lastRecordReader.seekg( -2, lastRecordReader.cur);// each "get()" call seeks(+1), so to get a char backwards do a seek(-2).
                 isDumpFileInGoodCondition = lastRecordReader.good();
-                if( singleChar<48 || singleChar>57 )// is-NOT-digit
+                if( singleChar[0]<48 || singleChar[0]>57 )// is-NOT-digit
                 {// is-NOT-digit
-                    if( singleChar==95) // isHalfToken=='_'==underscore
+                    if( singleChar[0]==95) // isHalfToken=='_'==underscore
                     {// isHalfToken
-                        buf->append(singleChar);
+                        buf->append(singleChar[0]);
                         //buf[acc++] = singleChar;
                         hmUnderscore++;// count the separators
                     }
@@ -194,9 +196,9 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
                     }// else// new line or invalid chars: \r \n ...
                     // invalid char->skip.
                 }// if is NOT-digit
-                if( singleChar>=48 && singleChar<=57 )// is digit
+                if( singleChar[0]>=48 && singleChar[0]<=57 )// is digit
                 {// is_digit
-                    buf->append(singleChar);
+                    buf->append(singleChar[0]);
                     //buf[acc++] = singleChar;
                 }// no else.
             }// for: exit on hmUnderscore==2.
