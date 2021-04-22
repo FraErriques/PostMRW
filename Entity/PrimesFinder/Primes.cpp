@@ -64,7 +64,7 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
      bool ifstreamStatus = true;// TODO dbg
      int readChars = 0;
      int curPositionInStream = -1;
-     lastrecReader.seekg( -1, ios_base::end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
+     lastrecReader.seekg( -1, lastrecReader.end); //ios_base::end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
      for( readChars = 0; streamSize>=readChars; readChars++ )
      {
         // functions to check state flags
@@ -78,7 +78,8 @@ const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPa
         curPositionInStream = lastrecReader.tellg();
         std::cout<<"position before Get()  "<<curPositionInStream<<std::endl;
         //
-         int readASCIIcode = lastrecReader.get();
+        // int readASCIIcode = lastrecReader.get();
+        int readASCIIcode = lastrecReader.peek();
         //
         curPositionInStream = lastrecReader.tellg();
         std::cout << "position after Get()" << curPositionInStream << std::endl;
@@ -122,7 +123,31 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( 0, lastrecReader.end);
     int streamSize = lastrecReader.tellg();
-    const int lastTokenHypothesizedLength = 10;// TODO f(streamSize) xor costante;
+    int lastTokenHypothesizedLength;// f(streamSize).
+    // cannot use runtime-expressions in switch-case: case-labels have to be complite-time constants.
+    if( streamSize<4)
+        {// no valid last-record in place.
+            this->lastOrdinal=0UL;
+            this->lastPrime=0UL;
+            return nullptr;
+        }
+    else if( streamSize>=4 && streamSize<=10)
+        {
+            lastTokenHypothesizedLength = streamSize;
+            // do the reading..TODO
+        }
+    else if( streamSize>10 && streamSize<=200)
+        {
+            lastTokenHypothesizedLength = 10;
+            // do the reading..TODO
+        }
+    else// i.e. case >200
+        {
+            lastTokenHypothesizedLength = 50;// suitable for primes in magnitude-order of 10^9
+            // do the reading..TODO
+        }// if( streamsize..)->seek( howMuch, end).
+
+    //
     lastrecReader.seekg( -1*lastTokenHypothesizedLength, lastrecReader.end);
     char * buffer = new char[lastTokenHypothesizedLength+1];
     lastrecReader.read( buffer, lastTokenHypothesizedLength);
