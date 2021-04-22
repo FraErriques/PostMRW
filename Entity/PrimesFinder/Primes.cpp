@@ -13,7 +13,14 @@
     Ctor the params will be Ctor( min, max, desiredConfigSectionName)
     */
     PrimesFinder::Primes::Primes()
-    {
+    {// default section, in default file.
+        this->theDumpPath = this->getDefaultPrimeDumpFullPath( "primeDefaultFile");
+        if( nullptr != this->theDumpPath)
+        {
+            this->createOrAppend( this->theDumpPath);
+        }
+        char * straightContentOfDumpTail  = this->lastRecordReaderByString( this->theDumpPath);
+        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
     }// Ctor
 
 
@@ -37,9 +44,8 @@ const char * PrimesFinder::Primes::getDefaultPrimeDumpFullPath( const std::strin
 {
     const char *  res = nullptr;
     Common::ConfigurationService * primeNamedConfig = new
-    Common::ConfigurationService( "./PrimeConfig.txt");
-    const std::string * desiderSectionContent =
-    primeNamedConfig->getValue( sectionNameInFile);
+    Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file.
+    const std::string * desiderSectionContent = primeNamedConfig->getValue( sectionNameInFile);
     res = desiderSectionContent->c_str();
     return res;
 }// getDefaultPrimeDumpFullPath
@@ -47,73 +53,9 @@ const char * PrimesFinder::Primes::getDefaultPrimeDumpFullPath( const std::strin
 // from email #
 void PrimesFinder::Primes::createOrAppend( const std::string & fullPath)
 {
-    ofstream createOrApp(fullPath, std::fstream::out |
-    std::fstream::app);
+    ofstream createOrApp(fullPath, std::fstream::out | std::fstream::app);
     createOrApp.close();
 }// dumpFile createOrAppend
-
-// from email #
-const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPath)
-{
-     ifstream lastrecReader(fullPath, std::fstream::in );
-     std::string * buf = new std::string();
-     char curChar;
-     lastrecReader.seekg( 0, lastrecReader.end);
-     int streamSize = lastrecReader.tellg();
-     std::cout<<"file length=="<<streamSize<<std::endl;
-     bool ifstreamStatus = true;// TODO dbg
-     int readChars = 0;
-     int curPositionInStream = -1;
-     lastrecReader.seekg( -1, lastrecReader.end); //ios_base::end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
-     for( readChars = 0; streamSize>=readChars; readChars++ )
-     {
-        // functions to check state flags
-        bool isGood = lastrecReader.good();
-        bool isEOF = lastrecReader.eof();
-        bool isFailure = lastrecReader.fail();
-        bool isBad = lastrecReader.bad();
-        bool isRdState = lastrecReader.rdstate();
-        // ### dbg ####
-        //
-        curPositionInStream = lastrecReader.tellg();
-        std::cout<<"position before Get()  "<<curPositionInStream<<std::endl;
-        //
-        // int readASCIIcode = lastrecReader.get();
-        int readASCIIcode = lastrecReader.peek();
-        //
-        curPositionInStream = lastrecReader.tellg();
-        std::cout << "position after Get()" << curPositionInStream << std::endl;
-        //
-         lastrecReader.seekg( -2, ios_base::cur);//####### NB. each stream.get() seeks(+1,cur) so to read backwards I need seek(-2,cur).
-        //
-        curPositionInStream = lastrecReader.tellg();
-        std::cout << "position after Seek(-3,cur)" << curPositionInStream << std::endl;
-        //
-         curChar = (char)readASCIIcode;
-        // functions to check state flags
-        isGood = lastrecReader.good();
-        isEOF = lastrecReader.eof();
-        isFailure = lastrecReader.fail();
-        isBad = lastrecReader.bad();
-        isRdState = lastrecReader.rdstate();
-        ifstreamStatus = (isGood && !isEOF &&!isFailure && !isBad && !isRdState);
-        //
-         buf->append( 1, curChar);// append #one time, character curChar.
-         if( !ifstreamStatus)
-         {
-             break;
-         }
-     }
-     lastrecReader.close();//######### NB. close the stream #################
-     const char * revertedBuf =  buf->c_str();
-     int revertedLength = buf->length();
-     char * straightBuf = new char[revertedLength];
-     for( int c=buf->length()-1; c>=0; c-- )
-     {
-         straightBuf[(buf->length()-1)-c] = revertedBuf[c];
-     }
-     return straightBuf;
-}// lastRecordReader
 
 
 
@@ -150,8 +92,9 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     //
     lastrecReader.seekg( -1*lastTokenHypothesizedLength, lastrecReader.end);
     char * buffer = new char[lastTokenHypothesizedLength+1];
-    lastrecReader.read( buffer, lastTokenHypothesizedLength);
+    lastrecReader.read( buffer, lastTokenHypothesizedLength);// fill the buffer from the stream-tail.
     buffer[lastTokenHypothesizedLength]=0;//terminate.
+    lastrecReader.close();
     return buffer;
 }// lastRecordReaderByString
 
@@ -167,6 +110,100 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
    {// TODO linear bisection on IntegralFile.
        return 2UL;// TODO
    }
+
+
+
+void  PrimesFinder::Primes::recoverLastRecord( const char * fromFile)
+{
+    std::string parFromFile(fromFile);
+    std::string filteredLastToken("");
+    for( int c=0; c<parFromFile.length();c++)
+    {
+        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
+        {
+            filteredLastToken.append( 1, parFromFile[c] );
+        }
+        else// not digit
+        {
+            filteredLastToken.append( 1, '_' );// subst. with '_'
+        }
+    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
+    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+    int i=+1;
+    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin(); it!=tokenArray->rend(); ++it, i++)
+    {// preserve only the last two semi-records: they are lastOrdinal and LastPrime.
+        if( 1==i)
+        {// last Prime
+            this->lastPrime = Common::StrManipul::stringToUnsignedLong(*it);
+        }
+        else if( 2==i)
+        {// last ordinal
+            this->lastOrdinal = Common::StrManipul::stringToUnsignedLong(*it);
+        }// else the token is not interesting; it was included in the read portion, but is not part of the last row.
+    }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
+}//recoverLastRecord
+
+
+
+
+    // state of the art.
+void PrimesFinder::Primes::IntegralFileFromStartFSproducer( unsigned long sup ) const
+{
+    unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
+    bool isStillPrime = true;
+    double realQuotient;
+    unsigned long intQuotient;
+    unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
+    ofstream appendStream( this->theDumpPath, std::fstream::out | std::fstream::app);
+    //
+    for( ; cursor<=sup; cursor++)//NB. cursor==dividend.
+    {
+        Common::StringBuilder * strBuild = nullptr;
+        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
+        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
+        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
+        unsigned long divisor=+2;
+        for( ; divisor<=soglia; divisor++)
+        {
+            realQuotient = (double)cursor/(double)divisor;
+            intQuotient = cursor/divisor;
+            if( realQuotient-intQuotient <+1.0E-80 )
+            {// divisione diofantea
+                isStillPrime = false;// NB. #################
+                break;// NB. #################
+            }// else  continue searching for primality.
+        }// the internal for : the one from [+2, cursor]
+        // if after all idoneous divisors..
+        if( isStillPrime)
+        {
+            ++ordinal;//another one foud, starting from zero, so that Prime[1]=2
+            std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
+            std::string * primeStr = Common::StrManipul::uLongToString( cursor );
+            int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
+            Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
+            strBuild->append(ordinalStr->c_str());
+            strBuild->append("_");
+            strBuild->append(primeStr->c_str());
+            strBuild->append("\r");// choose one btw '\r' or '\n'
+            delete ordinalStr;
+            delete primeStr;
+            // instead of returning it, dump it on the file.
+            appendStream.write( strBuild->str().c_str(), strBuild->str().length() );
+            delete strBuild;// clean up the token-buffer.
+            strBuild = nullptr;
+        }// else ripristino del flag-primalita' per il candidato divisore successivo.
+        else
+        {// ripristino della primalita', dopo un composto(i.e. non primo).
+            isStillPrime = true;
+        }// ripristino della primalita', dopo un composto(i.e. non primo).
+    }// external for : the one where cursor cicles from inf to sup, on dividends.
+    appendStream.close();
+    // ready.
+}// IntegralFileFromStartFSproducer
+
+
+
+/*
 
 
     void PrimesFinder::Primes::old_lastRecordReader( const std::string & theDumpPath)
@@ -270,9 +307,71 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
 
 
 
+// from email #
+const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPath)
+{
+     ifstream lastrecReader(fullPath, std::fstream::in );
+     std::string * buf = new std::string();
+     char curChar;
+     lastrecReader.seekg( 0, lastrecReader.end);
+     int streamSize = lastrecReader.tellg();
+     std::cout<<"file length=="<<streamSize<<std::endl;
+     bool ifstreamStatus = true;// TODO dbg
+     int readChars = 0;
+     int curPositionInStream = -1;
+     lastrecReader.seekg( -1, lastrecReader.end); //ios_base::end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
+     for( readChars = 0; streamSize>=readChars; readChars++ )
+     {
+        // functions to check state flags
+        bool isGood = lastrecReader.good();
+        bool isEOF = lastrecReader.eof();
+        bool isFailure = lastrecReader.fail();
+        bool isBad = lastrecReader.bad();
+        bool isRdState = lastrecReader.rdstate();
+        // ### dbg ####
+        //
+        curPositionInStream = lastrecReader.tellg();
+        std::cout<<"position before Get()  "<<curPositionInStream<<std::endl;
+        //
+        // int readASCIIcode = lastrecReader.get();
+        int readASCIIcode = lastrecReader.peek();
+        //
+        curPositionInStream = lastrecReader.tellg();
+        std::cout << "position after Get()" << curPositionInStream << std::endl;
+        //
+         lastrecReader.seekg( -2, ios_base::cur);//####### NB. each stream.get() seeks(+1,cur) so to read backwards I need seek(-2,cur).
+        //
+        curPositionInStream = lastrecReader.tellg();
+        std::cout << "position after Seek(-3,cur)" << curPositionInStream << std::endl;
+        //
+         curChar = (char)readASCIIcode;
+        // functions to check state flags
+        isGood = lastrecReader.good();
+        isEOF = lastrecReader.eof();
+        isFailure = lastrecReader.fail();
+        isBad = lastrecReader.bad();
+        isRdState = lastrecReader.rdstate();
+        ifstreamStatus = (isGood && !isEOF &&!isFailure && !isBad && !isRdState);
+        //
+         buf->append( 1, curChar);// append #one time, character curChar.
+         if( !ifstreamStatus)
+         {
+             break;
+         }
+     }
+     lastrecReader.close();//######### NB. close the stream #################
+     const char * revertedBuf =  buf->c_str();
+     int revertedLength = buf->length();
+     char * straightBuf = new char[revertedLength];
+     for( int c=buf->length()-1; c>=0; c-- )
+     {
+         straightBuf[(buf->length()-1)-c] = revertedBuf[c];
+     }
+     return straightBuf;
+}// lastRecordReader
 
 
-/*
+
 // state of the art.
 void PrimesFinder::Primes::IntegralFileFromStartFSproducer( unsigned long sup) const
 {
