@@ -21,7 +21,7 @@
 int main()
 {
      PrimesFinder::Primes * p = new PrimesFinder::Primes();
-     p->IntegralFileFromStartFSproducer( 1590);
+     p->IntegralFileFromStartFSproducer( 100);
 
     //
     std::cout<<"\n\t Strike Enter to leave\t";

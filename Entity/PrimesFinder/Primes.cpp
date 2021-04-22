@@ -18,9 +18,12 @@
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
-        }
+        }// else : TODO not-healthly built.
         char * straightContentOfDumpTail  = this->lastRecordReaderByString( this->theDumpPath);
-        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        if( nullptr != straightContentOfDumpTail)
+        {
+            recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        }// else : no valid last record : start from zero!
     }// Ctor
 
 
@@ -70,8 +73,8 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     if( streamSize<4)
         {// no valid last-record in place.
             this->lastOrdinal=0UL;
-            this->lastPrime=0UL;
-            return nullptr;
+            this->lastPrime=+1UL;//##### +2 first of the Primes p in P in N. this->lastPrime gets a ++ before start.
+            return nullptr;// NB ##### do NOT call recoverLastRecord on a null ptr !!! ####################
         }
     else if( streamSize>=4 && streamSize<=10)
         {
