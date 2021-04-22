@@ -15,24 +15,48 @@
 #include "../Entity/PrimesFinder/Primes.h"
 
 
+
 unsigned long recoveredOrdinal;
 unsigned long recoveredPrime;
 void recoverLastRecord( const char * fromFile)
 {
-    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", fromFile, true );// remove empty entries.
-
-    int i=+1;
-    for( std::vector<std::string>::iterator it=tokenArray->begin(); it!=tokenArray->end(); ++it, i++)
+    std::string parFromFile(fromFile);
+    std::string filteredLastToken("");
+    for( int c=0; c<parFromFile.length();c++)
     {
-        std::cout << "token nr."<< i <<"   "<< *it<<std::endl;
-        std::vector<std::string> * splitOnNewLine = Common::StrManipul::stringSplit("\n", *it, true );// remove empty entries.
-        int nestedTokens=0;
-        for( std::vector<std::string>::iterator nested_it=splitOnNewLine->begin(); nested_it!=splitOnNewLine->end(); ++nested_it, nestedTokens++)
+        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
         {
-            std::cout << "nested-token nr."<< nestedTokens <<"   "<< *nested_it<<std::endl;
+            filteredLastToken.append( 1, parFromFile[c] );
         }
+        else// not digit
+        {
+            filteredLastToken.append( 1, '_' );// subst. with '_'
+        }
+    }//for
+    std::cout << "\n\n\n";
+    std::cout << filteredLastToken << std::endl;
+    std::cout << "\n\n\n";
+    //
+    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+    int i=+1;
+    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin(); it!=tokenArray->rend(); ++it, i++)
+    {
+        if( 1==i)
+        {
+            recoveredPrime = Common::StrManipul::stringToUnsignedLong(*it);
+        }
+        else if( 2==i)
+        {
+            recoveredOrdinal = Common::StrManipul::stringToUnsignedLong(*it);
+        }// else not interesting.
+        std::cout << "token nr."<< i <<"   "<< *it<<std::endl;
     }
+    std::cout << "\n\n\n";
+    std::cout<<" recovered ordinal=="<<recoveredOrdinal<<std::endl;
+    std::cout<<" recovered prime=="<<recoveredPrime <<std::endl;
 }//recoverLastRecord
+
+
 
 
 int main()
@@ -62,6 +86,7 @@ int main()
 //            straightContent[d] = '#';
 //        }
 //     }
+
     std::cout<<"\n\n"<< straightContent;
 
 

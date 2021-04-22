@@ -66,6 +66,7 @@ double rettangoli()
 
 /* --------------cantina----------------------------
 
+//    std::replace( filteredLastToken.begin(), filteredLastToken.end(), '\r', '_'); // replace all '\r' to '_' NB. in <algorithm>
 
 void LoggerSinkFS_example( unsigned long inf, unsigned long sup)
 {
