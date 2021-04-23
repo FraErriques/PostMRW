@@ -14,7 +14,7 @@
     */
     PrimesFinder::Primes::Primes()
     {// default section, in default file.
-        this->theDumpPath = this->getDefaultPrimeDumpFullPath( "primeDefaultFile");
+        this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
@@ -26,6 +26,22 @@
         }// else : no valid last record : start from zero!
     }// Ctor
 
+    /*
+    This Construction path is devoted to log the results on a CUSTOM IntegralFile.
+    This Ctor is devoted to log on a partial-File, which consists in a custom analysis, in (inf, max]. For such
+    Ctor the params are: Ctor( min, max, desiredConfigSectionName).
+    */
+    PrimesFinder::Primes::Primes(unsigned long inf, unsigned long max, const std::string& desiredConfigSectionName)
+    {// CUSTOM section, in default file.
+        this->theDumpPath = this->getPrimeDumpFullPath( desiredConfigSectionName);// CUSTOM Section Name.
+        if( nullptr != this->theDumpPath)
+        {
+            this->createOrAppend( this->theDumpPath);
+        }// else : TODO not-healthly built.
+        // NB. no {lastRecordReaderByString, recoverLastRecord,...} -> work in [min, max].
+        this->lastOrdinal= 0;//TODO stima !
+        this->lastPrime = inf;//##### the first integer analyzed qill be inf+1; the last will be "max" parameter.##
+    }// Ctor
 
 
 
@@ -42,18 +58,21 @@
     }// Dtor(
 
 
-// from email #
-const char * PrimesFinder::Primes::getDefaultPrimeDumpFullPath( const std::string & sectionNameInFile)
+
+const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile)
 {
     const char *  res = nullptr;
     Common::ConfigurationService * primeNamedConfig = new
-    Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file.
-    const std::string * desiderSectionContent = primeNamedConfig->getValue( sectionNameInFile);
+    Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for Primes:: in this file.
+    const std::string * desiderSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
     res = desiderSectionContent->c_str();
     return res;
-}// getDefaultPrimeDumpFullPath
+}// getPrimeDumpFullPath
 
-// from email #
+
+
+
+
 void PrimesFinder::Primes::createOrAppend( const std::string & fullPath)
 {
     ofstream createOrApp(fullPath, std::fstream::out | std::fstream::app);

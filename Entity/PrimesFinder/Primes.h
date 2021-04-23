@@ -26,7 +26,9 @@ class Primes
     public:
     /// Data
     /// Ctor
-    Primes();
+    Primes();// default Section, on default config-file, dedicated for this class: i.e. ./PrimeConfig.txt
+    // below: a Ctor to span (inf, max] :
+    Primes(unsigned long inf, unsigned long max, const std::string& desiredConfigSectionName);// CUSTOM Section, on default config-file.
     ~Primes  ( void );
     /// method
     unsigned long getActualLength();
@@ -34,7 +36,7 @@ class Primes
     unsigned long getLastPrime();
     unsigned long operator[] (const unsigned long & requiredOrdinal) const;// it's a read-only utility; syntax: Prime[ordinal]==...
     // to be tested:
-    const char * getDefaultPrimeDumpFullPath( const std::string & sectionNameInFile);
+    const char * getPrimeDumpFullPath( const std::string & sectionNameInFile);
     void  createOrAppend( const std::string & );
     char * lastRecordReaderByString( const std::string & fullPath);
     void IntegralFileFromStartFSproducer( unsigned long sup ) const;
