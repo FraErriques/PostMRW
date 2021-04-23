@@ -14,7 +14,7 @@
     Another Ctor will be provided, to log on a partial-File, which consists in a custom analysis, in [min, max]. For such
     Ctor the params will be Ctor( min, max, desiredConfigSectionName)
     */
-    PrimesFinder::Primes::Primes()
+    PrimesFinder::Primes::Primes(unsigned long threshold)
     {// default section, in default file.
         this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
         if( nullptr != this->theDumpPath)
@@ -26,10 +26,13 @@
         {
             recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
         }// else : no valid last record : start from zero!
+        this->desiredThreshold = threshold;// set the upper bound for research, in R+.
     }// Ctor
 
+
+    // an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
     double LogIntegral_coChain( double x)
-    {
+    {// an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
         return +1.0/log(x);
     }// LogIntegral_coChain
 
@@ -186,7 +189,7 @@ void  PrimesFinder::Primes::recoverLastRecord( const char * fromFile)
 
 
     // state of the art.
-void PrimesFinder::Primes::IntegralFileFromStartFSproducer( unsigned long sup ) const
+void PrimesFinder::Primes::Start_PrimeDump_FileSys() const
 {
     unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
     bool isStillPrime = true;
@@ -195,7 +198,7 @@ void PrimesFinder::Primes::IntegralFileFromStartFSproducer( unsigned long sup ) 
     unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
     ofstream appendStream( this->theDumpPath, std::fstream::out | std::fstream::app);
     //
-    for( ; cursor<=sup; cursor++)//NB. cursor==dividend.
+    for( ; cursor<=this->desiredThreshold; cursor++)//NB. cursor==dividend.
     {
         Common::StringBuilder * strBuild = nullptr;
         double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]

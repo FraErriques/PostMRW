@@ -20,9 +20,9 @@
 
 int main()
 {
-     //PrimesFinder::Primes * p = new PrimesFinder::Primes();
-     PrimesFinder::Primes * p = new PrimesFinder::Primes( 950, 1000, "primeCustomFile");
-     p->IntegralFileFromStartFSproducer( 1000);
+     PrimesFinder::Primes * p = new PrimesFinder::Primes(2000);
+     //PrimesFinder::Primes * p = new PrimesFinder::Primes( 950, 1000, "primeCustomFile");
+     p->Start_PrimeDump_FileSys();
 
     //
     std::cout<<"\n\t Strike Enter to leave\t";

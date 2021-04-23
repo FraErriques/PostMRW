@@ -26,7 +26,7 @@ class Primes
     public:
     /// Data
     /// Ctor
-    Primes();// default Section, on default config-file, dedicated for this class: i.e. ./PrimeConfig.txt
+    Primes(unsigned long threshold);// default Section, on default config-file, dedicated for this class: i.e. ./PrimeConfig.txt
     // below: a Ctor to span (inf, max] :
     Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName);// CUSTOM Section, on default config-file.
     ~Primes  ( void );
@@ -39,7 +39,7 @@ class Primes
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile);
     void  createOrAppend( const std::string & );
     char * lastRecordReaderByString( const std::string & fullPath);
-    void IntegralFileFromStartFSproducer( unsigned long sup ) const;
+    void Start_PrimeDump_FileSys() const;
 
 
    /// algo ///////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ private:
     unsigned long lastOrdinal;
     unsigned long lastPrime;
     unsigned long desiredOrdinal;
-    unsigned long desiredPrime;
+    unsigned long desiredThreshold;// in R+
     unsigned long actualPrimaryFileLength;
     const char * theDumpPath = nullptr;
     bool isHealthlyConstructed = false;
@@ -59,6 +59,7 @@ private:
     double sigma;
     double t;
     /// Ctor
+    Primes();// empty Ctor not available; a threshold is required.
     // copying methoda : not usable->private.
     // Copy Constructor
     Primes   ( const Primes & original );
