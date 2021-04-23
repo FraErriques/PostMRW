@@ -1,10 +1,12 @@
 ﻿#include <iostream>
 #include <string>
 #include <math.h>
+#include <ctime>
 #include "Primes.h"
 #include "../../Common/Config_wrap/Config_wrap.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
+#include "../../Entity/Integration/Integration.h"
 
 
     /*
@@ -26,21 +28,36 @@
         }// else : no valid last record : start from zero!
     }// Ctor
 
+    double LogIntegral_coChain( double x)
+    {
+        return +1.0/log(x);
+    }// LogIntegral_coChain
+
     /*
     This Construction path is devoted to log the results on a CUSTOM IntegralFile.
-    This Ctor is devoted to log on a partial-File, which consists in a custom analysis, in (inf, max]. For such
-    Ctor the params are: Ctor( min, max, desiredConfigSectionName).
+    This Ctor is devoted to log on a partial-File, which consists in a custom analysis, in (infLeft, maxRight]. For such
+    Ctor the params are: Ctor( infLeft, maxRight, desiredConfigSectionName).
     */
-    PrimesFinder::Primes::Primes(unsigned long inf, unsigned long max, const std::string& desiredConfigSectionName)
+    PrimesFinder::Primes::Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName)
     {// CUSTOM section, in default file.
         this->theDumpPath = this->getPrimeDumpFullPath( desiredConfigSectionName);// CUSTOM Section Name.
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
         }// else : TODO not-healthly built.
-        // NB. no {lastRecordReaderByString, recoverLastRecord,...} -> work in [min, max].
-        this->lastOrdinal= 0;//TODO stima !
-        this->lastPrime = inf;//##### the first integer analyzed qill be inf+1; the last will be "max" parameter.##
+        // NB. no {lastRecordReaderByString, recoverLastRecord,...} -> work in [infLeft, maxRight].
+        Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
+        double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+        this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+        this->lastPrime = infLeft;//##### the first integer analyzed qill be infLeft+1; the last will be "maxRight" parameter.##
+        // write a stamp, about what we're doing and when.
+        time_t ttime = time(0);
+        char* dt = ctime(&ttime);
+        //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
+        //dt = asctime(gmt_time);
+        ofstream stampWriter( this->theDumpPath, std::fstream::out | std::fstream::app);
+        stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
+        stampWriter.close();
     }// Ctor
 
 
