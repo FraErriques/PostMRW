@@ -52,7 +52,8 @@
         Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
         double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
         this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
-        this->lastPrime = infLeft;//##### the first integer analyzed qill be infLeft+1; the last will be "maxRight" parameter.##
+        this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
+        this->desiredThreshold = maxRight;
         // write a stamp, about what we're doing and when.
         time_t ttime = time(0);
         char* dt = ctime(&ttime);
