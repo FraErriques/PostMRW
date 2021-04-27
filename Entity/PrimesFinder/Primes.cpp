@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <math.h>
 #include <ctime>
@@ -80,7 +80,7 @@
 
 
 
-const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile)
+const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 {
     const char *  res = nullptr;
     Common::ConfigurationService * primeNamedConfig = new
@@ -151,6 +151,24 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
    // it's a read-only utility; syntax: Prime[ordinal]==...
    unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal ) const
    {// TODO linear bisection on IntegralFile.
+        const char * localDumpPath = new char[400];
+        localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+        if( nullptr == localDumpPath)
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }// else continue:
+       std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
+       dumpReader.seekg( 0, dumpReader.end);
+       long dumpSize = dumpReader.tellg();
+       // start bisecting:
+       int target = dumpSize/2;
+       dumpReader.seekg( target, dumpReader.beg);
+       const int tokenSize = 20;
+       char token[tokenSize];
+       dumpReader.read( token, tokenSize );
+       // TODO
+       dumpReader.close();
+       delete[] localDumpPath;
        return 2UL;// TODO
    }
 

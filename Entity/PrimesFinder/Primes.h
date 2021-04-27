@@ -36,7 +36,7 @@ class Primes
     unsigned long getLastPrime();
     unsigned long operator[] (const unsigned long & requiredOrdinal) const;// it's a read-only utility; syntax: Prime[ordinal]==...
     // to be tested:
-    const char * getPrimeDumpFullPath( const std::string & sectionNameInFile);
+    const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
     char * lastRecordReaderByString( const std::string & fullPath);
     void Start_PrimeDump_FileSys() const;

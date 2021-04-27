@@ -20,9 +20,10 @@
 
 int main()
 {
-     //PrimesFinder::Primes * p = new PrimesFinder::Primes(9888777666);
-     PrimesFinder::Primes * p = new PrimesFinder::Primes( 9888777, 9888999, "primeCustomFile");
-     p->Start_PrimeDump_FileSys();
+     PrimesFinder::Primes * p = new PrimesFinder::Primes(9888777666);
+     unsigned long res = (*p)[3];
+     //PrimesFinder::Primes * p = new PrimesFinder::Primes( 9888777, 9888999, "primeCustomFile");
+     //p->Start_PrimeDump_FileSys();
 
     //
     std::cout<<"\n\t Strike Enter to leave\t";
