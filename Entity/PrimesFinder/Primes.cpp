@@ -163,7 +163,7 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
        // start bisecting:
        int target = dumpSize/2;
        dumpReader.seekg( target, dumpReader.beg);
-       const int tokenSize = 20;
+       const int tokenSize = 30;
        char token[tokenSize];
        dumpReader.read( token, tokenSize );
        // TODO
@@ -177,8 +177,9 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
 void  PrimesFinder::Primes::recoverLastRecord( const char * fromFile)
 {
     std::string parFromFile(fromFile);
+    int inputParamLength = parFromFile.length();
     std::string filteredLastToken("");
-    for( int c=0; c<parFromFile.length();c++)
+    for( int c=0; c<inputParamLength;c++)
     {
         if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
         {
@@ -219,7 +220,6 @@ void PrimesFinder::Primes::Start_PrimeDump_FileSys() const
     //
     for( ; cursor<=this->desiredThreshold; cursor++)//NB. cursor==dividend.
     {
-        Common::StringBuilder * strBuild = nullptr;
         double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
         // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
         // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
