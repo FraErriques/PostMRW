@@ -83,11 +83,10 @@
 const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 {
     const char *  res = nullptr;
-    Common::ConfigurationService * primeNamedConfig = new
-    Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for Primes:: in this file.
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for Primes:: in this file.
     const std::string * desiderSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
     res = desiderSectionContent->c_str();
-    return res;
+    return res;// caller has to delete.
 }// getPrimeDumpFullPath
 
 
@@ -148,6 +147,8 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         return this->actualPrimaryFileLength;
     }
 
+
+
    // it's a read-only utility; syntax: Prime[ordinal]==...
    unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal ) const
    {// TODO linear bisection on IntegralFile.
@@ -157,20 +158,62 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         {
             return -1UL;// as an error code, since the correct response has to be >0.
         }// else continue:
+       unsigned long requiredPrime;
        std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
        dumpReader.seekg( 0, dumpReader.end);
        long dumpSize = dumpReader.tellg();
        // start bisecting:
        int target = dumpSize/2;
        dumpReader.seekg( target, dumpReader.beg);
-       const int tokenSize = 30;
-       char token[tokenSize];
-       dumpReader.read( token, tokenSize );
-       // TODO
+       const int tokenSize = 60;
+       char partialToken[tokenSize];
+       char secondToken[tokenSize];
+       unsigned long decodedOrdinal = -1UL;
+       //
+    for( ; requiredOrdinal!= decodedOrdinal;)
+    {
+        dumpReader.getline( partialToken, tokenSize, '\r' );// first one has to be thrown away, since it is likely to be truncated before the beginning, due to random access to seek(bisection); next record will be complete.
+        dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
+        //##
+        // functions to check state flags
+        bool isGood = dumpReader.good();
+        bool isEOF = dumpReader.eof();
+        bool isFailure = dumpReader.fail();
+        bool isBad = dumpReader.bad();
+        bool isRdState = dumpReader.rdstate();
+        //##
+        int dumpSize_3 = dumpReader.tellg();
+        char cStringDivisorSequence[2];
+        cStringDivisorSequence[0] = '_';
+        cStringDivisorSequence[1] = 0;
+        std::vector<std::string> * splittedTokens = Common::StrManipul::stringSplit( cStringDivisorSequence, secondToken, true);
+        int hmFoundToken = splittedTokens->size();
+        const char * decodedOrdinal_str = (*splittedTokens)[0].c_str();
+        const char * decodedPrime_str = (*splittedTokens)[1].c_str();
+        decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);
+        // TODO : manage exception on parsing.
+        long presentPosition = dumpReader.tellg();
+        if( decodedOrdinal<requiredOrdinal)
+        {// bisection forward : right leaf
+        long destinationForward = (dumpSize - presentPosition)/2;
+        dumpReader.seekg( destinationForward, dumpReader.beg);
+        }
+        else if( decodedOrdinal > requiredOrdinal)
+        {// bisection backward : left leaf
+        long destinationBackward = presentPosition/2;
+        dumpReader.seekg( destinationBackward, dumpReader.beg);
+        }
+        else// i.e.  decodedOrdinal == requiredOrdinal
+        {
+        requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
+        break;
+        }// TODO : rientrare nel loop, dopo bisezione.
+    }
+        //
        dumpReader.close();
        delete[] localDumpPath;
-       return 2UL;// TODO
-   }
+       return requiredPrime;
+   }// operator[]
 
 
 

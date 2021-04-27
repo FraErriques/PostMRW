@@ -5,9 +5,10 @@ select MAX(ordinal) from PrimeData.dbo.Prime_sequence
 select * from PrimeData.dbo.Prime_sequence
 where [ordinal] between 4391800 and 4391889
 
-4.391.889
+-- 4.391.889
 
 select COUNT(*) from PrimeData.dbo.Prime_sequence_noIdentity
+-- #cardinalita' in tabella: 2.500.000
 select min(ordinal) from PrimeData.dbo.Prime_sequence_noIdentity
 select max(ordinal) from PrimeData.dbo.Prime_sequence_noIdentity
 select * from PrimeData.dbo.Prime_sequence_noIdentity
