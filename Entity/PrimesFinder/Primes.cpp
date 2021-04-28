@@ -36,6 +36,51 @@
         return +1.0/log(x);
     }// LogIntegral_coChain
 
+// TODO:
+    void ExpIntegralEi_Ramanujan( double x)//( Complex x)
+    {// notes on a convergent series
+//
+//        N[(+EulerGamma + Log[x]) +
+//          Exp[x/2]*Sum[((-1)^(n - 1) (+x)^n)/((n!)*(2^(n - 1)))*
+//             Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
+//
+//        /*
+//        N[(+EulerGamma + Log[x]) +
+//          Exp[x/2]*Sum[((-1)^(n - 1) (+x)^n)/((n!)*(2^(n - 1)))*
+//             Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
+//        */
+
+//        double internalFactor = 0.0;
+//        double externalFactor = 0.0;
+//        for( int n=+1; n<=+99; n++)
+//        {
+//            for(int k=0; k<floor(((double)n - 1.0)/2.0); k++)
+//            {
+//                internalFactor += +1.0/(2.0*(double)k + 1.0);
+//            }
+//            externalFactor += ((-1.0)^((double)n - 1.0) (+x)^(double)n)/((n!)*(2.0^(n - 1))) * internal_factor;
+//            internalFactor = 0.0;// reset.
+//        }
+//        externalFactor += EulerGamma + Log[x];
+
+        const double EulerGamma = +0.577216;
+        double internalFactor = 0.0;
+        double externalFactor = 0.0;
+        for( int n=+1; n<=+99; n++)
+        {
+            for(int k=0; k< floor(((double)n - 1.0)/2.0); k++ )
+            {
+                internalFactor += +1.0/(2.0*(double)k + 1.0);
+            }
+
+            //externalFactor += (pow((-1.0),((double)n - 1.0)) * pow(+x,(double)n) /((n!)* pow(2.0,((double)n - 1)) ) * internalFactor;
+//            internalFactor = 0.0;// reset.
+        }
+        externalFactor += EulerGamma + log(x);
+
+  }// Ramanujan series
+
+
     /*
     This Construction path is devoted to log the results on a CUSTOM IntegralFile.
     This Ctor is devoted to log on a partial-File, which consists in a custom analysis, in (infLeft, maxRight]. For such
@@ -173,50 +218,59 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
  }
 
 
-   // it's a utility; syntax: Prime[ordinal]==...
-   unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal )
-   {// TODO linear bisection on IntegralFile.
-        const char * localDumpPath = new char[400];
-        localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
-        if( nullptr == localDumpPath)
-        {
-            return -1UL;// as an error code, since the correct response has to be >0.
-        }// else continue:
-       unsigned long requiredPrime;
-       std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
-       dumpReader.seekg( 0, dumpReader.end);
-       long dumpSize = dumpReader.tellg();
-       long leftBoundary = 0;
-       long rightBoundary = dumpSize;
-       // start bisecting:
-       this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
-       if( requiredOrdinal>this->lastOrdinal)
-        {
-            return -1UL;// as an error code, since the correct response has to be >0.
-        }// else continue:
-       double requiredLandingPoint = (double)requiredOrdinal / (double)(this->lastOrdinal);
-       int target = (int)(requiredLandingPoint*dumpSize);// find required %.
-       dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
-       const int tokenSize = 60;
-       char partialToken[tokenSize];
-       char secondToken[tokenSize];
-       unsigned long decodedOrdinal = -1UL;
-       //
-    for( ; requiredOrdinal!= decodedOrdinal;)
+// it's a utility; syntax: Prime[ordinal]==...
+unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal )
+{// linear bisection on IntegralFile.
+    const char * localDumpPath = new char[400];
+    localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+    if( nullptr == localDumpPath)
     {
-        dumpReader.getline( partialToken, tokenSize, '\r' );// first one has to be thrown away, since it is likely to be truncated before the beginning, due to random access to seek(bisection); next record will be complete.
+        return -1UL;// as an error code, since the correct response has to be >0.
+    }// else continue:
+    unsigned long requiredPrime;
+    std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
+    dumpReader.seekg( 0, dumpReader.end);
+    long dumpSize = dumpReader.tellg();
+    long leftBoundary = 0;
+    long rightBoundary = dumpSize;
+    // start bisecting:
+    this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
+    if( requiredOrdinal>this->lastOrdinal)
+    {
+        return -1UL;// as an error code, since the correct response has to be >0.
+    }// else continue:
+    double requiredLandingPoint = (double)requiredOrdinal / (double)(this->lastOrdinal);
+    int target = (int)(requiredLandingPoint*dumpSize);// find required %.
+    dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
+    const int tokenSize = 60;
+    char partialToken[tokenSize];
+    char secondToken[tokenSize];
+    unsigned long decodedOrdinal = -1UL;
+    //
+    for( ; requiredOrdinal!= decodedOrdinal;)
+    {// loop della bisezione:
+        // first one has to be thrown away, since it is likely to be truncated before the beginning, due to
+        // random access to seek(bisection); next record will be complete.
+        dumpReader.getline( partialToken, tokenSize, '\r' );
         dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
         int partialToken_Length = strlen_loc( partialToken);
         int secondToken_Length = strlen_loc( secondToken);
         int totalReadTokenLength = partialToken_Length+secondToken_Length+2;// +the two '\r' that are descarded.
-        //##
-        // functions to check state flags
+        //## functions to check state flags:
         bool isGood = dumpReader.good();
         bool isEOF = dumpReader.eof();
         bool isFailure = dumpReader.fail();
         bool isBad = dumpReader.bad();
         bool isRdState = dumpReader.rdstate();
-        //##
+        if( !isGood
+            ||isEOF
+            ||isFailure
+            ||isBad
+            ||isRdState )
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }// else continue:
+        //## end: functions to check state flags.
         char cStringDivisorSequence[2];
         cStringDivisorSequence[0] = '_';
         cStringDivisorSequence[1] = 0;
@@ -224,7 +278,7 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         int hmFoundToken = splittedTokens->size();
         const char * decodedOrdinal_str = nullptr;
         const char * decodedPrime_str = nullptr;
-        if(2<=hmFoundToken)
+        if(2<=hmFoundToken)// at least ordinal_prime ,i.e. 2 token.
         {
             decodedOrdinal_str = (*splittedTokens)[0].c_str();
             decodedPrime_str = (*splittedTokens)[1].c_str();
@@ -233,36 +287,38 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         {
             return -1UL;// as an error code, since the correct response has to be >0.
         }
-        decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);
         // TODO : manage exception on parsing.
+        decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);// TODO : manage exception on parsing. test:
+        if( decodedOrdinal>this->lastOrdinal)
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }
         long presentPosition = dumpReader.tellg();//#### NB. ####
         if( decodedOrdinal<requiredOrdinal)// #### landingPoint evaluation #####
         {// bisection forward : right leaf
             leftBoundary = presentPosition;
             rightBoundary = dumpSize;
             requiredLandingPoint = (double)requiredOrdinal / (double)(decodedOrdinal);
-            int target = (int)(requiredLandingPoint*rightBoundary);// find required %.
-            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
         }
         else if( decodedOrdinal > requiredOrdinal)
         {// bisection backward : left leaf
             leftBoundary = 0;
             rightBoundary = presentPosition-totalReadTokenLength;
             requiredLandingPoint = (double)requiredOrdinal / (double)(decodedOrdinal);
-            int target = (int)(requiredLandingPoint*rightBoundary);// find required %.
-            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
         }
         else// i.e.  decodedOrdinal == requiredOrdinal
         {
             requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
             break;
-        }// TODO : rientrare nel loop, dopo bisezione.
-    }
-        //
-       dumpReader.close();
-       delete[] localDumpPath;
-       return requiredPrime;
-   }// operator[]
+        }
+        int target = (int)(requiredLandingPoint*rightBoundary);// find required %.
+        dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
+    }// loop della bisezione.
+    // ready.
+    dumpReader.close();
+    delete[] localDumpPath;
+    return requiredPrime;
+}// operator[]
 
 
 
