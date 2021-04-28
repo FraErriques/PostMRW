@@ -79,6 +79,26 @@
     }// Dtor(
 
 
+bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
+{
+    bool res = false;// init to invalid.
+    this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+    if( nullptr != this->theDumpPath)
+    {
+        this->createOrAppend( this->theDumpPath);
+    }// else : TODO not-healthly built.
+    else {return res;}// which is still "false".
+    char * straightContentOfDumpTail  = this->lastRecordReaderByString( this->theDumpPath);
+    if( nullptr != straightContentOfDumpTail)
+    {
+        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+    }// else : no valid last record : start from zero!
+    else {return res;}// which is still "false".
+    // ready:
+    res = true;// all ok.
+    return res;
+}// getLastCoupleInDefaultFile
+
 
 const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 {
@@ -118,18 +138,15 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     else if( streamSize>=4 && streamSize<=10)
         {
             lastTokenHypothesizedLength = streamSize;
-            // do the reading..TODO
         }
     else if( streamSize>10 && streamSize<=200)
         {
             lastTokenHypothesizedLength = 10;
-            // do the reading..TODO
         }
     else// i.e. case >200
         {
             lastTokenHypothesizedLength = 50;// suitable for primes in magnitude-order of 10^9
-            // do the reading..TODO
-        }// if( streamsize..)->seek( howMuch, end).
+        }// end of if( streamsize..)->seek( howMuch, end).
 
     //
     lastrecReader.seekg( -1*lastTokenHypothesizedLength, lastrecReader.end);
@@ -147,10 +164,17 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         return this->actualPrimaryFileLength;
     }
 
+ unsigned strlen_loc( char * par)
+ {
+     int res = 0;
+     if(nullptr==par) {return res;}
+     for( ; par[res]!=0; res++);
+     return res;
+ }
 
 
    // it's a read-only utility; syntax: Prime[ordinal]==...
-   unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal ) const
+   unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal )
    {// TODO linear bisection on IntegralFile.
         const char * localDumpPath = new char[400];
         localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
@@ -162,9 +186,13 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
        std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
        dumpReader.seekg( 0, dumpReader.end);
        long dumpSize = dumpReader.tellg();
+       long leftBoundary = 0;
+       long rightBoundary = dumpSize;
        // start bisecting:
-       int target = dumpSize/2;
-       dumpReader.seekg( target, dumpReader.beg);
+       this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
+       double requiredLandingPoint = (double)requiredOrdinal / (double)(this->lastOrdinal);
+       int target = (int)(requiredLandingPoint*dumpSize);// find required %.
+       dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
        const int tokenSize = 60;
        char partialToken[tokenSize];
        char secondToken[tokenSize];
@@ -174,6 +202,9 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     {
         dumpReader.getline( partialToken, tokenSize, '\r' );// first one has to be thrown away, since it is likely to be truncated before the beginning, due to random access to seek(bisection); next record will be complete.
         dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
+        int partialToken_Length = strlen_loc( partialToken);
+        int secondToken_Length = strlen_loc( secondToken);
+        int totalReadTokenLength = partialToken_Length+secondToken_Length+2;// +the two '\r' that are descarded.
         //##
         // functions to check state flags
         bool isGood = dumpReader.good();
@@ -182,7 +213,6 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         bool isBad = dumpReader.bad();
         bool isRdState = dumpReader.rdstate();
         //##
-        int dumpSize_3 = dumpReader.tellg();
         char cStringDivisorSequence[2];
         cStringDivisorSequence[0] = '_';
         cStringDivisorSequence[1] = 0;
@@ -192,21 +222,27 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         const char * decodedPrime_str = (*splittedTokens)[1].c_str();
         decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);
         // TODO : manage exception on parsing.
-        long presentPosition = dumpReader.tellg();
-        if( decodedOrdinal<requiredOrdinal)
+        long presentPosition = dumpReader.tellg();//#### NB. ####
+        if( decodedOrdinal<requiredOrdinal)// #### landingPoint evaluation #####
         {// bisection forward : right leaf
-        long destinationForward = (dumpSize - presentPosition)/2;
-        dumpReader.seekg( destinationForward, dumpReader.beg);
+            leftBoundary = presentPosition;
+            rightBoundary = dumpSize;
+            requiredLandingPoint = (double)requiredOrdinal / (double)(decodedOrdinal);
+            int target = (int)(requiredLandingPoint*rightBoundary);// find required %.
+            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
         }
         else if( decodedOrdinal > requiredOrdinal)
         {// bisection backward : left leaf
-        long destinationBackward = presentPosition/2;
-        dumpReader.seekg( destinationBackward, dumpReader.beg);
+            leftBoundary = 0;
+            rightBoundary = presentPosition-totalReadTokenLength;
+            requiredLandingPoint = (double)requiredOrdinal / (double)(decodedOrdinal);
+            int target = (int)(requiredLandingPoint*rightBoundary);// find required %.
+            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
         }
         else// i.e.  decodedOrdinal == requiredOrdinal
         {
-        requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
-        break;
+            requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
+            break;
         }// TODO : rientrare nel loop, dopo bisezione.
     }
         //

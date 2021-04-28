@@ -66,6 +66,9 @@ double rettangoli()
 
 /* --------------cantina----------------------------
 
+    int a = strlen_loc("asdfghjkl");
+    int b = strlen_loc("asd");
+
 //     const char * primeDefaultFile = p->getDefaultPrimeDumpFullPath( "primeDefaultFile");
 //     p->createOrAppend( primeDefaultFile);
 //     char * straightContent  = p->lastRecordReaderByString( primeDefaultFile);

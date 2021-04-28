@@ -34,7 +34,7 @@ class Primes
     unsigned long getActualLength();
     unsigned long getLastOrdinal();
     unsigned long getLastPrime();
-    unsigned long operator[] (const unsigned long & requiredOrdinal) const;// it's a read-only utility; syntax: Prime[ordinal]==...
+    unsigned long operator[] (const unsigned long & requiredOrdinal);// NON const; updates the members {lastOrdinal, lastPrime}.syntax: Prime[ordinal]==...
     // to be tested:
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
@@ -68,6 +68,7 @@ private:
     /// method
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
+    bool getLastCoupleInDefaultFile();
 
 
 

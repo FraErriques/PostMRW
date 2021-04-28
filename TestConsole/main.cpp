@@ -60,11 +60,14 @@ void fReader_byRow()
 //dumpReader.seekg( bufSize, ios::beg);// from start
 
 
+
+
 int main()
 {
     //fReader_byRow();
+
      PrimesFinder::Primes * p = new PrimesFinder::Primes(4349999);
-     unsigned long res = (*p)[3];
+     unsigned long res = (*p)[93000];
      //PrimesFinder::Primes * p = new PrimesFinder::Primes( 9888777, 9888999, "primeCustomFile");
      //p->Start_PrimeDump_FileSys();
 
