@@ -173,7 +173,7 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
  }
 
 
-   // it's a read-only utility; syntax: Prime[ordinal]==...
+   // it's a utility; syntax: Prime[ordinal]==...
    unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal )
    {// TODO linear bisection on IntegralFile.
         const char * localDumpPath = new char[400];
@@ -190,6 +190,10 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
        long rightBoundary = dumpSize;
        // start bisecting:
        this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
+       if( requiredOrdinal>this->lastOrdinal)
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }// else continue:
        double requiredLandingPoint = (double)requiredOrdinal / (double)(this->lastOrdinal);
        int target = (int)(requiredLandingPoint*dumpSize);// find required %.
        dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
@@ -218,8 +222,17 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
         cStringDivisorSequence[1] = 0;
         std::vector<std::string> * splittedTokens = Common::StrManipul::stringSplit( cStringDivisorSequence, secondToken, true);
         int hmFoundToken = splittedTokens->size();
-        const char * decodedOrdinal_str = (*splittedTokens)[0].c_str();
-        const char * decodedPrime_str = (*splittedTokens)[1].c_str();
+        const char * decodedOrdinal_str = nullptr;
+        const char * decodedPrime_str = nullptr;
+        if(2<=hmFoundToken)
+        {
+            decodedOrdinal_str = (*splittedTokens)[0].c_str();
+            decodedPrime_str = (*splittedTokens)[1].c_str();
+        }
+        else
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }
         decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);
         // TODO : manage exception on parsing.
         long presentPosition = dumpReader.tellg();//#### NB. ####

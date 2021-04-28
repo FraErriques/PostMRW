@@ -67,7 +67,11 @@ int main()
     //fReader_byRow();
 
      PrimesFinder::Primes * p = new PrimesFinder::Primes(4349999);
-     unsigned long res = (*p)[93000];
+     unsigned long res = (*p)[3];
+     res = (*p)[65123];
+     res = (*p)[183123];
+     res = (*p)[253000];
+     res = (*p)[300001];
      //PrimesFinder::Primes * p = new PrimesFinder::Primes( 9888777, 9888999, "primeCustomFile");
      //p->Start_PrimeDump_FileSys();
 
