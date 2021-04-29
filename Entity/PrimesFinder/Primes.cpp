@@ -36,6 +36,18 @@
         return +1.0/log(x);
     }// LogIntegral_coChain
 
+
+unsigned long factorial( unsigned int par)
+{
+    unsigned long res = +1UL;
+    for( int c=par; c>+1; c--)
+    {
+        res *= c;
+    }
+    return res;
+}// factorial
+
+
 // TODO:
     void ExpIntegralEi_Ramanujan( double x)//( Complex x)
     {// notes on a convergent series
@@ -73,12 +85,14 @@
                 internalFactor += +1.0/(2.0*(double)k + 1.0);
             }
 
-            //externalFactor += (pow((-1.0),((double)n - 1.0)) * pow(+x,(double)n) /((n!)* pow(2.0,((double)n - 1)) ) * internalFactor;
-//            internalFactor = 0.0;// reset.
+            externalFactor += pow((-1.0),((double)n - 1.0)) * pow(+x,(double)n) /(factorial(n)* pow(2.0,((double)n - 1)) ) * internalFactor;
+            internalFactor = 0.0;// reset.
         }
         externalFactor += EulerGamma + log(x);
 
   }// Ramanujan series
+
+
 
 
     /*
