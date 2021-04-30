@@ -42,6 +42,11 @@ Complex  Complex::operator+ (const Complex & second) const
    return Complex ( _Re+second.Re(), _Im+second.Im());
 }
 
+Complex  Complex::operator+  (const double    second)    const
+{// Complex::+Real:
+   return Complex ( _Re+second, _Im );
+}
+
 Complex  Complex::operator- (const Complex & second) const
 {
    return Complex ( _Re-second.Re(), _Im-second.Im());
@@ -51,6 +56,12 @@ Complex  Complex::operator*  (const Complex & second) const
 {
    return Complex ( _Re*second.Re() - _Im*second.Im() ,
                     _Re*second.Im() + _Im*second.Re()   );
+}
+
+Complex  Complex::operator*  (const int second)     const
+{// a Complex:: times an Integer:
+   return Complex ( _Re*second ,
+                    _Im*second    );
 }
 
 Complex  Complex::operator/  (const Complex & second) const
@@ -211,13 +222,16 @@ Complex Complex::ExpC (void) const  // exponential e^z
 
 
 Complex  Complex::operator^  (const Complex & exponent) const
-{
-   // z^exponent = e^ (exponent ln z)
+{// z^exponent = e^ (exponent ln z)
    Complex res ( exponent * this->LnC() ); // by a copy constructor
    return res.ExpC();
 }
 
-
+Complex Complex::operator^    (const int exponent)       const
+{// z^exponent = e^ (exponent ln z) with Integer exponent
+   Complex res( this->LnC() * exponent ); // by a copy constructor: NB. the operator(*) accepts the Integer only as second factor.
+   return res.ExpC();
+}
 
 
 ///########## trigonometric sub-section    ###########################################################

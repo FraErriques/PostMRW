@@ -14,6 +14,7 @@
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
+#include "../Entity/Complex/Complex.h"
 
 
 void fReader_byString()
@@ -71,39 +72,57 @@ unsigned long factorial( unsigned int par)
     return res;
 }// factorial
 
+double factorial( unsigned int par, bool onReals)
+{
+    double res = +1.0;
+    for( int c=par; c>+1; c--)
+    {
+        res *= c;
+    }
+    return res;
+}// factorial
 
 
-// TODO:
-    double ExpIntegralEi_Ramanujan( double x)//( Complex x)
-    {// notes on a convergent series
-        /*
-        N[(+EulerGamma + Log[x]) +
-          Exp[x/2]*Sum[((-1)^(n - 1) (+x)^n)/((n!)*(2^(n - 1)))*
-             Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
-        */
-        const double EulerGamma = +0.577216;
-        double internalFactor = 0.0;
-        double externalFactor = 0.0;
-        for( int n=+1; n<=+9; n++)
+// TODO: verificare convergenza, per zone del piano complesso.
+Numerics::Complex ExpIntegralEi_Ramanujan( Numerics::Complex zVariable)
+{/* notes on a convergent series:
+    N[(+EulerGamma + Log[zVariable]) +
+    Exp[zVariable/2]*Sum[((-1)^(n - 1) (zVariable)^n)/((n!)*(2^(n - 1)))*
+    Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
+    */
+    const double EulerGamma = +0.577216;// Euler-Mascheroni.
+    Numerics::Complex externalAddend(0.0, 0.0);// init to zero the Sum element. The external one is never updated.
+    Numerics::Complex internalFactor(+1.0, 0.0);// the internal one is a factor and gets reset at each external-loop.
+    //
+    for( int n=+1; n<=+12; n++)// NB. ######## factorial does not support (now) more than 12! ######
+    {
+        for(int k=0; k< floor(((double)n - 1.0)/2.0); k++ )
         {
-            for(int k=0; k< floor(((double)n - 1.0)/2.0); k++ )
-            {
-                internalFactor += +1.0/(2.0*(double)k + 1.0);
-            }
-
-            externalFactor += pow((-1.0),((double)n - 1.0)) * pow(+x,(double)n) /(factorial(n)* pow(2.0,((double)n - 1)) ) * internalFactor;
-            internalFactor = 0.0;// reset.
-        }
-        externalFactor += EulerGamma + log(x);
-        // ready.
-        return externalFactor;
-  }// Ramanujan series
+            internalFactor += +1.0/(2.0*(double)k + 1.0);
+        }// end internal-factor finite sum.
+        externalAddend += (zVariable^n)*pow((-1.0),((double)n - 1.0))  /(factorial(n,true)* pow(2.0,((double)n - 1)) ) * internalFactor;
+        internalFactor = +1.0;// reset.
+    }// end external series step.
+    externalAddend += zVariable.LnC() + EulerGamma;// final addenda.
+    // ready.
+    return externalAddend;
+}// Ramanujan series
 
 
 
 int main()
 {
-    double res = ExpIntegralEi_Ramanujan( +33.0);
+    Numerics::Complex zVariable( +33.0, 1952.0 );
+    Numerics::Complex res = ExpIntegralEi_Ramanujan( zVariable);
+    std::cout<<"\n\t ExpIntegralEi_Ramanujan( "<< zVariable.Re() <<" +I* "<< zVariable.Im() <<")==" << res.Re() <<" +I* "<< res.Im() <<std::endl;
+
+//    for( int c=0; c<19; c++)
+//    {
+//        std::cout<<"\n\tFactorial("<<c<<")=="<<factorial(c)<<std::endl;
+//        std::cout<<"\n\tFactorial("<<c<<")=="<<factorial(c, true)<<std::endl;
+//    }
+
+
     //fReader_byRow();
 
 //     PrimesFinder::Primes * p = new PrimesFinder::Primes(4349999);
