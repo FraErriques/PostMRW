@@ -109,17 +109,29 @@ Numerics::Complex ExpIntegralEi_Ramanujan( Numerics::Complex zVariable)
 }// Ramanujan series
 
 
-double fForm_ReExpIntegralE1( double u
+double fFormExpIntegralE1_Re( double u
  ,double x, double y )// these last ones have to be constant, since they are Re and Im of the complex param.
 {
     return exp(-x/u)*cos(y/u)/u;
 }
 
-double fForm_ImExpIntegralE1( double u
+double fFormExpIntegralE1_Im( double u
  ,double x, double y )// these last ones have to be constant, since they are Re and Im of the complex param.
 {
     return -exp(-x/u)*sin(y/u)/u;
 }
+
+double EunoWrapper_RealPart;
+double EunoWrapper_ImmaginaryPart;
+double EunoWrapper_Re( double u)
+{
+    return fFormExpIntegralE1_Re( u,EunoWrapper_RealPart,EunoWrapper_ImmaginaryPart);
+}//EunoWrapper_Re
+double EunoWrapper_Im( double u)
+{
+    return fFormExpIntegralE1_Im( u,EunoWrapper_RealPart,EunoWrapper_ImmaginaryPart);
+}//EunoWrapper_Im
+
 
 Numerics::Complex EunoZeta( Numerics::Complex zVariable)
 {/*
@@ -132,14 +144,17 @@ ComplexExpand[ Exp[-(x + I*y)/u]/u] ==
 == (E^(-(x/u)))/u*(Cos[y/u]-(I*Sin[y/u]) ==
 == (E^(-(x/u)))/u*(E^(-I*(y/u)))
     */
-    Numerics::Complex res(0.0, 0.0);
-    double x = zVariable.Re();
-    double y = zVariable.Im();
-    double u = 0.0;// integration domain start.
-    Numerics::Complex coChain( fForm_ReExpIntegralE1(u,x,y), fForm_ImExpIntegralE1(u,x,y) );
-    //...TODO : integrate until u->+1.0
+    //
+    EunoWrapper_RealPart = zVariable.Re();
+    EunoWrapper_ImmaginaryPart = zVariable.Im();
+    Entity::Integration::FunctionalForm f_Re = EunoWrapper_Re;// function pointer to wrapper for Real_part.
+    Entity::Integration::FunctionalForm f_Im = EunoWrapper_Im;// function pointer to wrapper for Immaginary_part.
+    // integrate in du , u in (0,+1)
+    double RealPart = Entity::Integration::trapezi( 0.0, +1.0, 999, f_Re);
+    Numerics::Complex res( Entity::Integration::trapezi( 0.03, +1.0, 999, f_Re)
+                              , Entity::Integration::trapezi( 0.03, +1.0, 999, f_Im) );
     //ready.
-    return res;// TODO
+    return res;
 }// EunoZeta
 
 
@@ -148,8 +163,27 @@ ComplexExpand[ Exp[-(x + I*y)/u]/u] ==
 int main()
 {
     Numerics::Complex zVariable( +33.0, 1952.0 );
-    Numerics::Complex res = ExpIntegralEi_Ramanujan( zVariable);
-    std::cout<<"\n\t ExpIntegralEi_Ramanujan( "<< zVariable.Re() <<" +I* "<< zVariable.Im() <<")==" << res.Re() <<" +I* "<< res.Im() <<std::endl;
+    const double dx = +1.0E-3;
+    for( double u=0.03; u<=+0.97; u+=dx)
+    {
+        double re = fFormExpIntegralE1_Re( u, zVariable.Re(), zVariable.Im() );
+        double im = fFormExpIntegralE1_Im( u, zVariable.Re(), zVariable.Im() );
+        std::cout<<"\n\t fFormExpIntegralE1_xx( "<<u<<", "<< zVariable.Re() <<" +I* "<< zVariable.Im() <<")==" << re <<" +I* "<< im <<std::endl;
+    }
+
+    Numerics::Complex res = EunoZeta( zVariable);
+    std::cout<<"\n\t Euno( "<< zVariable.Re() <<" +I* "<< zVariable.Im() <<")==" << res.Re() <<" +I* "<< res.Im() <<std::endl;
+
+    //
+    std::cout<<"\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}
+
+/* cantina
+//    Numerics::Complex zVariable( +33.0, 1952.0 );
+//    Numerics::Complex res = ExpIntegralEi_Ramanujan( zVariable);
+//    std::cout<<"\n\t ExpIntegralEi_Ramanujan( "<< zVariable.Re() <<" +I* "<< zVariable.Im() <<")==" << res.Re() <<" +I* "<< res.Im() <<std::endl;
 
 //    for( int c=0; c<19; c++)
 //    {
@@ -169,8 +203,4 @@ int main()
      //PrimesFinder::Primes * p = new PrimesFinder::Primes( 9888777, 9888999, "primeCustomFile");
      //p->Start_PrimeDump_FileSys();
 
-    //
-    std::cout<<"\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}
+*/
