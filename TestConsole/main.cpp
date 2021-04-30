@@ -109,6 +109,41 @@ Numerics::Complex ExpIntegralEi_Ramanujan( Numerics::Complex zVariable)
 }// Ramanujan series
 
 
+double fForm_ReExpIntegralE1( double u
+ ,double x, double y )// these last ones have to be constant, since they are Re and Im of the complex param.
+{
+    return exp(-x/u)*cos(y/u)/u;
+}
+
+double fForm_ImExpIntegralE1( double u
+ ,double x, double y )// these last ones have to be constant, since they are Re and Im of the complex param.
+{
+    return -exp(-x/u)*sin(y/u)/u;
+}
+
+Numerics::Complex EunoZeta( Numerics::Complex zVariable)
+{/*
+ComplexExpand[ Exp[-(x + I*y)/u]/u] ==
+                (\[ExponentialE]^(-(x/u))*Cos[y/u])/u +
+- (\[ImaginaryI] \[ExponentialE]^(-(x/u)) Sin[y/u])/u     ==
+==              (E^(-(x/u))*Cos[y/u])/u +
+- (\[ImaginaryI]*E^(-(x/u))*Sin[y/u])/u      ==
+== (E^(-(x/u))*Cos[y/u])/u - (I*E^(-(x/u))*Sin[y/u])/u ==
+== (E^(-(x/u)))/u*(Cos[y/u]-(I*Sin[y/u]) ==
+== (E^(-(x/u)))/u*(E^(-I*(y/u)))
+    */
+    Numerics::Complex res(0.0, 0.0);
+    double x = zVariable.Re();
+    double y = zVariable.Im();
+    double u = 0.0;// integration domain start.
+    Numerics::Complex coChain( fForm_ReExpIntegralE1(u,x,y), fForm_ImExpIntegralE1(u,x,y) );
+    //...TODO : integrate until u->+1.0
+    //ready.
+    return res;// TODO
+}// EunoZeta
+
+
+
 
 int main()
 {
