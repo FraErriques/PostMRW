@@ -221,7 +221,19 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     unsigned long PrimesFinder::Primes::getActualLength()
     {
         return this->actualPrimaryFileLength;
-    }
+    }//getActualLength
+
+    unsigned long PrimesFinder::Primes::getLastOrdinal()
+    {
+        return this->lastOrdinal;
+    }//getLastOrdinal
+
+    unsigned long PrimesFinder::Primes::getLastPrime()
+    {
+        return this->lastPrime;
+    }//getLastPrime
+
+
 
  unsigned strlen_loc( char * par)
  {
@@ -423,6 +435,9 @@ void PrimesFinder::Primes::Start_PrimeDump_FileSys() const
     appendStream.close();
     // ready.
 }// IntegralFileFromStartFSproducer
+
+
+
 
 
 

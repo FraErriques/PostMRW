@@ -17,35 +17,71 @@
 #include "../Entity/Complex/Complex.h"
 
 
+    struct SingleFactor
+    {
+        unsigned long  pi;
+        unsigned long  ai;
+    };
 
-void protoFactorize( unsigned long par)
+SingleFactor * protoFactorize( unsigned long par)
 {
-    unsigned longsogliaStimata = par/2;// greatest involved-prime is the cofactor of the smallest one(i.e. 2).
+    SingleFactor * factorization = new SingleFactor[100];// TODO #
+    unsigned long sogliaStimata = par/2;// greatest involved-prime is the cofactor of the smallest one(i.e. 2).
     // ordinaleStimato == LogIntegral[ sogliaStimata] NB. overstimate it, for safety.
-    unsigned ordinaleStimato = 56UL; // TODO
+//        Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
+//        double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+//     unsigned ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+    unsigned ordinaleStimato = 11UL; // TODO
+    for(int c=0; c<ordinaleStimato; c++)
+    {// init.
+        factorization[c].pi = 0;
+        factorization[c].ai = 0;
+    }
     // TODO readRange( 1, ordinaleStimato);
-    unsigned long * involvedPrimes = new unsigned long[ordinaleStimato];
+    unsigned long * involvedPrimes = new unsigned long[ordinaleStimato]{2,3,5,7,11,13,17,19,23,29,31};
+    unsigned long dividendo, divisore;
+    dividendo = par;
+    double realQuotient;
+    unsigned long intQuotient;
+    int i=0;// start from +2. indice nel vettore dei primi.
+    int acc=0;// indice nel vettore dei risultati.
+    divisore=involvedPrimes[i];
+    bool lastDivisionWasDiophantine =  false;
+    double soglia = (double)dividendo/2.0; // greatest involved-prime is the cofactor of the smallest one(i.e. 2).
+    //
+    for(  ; +1<dividendo; )
+    {
+        realQuotient = (double)dividendo/(double)divisore;
+        intQuotient = dividendo/divisore;
+        if( realQuotient-intQuotient <+1.0E-80 )
+        {// divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
+            lastDivisionWasDiophantine =  true;
+            if( ! lastDivisionWasDiophantine)
+            {
+                acc++;// step to next factor in the results.
+            }// else incerment the exponent of an already existing factor.
+            factorization[acc].pi = divisore;// promote current prime and its exponent.
+            factorization[acc].ai++;// increment ai on this pi
+            dividendo = intQuotient;// NB. swap the dividendo, after a successful factor individuation.
+        }// else: goto test next prime, as divisor.
+        else
+        {// else: goto test next prime, as divisor.
+            lastDivisionWasDiophantine =  false;
+            i++;
+            divisore=involvedPrimes[i];
+        }
+    }
     //..
     delete[] involvedPrimes;
+    // ready.
+    return factorization;// NB. the caller has to delete.
 }// protoFactorize
 
 
 int main()
-{// declare a threshold under the actual one. In case of accidental start, mothing will be done.
-     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-     unsigned long res = (*p)[2];// TODO bug [1] #######################################################
-     unsigned long *pRange = new unsigned long[100];
-     for( int c=0; c<100; c++)
-     {
-         pRange[c] = (*p)[c+2];
-     }
-     for( int c=0; c<100; c++)
-     {
-         std::cout<<"\n\t Prime["<<c+2<<"]== "<<pRange[c];
-     }
-     //...
-     delete p;
-     delete[] pRange;
+{
+    SingleFactor * factorization = protoFactorize( 34);
+    delete[] factorization;
 
     //
     std::cout<<"\n\t Strike Enter to leave\t";
@@ -55,6 +91,26 @@ int main()
 
 
 /* cantina
+
+// declare a threshold under the actual one. In case of accidental start, mothing will be done.
+     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+     unsigned long lastOrdinal = p->getLastOrdinal();
+     unsigned long lastPrime = p->getLastPrime();
+     unsigned long presentLength = p->getActualLength();
+     unsigned long res = (*p)[3000];// TODO bug [1] #######################################################
+     unsigned long Delta = res - 4349987;// test
+     unsigned long *pRange = new unsigned long[100];
+     for( int c=0; c<100; c++)
+     {
+         pRange[c] = (*p)[c+300000];
+     }
+     for( int c=0; c<100; c++)
+     {
+         std::cout<<"\n\t Prime["<<c+2<<"]== "<<pRange[c];
+     }
+     //...
+     delete p;
+     delete[] pRange;
 
 //     PrimesFinder::Primes * p = new PrimesFinder::Primes(4349999);
 //     unsigned long res = (*p)[3];
