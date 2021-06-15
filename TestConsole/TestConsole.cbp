@@ -47,6 +47,7 @@
 			<Add directory="/usr/local/mysql/connector-c++-8.0/lib" />
 		</Linker>
 		<Unit filename="Cantina.txt" />
+		<Unit filename="Ei_parametrization_.txt" />
 		<Unit filename="Fantoccio.cpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="sqlScript.txt" />
