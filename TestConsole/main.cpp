@@ -53,23 +53,38 @@ SingleFactor * protoFactorize( unsigned long par)
     {
         realQuotient = (double)dividendo/(double)divisore;
         intQuotient = dividendo/divisore;
-        if( realQuotient-intQuotient <+1.0E-80 )
+        if( realQuotient-intQuotient <+1.0E-80 )// ####### ramo lastDivisionWasDiophantine ##
         {// divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
-            lastDivisionWasDiophantine =  true;
-            if( ! lastDivisionWasDiophantine)
+            if(  lastDivisionWasDiophantine)
             {
-                acc++;// step to next factor in the results.
-            }// else incerment the exponent of an already existing factor.
-            factorization[acc].pi = divisore;// promote current prime and its exponent.
-            factorization[acc].ai++;// increment ai on this pi
-            dividendo = intQuotient;// NB. swap the dividendo, after a successful factor individuation.
-        }// else: goto test next prime, as divisor.
-        else
+                // factorization[acc].pi is already correct: do nothing.
+                factorization[acc].ai++;// increment ai on this pi
+                lastDivisionWasDiophantine =  true;
+            }
+            else if( ! lastDivisionWasDiophantine)
+            {
+                factorization[acc].pi = divisore;// promote current prime and its exponent.
+                factorization[acc].ai++;// increment ai on this pi
+                lastDivisionWasDiophantine =  true;
+            }// No other else.
+            // in common btw curDivDiophantine
+            dividendo = intQuotient;// NB. swap the dividendo, after a successful
+        }// if // divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
+        else// ### no Diophantine division ##
         {// else: goto test next prime, as divisor.
+            if(  lastDivisionWasDiophantine)
+            {
+                acc++;// next factor slot, in the results array.
+            }
+            else if( ! lastDivisionWasDiophantine)
+            {
+                // NO acc++ we don't have an idoneous factor, yet.
+            }// No other else.
+            // factors in common btw lastDivisionWasDiophantine when curDivNOTDiophantine
+            i++;// test next prime, as factor.
             lastDivisionWasDiophantine =  false;
-            i++;
-            divisore=involvedPrimes[i];
-        }
+            divisore=involvedPrimes[i];// to next prime, if cur one works no more
+        }// else// ### no Diophantine division ##
     }
     //..
     delete[] involvedPrimes;
@@ -80,7 +95,7 @@ SingleFactor * protoFactorize( unsigned long par)
 
 int main()
 {
-    SingleFactor * factorization = protoFactorize( 34);
+    SingleFactor * factorization = protoFactorize( 2*2*2 * 3*3 * 5*5*5 *7 );
     delete[] factorization;
 
     //
