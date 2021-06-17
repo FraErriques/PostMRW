@@ -244,6 +244,10 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
  }
 
 
+ /// suggestions for bug-fixing on index[1]
+ // eliminate duplicated variable "target" in nested scopes
+ // on seekg(0, begin) swap partial_token and second_token, since there's no previous token, with respect to the first one.
+ // on seekg(0, end ) : not yet : TODO
 // it's a utility; syntax: Prime[ordinal]==...
 unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal )
 {// linear bisection on IntegralFile.
