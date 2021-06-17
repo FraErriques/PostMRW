@@ -95,7 +95,7 @@ SingleFactor * protoFactorize( unsigned long par)
 
 int main()
 {
-    SingleFactor * factorization = protoFactorize( 2*2*2 * 3*3 * 5*5*5 *7 );
+    SingleFactor * factorization = protoFactorize( 2*2*2 *   19 * 23 * 31*31*31 );
     delete[] factorization;
 
     //
