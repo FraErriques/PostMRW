@@ -95,20 +95,19 @@ SingleFactor * protoFactorize( unsigned long par)
 
 int main()
 {
-<<<<<<< HEAD
- 
-=======
      PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
      unsigned long lastOrdinal = p->getLastOrdinal();
      unsigned long lastPrime = p->getLastPrime();
      unsigned long presentLength = p->getActualLength();
-     unsigned long res = (*p)[1];// TODO bug [1] #######################################################
+     unsigned long res = (*p)[305083];// TODO bug [1] #######################################################
+     for( int c=1; c<100; c++)
+     {
+         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
+     }
      delete p;
      //
 //    SingleFactor * factorization = protoFactorize( 2*2*2 * 7 );// NB. when a prime not in divisors list is required, you get a div_by_0.
 //    delete[] factorization;
->>>>>>> refs/remotes/origin/WinPlatf
-
     //
     std::cout<<"\n\t Strike Enter to leave\t";
     getchar();

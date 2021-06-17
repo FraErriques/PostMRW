@@ -248,8 +248,9 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
  // eliminate duplicated variable "target" in nested scopes
  // on seekg(0, begin) swap partial_token and second_token, since there's no previous token, with respect to the first one.
  // on seekg(0, end ) : not yet : TODO
+ // on assignement const int tokenSize = 60; evaluate a dynamic size.
 // it's a utility; syntax: Prime[ordinal]==...
-unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & requiredOrdinal )
+unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredOrdinal )
 {// linear bisection on IntegralFile.
     const char * localDumpPath = new char[400];
     localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
@@ -265,7 +266,8 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & require
     long rightBoundary = dumpSize;
     // start bisecting:
     this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
-    if( requiredOrdinal>this->lastOrdinal)
+    if( requiredOrdinal>this->lastOrdinal
+        || requiredOrdinal<=0 )
     {
         return -1UL;// as an error code, since the correct response has to be >0.
     }// else continue:
@@ -273,6 +275,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & require
     int target = (int)(requiredLandingPoint*dumpSize);// find required %.
     dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
     const int tokenSize = 60;
+    bool mustSwapTokens = false;
     char partialToken[tokenSize];
     char secondToken[tokenSize];
     unsigned long decodedOrdinal = -1UL;
@@ -283,6 +286,14 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & require
         // random access to seek(bisection); next record will be complete.
         dumpReader.getline( partialToken, tokenSize, '\r' );
         dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
+        if(mustSwapTokens)
+        {// it's needed only when searching for the first record in the dump, since it has no previous record.
+            for( int c=0; c<tokenSize; c++)
+            {
+                secondToken[c] = partialToken[c];
+            }
+            mustSwapTokens = false;//reset
+        }// no else; when searching for records different from the absolute first, there's no need for this swap.
         int partialToken_Length = strlen_loc( partialToken);
         int secondToken_Length = strlen_loc( secondToken);
         int totalReadTokenLength = partialToken_Length+secondToken_Length+2;// +the two '\r' that are descarded.
@@ -342,6 +353,10 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long & require
             break;
         }
         int target = (int)(requiredLandingPoint*rightBoundary);// find required %.
+        if(0==target)
+        {
+            mustSwapTokens = true;
+        }
         dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
     }// loop della bisezione.
     // ready.
