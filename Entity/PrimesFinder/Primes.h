@@ -19,12 +19,16 @@ using namespace std;
 namespace PrimesFinder
 {
 
-
 class Primes
 {
-
     public:
     /// Data
+    struct SingleFactor
+    {
+        unsigned long  pi;
+        unsigned long  ai;
+    };
+
     /// Ctor
     Primes(unsigned long threshold);// default Section, on default config-file, dedicated for this class: i.e. ./PrimeConfig.txt
     // below: a Ctor to span (inf, max] :
@@ -35,15 +39,12 @@ class Primes
     unsigned long getLastOrdinal();
     unsigned long getLastPrime();
     unsigned long operator[] (const unsigned long requiredOrdinal);// NON const; updates the members {lastOrdinal, lastPrime}.syntax: Prime[ordinal]==...
-    // to be tested:
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
     char * lastRecordReaderByString( const std::string & fullPath);
+    /// method /// algo ///////////////////////////////////////////////////////////////////////
     void Start_PrimeDump_FileSys() const;
-
-
-   /// algo ///////////////////////////////////////////////////////////////////////
-
+    SingleFactor * IntegerDecomposition( unsigned long par);
 
 private:
     /// Data
@@ -69,9 +70,6 @@ private:
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
-
-
-
 
 };// class
 

@@ -367,6 +367,74 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
 }// operator[]
 
 
+// IntegerDecomposition : the Fundamental Thm of Arithmetic.
+PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition( unsigned long par)
+{
+    Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)par, ((double)par-2.0)*4, LogIntegral );
+    unsigned long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
+    SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
+    // Oss. greatest involved-prime==par/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
+    for(int c=0; c<ordinaleStimato; c++)
+    {// init to zeroContentMemory.
+        factorization[c].pi = 0;
+        factorization[c].ai = 0;
+    }
+    // TODO readRange( 1, ordinaleStimato);
+    unsigned long * involvedPrimes = new unsigned long[ordinaleStimato];
+    for(int c=0; c<ordinaleStimato; c++)
+    {
+        involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
+    }// end filling up the candidate prime-factor array.
+    unsigned long dividendo, divisore;
+    dividendo = par;
+    double realQuotient;
+    unsigned long intQuotient;
+    int i=0;// start from +2. indice nel vettore dei primi.
+    int acc=0;// indice nel vettore dei risultati.
+    divisore=involvedPrimes[i];
+    bool lastDivisionWasDiophantine =  false;
+    // #### start factorization loop ######################################################################################
+    for(  ; +1<dividendo; )
+    {// dividendo will be substituted by Quotient, until dividendo==+1.
+        realQuotient = (double)dividendo/(double)divisore;
+        intQuotient = dividendo/divisore;
+        if( realQuotient-intQuotient <+1.0E-80 )// ####### ramo lastDivisionWasDiophantine ##
+        {// divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
+            if(  lastDivisionWasDiophantine)
+            {//NB. factorization[acc].pi is already correct: do nothing on current factor "pi"
+            }//if(  lastDivisionWasDiophantine)
+            else if( ! lastDivisionWasDiophantine)
+            {// a new divisor gets promoted.
+                factorization[acc].pi = divisore;// promote current prime and its exponent.
+            }// No other else.
+            // NB. Actions in common btw curDivDiophantine:
+            factorization[acc].ai++;// increment the exponent of this factor: i.e. pi^ai
+            lastDivisionWasDiophantine =  true;// that's something we need to track.
+            dividendo = intQuotient;// NB. swap the dividendo, after a successful Diophantine-ratio.
+        }// if // divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
+        else// ### no Diophantine division ##
+        {// ### no Diophantine division ##
+            if(  lastDivisionWasDiophantine)
+            {// use next divisor slot, in the results array.
+                acc++;// next factor slot, in the results array.
+            }
+            else if( ! lastDivisionWasDiophantine)
+            {// NO acc++ we don't have an idoneous factor, yet.
+            }// No other else.
+            // NB. Actions in common btw lastDivisionWasDiophantine when curDivNOTDiophantine
+            i++;// test next prime, as factor.
+            lastDivisionWasDiophantine =  false;
+            divisore=involvedPrimes[i];// NB. to next prime, if cur one works no more
+        }// else// ### no Diophantine division ##
+    }// #### start factorization loop ######################################################################################
+    //..
+    delete[] involvedPrimes;// no more use of them.
+    // TODO : delete the prudentially oversized array, after copying in a fit-size one.
+    // ready.
+    return factorization;// NB. the caller has to delete.
+}// IntegerDecomposition : the Fundamental Thm of Arithmetic.
+
 
 void  PrimesFinder::Primes::recoverLastRecord( const char * fromFile)
 {
