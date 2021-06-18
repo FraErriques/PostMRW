@@ -96,10 +96,15 @@ SingleFactor * protoFactorize( unsigned long par)
 int main()
 {
      PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+     unsigned long overflowFlag = -1UL;
      unsigned long lastOrdinal = p->getLastOrdinal();
      unsigned long lastPrime = p->getLastPrime();
      unsigned long presentLength = p->getActualLength();
-     unsigned long res = (*p)[305083];// TODO bug [1] #######################################################
+     unsigned long res = (*p)[lastOrdinal-2];// TODO bug [lastOrdinal] #######################################################
+     if(overflowFlag==res)
+     {
+         std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
+     }
      for( int c=1; c<100; c++)
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];

@@ -245,10 +245,11 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
 
 
  /// suggestions for bug-fixing on index[1]
- // eliminate duplicated variable "target" in nested scopes
- // on seekg(0, begin) swap partial_token and second_token, since there's no previous token, with respect to the first one.
- // on seekg(0, end ) : not yet : TODO
- // on assignement const int tokenSize = 60; evaluate a dynamic size.
+ // eliminate duplicated variable "target" in nested scopes : DONE
+ // on seekg(0, begin) swap partial_token and second_token, since there's no previous token, with respect to the first one. DONE
+ // on seekg(0, end ) : cannot read more than the remaining bytes to EOF. So cannot seekg past (filesize-recordLength). DONE.
+ // on assignement const int tokenSize = 60; evaluate a dynamic size. TODO
+ //
 // it's a utility; syntax: Prime[ordinal]==...
 unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredOrdinal )
 {// linear bisection on IntegralFile.
@@ -266,7 +267,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
     long rightBoundary = dumpSize;
     // start bisecting:
     this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
-    if( requiredOrdinal>this->lastOrdinal
+    if( requiredOrdinal>this->lastOrdinal-2// "less 2" is necessary, to do NOT attempt reading after EOF, which throws.
         || requiredOrdinal<=0 )
     {
         return -1UL;// as an error code, since the correct response has to be >0.
@@ -352,7 +353,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
             requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
             break;
         }
-        int target = (int)(requiredLandingPoint*rightBoundary);// find required %.
+        target = (int)(requiredLandingPoint*rightBoundary);// find required %.
         if(0==target)
         {
             mustSwapTokens = true;
