@@ -52,7 +52,6 @@
 		<Unit filename="Integration/Integration.cpp" />
 		<Unit filename="Integration/Integration.h" />
 		<Unit filename="PrimesFinder/Primes.cpp" />
-		<Unit filename="PrimesFinder/Primes.cs" />
 		<Unit filename="PrimesFinder/Primes.h" />
 		<Unit filename="PrimesFinder/cantina.txt" />
 		<Unit filename="RealAnalysis/Real.cpp" />

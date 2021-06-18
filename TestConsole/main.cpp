@@ -17,81 +17,6 @@
 #include "../Entity/Complex/Complex.h"
 
 
-    struct SingleFactor
-    {
-        unsigned long  pi;
-        unsigned long  ai;
-    };
-
-SingleFactor * protoFactorize( unsigned long par)
-{
-    SingleFactor * factorization = new SingleFactor[100];// TODO #
-    unsigned long sogliaStimata = par/2;// greatest involved-prime is the cofactor of the smallest one(i.e. 2).
-    // ordinaleStimato == LogIntegral[ sogliaStimata] NB. overstimate it, for safety.
-//        Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
-//        double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
-//     unsigned ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;//TODO stima !
-    unsigned ordinaleStimato = 11UL; // TODO
-    for(int c=0; c<ordinaleStimato; c++)
-    {// init.
-        factorization[c].pi = 0;
-        factorization[c].ai = 0;
-    }
-    // TODO readRange( 1, ordinaleStimato);
-    unsigned long * involvedPrimes = new unsigned long[ordinaleStimato]{2,3,5,7,11,13,17,19,23,29,31};
-    unsigned long dividendo, divisore;
-    dividendo = par;
-    double realQuotient;
-    unsigned long intQuotient;
-    int i=0;// start from +2. indice nel vettore dei primi.
-    int acc=0;// indice nel vettore dei risultati.
-    divisore=involvedPrimes[i];
-    bool lastDivisionWasDiophantine =  false;
-    double soglia = (double)dividendo/2.0; // greatest involved-prime is the cofactor of the smallest one(i.e. 2).
-    //
-    for(  ; +1<dividendo; )
-    {
-        realQuotient = (double)dividendo/(double)divisore;
-        intQuotient = dividendo/divisore;
-        if( realQuotient-intQuotient <+1.0E-80 )// ####### ramo lastDivisionWasDiophantine ##
-        {// divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
-            if(  lastDivisionWasDiophantine)
-            {
-                // factorization[acc].pi is already correct: do nothing.
-                factorization[acc].ai++;// increment ai on this pi
-                lastDivisionWasDiophantine =  true;
-            }
-            else if( ! lastDivisionWasDiophantine)
-            {
-                factorization[acc].pi = divisore;// promote current prime and its exponent.
-                factorization[acc].ai++;// increment ai on this pi
-                lastDivisionWasDiophantine =  true;
-            }// No other else.
-            // in common btw curDivDiophantine
-            dividendo = intQuotient;// NB. swap the dividendo, after a successful
-        }// if // divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
-        else// ### no Diophantine division ##
-        {// else: goto test next prime, as divisor.
-            if(  lastDivisionWasDiophantine)
-            {
-                acc++;// next factor slot, in the results array.
-            }
-            else if( ! lastDivisionWasDiophantine)
-            {
-                // NO acc++ we don't have an idoneous factor, yet.
-            }// No other else.
-            // factors in common btw lastDivisionWasDiophantine when curDivNOTDiophantine
-            i++;// test next prime, as factor.
-            lastDivisionWasDiophantine =  false;
-            divisore=involvedPrimes[i];// to next prime, if cur one works no more
-        }// else// ### no Diophantine division ##
-    }
-    //..
-    delete[] involvedPrimes;
-    // ready.
-    return factorization;// NB. the caller has to delete.
-}// protoFactorize
-
 
 int main()
 {
@@ -100,7 +25,7 @@ int main()
      unsigned long lastOrdinal = p->getLastOrdinal();
      unsigned long lastPrime = p->getLastPrime();
      unsigned long presentLength = p->getActualLength();
-     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( 102);
+     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( 1279*7);
      delete factorization;
      delete p;
     //

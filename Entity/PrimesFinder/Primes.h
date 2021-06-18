@@ -44,7 +44,7 @@ class Primes
     char * lastRecordReaderByString( const std::string & fullPath);
     /// method /// algo ///////////////////////////////////////////////////////////////////////
     void Start_PrimeDump_FileSys() const;
-    SingleFactor * IntegerDecomposition( unsigned long par);
+    SingleFactor * IntegerDecomposition( const unsigned long dividend);
 
 private:
     /// Data

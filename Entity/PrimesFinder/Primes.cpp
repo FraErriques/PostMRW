@@ -368,13 +368,13 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
 
 
 // IntegerDecomposition : the Fundamental Thm of Arithmetic.
-PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition( unsigned long par)
+PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition( const unsigned long dividend)
 {
     Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)par, ((double)par-2.0)*4, LogIntegral );
+    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
     unsigned long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
-    // Oss. greatest involved-prime==par/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
+    // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
     for(int c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
         factorization[c].pi = 0;
@@ -387,7 +387,7 @@ PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition(
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
     }// end filling up the candidate prime-factor array.
     unsigned long dividendo, divisore;
-    dividendo = par;
+    dividendo = dividend;
     double realQuotient;
     unsigned long intQuotient;
     int i=0;// start from +2. indice nel vettore dei primi.
@@ -430,9 +430,16 @@ PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition(
     }// #### start factorization loop ######################################################################################
     //..
     delete[] involvedPrimes;// no more use of them.
-    // TODO : delete the prudentially oversized array, after copying in a fit-size one.
+    // NB. swap the prudentially oversized array, in a fit-size one.
+    SingleFactor * factorization_srk_ = new SingleFactor[acc+2];// the #divisors, counting from zero + a termination_record, zero filled.
+    for(int c=0; c<acc+2; c++)
+    {
+        factorization_srk_[c] = factorization[c];
+    }
+    if( factorization[acc+1].pi != 0) {throw;}// check on the nullity of last record. It's a placeholder.
+    delete[] factorization;// NB. delete the prudentially oversized array, after copying it, in a fit-size one.
     // ready.
-    return factorization;// NB. the caller has to delete.
+    return factorization_srk_;// NB. the caller has to delete.
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
 
 
