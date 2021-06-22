@@ -187,7 +187,7 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     lastrecReader.seekg( 0, lastrecReader.end);
     int streamSize = lastrecReader.tellg();
     int lastTokenHypothesizedLength;// f(streamSize).
-    // cannot use runtime-expressions in switch-case: case-labels have to be complite-time constants.
+    // cannot use runtime-expressions in switch-case: case-labels have to be compile-time constants.
     if( streamSize<4)
         {// no valid last-record in place.
             this->lastOrdinal=0UL;
