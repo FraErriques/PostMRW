@@ -21,7 +21,7 @@
         {
             this->createOrAppend( this->theDumpPath);
         }// else : TODO not-healthly built.
-        char * straightContentOfDumpTail  = this->lastRecordReaderByString( this->theDumpPath);
+        char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
         if( nullptr != straightContentOfDumpTail)
         {
             recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
@@ -107,7 +107,7 @@ unsigned long factorial( unsigned int par)
         {
             this->createOrAppend( this->theDumpPath);
         }// else : TODO not-healthly built.
-        // NB. no {lastRecordReaderByString, recoverLastRecord,...} -> work in [infLeft, maxRight].
+        // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
         Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
         double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
         this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
@@ -147,7 +147,7 @@ bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
         this->createOrAppend( this->theDumpPath);
     }// else : TODO not-healthly built.
     else {return res;}// which is still "false".
-    char * straightContentOfDumpTail  = this->lastRecordReaderByString( this->theDumpPath);
+    char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
     if( nullptr != straightContentOfDumpTail)
     {
         recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
@@ -181,7 +181,7 @@ void PrimesFinder::Primes::createOrAppend( const std::string & fullPath)
 
 
 
-char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & fullPath)
+char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
 {
     ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( 0, lastrecReader.end);
@@ -214,7 +214,7 @@ char *  PrimesFinder::Primes::lastRecordReaderByString( const std::string & full
     buffer[lastTokenHypothesizedLength]=0;//terminate.
     lastrecReader.close();
     return buffer;
-}// lastRecordReaderByString
+}// dumpTailReader
 
 
 

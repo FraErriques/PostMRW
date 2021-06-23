@@ -41,7 +41,7 @@ class Primes
     unsigned long operator[] (const unsigned long requiredOrdinal);// NON const; updates the members {lastOrdinal, lastPrime}.syntax: Prime[ordinal]==...
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
-    char * lastRecordReaderByString( const std::string & fullPath);
+    char * dumpTailReader( const std::string & fullPath);
     /// method /// algo ///////////////////////////////////////////////////////////////////////
     void Start_PrimeDump_FileSys() const;
     SingleFactor * IntegerDecomposition( const unsigned long dividend);
