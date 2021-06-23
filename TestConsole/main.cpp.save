@@ -11,6 +11,7 @@
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
+#include "../Entity/PrimesFinder/Primes.h"
 
 
 
@@ -21,9 +22,17 @@ double asdrubale( double x)
 
 int main()
 {
+    PrimesFinder::Primes * p = new PrimesFinder::Primes();
+    const char * primeDefaultFile = p->getDefaultPrimeDumpFullPath(  "primeDefaultFile");
+    p->createOrAppend( primeDefaultFile);
+    const char * revertedContent = p->lastRecordReader(  primeDefaultFile);
+    del
+    //const char * primeDefaultFile = prime.createOrAppend("./PrimeConfig.txt", "primeDefaultFile");
+
 
     //Common::dbCall::cantiere_sede_INSERT_SINGLE();
-    int res = Common::DbConnectionService::dbName_tableName_paramsList_INSERT_SINGLE("cantiere","`usp_cantiere_Primes_INSERT`","19");
+    //int res = Common::DbConnectionService::dbName_tableName_paramsList_INSERT_SINGLE("cantiere","`usp_cantiere_Primes_INSERT`","31");
+    //Common::DbConnectionService::do_usp_LOAD(); crashes...sadly.
     //sql::ResultSet * resPrimes = Common::DbConnectionService::dbName_tableName_LOAD_MULTI_("cantiere","Primes");
 
 //

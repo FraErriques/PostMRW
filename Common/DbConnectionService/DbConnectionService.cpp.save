@@ -100,11 +100,11 @@ void do_usp_LOAD()
     // Create a connection : steps follow:
     driver = get_driver_instance();// get the driver
     con = driver->connect( "tcp://127.0.0.1:3306", "root", "Riemann0");// get the connection to the specified instance.
-
+    /*
     sql::ResultSet  *res;
     stmt = con->createStatement();
     res = stmt->executeQuery("SELECT Ordinal, Prime FROM Primes ORDER BY Ordinal ASC");
-    /*
+    //
     while (res->next()) {
       // You can use either numeric offsets...
       cout << "Ordinal = " << res->getInt(1); // getInt(1) returns the first column
@@ -112,9 +112,9 @@ void do_usp_LOAD()
       // The latter is recommended.
       cout << ", label = '" << res->getString("Prime") << "'" << endl;
     }
+    */
     delete res;
     delete stmt;
-    */
     delete con;
 }//do_usp_LOAD(
 
