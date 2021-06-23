@@ -25,7 +25,13 @@ int main()
      unsigned long lastOrdinal = p->getLastOrdinal();
      unsigned long lastPrime = p->getLastPrime();
      unsigned long presentLength = p->getActualLength();
+     const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+     if( nullptr != theDumpPath)
+      {}// else : TODO not-healthly built.
+     char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
+     PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
      PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( 1279*7);
+     delete dumpTail;
      delete factorization;
      delete p;
     //

@@ -25,8 +25,13 @@ class Primes
     /// Data
     struct SingleFactor
     {
-        unsigned long  pi;
-        unsigned long  ai;
+        unsigned long  factorBase;//pi;
+        unsigned long  factorMultiplicity;//ai;
+    };
+    struct DumpElement
+    {
+        unsigned long  ordinal;
+        unsigned long  prime;
     };
 
     /// Ctor
@@ -70,6 +75,8 @@ private:
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
+public:
+    DumpElement * recoverDumpTail( const char * dumpTail) const;
 
 };// class
 

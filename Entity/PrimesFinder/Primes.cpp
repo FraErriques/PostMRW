@@ -377,8 +377,8 @@ PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition(
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
     for(int c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
-        factorization[c].pi = 0;
-        factorization[c].ai = 0;
+        factorization[c].factorBase = 0;
+        factorization[c].factorMultiplicity = 0;
     }
     // TODO readRange( 1, ordinaleStimato);
     unsigned long * involvedPrimes = new unsigned long[ordinaleStimato];
@@ -406,10 +406,10 @@ PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition(
             }//if(  lastDivisionWasDiophantine)
             else if( ! lastDivisionWasDiophantine)
             {// a new divisor gets promoted.
-                factorization[acc].pi = divisore;// promote current prime and its exponent.
+                factorization[acc].factorBase = divisore;// promote current prime and its exponent.
             }// No other else.
             // NB. Actions in common btw curDivDiophantine:
-            factorization[acc].ai++;// increment the exponent of this factor: i.e. pi^ai
+            factorization[acc].factorMultiplicity++;// increment the exponent of this factor: i.e. pi^ai
             lastDivisionWasDiophantine =  true;// that's something we need to track.
             dividendo = intQuotient;// NB. swap the dividendo, after a successful Diophantine-ratio.
         }// if // divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
@@ -436,16 +436,16 @@ PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition(
     {
         factorization_srk_[c] = factorization[c];
     }
-    if( factorization[acc+1].pi != 0) {throw;}// check on the nullity of last record. It's a placeholder.
+    if( factorization[acc+1].factorBase != 0) {throw;}// check on the nullity of last record. It's a placeholder.
     delete[] factorization;// NB. delete the prudentially oversized array, after copying it, in a fit-size one.
     // ready.
     return factorization_srk_;// NB. the caller has to delete.
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
 
 
-void  PrimesFinder::Primes::recoverLastRecord( const char * fromFile)
+void  PrimesFinder::Primes::recoverLastRecord( const char * dumpTail)
 {
-    std::string parFromFile(fromFile);
+    std::string parFromFile(dumpTail);
     int inputParamLength = parFromFile.length();
     std::string filteredLastToken("");
     for( int c=0; c<inputParamLength;c++)
@@ -475,6 +475,56 @@ void  PrimesFinder::Primes::recoverLastRecord( const char * fromFile)
 }//recoverLastRecord
 
 
+// produce an array of couples {ordinal,prime} from the dumpTail.
+PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const char * dumpTail) const
+{
+    std::string parFromFile(dumpTail);
+    int inputParamLength = parFromFile.length();
+    std::string filteredLastToken("");
+    for( int c=0; c<inputParamLength;c++)
+    {
+        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
+        {
+            filteredLastToken.append( 1, parFromFile[c] );
+        }
+        else// not digit
+        {
+            filteredLastToken.append( 1, '_' );// subst. with '_'
+        }
+    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
+    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+    int entryCardinality = tokenArray->size();
+    int actualCoupleCardinality = 0;//TODO : tagliare al massimo dei minoranti pari
+    // TODO: stabilire se pari
+    if( (double)entryCardinality/2.0 - entryCardinality/2 <+1E-80 )
+    {// parita'
+        actualCoupleCardinality = entryCardinality;
+    }
+    else
+    {// DISparita'
+        actualCoupleCardinality = entryCardinality-1;// TODO : tagliare al massimo dei minoranti pari
+    }
+    // TODO : tagliare al massimo dei minoranti pari
+    // TODO : allocare per tale misura
+    DumpElement * res = new DumpElement[actualCoupleCardinality];
+    // TODO : fill-up reverse
+    int i=actualCoupleCardinality-1;
+    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();
+     it!=tokenArray->rend() && i>=0;
+       i--) // no more increment on the iterator
+    {// preserve the last complete-records: they have to be {Ordinal,Prime}. Use index-parity for this task:
+        //if( (double)i/2.0 - i/2 > +1E-80 )         {// dispari
+            // get a Prime from tailEnd, coming back:
+            res[i].prime =  Common::StrManipul::stringToUnsignedLong(*it);
+        //}
+        //else // pari         {
+            // get an ordinal from tailEnd, coming back:
+            res[i].ordinal =  Common::StrManipul::stringToUnsignedLong(*(++it));// goto next record backwards.
+        //}
+    }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
+    // TODO : ret.
+    return res;// caller has to delete.
+}//recoverDumpTail
 
 
     // state of the art.
