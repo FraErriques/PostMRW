@@ -498,29 +498,25 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
     // TODO: stabilire se pari
     if( (double)entryCardinality/2.0 - entryCardinality/2 <+1E-80 )
     {// parita'
-        actualCoupleCardinality = entryCardinality;
+        actualCoupleCardinality = entryCardinality/2;
     }
     else
     {// DISparita'
-        actualCoupleCardinality = entryCardinality-1;// TODO : tagliare al massimo dei minoranti pari
+        actualCoupleCardinality = (entryCardinality-1)/2;// TODO : tagliare al massimo dei minoranti pari
     }
     // TODO : tagliare al massimo dei minoranti pari
     // TODO : allocare per tale misura
     DumpElement * res = new DumpElement[actualCoupleCardinality];
     // TODO : fill-up reverse
-    int i=actualCoupleCardinality-1;
+    int currentCouple=actualCoupleCardinality-1;
     for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();
-     it!=tokenArray->rend() && i>=0;
-       i--) // no more increment on the iterator
+     it!=tokenArray->rend() && currentCouple>=0;
+       currentCouple--) // no more increment on the iterator
     {// preserve the last complete-records: they have to be {Ordinal,Prime}. Use index-parity for this task:
-        //if( (double)i/2.0 - i/2 > +1E-80 )         {// dispari
-            // get a Prime from tailEnd, coming back:
-            res[i].prime =  Common::StrManipul::stringToUnsignedLong(*it);
-        //}
-        //else // pari         {
-            // get an ordinal from tailEnd, coming back:
-            res[i].ordinal =  Common::StrManipul::stringToUnsignedLong(*(++it));// goto next record backwards.
-        //}
+        // get a Prime from tailEnd, coming back:
+        res[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
+        // get an ordinal from tailEnd, coming back:
+        res[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
     // TODO : ret.
     return res;// caller has to delete.
