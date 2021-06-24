@@ -43,7 +43,8 @@ class Primes
     unsigned long getActualLength();
     unsigned long getLastOrdinal();
     unsigned long getLastPrime();
-    unsigned long operator[] (const unsigned long requiredOrdinal);// NON const; updates the members {lastOrdinal, lastPrime}.syntax: Prime[ordinal]==...
+    // NON const; updates the members {lastOrdinal, lastPrime}.syntax: Prime[ordinal]==...
+    unsigned long operator[] (const unsigned long requiredOrdinal);
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
     char * dumpTailReader( const std::string & fullPath);
@@ -75,7 +76,8 @@ private:
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
-public:
+public:// to let private, after the test-phase:
+    const int tailRecordSize = 60;
     DumpElement * recoverDumpTail( const char * dumpTail) const;
 
 };// class
