@@ -17,7 +17,7 @@
 
 int main()
 {
-     PrimesFinder::Primes * p = new PrimesFinder::Primes(99);
+     PrimesFinder::Primes * p = new PrimesFinder::Primes(1000999);
      unsigned long overflowFlag = -1UL;
      //
      p->Start_PrimeDump_FileSys();

@@ -219,16 +219,48 @@ char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
 
     unsigned long PrimesFinder::Primes::getActualLength()
     {
+        const char * localDumpPath = new char[400];
+        localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+        if( nullptr == localDumpPath)
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }// else continue:
+        unsigned long requiredPrime;
+        std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
+        dumpReader.seekg( 0, dumpReader.end);
+        long dumpSize = dumpReader.tellg();
+        this->actualPrimaryFileLength = dumpSize;
+        dumpReader.close();
         return this->actualPrimaryFileLength;
     }//getActualLength
 
     unsigned long PrimesFinder::Primes::getLastOrdinal()
     {
+        this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+        if( nullptr != this->theDumpPath)
+        {
+            this->createOrAppend( this->theDumpPath);
+        }// else : TODO not-healthly built.
+        char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
+        if( nullptr != straightContentOfDumpTail)
+        {
+            recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        }// else : no valid last record : start from zero!
         return this->lastOrdinal;
     }//getLastOrdinal
 
     unsigned long PrimesFinder::Primes::getLastPrime()
     {
+        this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+        if( nullptr != this->theDumpPath)
+        {
+            this->createOrAppend( this->theDumpPath);
+        }// else : TODO not-healthly built.
+        char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
+        if( nullptr != straightContentOfDumpTail)
+        {
+            recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        }// else : no valid last record : start from zero!
         return this->lastPrime;
     }//getLastPrime
 
