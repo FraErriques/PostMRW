@@ -29,8 +29,10 @@ public:
 
    /// binary operators /////////////////////////////////////////////////////
    Complex  operator+  (const Complex & second)    const;
+   Complex  operator+  (const double    second)    const;
    Complex  operator-  (const Complex & second)    const;
    Complex  operator*  (const Complex & second)    const;
+   Complex  operator*  (const int second)          const;
    Complex  operator/  (const Complex & second)    const;
    bool  operator==    (const Complex & second)    const;
    /// unary operators ////////////////////////////////////////////////////////
@@ -44,6 +46,7 @@ public:
    Complex LnC          (void)                     const;
    Complex ExpC         (void)                     const;
    Complex operator^    (const Complex & exponent) const;
+   Complex operator^    (const int exponent)       const;
    // trigonometric sub-section /////////////////////////
    Complex SinC         (void)                     const;
    Complex CosC         (void)                     const;

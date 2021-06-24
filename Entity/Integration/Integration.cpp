@@ -9,12 +9,9 @@ namespace Entity
 namespace Integration
 {
 
-// const double M_PI = atan(+1.0) * +4.0;  needed only on Windows ,while on Linux it's a symbolic constant.
 
 
-
-
-double rettangoli( double inf
+double rettangoli_withLog( double inf
                    ,double sup
                    ,double cardPartiz
                    ,FunctionalForm functionalForm
@@ -78,7 +75,7 @@ What else is contained in the two formulas is zero, whenever f(x0)==f(xn)==0 (i.
 When there's no null-boundary, the term CorrettivoAlContorno consists of Dx/2*(f(x0)+f(xn))-Dx*f(x0)==Dx/2*(f(xn)-f(x0)).
 Q.D.E.
 */
-double correttivoAlContorno( double inf
+double correttivoAlContorno_withLog( double inf
                    ,double sup
                    ,double cardPartiz
                    ,FunctionalForm functionalForm
@@ -95,7 +92,7 @@ double correttivoAlContorno( double inf
     return res;
 }
 
-double trapezi( double inf
+double trapezi_withLog( double inf
                    ,double sup
                    ,double cardPartiz
                    ,FunctionalForm functionalForm
@@ -121,6 +118,83 @@ double trapezi( double inf
     Common::LogWrappers::SectionClose();
     return res;
 }
+
+//###### below this mark, no_log versions: ###########
+
+
+
+double rettangoli( double inf
+                   ,double sup
+                   ,double cardPartiz
+                   ,FunctionalForm functionalForm
+                   ,bool calledFromTrapezi
+                  )
+{
+    double dx = (sup-inf) / cardPartiz;
+    double res = 0.0;// step adding on it
+    size_t i = 0;// step ordinal
+    for( double x=inf; x<sup; x+=dx)
+    {
+        ++i;
+        if( i > cardPartiz)
+        {
+            break;
+        }// else continue.
+        res += functionalForm(x) * dx;
+    }
+    return res;
+}
+
+
+
+/*
+Trapezium is generally more accurate than rectangle.
+Only in case the interval is bounded from gaussian-zeroes, the calculation gets equivalent.
+So, it's possible to compute Trapezium in the general case as Rectangle+correttivoAlContorno, where
+correttivoAlContorno==0 in gaussian conditions.
+Demonstration:
+for a Riemann-partition of cardinality #n Trapezium uses f(xi)[i=0->i=n]
+while Rectangle uses f(xi)[i=0->i=n-1]
+explicitly:
+Trapezium== Dx*Sum[f(xi)[i=1->i=n-1]]+Dx/2*(f(x0)+f(xn))
+Rectangle== Dx*f(x0)+Dx*Sum[f(xi)[i=1->i=n-1]]
+to verify that, just consider the Geometry here involved.
+Between the two formulas there is a common core, which consists in: Dx*Sum[f(xi)[i=1->i=n-1]]
+What else is contained in the two formulas is zero, whenever f(x0)==f(xn)==0 (i.e. null boundary condition, C.F.Gauss).
+When there's no null-boundary, the term CorrettivoAlContorno consists of Dx/2*(f(x0)+f(xn))-Dx*f(x0)==Dx/2*(f(xn)-f(x0)).
+Q.D.E.
+*/
+double correttivoAlContorno( double inf
+                   ,double sup
+                   ,double cardPartiz
+                   ,FunctionalForm functionalForm
+                  )
+{
+    double dx = (sup-inf) / cardPartiz;
+    double res = (+1.0/+2.0)*dx*(functionalForm(sup)-functionalForm(inf));// see demostration above, to get that trapezium==rettangolo+correttivoAlContorno.
+    return res;
+}
+
+
+double trapezi ( double inf
+                   ,double sup
+                   ,double cardPartiz
+                   ,FunctionalForm functionalForm
+                  )
+{
+    double res = rettangoli(  inf
+                   ,  sup
+                   ,  cardPartiz
+                   ,  functionalForm
+                   ,  true // in this call, "rettangoli()" function is the inner core of "trapezi()" function.
+                  );
+    res += correttivoAlContorno(  inf // trapezi() consists of an inner core "rettangoli" + corretivoAlContorno.
+                   ,  sup
+                   ,  cardPartiz
+                   ,  functionalForm
+                  );
+    return res;
+}//trapezi
 
 
 }// nmsp

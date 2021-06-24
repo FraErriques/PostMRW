@@ -52,9 +52,11 @@ std::vector<std::string> * removeEmptyEntries( std::vector<std::string> * origin
 // follow the xToString() and stringToX() functions:
 std::string * doubleToString( const double &par);
 std::string * intToString( const int &par);
+std::string * uLongToString( const unsigned long &par);
 std::string * boolToString( const bool &par);
 std::string * charToString( const char par);// no byRef, but byVal, since it's one byte.
 int stringToInt( const std::string &par);
+int stringToUnsignedLong( const std::string &par);
 double stringToDouble( const std::string &par);
 
 
