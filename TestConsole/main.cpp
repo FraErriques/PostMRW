@@ -20,12 +20,26 @@
 
 int main()
 {
-     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-     unsigned long overflowFlag = -1UL;
-     unsigned long lastOrdinal = p->getLastOrdinal();
-     unsigned long lastPrime = p->getLastPrime();
-     unsigned long presentLength = p->getActualLength();
-     unsigned long res = (*p)[lastOrdinal-1];// TODO bug [lastOrdinal] #######################################################
+    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    unsigned long overflowFlag = -1UL;
+    unsigned long lastOrdinal = p->getLastOrdinal();
+    unsigned long lastPrime = p->getLastPrime();
+    unsigned long presentLength = p->getActualLength();
+    delete p;
+    p = new PrimesFinder::Primes(5000000); // re-use
+    p->Start_PrimeDump_FileSys();
+    lastOrdinal = p->getLastOrdinal();
+    lastPrime = p->getLastPrime();
+    presentLength = p->getActualLength();
+
+     unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
+     res = (*p)[1];
+     res = (*p)[2];
+     res = (*p)[3];
+     res = (*p)[lastOrdinal];
+     res = (*p)[lastOrdinal-1];
+     res = (*p)[lastOrdinal-2];
+     res = (*p)[lastOrdinal-3];
      if(overflowFlag==res)
      {
          std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
