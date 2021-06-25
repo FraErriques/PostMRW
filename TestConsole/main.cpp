@@ -40,6 +40,7 @@ int main()
      res = (*p)[lastOrdinal-1];
      res = (*p)[lastOrdinal-2];
      res = (*p)[lastOrdinal-3];
+     res = (*p)[lastOrdinal-100];
      if(overflowFlag==res)
      {
          std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
