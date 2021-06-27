@@ -17,20 +17,32 @@
 
 int main()
 {
-     PrimesFinder::Primes * p = new PrimesFinder::Primes(1000999);
-     unsigned long overflowFlag = -1UL;
-     //
-     p->Start_PrimeDump_FileSys();
-     //
-     unsigned long lastOrdinal = p->getLastOrdinal();
-     unsigned long lastPrime = p->getLastPrime();
-     unsigned long presentLength = p->getActualLength();
-     unsigned long res = (*p)[lastOrdinal-1];// TODO bug [lastOrdinal] #######################################################
+    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    unsigned long overflowFlag = -1UL;
+    unsigned long lastOrdinal = p->getLastOrdinal();
+    unsigned long lastPrime = p->getLastPrime();
+    unsigned long presentLength = p->getActualLength();
+    delete p;
+    p = new PrimesFinder::Primes(5000000); // re-use
+    p->Start_PrimeDump_FileSys();
+    lastOrdinal = p->getLastOrdinal();
+    lastPrime = p->getLastPrime();
+    presentLength = p->getActualLength();
+
+     unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
+     res = (*p)[1];
+     res = (*p)[2];
+     res = (*p)[3];
+     res = (*p)[lastOrdinal];
+     res = (*p)[lastOrdinal-1];
+     res = (*p)[lastOrdinal-2];
+     res = (*p)[lastOrdinal-3];
+     res = (*p)[lastOrdinal-100];
      if(overflowFlag==res)
      {
          std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
      }
-     for( int c=1; c<100; c++)
+     for( int c=1970; c<=1100000; c++)
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
      }
@@ -39,9 +51,11 @@ int main()
       {}// else : TODO not-healthly built.
      char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
      PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
-//     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( 1279*7);
-//     delete factorization;
-     delete dumpTail;
+     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( 1279*7);
+     delete[] theDumpPath;
+     delete[] straightContentOfDumpTail;     
+     delete[] factorization;
+     delete[] dumpTail;
      delete p;
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";

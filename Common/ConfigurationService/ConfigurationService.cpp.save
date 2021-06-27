@@ -63,10 +63,10 @@ inline bool Common::ConfigurationService::FileExists_test( const std::string& na
 /// NB. on Unix the process has allowance to write only in its working dir (i.e. "./" ).
 Common::ConfigurationService::ConfigurationService( const std::string & configPath)
 {
-    std::vector<std::string> * local_tokenArray = nullptr;
     try
     {// first: book the memory. In case of Ctor failure, it will be anyway necessary to answer the queries.
         int configPathAnalysis = configPath.compare("default");
+
         std::string defaultConfigPath;
         switch( configPathAnalysis)
         {

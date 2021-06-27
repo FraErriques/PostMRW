@@ -153,6 +153,7 @@ bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
         recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else {return res;}// which is still "false".
+    delete straightContentOfDumpTail;
     // ready:
     res = true;// all ok.
     return res;
@@ -164,6 +165,8 @@ const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sec
     const char *  res = nullptr;
     Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for Primes:: in this file.
     const std::string * desiderSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
+    delete primeNamedConfig;
+    delete desiderSectionContent;
     res = desiderSectionContent->c_str();
     return res;// caller has to delete.
 }// getPrimeDumpFullPath
@@ -438,8 +441,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
 // it's a utility; syntax: Prime[ordinal]==...
 unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredOrdinal )
 {// linear bisection on IntegralFile.
-    const char * localDumpPath = new char[400];
-    localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+    //const char * localDumpPath = new char[400];
+    const char * localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
     if( nullptr == localDumpPath)
     {
         return -1UL;// as an error code, since the correct response has to be >0.
@@ -728,6 +731,7 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
         // get an ordinal from tailEnd, coming back:
         res[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
+    delete tokenArray;
     //ready.
     return res;// caller has to delete.
 }//recoverDumpTail
