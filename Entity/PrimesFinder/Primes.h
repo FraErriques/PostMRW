@@ -59,7 +59,8 @@ private:
     unsigned long desiredOrdinal;
     unsigned long desiredThreshold;// in R+
     unsigned long actualPrimaryFileLength;
-    const char * theDumpPath = nullptr;
+    const char * theDumpPath = nullptr;// NB. remember to share and delete[].
+    const int tailRecordSize = 60;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     // Riemann exponent s in C; s=:(sigma + i*t).
@@ -70,14 +71,14 @@ private:
     // copying methoda : not usable->private.
     // Copy Constructor
     Primes   ( const Primes & original );
+    // construction helper:
+    const char * feedDumpPath(); // non const
     // operator= only between isomorphic matrixes
     Primes & operator=   ( const Primes & second );
     /// method
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
-public:// to let private, after the test-phase:
-    const int tailRecordSize = 60;
     DumpElement * recoverDumpTail( const char * dumpTail) const;
 
 };// class
