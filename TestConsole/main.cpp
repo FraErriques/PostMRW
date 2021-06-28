@@ -45,7 +45,7 @@ int main()
      {
          std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
      }
-     for( int c=1970; c<=15021; c++)
+     for( int c=1; c<=lastOrdinal; c++)
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
      }
@@ -54,7 +54,7 @@ int main()
       {}// else : TODO not-healthly built.
      char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 //PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
-     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( 1279*7);
+     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
      delete[] theDumpPath;
      delete[] straightContentOfDumpTail;
      delete[] factorization;

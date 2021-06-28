@@ -16,7 +16,6 @@
     */
     PrimesFinder::Primes::Primes(unsigned long threshold)
     {// default section, in default file.
-//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
         this->feedDumpPath();
         if( nullptr != this->theDumpPath)
         {
@@ -126,7 +125,6 @@ unsigned long factorial( unsigned int par)
     */
     PrimesFinder::Primes::Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName)
     {// CUSTOM section, in default file.
-//this->theDumpPath = this->getPrimeDumpFullPath( desiredConfigSectionName);// CUSTOM Section Name.
         this->feedDumpPath();
         if( nullptr != this->theDumpPath)
         {
@@ -176,7 +174,6 @@ unsigned long factorial( unsigned int par)
 bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
 {
     bool res = false;// init to invalid.
-//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
     this->feedDumpPath();
     if( nullptr != this->theDumpPath)
     {
@@ -203,7 +200,7 @@ const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sec
     const std::string * desiredSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
     res = desiredSectionContent->c_str();
     delete primeNamedConfig;
-//delete desiredSectionContent;
+//delete desiredSectionContent;  TODO study how to delete it.
     return res;// caller has to delete.
 }// getPrimeDumpFullPath
 
@@ -258,7 +255,6 @@ char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
 
 unsigned long PrimesFinder::Primes::getActualLength()
 {
-//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
     this->feedDumpPath();
     if( nullptr == this->theDumpPath)
     {
@@ -274,9 +270,8 @@ unsigned long PrimesFinder::Primes::getActualLength()
 }//getActualLength
 
 unsigned long PrimesFinder::Primes::getLastOrdinal()
-{// default section, in default file.
-//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
-    this->feedDumpPath();
+{
+    this->feedDumpPath();// default section, in default file.
     if( nullptr == this->theDumpPath)
     {
         this->isHealthlyConstructed = false;
@@ -298,7 +293,6 @@ unsigned long PrimesFinder::Primes::getLastOrdinal()
 
 unsigned long PrimesFinder::Primes::getLastPrime()
 {// default section, in default file.
-//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
     this->feedDumpPath();
     if( nullptr == this->theDumpPath)
     {
@@ -330,152 +324,6 @@ unsigned long PrimesFinder::Primes::getLastPrime()
  }
 
 
-// // suggestions for bug-fixing on index[1]
-// // on seekg(0, begin) swap partial_token and second_token, since there's no previous token, with respect to the first one. DONE
-// // on seekg(0, end ) : cannot read more than the remaining bytes to EOF. So cannot seekg past (filesize-recordLength). DONE.
-// // on assignement const int tokenSize = 60; evaluate a dynamic size. DONE: global dataMember tailRecordSize==60.
-// //
-//// it's a utility; syntax: Prime[ordinal]==...
-//unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredOrdinal )
-//{// linear bisection on IntegralFile.
-//    //const char * localDumpPath = new char[400];
-//    const char * localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
-//    if( nullptr == localDumpPath)
-//    {
-//        return -1UL;// as an error code, since the correct response has to be >0.
-//    }// else continue:
-//    unsigned long requiredPrime;
-//    std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
-//    dumpReader.seekg( 0, dumpReader.end);
-//    long dumpSize = dumpReader.tellg();
-//    long secureRightBound = dumpSize - this->tailRecordSize;
-//    long leftBoundary = 0;
-//    long rightBoundary = dumpSize;
-//    // start bisecting:
-//    this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
-//    if( requiredOrdinal>this->lastOrdinal// TODO test  "less 2" is necessary, to do NOT attempt reading after EOF, which throws.
-//        || requiredOrdinal<=0 )
-//    {
-//        return -1UL;// as an error code, since the correct response has to be >0.
-//    }// else continue:
-//    double requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) )*dumpSize;
-//    int target;
-//    const int tokenSize = this->tailRecordSize;// globally defined.
-//    bool mustSwapTokens = false;
-//    char partialToken[tokenSize];
-//    char secondToken[tokenSize];
-//    unsigned long decodedOrdinal = -1UL;
-//    //
-//    for( ; requiredOrdinal!= decodedOrdinal;)
-//    {// loop della bisezione:
-////##
-//        target = (int)(requiredLandingPoint);// find required %.
-//        if( secureRightBound<target)// required a landing-point, after the secureRightBound
-//        {
-//            char * straightContentOfDumpTail  = this->dumpTailReader( localDumpPath);
-//            PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( straightContentOfDumpTail);
-//            for(int c=0; ; c++)
-//            {// scan the dumpTailArray
-//                if( requiredOrdinal==dumpTail[c].ordinal)
-//                {
-//                    decodedOrdinal = dumpTail[c].ordinal;// exit condition
-//                    requiredPrime = dumpTail[c].prime;
-//                    delete[] straightContentOfDumpTail;
-//                    delete[] dumpTail;
-//                    return requiredPrime;// NB. break is not enough!
-//                }// else continue.
-//            }// scan the dumpTailArray
-//        }// required a landing-point, after the secureRightBound
-//        else
-//        {// NB. only seek to safe locations(i.e. <=secureRightBound) otherwise the flag-family isBad,isEOF will throw something.
-//            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.############################################################ crucial action #####
-//        }// after having landed, evaluate:
-//        if(0==target)//if the required landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
-//        {
-//            mustSwapTokens = true;
-//        }
-//        else
-//        {
-//            mustSwapTokens = false;// evaluate TODO
-//        }
-////##
-//        // first Token has to be thrown away, since it is likely to be truncated before the beginning, due to
-//        // random access to seek(bisection); next record will be complete.
-//        dumpReader.getline( partialToken, tokenSize, '\r' );
-//        dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
-//        if(mustSwapTokens)// just in case of having read the first absolute record, which is 1_2
-//        {// it's needed only when searching for the first record in the dump, since it has no previous record.
-//            for( int c=0; c<tokenSize; c++)
-//            {
-//                secondToken[c] = partialToken[c];
-//            }
-//            mustSwapTokens = false;//reset
-//        }// no else; when searching for records different from the absolute first, there's no need for this swap.
-//        int partialToken_Length = strlen_loc( partialToken);
-//        int secondToken_Length = strlen_loc( secondToken);
-//        int totalReadTokenLength = partialToken_Length+secondToken_Length+2;// +the two '\r' that are descarded.
-//        //## functions to check state flags:
-//        bool isGood = dumpReader.good();
-//        bool isEOF = dumpReader.eof();
-//        bool isFailure = dumpReader.fail();
-//        bool isBad = dumpReader.bad();
-//        bool isRdState = dumpReader.rdstate();
-//        if( !isGood
-//            ||isEOF
-//            ||isFailure
-//            ||isBad
-//            ||isRdState )
-//        {
-//            return -1UL;// as an error code, since the correct response has to be >0.
-//        }// else continue:
-//        //## end: functions to check state flags.
-//        char cStringDivisorSequence[2];
-//        cStringDivisorSequence[0] = '_';
-//        cStringDivisorSequence[1] = 0;
-//        std::vector<std::string> * splittedTokens = Common::StrManipul::stringSplit( cStringDivisorSequence, secondToken, true);
-//        int hmFoundToken = splittedTokens->size();
-//        const char * decodedOrdinal_str = nullptr;
-//        const char * decodedPrime_str = nullptr;
-//        if(2<=hmFoundToken)// at least ordinal_prime ,i.e. 2 token.
-//        {
-//            decodedOrdinal_str = (*splittedTokens)[0].c_str();
-//            decodedPrime_str = (*splittedTokens)[1].c_str();
-//        }
-//        else
-//        {
-//            return -1UL;// as an error code, since the correct response has to be >0.
-//        }
-//        // TODO : manage exception on parsing.
-//        decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);// TODO : manage exception on parsing. test:
-//        if( decodedOrdinal>this->lastOrdinal)
-//        {
-//            return -1UL;// as an error code, since the correct response has to be >0.
-//        }
-//        long presentPosition = dumpReader.tellg();//#### NB. ####
-//        if( decodedOrdinal<requiredOrdinal)// #### landingPoint evaluation #####
-//        {// bisection forward : right leaf
-//            leftBoundary = presentPosition;
-//            rightBoundary = dumpSize;
-//        }
-//        else if( decodedOrdinal > requiredOrdinal)
-//        {// bisection backward : left leaf
-//            leftBoundary = 0;
-//            rightBoundary = presentPosition-totalReadTokenLength;
-//        }
-//        else// i.e.  decodedOrdinal == requiredOrdinal
-//        {
-//            requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
-//            break;
-//        }
-//        // common factors:
-//        dumpSize = rightBoundary - leftBoundary;
-//        requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * dumpSize;
-//    }// loop della bisezione.
-//    // ready.
-//    dumpReader.close();// TODO evaluate if leave open for ReadRange()
-//    delete[] localDumpPath;
-//    return requiredPrime;
-//}// operator[]
 
 
  // suggestions for bug-fixing on index[1]
