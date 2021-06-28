@@ -16,7 +16,8 @@
     */
     PrimesFinder::Primes::Primes(unsigned long threshold)
     {// default section, in default file.
-        this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+        this->feedDumpPath();
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
@@ -33,6 +34,22 @@
             this->canOperate = false;
         }// else : not-healthly built.
     }// Ctor
+
+
+const char * PrimesFinder::Primes::feedDumpPath() // non const
+{// default section, in default file.
+    if( nullptr==this->theDumpPath)
+    {
+        this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+    }//else ready.
+    return this->theDumpPath;
+}// feedDumpPath()
+
+
+
+namespace internalAlgos
+{
+
 
 
     // an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
@@ -98,6 +115,8 @@ unsigned long factorial( unsigned int par)
   }// Ramanujan series
 
 
+}// end nmsp internalAlgos
+
 
 
     /*
@@ -107,12 +126,13 @@ unsigned long factorial( unsigned int par)
     */
     PrimesFinder::Primes::Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName)
     {// CUSTOM section, in default file.
-        this->theDumpPath = this->getPrimeDumpFullPath( desiredConfigSectionName);// CUSTOM Section Name.
+//this->theDumpPath = this->getPrimeDumpFullPath( desiredConfigSectionName);// CUSTOM Section Name.
+        this->feedDumpPath();
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
             // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-            Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
+            Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
             double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
             this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
             this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
@@ -138,6 +158,11 @@ unsigned long factorial( unsigned int par)
     /// Dtor()
     PrimesFinder::Primes::~Primes()
     {/// Dtor() : closes the append_handle.
+        if( nullptr != this->theDumpPath)
+        {
+            delete[] this->theDumpPath;
+            this->theDumpPath = nullptr;
+        }
         /*
         if( nullptr != this->appendStream)  no more a global class::variable.
         {
@@ -151,7 +176,8 @@ unsigned long factorial( unsigned int par)
 bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
 {
     bool res = false;// init to invalid.
-    this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+    this->feedDumpPath();
     if( nullptr != this->theDumpPath)
     {
         this->createOrAppend( this->theDumpPath);
@@ -232,7 +258,8 @@ char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
 
 unsigned long PrimesFinder::Primes::getActualLength()
 {
-    this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+    this->feedDumpPath();
     if( nullptr == this->theDumpPath)
     {
         this->isHealthlyConstructed = false;
@@ -248,7 +275,8 @@ unsigned long PrimesFinder::Primes::getActualLength()
 
 unsigned long PrimesFinder::Primes::getLastOrdinal()
 {// default section, in default file.
-    this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+    this->feedDumpPath();
     if( nullptr == this->theDumpPath)
     {
         this->isHealthlyConstructed = false;
@@ -270,7 +298,8 @@ unsigned long PrimesFinder::Primes::getLastOrdinal()
 
 unsigned long PrimesFinder::Primes::getLastPrime()
 {// default section, in default file.
-    this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+//this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+    this->feedDumpPath();
     if( nullptr == this->theDumpPath)
     {
         this->isHealthlyConstructed = false;
@@ -309,8 +338,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
 //// it's a utility; syntax: Prime[ordinal]==...
 //unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredOrdinal )
 //{// linear bisection on IntegralFile.
-//    const char * localDumpPath = new char[400];
-//    localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+//    //const char * localDumpPath = new char[400];
+//    const char * localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
 //    if( nullptr == localDumpPath)
 //    {
 //        return -1UL;// as an error code, since the correct response has to be >0.
@@ -329,9 +358,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
 //    {
 //        return -1UL;// as an error code, since the correct response has to be >0.
 //    }// else continue:
-//    double requiredLandingPoint = (double)requiredOrdinal / (double)(this->lastOrdinal);
-//    int target = (int)(requiredLandingPoint*dumpSize);// find required %.
-//    dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
+//    double requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) )*dumpSize;
+//    int target;
 //    const int tokenSize = this->tailRecordSize;// globally defined.
 //    bool mustSwapTokens = false;
 //    char partialToken[tokenSize];
@@ -340,11 +368,42 @@ unsigned long PrimesFinder::Primes::getLastPrime()
 //    //
 //    for( ; requiredOrdinal!= decodedOrdinal;)
 //    {// loop della bisezione:
-//        // first one has to be thrown away, since it is likely to be truncated before the beginning, due to
+////##
+//        target = (int)(requiredLandingPoint);// find required %.
+//        if( secureRightBound<target)// required a landing-point, after the secureRightBound
+//        {
+//            char * straightContentOfDumpTail  = this->dumpTailReader( localDumpPath);
+//            PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( straightContentOfDumpTail);
+//            for(int c=0; ; c++)
+//            {// scan the dumpTailArray
+//                if( requiredOrdinal==dumpTail[c].ordinal)
+//                {
+//                    decodedOrdinal = dumpTail[c].ordinal;// exit condition
+//                    requiredPrime = dumpTail[c].prime;
+//                    delete[] straightContentOfDumpTail;
+//                    delete[] dumpTail;
+//                    return requiredPrime;// NB. break is not enough!
+//                }// else continue.
+//            }// scan the dumpTailArray
+//        }// required a landing-point, after the secureRightBound
+//        else
+//        {// NB. only seek to safe locations(i.e. <=secureRightBound) otherwise the flag-family isBad,isEOF will throw something.
+//            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.############################################################ crucial action #####
+//        }// after having landed, evaluate:
+//        if(0==target)//if the required landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
+//        {
+//            mustSwapTokens = true;
+//        }
+//        else
+//        {
+//            mustSwapTokens = false;// evaluate TODO
+//        }
+////##
+//        // first Token has to be thrown away, since it is likely to be truncated before the beginning, due to
 //        // random access to seek(bisection); next record will be complete.
 //        dumpReader.getline( partialToken, tokenSize, '\r' );
 //        dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
-//        if(mustSwapTokens)
+//        if(mustSwapTokens)// just in case of having read the first absolute record, which is 1_2
 //        {// it's needed only when searching for the first record in the dump, since it has no previous record.
 //            for( int c=0; c<tokenSize; c++)
 //            {
@@ -397,47 +456,23 @@ unsigned long PrimesFinder::Primes::getLastPrime()
 //        {// bisection forward : right leaf
 //            leftBoundary = presentPosition;
 //            rightBoundary = dumpSize;
-//            requiredLandingPoint = (double)requiredOrdinal / (double)(decodedOrdinal);
 //        }
 //        else if( decodedOrdinal > requiredOrdinal)
 //        {// bisection backward : left leaf
 //            leftBoundary = 0;
 //            rightBoundary = presentPosition-totalReadTokenLength;
-//            requiredLandingPoint = (double)requiredOrdinal / (double)(decodedOrdinal);
 //        }
 //        else// i.e.  decodedOrdinal == requiredOrdinal
 //        {
 //            requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
 //            break;
 //        }
-//        target = (int)(requiredLandingPoint*rightBoundary);// find required %.
-//        if(0==target)//if the required landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
-//        {
-//            mustSwapTokens = true;
-//        }
-//        if( secureRightBound<target)// required a landing-point, after the secureRightBound
-//        {
-////            const char * theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
-////            if( nullptr == theDumpPath)
-////            {throw;}// on file not found; else continue.
-//            char * straightContentOfDumpTail  = this->dumpTailReader( localDumpPath);
-//            PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( straightContentOfDumpTail);
-//            for(int c=0; ; c++)
-//            {// scan the dumpTailArray
-//                if( requiredOrdinal==dumpTail[c].ordinal)
-//                {
-//                    decodedOrdinal = dumpTail[c].ordinal;// exit condition
-//                    requiredPrime = dumpTail[c].prime;
-//                    delete[] straightContentOfDumpTail;
-//                    delete[] dumpTail;
-//                    break;
-//                }// else continue.
-//            }// scan the dumpTailArray
-//        }// required a landing-point, after the secureRightBound
-//        dumpReader.seekg( target, dumpReader.beg);// GOTO required %.
+//        // common factors:
+//        dumpSize = rightBoundary - leftBoundary;
+//        requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * dumpSize;
 //    }// loop della bisezione.
 //    // ready.
-//    dumpReader.close();
+//    dumpReader.close();// TODO evaluate if leave open for ReadRange()
 //    delete[] localDumpPath;
 //    return requiredPrime;
 //}// operator[]
@@ -451,14 +486,13 @@ unsigned long PrimesFinder::Primes::getLastPrime()
 // it's a utility; syntax: Prime[ordinal]==...
 unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredOrdinal )
 {// linear bisection on IntegralFile.
-    //const char * localDumpPath = new char[400];
-    const char * localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
-    if( nullptr == localDumpPath)
+    this->feedDumpPath();
+    if( nullptr == this->theDumpPath)
     {
         return -1UL;// as an error code, since the correct response has to be >0.
     }// else continue:
     unsigned long requiredPrime;
-    std::ifstream dumpReader( localDumpPath, std::fstream::in );// read-only.
+    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
     dumpReader.seekg( 0, dumpReader.end);
     long dumpSize = dumpReader.tellg();
     long secureRightBound = dumpSize - this->tailRecordSize;
@@ -466,26 +500,24 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
     long rightBoundary = dumpSize;
     // start bisecting:
     this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
-    if( requiredOrdinal>this->lastOrdinal// TODO test  "less 2" is necessary, to do NOT attempt reading after EOF, which throws.
+    if( requiredOrdinal>this->lastOrdinal// NB. do NOT attempt reading after EOF, which throws.
         || requiredOrdinal<=0 )
     {
         return -1UL;// as an error code, since the correct response has to be >0.
     }// else continue:
-    double requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) )*dumpSize;
+    double requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) )*dumpSize;// NB. crucial ####
     int target;
     const int tokenSize = this->tailRecordSize;// globally defined.
-    bool mustSwapTokens = false;
     char partialToken[tokenSize];
     char secondToken[tokenSize];
     unsigned long decodedOrdinal = -1UL;
     //
     for( ; requiredOrdinal!= decodedOrdinal;)
     {// loop della bisezione:
-//##
         target = (int)(requiredLandingPoint);// find required %.
         if( secureRightBound<target)// required a landing-point, after the secureRightBound
         {
-            char * straightContentOfDumpTail  = this->dumpTailReader( localDumpPath);
+            char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
             PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( straightContentOfDumpTail);
             for(int c=0; ; c++)
             {// scan the dumpTailArray
@@ -503,30 +535,21 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         {// NB. only seek to safe locations(i.e. <=secureRightBound) otherwise the flag-family isBad,isEOF will throw something.
             dumpReader.seekg( target, dumpReader.beg);// GOTO required %.############################################################ crucial action #####
         }// after having landed, evaluate:
-        if(0==target)//if the required landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
-        {
-            mustSwapTokens = true;
-        }
-        else
-        {
-            mustSwapTokens = false;// evaluate TODO
-        }
-//##
         // first Token has to be thrown away, since it is likely to be truncated before the beginning, due to
         // random access to seek(bisection); next record will be complete.
         dumpReader.getline( partialToken, tokenSize, '\r' );
         dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
-        if(mustSwapTokens)// just in case of having read the first absolute record, which is 1_2
+        if(0==target)//if the required landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
         {// it's needed only when searching for the first record in the dump, since it has no previous record.
             for( int c=0; c<tokenSize; c++)
-            {
+            {// mustSwapTokens
                 secondToken[c] = partialToken[c];
             }
-            mustSwapTokens = false;//reset
         }// no else; when searching for records different from the absolute first, there's no need for this swap.
         int partialToken_Length = strlen_loc( partialToken);
         int secondToken_Length = strlen_loc( secondToken);
         int totalReadTokenLength = partialToken_Length+secondToken_Length+2;// +the two '\r' that are descarded.
+        /* in case of need to Debug the stream seeking.
         //## functions to check state flags:
         bool isGood = dumpReader.good();
         bool isEOF = dumpReader.eof();
@@ -542,6 +565,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
             return -1UL;// as an error code, since the correct response has to be >0.
         }// else continue:
         //## end: functions to check state flags.
+        */
         char cStringDivisorSequence[2];
         cStringDivisorSequence[0] = '_';
         cStringDivisorSequence[1] = 0;
@@ -586,7 +610,6 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
     }// loop della bisezione.
     // ready.
     dumpReader.close();// TODO evaluate if leave open for ReadRange()
-    delete[] localDumpPath;
     return requiredPrime;
 }// operator[]
 
@@ -594,7 +617,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
 // IntegerDecomposition : the Fundamental Thm of Arithmetic.
 PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition( const unsigned long dividend)
 {
-    Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
+    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
     unsigned long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
@@ -802,431 +825,3 @@ void PrimesFinder::Primes::Start_PrimeDump_FileSys() const
 }// IntegralFileFromStartFSproducer
 
 
-
-
-
-
-/*
-
-
-    void PrimesFinder::Primes::old_lastRecordReader( const std::string & theDumpPath)
-    {// get last record START
-        //char * buf = new char[200];// stay huge.
-        Common::StringBuilder * buf = new Common::StringBuilder(900);
-        char * cleanToken = nullptr;
-        Common::StringBuilder * unusefulToken = new Common::StringBuilder(100);// TODO forecast a size.
-        Common::StringBuilder * primeToken = new Common::StringBuilder(100);// TODO forecast a size.
-        Common::StringBuilder * ordinalToken = new Common::StringBuilder(100);// TODO forecast a size.
-        int underscoreSymbolAccumulator=0;
-        int hashSymbolAccumulator=0;
-        ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
-        lastRecordReader.seekg (-1, lastRecordReader.end);
-        int length = lastRecordReader.tellg();
-        bool isDumpFileInGoodCondition = lastRecordReader.good();
-        if( ! isDumpFileInGoodCondition || length<3)
-        {// if file does not contain a single record, skip reading last-record.
-            this->lastOrdinal=0;
-            this->lastPrime=0;
-        }
-        else// can read last record
-        {
-            lastRecordReader.seekg( -1, lastRecordReader.end);// position right before EOF, i.e. -1,end.
-            isDumpFileInGoodCondition = lastRecordReader.good();
-            bool isTokenStart = true;
-            bool isHalfToken = false;
-            bool isTokenEnd = false;
-            char singleChar[2];// one used, the other for termination.
-            int hmUnderscore = 0;
-            int c=0, acc=0;
-            for( ; hmUnderscore<2 ; c++)
-            {
-                //lastRecordReader.get( singleChar);
-                lastRecordReader.read( singleChar,1);
-                singleChar[2]=0;// term.
-                isDumpFileInGoodCondition = lastRecordReader.good();
-                lastRecordReader.seekg( -2, lastRecordReader.cur);// each "get()" call seeks(+1), so to get a char backwards do a seek(-2).
-                isDumpFileInGoodCondition = lastRecordReader.good();
-                if( singleChar[0]<48 || singleChar[0]>57 )// is-NOT-digit
-                {// is-NOT-digit
-                    if( singleChar[0]==95) // isHalfToken=='_'==underscore
-                    {// isHalfToken
-                        buf->append(singleChar[0]);
-                        //buf[acc++] = singleChar;
-                        hmUnderscore++;// count the separators
-                    }
-                    else// new line or invalid chars: \r \n ...
-                    {// new line or invalid chars: \r \n ...
-                        buf->append('#');
-                        //buf[acc++] = '#';
-                    }// else// new line or invalid chars: \r \n ...
-                    // invalid char->skip.
-                }// if is NOT-digit
-                if( singleChar[0]>=48 && singleChar[0]<=57 )// is digit
-                {// is_digit
-                    buf->append(singleChar[0]);
-                    //buf[acc++] = singleChar;
-                }// no else.
-            }// for: exit on hmUnderscore==2.
-            //
-            for( int d=acc; d>=0; d--)
-            {
-                if( buf->str()[d]=='_' )
-                {
-                    underscoreSymbolAccumulator++;
-                }
-                else if( buf->str()[d]=='#' )
-                {
-                    hashSymbolAccumulator++;
-                }
-                if( buf->str()[d]>=48 && buf->str()[d]<=57 )
-                {
-                    if( +1==underscoreSymbolAccumulator && 0==hashSymbolAccumulator)
-                    {
-                        unusefulToken->append(buf->str()[d]);
-                    }
-                    else if( +1==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
-                    {
-                        ordinalToken->append(buf->str()[d]);
-                    }
-                    else if( +2==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
-                    {
-                        primeToken->append(buf->str()[d]);
-                    }
-                }// else skip non inherent char, in parsing.
-            }// reparse the reverted string, which contains one and half token.
-        }// read last record activity
-        const char * unusefulTokenResult = unusefulToken->str().c_str();
-        const char * ordinalTokenResult = ordinalToken->str().c_str();
-        const char * primeTokenResult = primeToken->str().c_str();
-        this->lastOrdinal = Common::StrManipul::stringToUnsignedLong( ordinalTokenResult);
-        this->lastPrime = Common::StrManipul::stringToUnsignedLong( primeTokenResult);
-        delete unusefulToken;
-        delete ordinalToken;
-        delete primeToken;
-        delete buf;
-        lastRecordReader.close();// close input stream.
-        // get last record END
-    }//  PrimesFinder::Primes::old_lastRecordReader()
-
-
-
-// from email #
-const char *  PrimesFinder::Primes::lastRecordReader( const std::string & fullPath)
-{
-     ifstream lastrecReader(fullPath, std::fstream::in );
-     std::string * buf = new std::string();
-     char curChar;
-     lastrecReader.seekg( 0, lastrecReader.end);
-     int streamSize = lastrecReader.tellg();
-     std::cout<<"file length=="<<streamSize<<std::endl;
-     bool ifstreamStatus = true;// TODO dbg
-     int readChars = 0;
-     int curPositionInStream = -1;
-     lastrecReader.seekg( -1, lastrecReader.end); //ios_base::end);//########## NB. to do not get EOF on first read, it's necessary to seek(-1,end).
-     for( readChars = 0; streamSize>=readChars; readChars++ )
-     {
-        // functions to check state flags
-        bool isGood = lastrecReader.good();
-        bool isEOF = lastrecReader.eof();
-        bool isFailure = lastrecReader.fail();
-        bool isBad = lastrecReader.bad();
-        bool isRdState = lastrecReader.rdstate();
-        // ### dbg ####
-        //
-        curPositionInStream = lastrecReader.tellg();
-        std::cout<<"position before Get()  "<<curPositionInStream<<std::endl;
-        //
-        // int readASCIIcode = lastrecReader.get();
-        int readASCIIcode = lastrecReader.peek();
-        //
-        curPositionInStream = lastrecReader.tellg();
-        std::cout << "position after Get()" << curPositionInStream << std::endl;
-        //
-         lastrecReader.seekg( -2, ios_base::cur);//####### NB. each stream.get() seeks(+1,cur) so to read backwards I need seek(-2,cur).
-        //
-        curPositionInStream = lastrecReader.tellg();
-        std::cout << "position after Seek(-3,cur)" << curPositionInStream << std::endl;
-        //
-         curChar = (char)readASCIIcode;
-        // functions to check state flags
-        isGood = lastrecReader.good();
-        isEOF = lastrecReader.eof();
-        isFailure = lastrecReader.fail();
-        isBad = lastrecReader.bad();
-        isRdState = lastrecReader.rdstate();
-        ifstreamStatus = (isGood && !isEOF &&!isFailure && !isBad && !isRdState);
-        //
-         buf->append( 1, curChar);// append #one time, character curChar.
-         if( !ifstreamStatus)
-         {
-             break;
-         }
-     }
-     lastrecReader.close();//######### NB. close the stream #################
-     const char * revertedBuf =  buf->c_str();
-     int revertedLength = buf->length();
-     char * straightBuf = new char[revertedLength];
-     for( int c=buf->length()-1; c>=0; c-- )
-     {
-         straightBuf[(buf->length()-1)-c] = revertedBuf[c];
-     }
-     return straightBuf;
-}// lastRecordReader
-
-
-
-// state of the art.
-void PrimesFinder::Primes::IntegralFileFromStartFSproducer( unsigned long sup) const
-{
-    unsigned long ordinal = 0UL;
-    bool isStillPrime = true;
-    double realQuotient;
-    unsigned long intQuotient;
-    unsigned long cursor=+2UL;
-    //
-    for( ; cursor<=sup; cursor++)//NB. cursor==dividend.
-    {
-        Common::StringBuilder * strBuild = nullptr;
-        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
-        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
-        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
-        unsigned long divisor=+2;
-        for( ; divisor<=soglia; divisor++)
-        {
-            realQuotient = (double)cursor/(double)divisor;
-            intQuotient = cursor/divisor;
-            if( realQuotient-intQuotient <+1.0E-80 )
-            {// divisione diofantea
-                isStillPrime = false;// NB. #################
-                break;// NB. #################
-            }// else  continue searching for primality.
-        }// the internal for : the one from [+2, cursor]
-        // if after all idoneous divisors..
-        if( isStillPrime)
-        {
-            ++ordinal;//another one foud, starting from zero, so that Prime[1]=2
-            std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
-            std::string * primeStr = Common::StrManipul::uLongToString( cursor );
-            int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
-            Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
-            strBuild->append(ordinalStr->c_str());
-            strBuild->append("_");
-            strBuild->append(primeStr->c_str());
-            strBuild->append("\r");// choose one btw '\r' or '\n'
-            delete ordinalStr;
-            delete primeStr;
-            // instead of returning it, dump it on the file.
-            appendStream->write( strBuild->str().c_str(), strBuild->str().length() );
-            delete strBuild;// clean up the token-buffer.
-            strBuild = nullptr;
-        }// else ripristino del flag-primalita' per il candidato divisore successivo.
-        else
-        {// ripristino della primalita', dopo un composto(i.e. non primo).
-            isStillPrime = true;
-        }// ripristino della primalita', dopo un composto(i.e. non primo).
-    }// external for : the one where cursor cicles from inf to sup, on dividends.
-    // ready.
-}// IntegralFileFromStartFSproducer
-*/
-
-
-
-/*
-void PrimesFinder::Primes::IntegralFileFromAnywhereFSproducer( unsigned long inf, unsigned long sup) const
-{
-    Common::LogWrappers::SectionOpen("TestConsole::LoggerSinkFS_example()", 0);
-    bool isStillPrime = true;
-    double realQuotient;
-    unsigned long intQuotient;
-    std::string * realQuotientStr = nullptr;
-    std::string * intQuotientStr = nullptr;
-    for( unsigned long cursor=inf; cursor<=sup; cursor++)//NB. cursor==dividend.
-    {
-        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
-        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
-        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
-        unsigned long divisor=+2;
-        for( ; divisor<=soglia; divisor++)
-        {
-            realQuotient = (double)cursor/(double)divisor;
-            intQuotient = cursor/divisor;
-            realQuotientStr = Common::StrManipul::doubleToString(realQuotient);
-            intQuotientStr = Common::StrManipul::uLongToString(intQuotient);
-            if( realQuotient-intQuotient <+1.0E-80 )
-            {// divisione diofantea
-                isStillPrime = false;// NB. #################
-                break;// NB. #################
-            }
-            else
-            {// continue searching for primality
-            }// else : // continue searching for primality
-            delete realQuotientStr;// a new step allocates new memory, for each of those pointers.
-            delete intQuotientStr;// a new step allocates new memory, for each of those pointers.
-        }// the internal for : the one from [+2, cursor]
-        Common::StringBuilder strBuild( 200);// on the stack
-        if(isStillPrime)
-        {
-            strBuild.append("  ## Primo individuato ## : ");
-            strBuild.append( *Common::StrManipul::uLongToString( cursor) );
-            strBuild.append("  ###");
-        }// else ripristino.
-        else
-        {// ripristino della primalita', dopo un composto(i.e. non primo).
-            isStillPrime = true;
-        }// ripristino della primalita', dopo un composto(i.e. non primo).
-        std::string logBuf = strBuild.str();
-        const char* buf = logBuf.c_str();
-        Common::LogWrappers::SectionContent( buf, 0);
-    }// external for : the one where cursor cicles from inf to sup, on dividends.
-    // ready.
-    Common::LogWrappers::SectionClose();
-}// IntegralFileFromAnywhereFSproducer
-*/
-
-
-/* #cantina
-
-
-    void PrimesFinder::Primes::lastRecordReader()
-    {// get last record START
-        //char * buf = new char[200];// stay huge.
-        Common::StringBuilder * buf = new Common::StringBuilder(900);
-        char * cleanToken = nullptr;
-        Common::StringBuilder * unusefulToken = new Common::StringBuilder(100);// TODO forecast a size.
-        Common::StringBuilder * primeToken = new Common::StringBuilder(100);// TODO forecast a size.
-        Common::StringBuilder * ordinalToken = new Common::StringBuilder(100);// TODO forecast a size.
-        int underscoreSymbolAccumulator=0;
-        int hashSymbolAccumulator=0;
-        ifstream lastRecordReader( theDumpPath, std::ios::in );// read-only; to get the last record.
-        lastRecordReader.seekg (0, lastRecordReader.end);
-        int length = lastRecordReader.tellg();
-        bool isDumpFileInGoodCondition = lastRecordReader.good();
-        if( ! isDumpFileInGoodCondition || length<3)
-        {// if file does not contain a single record, skip reading last-record.
-            this->ordinal=0;
-            this->prime=0;
-        }
-        else// can read last record
-        {
-            lastRecordReader.seekg( -1, lastRecordReader.end);// position right before EOF, i.e. -1,end.
-            isDumpFileInGoodCondition = lastRecordReader.good();
-            bool isTokenStart = true;
-            bool isHalfToken = false;
-            bool isTokenEnd = false;
-            char singleChar;
-            int hmUnderscore = 0;
-            int c=0, acc=0;
-            for( ; hmUnderscore<2 ; c++)
-            {
-                lastRecordReader.get( singleChar);
-                isDumpFileInGoodCondition = lastRecordReader.good();
-                lastRecordReader.seekg( -2, lastRecordReader.cur);// each "get()" call seeks(+1), so to get a char backwards do a seek(-2).
-                isDumpFileInGoodCondition = lastRecordReader.good();
-                if( singleChar<48 || singleChar>57 )// is-NOT-digit
-                {// is-NOT-digit
-                    if( singleChar==95) // isHalfToken=='_'==underscore
-                    {// isHalfToken
-                        buf->append(singleChar);
-                        //buf[acc++] = singleChar;
-                        hmUnderscore++;// count the separators
-                    }
-                    else// new line or invalid chars: \r \n ...
-                    {// new line or invalid chars: \r \n ...
-                        buf->append('#');
-                        //buf[acc++] = '#';
-                    }// else// new line or invalid chars: \r \n ...
-                    // invalid char->skip.
-                }// if is NOT-digit
-                if( singleChar>=48 && singleChar<=57 )// is digit
-                {// is_digit
-                    buf->append(singleChar);
-                    //buf[acc++] = singleChar;
-                }// no else.
-            }// for: exit on hmUnderscore==2.
-            //
-            for( int d=acc; d>=0; d--)
-            {
-                if( buf->str()[d]=='_' )
-                {
-                    underscoreSymbolAccumulator++;
-                }
-                else if( buf->str()[d]=='#' )
-                {
-                    hashSymbolAccumulator++;
-                }
-                if( buf->str()[d]>=48 && buf->str()[d]<=57 )
-                {
-                    if( +1==underscoreSymbolAccumulator && 0==hashSymbolAccumulator)
-                    {
-                        unusefulToken->append(buf->str()[d]);
-                    }
-                    else if( +1==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
-                    {
-                        ordinalToken->append(buf->str()[d]);
-                    }
-                    else if( +2==underscoreSymbolAccumulator && +1==hashSymbolAccumulator)
-                    {
-                        primeToken->append(buf->str()[d]);
-                    }
-                }// else skip non inherent char, in parsing.
-            }// reparse the reverted string, which contains one and half token.
-        }// read last record activity
-        const char * unusefulTokenResult = unusefulToken->str().c_str();
-        const char * ordinalTokenResult = ordinalToken->str().c_str();
-        const char * primeTokenResult = primeToken->str().c_str();
-        this->ordinal = Common::StrManipul::stringToUnsignedLong( ordinalTokenResult);
-        this->prime = Common::StrManipul::stringToUnsignedLong( primeTokenResult);
-        delete unusefulToken;
-        delete ordinalToken;
-        delete primeToken;
-        delete buf;
-        lastRecordReader.close();// close input stream.
-        // get last record END
-    }//  PrimesFinder::Primes::lastRecordReader()
-
-
-
-
-    void PrimesFinder::Primes::dumper()
-    {
-        if( nullptr != this->appendStream)
-        {
-            for( unsigned long ul=+99; ul<+199; ul++)
-            {
-                std::string * buf = Common::StrManipul::uLongToString(ul);
-                Common::StringBuilder strBuild(6000);
-                strBuild.append(buf->c_str());
-                strBuild.append("_");
-                strBuild.append(buf->c_str());
-                strBuild.append("\r");
-
-                const std::string & tmp = tokenEncoder(ul,ul).c_str();
-                int len = tmp.length();
-                appendStream->write( tmp.c_str(), len );
-                delete buf;
-                buf = nullptr;
-            }
-        }// else unable to write.
-    }// dumper(
-
-
-    /// caller DOES NOT have to delete.
-    const std::string & PrimesFinder::Primes::tokenEncoder( unsigned long ordinal, unsigned long prime ) const
-    {
-        std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
-        std::string * primeStr = Common::StrManipul::uLongToString(prime);
-        int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
-        Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
-        strBuild->append(ordinalStr->c_str());
-        strBuild->append("_");
-        strBuild->append(primeStr->c_str());
-        strBuild->append("\r");// choose one btw '\r' or '\n'
-        delete ordinalStr;
-        delete primeStr;
-        return strBuild->str();
-    }
-
-
-
-
-*/

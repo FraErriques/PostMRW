@@ -71,6 +71,8 @@ private:
     // copying methoda : not usable->private.
     // Copy Constructor
     Primes   ( const Primes & original );
+    // construction helper:
+    const char * feedDumpPath(); // non const
     // operator= only between isomorphic matrixes
     Primes & operator=   ( const Primes & second );
     /// method
