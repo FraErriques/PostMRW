@@ -20,13 +20,18 @@
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
-        }// else : TODO not-healthly built.
-        char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-        if( nullptr != straightContentOfDumpTail)
-        {
-            recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
-        }// else : no valid last record : start from zero!
-        this->desiredThreshold = threshold;// set the upper bound for research, in R+.
+            char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
+            if( nullptr != straightContentOfDumpTail)
+            {
+                recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+            }// else : no valid last record : start from zero!
+            this->desiredThreshold = threshold;// set the upper bound for research, in R+.
+        }
+        else// else : not-healthly built.
+        {// else : not-healthly built.
+            this->isHealthlyConstructed = false;
+            this->canOperate = false;
+        }// else : not-healthly built.
     }// Ctor
 
 
@@ -106,21 +111,26 @@ unsigned long factorial( unsigned int par)
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
-        }// else : TODO not-healthly built.
-        // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-        Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
-        double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
-        this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
-        this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
-        this->desiredThreshold = maxRight;
-        // write a stamp, about what we're doing and when.
-        time_t ttime = time(0);
-        char* dt = ctime(&ttime);
-        //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
-        //dt = asctime(gmt_time);
-        ofstream stampWriter( this->theDumpPath, std::fstream::out | std::fstream::app);
-        stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
-        stampWriter.close();
+            // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
+            Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
+            double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+            this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+            this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
+            this->desiredThreshold = maxRight;
+            // write a stamp, about what we're doing and when.
+            time_t ttime = time(0);
+            char* dt = ctime(&ttime);
+            //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
+            //dt = asctime(gmt_time);
+            ofstream stampWriter( this->theDumpPath, std::fstream::out | std::fstream::app);
+            stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
+            stampWriter.close();
+        }// else :  not-healthly built.
+        else// else : not-healthly built.
+        {// else : not-healthly built.
+            this->isHealthlyConstructed = false;
+            this->canOperate = false;
+        }// else : not-healthly built.
     }// Ctor
 
 
@@ -153,6 +163,7 @@ bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
         recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else {return res;}// which is still "false".
+    delete straightContentOfDumpTail;
     // ready:
     res = true;// all ok.
     return res;
@@ -163,8 +174,10 @@ const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sec
 {
     const char *  res = nullptr;
     Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for Primes:: in this file.
-    const std::string * desiderSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
-    res = desiderSectionContent->c_str();
+    const std::string * desiredSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
+    res = desiredSectionContent->c_str();
+    delete primeNamedConfig;
+//delete desiredSectionContent;
     return res;// caller has to delete.
 }// getPrimeDumpFullPath
 
@@ -438,8 +451,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
 // it's a utility; syntax: Prime[ordinal]==...
 unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredOrdinal )
 {// linear bisection on IntegralFile.
-    const char * localDumpPath = new char[400];
-    localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
+    //const char * localDumpPath = new char[400];
+    const char * localDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name, in default file.
     if( nullptr == localDumpPath)
     {
         return -1UL;// as an error code, since the correct response has to be >0.
@@ -728,6 +741,7 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
         // get an ordinal from tailEnd, coming back:
         res[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
+    delete tokenArray;
     //ready.
     return res;// caller has to delete.
 }//recoverDumpTail

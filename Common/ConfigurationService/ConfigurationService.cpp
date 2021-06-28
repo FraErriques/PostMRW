@@ -63,6 +63,7 @@ inline bool Common::ConfigurationService::FileExists_test( const std::string& na
 /// NB. on Unix the process has allowance to write only in its working dir (i.e. "./" ).
 Common::ConfigurationService::ConfigurationService( const std::string & configPath)
 {
+    std::vector<std::string> * local_tokenArray = nullptr;
     try
     {// first: book the memory. In case of Ctor failure, it will be anyway necessary to answer the queries.
         int configPathAnalysis = configPath.compare("default");
@@ -115,7 +116,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                 }
                 if(isConstructorStillAlive)
                 {// se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
-                    std::vector<std::string> * local_tokenArray = new std::vector<std::string>;
+                    local_tokenArray = new std::vector<std::string>;
                     //
                     int c=0;
                     for( c=0; !theInStream.eof();  )
@@ -137,7 +138,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                     }// else can continue.
                     //# END se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
                     if(isConstructorStillAlive)
-                    {//# se il separatore è al suo posto : n + 1 + n.
+                    {//# se il separatore Ã¨ al suo posto : n + 1 + n.
                         int candidateSeparatorPosition = (int)ratio;// not+1 because we count from 0.
                         if( 0 != ((std::string)((*local_tokenArray)[candidateSeparatorPosition])).compare("#") )
                         {
@@ -145,7 +146,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                             this->isConstructorStillAlive = false;
                             this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 128 : ConfigFile does not have the separator token between keys#values (i.e. the # token).";
                         }// else can continue.
-                        // END # se il separatore è al suo posto : n + 1 + n.
+                        // END # se il separatore Ã¨ al suo posto : n + 1 + n.
                         if(isConstructorStillAlive)
                         {// popola la mappa
                             this->key_all_together->clear();// NB. if you get here, you have to removethe init-to-invalid record( which is the only one by now).
@@ -171,9 +172,10 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                             // final usage of bool_result
                             isConstructorStillAlive &= (c>0);// have found at least one key ?
                             delete local_tokenArray;// this was a temporary, for the first scan; then the file contents have been categorized in specialized data structs.
+                            local_tokenArray = nullptr;
                             isConstructorStillAlive = true;
                         }// END popola la mappa
-                    }// END se il separatore è al suo posto : n + 1 + n.
+                    }// END se il separatore Ã¨ al suo posto : n + 1 + n.
                 }// END se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
             }// END   se riesco ad aprirlo in lettura
         }// END  se esiste
@@ -183,6 +185,11 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
         this->isHealtlyConstructed = false;
         this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 177 : Catch(...) in Ctor().";
         this->isConstructorStillAlive = false;
+        if( nullptr != local_tokenArray )
+        {
+            delete local_tokenArray;// this was a temporary, for the first scan; then the file contents have been categorized in specialized data structs.        
+            local_tokenArray = nullptr;        
+        }
     }// END catch
     // ready.
 }// END default Ctor
@@ -452,7 +459,7 @@ Common::ConfigurationService::ConfigurationService()
                     }// else can continue.
                     //# END se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
                     if(isConstructorStillAlive)
-                    {//# se il separatore è al suo posto : n + 1 + n.
+                    {//# se il separatore Ã¨ al suo posto : n + 1 + n.
                         int candidateSeparatorPosition = (int)ratio;// not+1 because we count from 0.
                         std::cout<<"\n\n DEBUG ! "<< ((std::string)((*local_tokenArray)[candidateSeparatorPosition])) <<std::endl;
                         if( 0 != ((std::string)((*local_tokenArray)[candidateSeparatorPosition])).compare("#") )
@@ -460,7 +467,7 @@ Common::ConfigurationService::ConfigurationService()
                             this->isHealtlyConstructed = false;
                             this->isConstructorStillAlive = false;
                         }// else can continue.
-                        // END # se il separatore è al suo posto : n + 1 + n.
+                        // END # se il separatore Ã¨ al suo posto : n + 1 + n.
                         if(isConstructorStillAlive)
                         {// popola la mappa
                             this->key_all_together->clear();// NB. if you get here, you have to removethe init-to-invalid record( which is the only one by now).
@@ -514,7 +521,7 @@ Common::ConfigurationService::ConfigurationService()
                             delete local_tokenArray;// this was a temporary, for the first scan; then the file contents have been categorized in specialized data structs.
                             isConstructorStillAlive = true;
                         }// END popola la mappa
-                    }// END se il separatore è al suo posto : n + 1 + n.
+                    }// END se il separatore Ã¨ al suo posto : n + 1 + n.
                 }// END se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
             }// END   se riesco ad aprirlo in lettura
         }// END  se esiste
