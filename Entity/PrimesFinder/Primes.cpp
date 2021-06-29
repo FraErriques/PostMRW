@@ -20,10 +20,10 @@
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
-            char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-            if( nullptr != straightContentOfDumpTail)
+            this->dumpTailReader( this->theDumpPath);
+            if( nullptr != this->theDumpTailStr)
             {
-                recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+                recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
             }// else : no valid last record : start from zero!
             this->desiredThreshold = threshold;// set the upper bound for research, in R+.
         }
@@ -44,6 +44,14 @@ const char * PrimesFinder::Primes::feedDumpPath() // non const
     return this->theDumpPath;
 }// feedDumpPath()
 
+const char * PrimesFinder::Primes::feed_CustomDumpPath() // non const
+{// custom section, in default file.
+    if( nullptr==this->customDumpPath)
+    {
+        this->customDumpPath = this->getPrimeDumpFullPath( "primeCustomFile");// CUSTOM Section Name, for non complete dumping.
+    }//else ready.
+    return this->customDumpPath;
+}// feed_CustomDumpPath()
 
 
 namespace internalAlgos
@@ -125,10 +133,10 @@ unsigned long factorial( unsigned int par)
     */
     PrimesFinder::Primes::Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName)
     {// CUSTOM section, in default file.
-        this->feedDumpPath();
-        if( nullptr != this->theDumpPath)
+        this->feed_CustomDumpPath();
+        if( nullptr != this->customDumpPath)
         {
-            this->createOrAppend( this->theDumpPath);
+            this->createOrAppend( this->customDumpPath);
             // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
             Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
             double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
@@ -140,7 +148,7 @@ unsigned long factorial( unsigned int par)
             char* dt = ctime(&ttime);
             //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
             //dt = asctime(gmt_time);
-            ofstream stampWriter( this->theDumpPath, std::fstream::out | std::fstream::app);
+            ofstream stampWriter( this->customDumpPath, std::fstream::out | std::fstream::app);
             stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
             stampWriter.close();
         }// else :  not-healthly built.
@@ -161,6 +169,21 @@ unsigned long factorial( unsigned int par)
             delete[] this->theDumpPath;
             this->theDumpPath = nullptr;
         }
+        if( nullptr != this->customDumpPath)
+        {
+            delete[] this->customDumpPath;
+            this->customDumpPath = nullptr;
+        }
+        if( nullptr != this->theDumpTailStr )
+        {
+            delete[] this->theDumpTailStr;
+            this->theDumpTailStr = nullptr;
+        }
+        if( nullptr != this->dumpTail )
+        {
+            delete[] this->dumpTail;
+            this->dumpTail = nullptr;
+        }
         /*
         if( nullptr != this->appendStream)  no more a global class::variable.
         {
@@ -180,13 +203,12 @@ bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
         this->createOrAppend( this->theDumpPath);
     }// else : TODO not-healthly built.
     else {return res;}// which is still "false".
-    char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-    if( nullptr != straightContentOfDumpTail)
+    this->dumpTailReader( this->theDumpPath);
+    if( nullptr != this->theDumpTailStr)
     {
-        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else {return res;}// which is still "false".
-    delete[] straightContentOfDumpTail;
     // ready:
     res = true;// all ok.
     return res;
@@ -217,8 +239,12 @@ void PrimesFinder::Primes::createOrAppend( const std::string & fullPath)
 
 
 
-char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
+const char * PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
 {
+    if(nullptr!=this->theDumpTailStr)
+    {
+        return this->theDumpTailStr;
+    }// else build it.
     ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( 0, lastrecReader.end);
     int streamSize = lastrecReader.tellg();
@@ -243,14 +269,14 @@ char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
             lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
         }// end of if( streamsize..)->seek( howMuch, end).
     //
-    // TODO agire su stream di istanza.
-    int multipliesicityFactor = 3;
-    char * buffer = new char[multipliesicityFactor*lastTokenHypothesizedLength+1];
-    lastrecReader.seekg( -1*multipliesicityFactor*lastTokenHypothesizedLength, lastrecReader.end);// NB. go back TWICE the size of lastTokenHypothesizedLength: guarantee some overlapping.
-    lastrecReader.read( buffer, multipliesicityFactor*lastTokenHypothesizedLength);// fill the buffer from the stream-tail.
-    buffer[multipliesicityFactor*lastTokenHypothesizedLength]=0;//terminate.
+    int multeplicity = 2;// less two times backwards, from EOF.
+    lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
+    this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
+    lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
+    this->theDumpTailStr[multeplicity*lastTokenHypothesizedLength]=0;//terminate.
     lastrecReader.close();
-    return buffer;
+    // ready.
+    return this->theDumpTailStr;
 }// dumpTailReader
 
 
@@ -280,10 +306,10 @@ unsigned long PrimesFinder::Primes::getLastOrdinal()
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-    if( nullptr != straightContentOfDumpTail)
+    this->dumpTailReader( this->theDumpPath);
+    if( nullptr != this->theDumpTailStr)
     {
-        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else
     {
@@ -302,10 +328,10 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-    if( nullptr != straightContentOfDumpTail)
+    this->dumpTailReader( this->theDumpPath);
+    if( nullptr != this->theDumpTailStr)
     {
-        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else
     {
@@ -367,16 +393,18 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         target = (int)(requiredLandingPoint);// find required %.
         if( secureRightBound<target)// required a landing-point, after the secureRightBound
         {
-            char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-            PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( straightContentOfDumpTail);
+            this->dumpTailReader( this->theDumpPath);
+            this->recoverDumpTail( this->theDumpTailStr);
             for(int c=0; ; c++)
             {// scan the dumpTailArray
+                if( c>this->actualCoupleCardinality-1)
+                {
+                    throw "element not found in file tail.";
+                }
                 if( requiredOrdinal==dumpTail[c].ordinal)
                 {
                     decodedOrdinal = dumpTail[c].ordinal;// exit condition
                     requiredPrime = dumpTail[c].prime;
-                    delete[] straightContentOfDumpTail;
-                    delete[] dumpTail;
                     dumpReader.close();// TODO evaluate if leave open for ReadRange()
                     return requiredPrime;// NB. break is not enough!
                 }// else continue.
@@ -384,18 +412,18 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         }// required a landing-point, after the secureRightBound
         else
         {// NB. only seek to safe locations(i.e. <=secureRightBound) otherwise the flag-family isBad,isEOF will throw something.
-            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.############################################################ crucial action #####
+            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.##################################### crucial action #####
         }// after having landed, evaluate:
         // first Token has to be thrown away, since it is likely to be truncated before the beginning, due to
         // random access to seek(bisection); next record will be complete.
         dumpReader.getline( partialToken, tokenSize, '\r' );
         dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
-        if(0==target)//if the required landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
+        if(0==target)//if the landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
         {// it's needed only when searching for the first record in the dump, since it has no previous record.
             for( int c=0; c<tokenSize; c++)
             {// mustSwapTokens
                 secondToken[c] = partialToken[c];
-            }
+            }// mustSwapTokens
         }// no else; when searching for records different from the absolute first, there's no need for this swap.
         int partialToken_Length = strlen_loc( partialToken);
         int secondToken_Length = strlen_loc( secondToken);
@@ -430,7 +458,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
             decodedPrime_str = (*splittedTokens)[1].c_str();
         }
         else
-        {
+        {// TODO: evaluate a throw, due to inconsistent dumpIntegralFile.
             return -1UL;// as an error code, since the correct response has to be >0.
         }
         // TODO : manage exception on parsing.
@@ -458,6 +486,10 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         // common factors:
         dumpSize = rightBoundary - leftBoundary;
         requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * dumpSize;
+        // clanup:
+        delete splittedTokens;
+//        delete decodedOrdinal_str;// already deleted, as parts of splittedTokens.
+//        delete decodedPrime_str;
     }// loop della bisezione.
     // ready.
     dumpReader.close();// TODO evaluate if leave open for ReadRange()
@@ -574,8 +606,12 @@ void  PrimesFinder::Primes::recoverLastRecord( const char * dumpTail)
 
 
 // produce an array of couples {ordinal,prime} from the dumpTail.
-PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const char * dumpTail) const
+PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const char * dumpTail)
 {
+    if( nullptr != this->dumpTail)
+    {// do not build again.
+        return this->dumpTail;
+    }// else build it; it will be a shared dataMember and Dtor will delete.
     std::string parFromFile(dumpTail);
     int inputParamLength = parFromFile.length();
     std::string filteredLastToken("");
@@ -592,18 +628,18 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
     }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
     std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
     int entryCardinality = tokenArray->size();
-    int actualCoupleCardinality = 0;//NB: tagliare al massimo dei minoranti pari
+// already init this->actualCoupleCardinality = 0;//NB: tagliare al massimo dei minoranti pari
     // NB: stabilire se pari
     if( (double)entryCardinality/2.0 - entryCardinality/2 <+1E-80 )
     {// parita'
-        actualCoupleCardinality = entryCardinality/2;
+        this->actualCoupleCardinality = entryCardinality/2;
     }
     else
     {// DISparita'
-        actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
+        this->actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
     }
     // NB: allocare per tale misura
-    DumpElement * res = new DumpElement[actualCoupleCardinality];
+    this->dumpTail = new DumpElement[actualCoupleCardinality];// member struct-array {ordinal,prime}.
     // NB: fill-up reverse
     int currentCouple=actualCoupleCardinality-1;
     for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();
@@ -611,13 +647,13 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
        currentCouple--) // no more increment on the iterator
     {// preserve the last complete-records: they have to be {Ordinal,Prime}. Use index-parity for this task:
         // get a Prime from tailEnd, coming back:
-        res[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
+        this->dumpTail[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
         // get an ordinal from tailEnd, coming back:
-        res[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
+        this->dumpTail[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
     delete tokenArray;
     //ready.
-    return res;// caller has to delete.
+    return this->dumpTail;// caller has to delete.
 }//recoverDumpTail
 
 

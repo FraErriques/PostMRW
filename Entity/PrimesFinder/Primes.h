@@ -47,7 +47,7 @@ class Primes
     unsigned long operator[] (const unsigned long requiredOrdinal);
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
-    char * dumpTailReader( const std::string & fullPath);
+    const char * dumpTailReader( const std::string & fullPath);
     /// method /// algo ///////////////////////////////////////////////////////////////////////
     void Start_PrimeDump_FileSys() const;
     SingleFactor * IntegerDecomposition( const unsigned long dividend);
@@ -59,7 +59,11 @@ private:
     unsigned long desiredOrdinal;
     unsigned long desiredThreshold;// in R+
     unsigned long actualPrimaryFileLength;
+    char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
+    int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
+    DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
     const char * theDumpPath = nullptr;// NB. remember to share and delete[].
+    const char * customDumpPath = nullptr;// NB. remember to share and delete[].
     const int tailRecordSize = 60;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
@@ -73,13 +77,14 @@ private:
     Primes   ( const Primes & original );
     // construction helper:
     const char * feedDumpPath(); // non const
+    const char * feed_CustomDumpPath(); // non const
     // operator= only between isomorphic matrixes
     Primes & operator=   ( const Primes & second );
     /// method
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
-    DumpElement * recoverDumpTail( const char * dumpTail) const;
+    DumpElement * recoverDumpTail( const char * dumpTail);
 
 };// class
 

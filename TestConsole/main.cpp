@@ -42,6 +42,10 @@ int main()
      {
          std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
      }
+     for( int c=1; c<=15; c++)
+     {
+         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
+     }
      for( int c=lastOrdinal-100; c<=lastOrdinal; c++)
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
@@ -49,7 +53,7 @@ int main()
      const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
      if( nullptr != theDumpPath)
       {}// else : TODO not-healthly built.
-     char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
+     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 //PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
      PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
 
