@@ -47,7 +47,7 @@ class Primes
     unsigned long operator[] (const unsigned long requiredOrdinal);
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
-    char * dumpTailReader( const std::string & fullPath);
+    const char * dumpTailReader( const std::string & fullPath);
     /// method /// algo ///////////////////////////////////////////////////////////////////////
     void Start_PrimeDump_FileSys() const;
     SingleFactor * IntegerDecomposition( const unsigned long dividend);
@@ -59,6 +59,8 @@ private:
     unsigned long desiredOrdinal;
     unsigned long desiredThreshold;// in R+
     unsigned long actualPrimaryFileLength;
+    char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
+    DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
     const char * theDumpPath = nullptr;// NB. remember to share and delete[].
     const int tailRecordSize = 60;
     bool isHealthlyConstructed = false;

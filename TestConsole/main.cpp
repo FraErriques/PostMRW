@@ -25,12 +25,6 @@ int main()
     unsigned long lastOrdinal = p->getLastOrdinal();
     unsigned long lastPrime = p->getLastPrime();
     unsigned long presentLength = p->getActualLength();
-    delete p;
-    p = new PrimesFinder::Primes(5000000); // re-use
-    p->Start_PrimeDump_FileSys();
-    lastOrdinal = p->getLastOrdinal();
-    lastPrime = p->getLastPrime();
-    presentLength = p->getActualLength();
 
      unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
      res = (*p)[1];
@@ -45,21 +39,23 @@ int main()
      {
          std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
      }
-     for( int c=1; c<=lastOrdinal; c++)
+     for( int c=lastOrdinal-100; c<=lastOrdinal; c++)
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
      }
-     const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
-     if( nullptr != theDumpPath)
-      {}// else : TODO not-healthly built.
-     char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
-//PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
-     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
-     delete[] theDumpPath;
-     delete[] straightContentOfDumpTail;
-     delete[] factorization;
-//delete[] dumpTail;
+
+    //     const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+    //     if( nullptr != theDumpPath)
+    //      {}// else : TODO not-healthly built.
+    //     char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
+    ////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
+    //     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
+    //     delete[] theDumpPath;
+    //     delete[] straightContentOfDumpTail;
+    //     delete[] factorization;
+    ////delete[] dumpTail;
      delete p;
+
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();

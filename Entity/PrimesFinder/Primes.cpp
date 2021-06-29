@@ -20,10 +20,10 @@
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
-            char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-            if( nullptr != straightContentOfDumpTail)
+            this->dumpTailReader( this->theDumpPath);
+            if( nullptr != this->theDumpTailStr)
             {
-                recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+                recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
             }// else : no valid last record : start from zero!
             this->desiredThreshold = threshold;// set the upper bound for research, in R+.
         }
@@ -180,13 +180,12 @@ bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
         this->createOrAppend( this->theDumpPath);
     }// else : TODO not-healthly built.
     else {return res;}// which is still "false".
-    char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-    if( nullptr != straightContentOfDumpTail)
+    this->dumpTailReader( this->theDumpPath);
+    if( nullptr != this->theDumpTailStr)
     {
-        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else {return res;}// which is still "false".
-    delete straightContentOfDumpTail;
     // ready:
     res = true;// all ok.
     return res;
@@ -217,8 +216,12 @@ void PrimesFinder::Primes::createOrAppend( const std::string & fullPath)
 
 
 
-char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
+const char * PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
 {
+    if(nullptr!=this->theDumpTailStr)
+    {
+        return this->theDumpTailStr;
+    }// else build it.
     ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( 0, lastrecReader.end);
     int streamSize = lastrecReader.tellg();
@@ -243,12 +246,14 @@ char *  PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
             lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
         }// end of if( streamsize..)->seek( howMuch, end).
     //
-    lastrecReader.seekg( -1*lastTokenHypothesizedLength, lastrecReader.end);
-    char * buffer = new char[lastTokenHypothesizedLength+1];
-    lastrecReader.read( buffer, lastTokenHypothesizedLength);// fill the buffer from the stream-tail.
-    buffer[lastTokenHypothesizedLength]=0;//terminate.
+    int multeplicity = 2;// less two times backwards, from EOF.
+    lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
+    this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
+    lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
+    this->theDumpTailStr[multeplicity*lastTokenHypothesizedLength]=0;//terminate.
     lastrecReader.close();
-    return buffer;
+    // ready.
+    return this->theDumpTailStr;
 }// dumpTailReader
 
 
@@ -278,10 +283,10 @@ unsigned long PrimesFinder::Primes::getLastOrdinal()
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-    if( nullptr != straightContentOfDumpTail)
+    this->dumpTailReader( this->theDumpPath);
+    if( nullptr != this->theDumpTailStr)
     {
-        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else
     {
@@ -300,10 +305,10 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-    if( nullptr != straightContentOfDumpTail)
+    this->dumpTailReader( this->theDumpPath);
+    if( nullptr != this->theDumpTailStr)
     {
-        recoverLastRecord( straightContentOfDumpTail);// members should be in place, now: lastOrdinal, lastPrime.
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
     }// else : no valid last record : start from zero!
     else
     {
@@ -365,15 +370,14 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         target = (int)(requiredLandingPoint);// find required %.
         if( secureRightBound<target)// required a landing-point, after the secureRightBound
         {
-            char * straightContentOfDumpTail  = this->dumpTailReader( this->theDumpPath);
-            PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( straightContentOfDumpTail);
+            this->dumpTailReader( this->theDumpPath);
+            PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( this->theDumpTailStr);
             for(int c=0; ; c++)
             {// scan the dumpTailArray
                 if( requiredOrdinal==dumpTail[c].ordinal)
                 {
                     decodedOrdinal = dumpTail[c].ordinal;// exit condition
                     requiredPrime = dumpTail[c].prime;
-                    delete[] straightContentOfDumpTail;
                     delete[] dumpTail;
                     return requiredPrime;// NB. break is not enough!
                 }// else continue.
