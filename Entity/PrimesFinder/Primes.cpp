@@ -44,6 +44,14 @@ const char * PrimesFinder::Primes::feedDumpPath() // non const
     return this->theDumpPath;
 }// feedDumpPath()
 
+const char * PrimesFinder::Primes::feed_CustomDumpPath() // non const
+{// custom section, in default file.
+    if( nullptr==this->customDumpPath)
+    {
+        this->customDumpPath = this->getPrimeDumpFullPath( "primeCustomFile");// CUSTOM Section Name, for non complete dumping.
+    }//else ready.
+    return this->customDumpPath;
+}// feed_CustomDumpPath()
 
 
 namespace internalAlgos
@@ -125,10 +133,10 @@ unsigned long factorial( unsigned int par)
     */
     PrimesFinder::Primes::Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName)
     {// CUSTOM section, in default file.
-        this->feedDumpPath();
-        if( nullptr != this->theDumpPath)
+        this->feed_CustomDumpPath();
+        if( nullptr != this->customDumpPath)
         {
-            this->createOrAppend( this->theDumpPath);
+            this->createOrAppend( this->customDumpPath);
             // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
             Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
             double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
@@ -140,7 +148,7 @@ unsigned long factorial( unsigned int par)
             char* dt = ctime(&ttime);
             //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
             //dt = asctime(gmt_time);
-            ofstream stampWriter( this->theDumpPath, std::fstream::out | std::fstream::app);
+            ofstream stampWriter( this->customDumpPath, std::fstream::out | std::fstream::app);
             stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
             stampWriter.close();
         }// else :  not-healthly built.
@@ -160,6 +168,11 @@ unsigned long factorial( unsigned int par)
         {
             delete[] this->theDumpPath;
             this->theDumpPath = nullptr;
+        }
+        if( nullptr != this->customDumpPath)
+        {
+            delete[] this->customDumpPath;
+            this->customDumpPath = nullptr;
         }
         if( nullptr != this->theDumpTailStr )
         {
@@ -398,18 +411,18 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         }// required a landing-point, after the secureRightBound
         else
         {// NB. only seek to safe locations(i.e. <=secureRightBound) otherwise the flag-family isBad,isEOF will throw something.
-            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.############################################################ crucial action #####
+            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.##################################### crucial action #####
         }// after having landed, evaluate:
         // first Token has to be thrown away, since it is likely to be truncated before the beginning, due to
         // random access to seek(bisection); next record will be complete.
         dumpReader.getline( partialToken, tokenSize, '\r' );
         dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
-        if(0==target)//if the required landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
+        if(0==target)//if the landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
         {// it's needed only when searching for the first record in the dump, since it has no previous record.
             for( int c=0; c<tokenSize; c++)
             {// mustSwapTokens
                 secondToken[c] = partialToken[c];
-            }
+            }// mustSwapTokens
         }// no else; when searching for records different from the absolute first, there's no need for this swap.
         int partialToken_Length = strlen_loc( partialToken);
         int secondToken_Length = strlen_loc( secondToken);
@@ -444,7 +457,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
             decodedPrime_str = (*splittedTokens)[1].c_str();
         }
         else
-        {
+        {// TODO: evaluate a throw, due to inconsistent dumpIntegralFile.
             return -1UL;// as an error code, since the correct response has to be >0.
         }
         // TODO : manage exception on parsing.
@@ -472,6 +485,10 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         // common factors:
         dumpSize = rightBoundary - leftBoundary;
         requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * dumpSize;
+        // clanup:
+        delete splittedTokens;
+        delete[] decodedOrdinal_str;
+        delete[] decodedPrime_str;
     }// loop della bisezione.
     // ready.
     dumpReader.close();// TODO evaluate if leave open for ReadRange()
@@ -621,7 +638,7 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
         this->actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
     }
     // NB: allocare per tale misura
-    this->dumpTail = new DumpElement[actualCoupleCardinality];
+    this->dumpTail = new DumpElement[actualCoupleCardinality];// member struct-array {ordinal,prime}.
     // NB: fill-up reverse
     int currentCouple=actualCoupleCardinality-1;
     for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();

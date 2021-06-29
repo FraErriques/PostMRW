@@ -20,11 +20,17 @@
 
 int main()
 {
+//    PrimesFinder::Primes * p = new PrimesFinder::Primes(
+//                                                        1987654321,
+//                                                        2187654321,
+//                                                        "primeCustomFile"
+//                                                        );
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
     unsigned long overflowFlag = -1UL;
     unsigned long lastOrdinal = p->getLastOrdinal();
     unsigned long lastPrime = p->getLastPrime();
     unsigned long presentLength = p->getActualLength();
+    p->Start_PrimeDump_FileSys();
 
      unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
      res = (*p)[1];

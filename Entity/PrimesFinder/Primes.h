@@ -63,6 +63,7 @@ private:
     int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
     DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
     const char * theDumpPath = nullptr;// NB. remember to share and delete[].
+    const char * customDumpPath = nullptr;// NB. remember to share and delete[].
     const int tailRecordSize = 60;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
@@ -76,6 +77,7 @@ private:
     Primes   ( const Primes & original );
     // construction helper:
     const char * feedDumpPath(); // non const
+    const char * feed_CustomDumpPath(); // non const
     // operator= only between isomorphic matrixes
     Primes & operator=   ( const Primes & second );
     /// method
