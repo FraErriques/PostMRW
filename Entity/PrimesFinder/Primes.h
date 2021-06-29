@@ -60,6 +60,7 @@ private:
     unsigned long desiredThreshold;// in R+
     unsigned long actualPrimaryFileLength;
     char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
+    int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
     DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
     const char * theDumpPath = nullptr;// NB. remember to share and delete[].
     const int tailRecordSize = 60;
@@ -81,7 +82,7 @@ private:
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
-    DumpElement * recoverDumpTail( const char * dumpTail) const;
+    DumpElement * recoverDumpTail( const char * dumpTail);
 
 };// class
 

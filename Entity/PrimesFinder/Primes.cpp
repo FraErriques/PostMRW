@@ -161,6 +161,16 @@ unsigned long factorial( unsigned int par)
             delete[] this->theDumpPath;
             this->theDumpPath = nullptr;
         }
+        if( nullptr != this->theDumpTailStr )
+        {
+            delete[] this->theDumpTailStr;
+            this->theDumpTailStr = nullptr;
+        }
+//        if( nullptr != this->dumpTail )  TODO
+//        {
+//            delete[]
+//            __ = nullptr;
+//        }
         /*
         if( nullptr != this->appendStream)  no more a global class::variable.
         {
@@ -374,11 +384,14 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
             PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( this->theDumpTailStr);
             for(int c=0; ; c++)
             {// scan the dumpTailArray
+                if( c>this->actualCoupleCardinality-1)
+                {
+                    throw "element not found in file tail.";
+                }
                 if( requiredOrdinal==dumpTail[c].ordinal)
                 {
                     decodedOrdinal = dumpTail[c].ordinal;// exit condition
                     requiredPrime = dumpTail[c].prime;
-                    delete[] dumpTail;
                     return requiredPrime;// NB. break is not enough!
                 }// else continue.
             }// scan the dumpTailArray
@@ -575,8 +588,12 @@ void  PrimesFinder::Primes::recoverLastRecord( const char * dumpTail)
 
 
 // produce an array of couples {ordinal,prime} from the dumpTail.
-PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const char * dumpTail) const
+PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const char * dumpTail)
 {
+    if( nullptr != this->dumpTail)
+    {// do not build again.
+        return this->dumpTail;
+    }// else build it; it will be a shared dataMember and Dtor will delete.
     std::string parFromFile(dumpTail);
     int inputParamLength = parFromFile.length();
     std::string filteredLastToken("");
@@ -593,18 +610,18 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
     }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
     std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
     int entryCardinality = tokenArray->size();
-    int actualCoupleCardinality = 0;//NB: tagliare al massimo dei minoranti pari
+// already init this->actualCoupleCardinality = 0;//NB: tagliare al massimo dei minoranti pari
     // NB: stabilire se pari
     if( (double)entryCardinality/2.0 - entryCardinality/2 <+1E-80 )
     {// parita'
-        actualCoupleCardinality = entryCardinality/2;
+        this->actualCoupleCardinality = entryCardinality/2;
     }
     else
     {// DISparita'
-        actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
+        this->actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
     }
     // NB: allocare per tale misura
-    DumpElement * res = new DumpElement[actualCoupleCardinality];
+    this->dumpTail = new DumpElement[actualCoupleCardinality];
     // NB: fill-up reverse
     int currentCouple=actualCoupleCardinality-1;
     for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();
@@ -612,13 +629,13 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::recoverDumpTail( const
        currentCouple--) // no more increment on the iterator
     {// preserve the last complete-records: they have to be {Ordinal,Prime}. Use index-parity for this task:
         // get a Prime from tailEnd, coming back:
-        res[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
+        this->dumpTail[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
         // get an ordinal from tailEnd, coming back:
-        res[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
+        this->dumpTail[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
     delete tokenArray;
     //ready.
-    return res;// caller has to delete.
+    return this->dumpTail;// caller has to delete.
 }//recoverDumpTail
 
 
