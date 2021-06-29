@@ -166,11 +166,11 @@ unsigned long factorial( unsigned int par)
             delete[] this->theDumpTailStr;
             this->theDumpTailStr = nullptr;
         }
-//        if( nullptr != this->dumpTail )  TODO
-//        {
-//            delete[]
-//            __ = nullptr;
-//        }
+        if( nullptr != this->dumpTail )
+        {
+            delete[] this->dumpTail;
+            this->dumpTail = nullptr;
+        }
         /*
         if( nullptr != this->appendStream)  no more a global class::variable.
         {

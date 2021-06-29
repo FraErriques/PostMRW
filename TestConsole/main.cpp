@@ -39,7 +39,11 @@ int main()
      {
          std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
      }
-     for( int c=1; c<=lastOrdinal; c++)
+     for( int c=1; c<=15; c++)
+     {
+         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
+     }
+     for( int c=lastOrdinal-100; c<=lastOrdinal; c++)
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
      }
