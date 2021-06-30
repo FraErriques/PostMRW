@@ -48,11 +48,14 @@ class Primes
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
     const char * dumpTailReader( const std::string & fullPath);
+    const char * dumpTailReaderByChar( const std::string & fullPath);
     /// method /// algo ///////////////////////////////////////////////////////////////////////
     void Start_PrimeDump_FileSys() const;
     SingleFactor * IntegerDecomposition( const unsigned long dividend);
+// TODO let private after test
+    const char * theDumpPath = nullptr;// NB. remember to share and delete[].
 
-private:
+public: // TODO let private after test
     /// Data
     unsigned long lastOrdinal;
     unsigned long lastPrime;
@@ -62,7 +65,7 @@ private:
     char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
     int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
     DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
-    const char * theDumpPath = nullptr;// NB. remember to share and delete[].
+
     const char * customDumpPath = nullptr;// NB. remember to share and delete[].
     const int tailRecordSize = 60;
     bool isHealthlyConstructed = false;

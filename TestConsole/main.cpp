@@ -26,6 +26,9 @@ int main()
 //                                                        "primeCustomFile"
 //                                                        );
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+//    const char * dumpTailContent = p->dumpTailReaderByChar( p->theDumpPath);
+//    PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( dumpTailContent);
+
     unsigned long overflowFlag = -1UL;
     unsigned long lastOrdinal = p->getLastOrdinal();
     unsigned long lastPrime = p->getLastPrime();
