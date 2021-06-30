@@ -20,7 +20,7 @@
         if( nullptr != this->theDumpPath)
         {
             this->createOrAppend( this->theDumpPath);
-            this->dumpTailReader( this->theDumpPath);
+            this->dumpTailReaderByChar( this->theDumpPath);
             if( nullptr != this->theDumpTailStr)
             {
                 recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -203,7 +203,7 @@ bool PrimesFinder::Primes::getLastCoupleInDefaultFile()
         this->createOrAppend( this->theDumpPath);
     }// else : TODO not-healthly built.
     else {return res;}// which is still "false".
-    this->dumpTailReader( this->theDumpPath);
+    this->dumpTailReaderByChar( this->theDumpPath);
     if( nullptr != this->theDumpTailStr)
     {
         recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -280,6 +280,52 @@ const char * PrimesFinder::Primes::dumpTailReader( const std::string & fullPath)
 }// dumpTailReader
 
 
+const char * PrimesFinder::Primes::dumpTailReaderByChar( const std::string & fullPath)
+{
+    if(nullptr!=this->theDumpTailStr)
+    {
+        return this->theDumpTailStr;
+    }// else build it.
+    ifstream lastrecReader(fullPath, std::fstream::in );
+    lastrecReader.seekg( 0, lastrecReader.end);
+    int streamSize = lastrecReader.tellg();
+    int lastTokenHypothesizedLength;// f(streamSize).
+    // cannot use runtime-expressions in switch-case: case-labels have to be compile-time constants.
+    if( streamSize<4)
+        {// no valid last-record in place.
+            this->lastOrdinal=0UL;
+            this->lastPrime=+1UL;//##### +2 first of the Primes p in P in N. this->lastPrime gets a ++ before start.
+            return nullptr;// NB ##### do NOT call recoverLastRecord on a null ptr !!! ####################
+        }
+    else if( streamSize>=4 && streamSize<=10)
+        {
+            lastTokenHypothesizedLength = streamSize;
+        }
+    else if( streamSize>10 && streamSize<=200)
+        {
+            lastTokenHypothesizedLength = 10;
+        }
+    else// i.e. case >200
+        {
+            lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
+        }// end of if( streamsize..)->seek( howMuch, end).
+    //
+    int multeplicity = 2;// less two times backwards, from EOF.
+// avoid it:lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
+    lastrecReader.seekg( streamSize-multeplicity*lastTokenHypothesizedLength, lastrecReader.begin );
+//this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
+//Substituted lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
+    Common::StringBuilder * sb = new Common::StringBuilder(multeplicity*lastTokenHypothesizedLength+1);// forecasted size.
+    for( char c=0; lastrecReader.get(c); )
+    {
+        sb->append(c);
+    }
+    this->theDumpTailStr = (char *)(sb->str().c_str());// caller has to delete!
+    lastrecReader.close();
+    // ready.
+    return this->theDumpTailStr;
+}//dumpTailReaderByChar()
+
 
 unsigned long PrimesFinder::Primes::getActualLength()
 {
@@ -306,7 +352,7 @@ unsigned long PrimesFinder::Primes::getLastOrdinal()
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    this->dumpTailReader( this->theDumpPath);
+    this->dumpTailReaderByChar( this->theDumpPath);
     if( nullptr != this->theDumpTailStr)
     {
         recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -328,7 +374,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    this->dumpTailReader( this->theDumpPath);
+    this->dumpTailReaderByChar( this->theDumpPath);
     if( nullptr != this->theDumpTailStr)
     {
         recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -393,8 +439,8 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         target = (int)(requiredLandingPoint);// find required %.
         if( secureRightBound<target)// required a landing-point, after the secureRightBound
         {
-            this->dumpTailReader( this->theDumpPath);
-            PrimesFinder::Primes::DumpElement * dumpTail = this->recoverDumpTail( this->theDumpTailStr);
+            this->dumpTailReaderByChar( this->theDumpPath);
+            this->recoverDumpTail( this->theDumpTailStr);
             for(int c=0; ; c++)
             {// scan the dumpTailArray
                 if( c>this->actualCoupleCardinality-1)
@@ -405,8 +451,6 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
                 {
                     decodedOrdinal = dumpTail[c].ordinal;// exit condition
                     requiredPrime = dumpTail[c].prime;
-                    delete[] straightContentOfDumpTail;
-                    delete[] dumpTail;
                     dumpReader.close();// TODO evaluate if leave open for ReadRange()
                     return requiredPrime;// NB. break is not enough!
                 }// else continue.
@@ -490,8 +534,8 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * dumpSize;
         // clanup:
         delete splittedTokens;
-        delete[] decodedOrdinal_str;
-        delete[] decodedPrime_str;
+        //delete decodedOrdinal_str;//NB. already deleted, as parts of splittedTokens.
+        //delete decodedPrime_str;
     }// loop della bisezione.
     // ready.
     dumpReader.close();// TODO evaluate if leave open for ReadRange()

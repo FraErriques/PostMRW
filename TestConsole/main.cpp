@@ -46,7 +46,7 @@ int main()
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
      }
-     for( int c=lastOrdinal-100; c<=lastOrdinal; c++)
+     for( int c=lastOrdinal-500; c<=lastOrdinal-50; c++)
      {
          std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
      }
