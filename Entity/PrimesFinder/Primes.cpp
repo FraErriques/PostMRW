@@ -339,6 +339,7 @@ unsigned long PrimesFinder::Primes::getActualLength()
     std::ifstream dumpReader(  this->theDumpPath, std::fstream::in );// read-only.
     dumpReader.seekg( 0, dumpReader.end);
     this->actualPrimaryFileLength = dumpReader.tellg();
+    this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;// refresh it now!
     // ready.
     return this->actualPrimaryFileLength;
 }//getActualLength
@@ -415,11 +416,14 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
     }// else continue:
     unsigned long requiredPrime;
     std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
-    dumpReader.seekg( 0, dumpReader.end);
-    long dumpSize = dumpReader.tellg();
-    long secureRightBound = dumpSize - this->tailRecordSize;
+    this->getActualLength();// ths call contains the three actions, deleted below.
+    // NB. the previous line refreshes what follows: this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;
+//    dumpReader.seekg( 0, dumpReader.end);
+//    long dumpSize = dumpReader.tellg();
+//long secureRightBound = dumpSize - this->tailRecordSize;
+    long usefulPartOfDump_measure = this->actualPrimaryFileLength;// init. It will be updated bisecting.
     long leftBoundary = 0;
-    long rightBoundary = dumpSize;
+    long rightBoundary = this->actualPrimaryFileLength;
     // start bisecting:
     this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
     if( requiredOrdinal>this->lastOrdinal// NB. do NOT attempt reading after EOF, which throws.
@@ -427,7 +431,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
     {
         return -1UL;// as an error code, since the correct response has to be >0.
     }// else continue:
-    double requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) )*dumpSize;// NB. crucial ####
+    double requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) * usefulPartOfDump_measure;// NB. crucial ####
     int target;
     const int tokenSize = this->tailRecordSize;// globally defined.
     char partialToken[tokenSize];
@@ -517,7 +521,7 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
         if( decodedOrdinal<requiredOrdinal)// #### landingPoint evaluation #####
         {// bisection forward : right leaf
             leftBoundary = presentPosition;
-            rightBoundary = dumpSize;
+            rightBoundary = this->actualPrimaryFileLength;
         }
         else if( decodedOrdinal > requiredOrdinal)
         {// bisection backward : left leaf
@@ -530,8 +534,8 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
             break;
         }
         // common factors:
-        dumpSize = rightBoundary - leftBoundary;
-        requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * dumpSize;
+        usefulPartOfDump_measure = rightBoundary - leftBoundary;
+        requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * usefulPartOfDump_measure;
         // clanup:
         delete splittedTokens;
         //delete decodedOrdinal_str;//NB. already deleted, as parts of splittedTokens.
