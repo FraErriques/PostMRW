@@ -21,7 +21,11 @@
 int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-    int convergenceSteps = p->PropostaBisezione(50, 3, true);
+    int convergenceSteps = p->PropostaBisezione( 73, 100, false);
+    for(int c=0; c<=100;c++)
+    {
+        std::cout<<" steps needed to converge to LandingPoint_"<<c<<" are:"<< p->PropostaBisezione( c, 100, false)<<std::endl;
+    }
     delete p;
 
 
