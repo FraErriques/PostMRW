@@ -21,7 +21,7 @@
 int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-    p->PropostaBisezione(50, 90, true);
+    int convergenceSteps = p->PropostaBisezione(50, 3, true);
     delete p;
 
 

@@ -399,7 +399,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
  }
 
 
- void PrimesFinder::Primes::PropostaBisezione( const  long requiredOrdinal, const  long initialization, bool wantInitialization )
+ int PrimesFinder::Primes::PropostaBisezione( const  long requiredOrdinal, const  long initialization, bool wantInitialization )
  {
      long DeltaTessutoSomma;// NB. have to be signed, cause of signedDelta.
      double DeltaTessutoProdotto;
@@ -420,23 +420,33 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      last.Prime = +541;
      last.positionByte = +600;//per eccesso
      // init
-     LandingPoint = (long)(  (double)requiredOrdinal/(double)last.Ordinal * (double)last.positionByte  );
+     if( ! wantInitialization)
+     {
+         LandingPoint = (long)(  (double)requiredOrdinal/(double)last.Ordinal * (double)last.positionByte  );
+     }
+     else
+     {
+         LandingPoint = initialization;
+     }
      // init   decoded
-     decoded.Ordinal = LandingPoint;
-     decoded.positionByte = LandingPoint;
+     decoded.Ordinal = LandingPoint * +1/+1.91; // [Dim]==[ordinal]
+     //Hypothesis: position==f(ordinal)==+1.91*ordinal
+     decoded.positionByte = +1.91 * LandingPoint;
      decoded.Prime = 0;
      // ####
-     for( int acc=0; requiredOrdinal!=decoded.Ordinal; acc++)
+     int acc=0;// accumulator of steps, needed to converge.
+     for( ; requiredOrdinal!=decoded.Ordinal; acc++)
      {
          DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal;
          DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
-         LandingPoint =  decoded.positionByte + DeltaTessutoProdotto*last.positionByte;
+         LandingPoint =  decoded.positionByte + DeltaTessutoProdotto*last.positionByte;// [Dim]==[position]
          // simulation
          decoded.positionByte = LandingPoint;
-         decoded.Ordinal = LandingPoint;
+         decoded.Ordinal = LandingPoint * +1/+1.91; // [Dim]==[ordinal]
      }// for
      //###
-
+     //ready.
+     return acc;
  }// PropostaBisezione
 
 

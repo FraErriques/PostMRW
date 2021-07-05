@@ -88,7 +88,7 @@ public: // TODO let private after test
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
     DumpElement * recoverDumpTail( const char * dumpTail);
-    void PropostaBisezione( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    int PropostaBisezione( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
 
 };// class
 
