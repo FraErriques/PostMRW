@@ -20,42 +20,48 @@
 
 int main()
 {
+    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    p->PropostaBisezione(50, 90, true);
+    delete p;
+
+
+
 //    PrimesFinder::Primes * p = new PrimesFinder::Primes(
 //                                                        1987654321,
 //                                                        2187654321,
 //                                                        "primeCustomFile"
 //                                                        );
-    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-//    const char * dumpTailContent = p->dumpTailReaderByChar( p->theDumpPath);
-//    PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( dumpTailContent);
-
-    unsigned long overflowFlag = -1UL;
-    unsigned long lastOrdinal = p->getLastOrdinal();
-    unsigned long lastPrime = p->getLastPrime();
-    unsigned long presentLength = p->getActualLength();
-    p->Start_PrimeDump_FileSys();
-
-     unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
-     res = (*p)[1];
-     res = (*p)[2];
-     res = (*p)[3];
-     res = (*p)[lastOrdinal];
-     res = (*p)[lastOrdinal-1];
-     res = (*p)[lastOrdinal-2];
-     res = (*p)[lastOrdinal-3];
-     res = (*p)[lastOrdinal-100];
-     if(overflowFlag==res)
-     {
-         std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
-     }
-     for( int c=1; c<=15; c++)
-     {
-         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
-     }
-     for( int c=1; c<=lastOrdinal; c++)
-     {
-         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
-     }
+//    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+////    const char * dumpTailContent = p->dumpTailReaderByChar( p->theDumpPath);
+////    PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( dumpTailContent);
+//
+//    unsigned long overflowFlag = -1UL;
+//    unsigned long lastOrdinal = p->getLastOrdinal();
+//    unsigned long lastPrime = p->getLastPrime();
+//    unsigned long presentLength = p->getActualLength();
+//    p->Start_PrimeDump_FileSys();
+//
+//     unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
+//     res = (*p)[1];
+//     res = (*p)[2];
+//     res = (*p)[3];
+//     res = (*p)[lastOrdinal];
+//     res = (*p)[lastOrdinal-1];
+//     res = (*p)[lastOrdinal-2];
+//     res = (*p)[lastOrdinal-3];
+//     res = (*p)[lastOrdinal-100];
+//     if(overflowFlag==res)
+//     {
+//         std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
+//     }
+//     for( int c=1; c<=15; c++)
+//     {
+//         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
+//     }
+//     for( int c=1; c<=lastOrdinal; c++)
+//     {
+//         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
+//     }
 
     //     const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
     //     if( nullptr != theDumpPath)
@@ -67,7 +73,7 @@ int main()
     //     delete[] straightContentOfDumpTail;
     //     delete[] factorization;
     ////delete[] dumpTail;
-     delete p;
+    // delete p;
 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";

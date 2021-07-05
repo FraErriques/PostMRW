@@ -399,6 +399,46 @@ unsigned long PrimesFinder::Primes::getLastPrime()
  }
 
 
+ void PrimesFinder::Primes::PropostaBisezione( const  long requiredOrdinal, const  long initialization, bool wantInitialization )
+ {
+     long DeltaTessutoSomma;// NB. have to be signed, cause of signedDelta.
+     double DeltaTessutoProdotto;
+     struct AsinglePointInStream
+     {
+         long Ordinal;
+         long Prime;
+         long positionByte;
+     };
+     AsinglePointInStream beg, decoded, last;
+     long LandingPoint;
+     // init   beg
+     beg.Ordinal = +1;
+     beg.Prime = +2;
+     beg.positionByte = 0;
+     // init  last
+     last.Ordinal = +100;// case study
+     last.Prime = +541;
+     last.positionByte = +600;//per eccesso
+     // init
+     LandingPoint = (long)(  (double)requiredOrdinal/(double)last.Ordinal * (double)last.positionByte  );
+     // init   decoded
+     decoded.Ordinal = LandingPoint;
+     decoded.positionByte = LandingPoint;
+     decoded.Prime = 0;
+     // ####
+     for( int acc=0; requiredOrdinal!=decoded.Ordinal; acc++)
+     {
+         DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal;
+         DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
+         LandingPoint =  decoded.positionByte + DeltaTessutoProdotto*last.positionByte;
+         // simulation
+         decoded.positionByte = LandingPoint;
+         decoded.Ordinal = LandingPoint;
+     }// for
+     //###
+
+ }// PropostaBisezione
+
 
 
  // suggestions for bug-fixing on index[1]
@@ -545,6 +585,8 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
     dumpReader.close();// TODO evaluate if leave open for ReadRange()
     return requiredPrime;
 }// operator[]
+
+
 
 
 // IntegerDecomposition : the Fundamental Thm of Arithmetic.
