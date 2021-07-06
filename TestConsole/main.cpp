@@ -21,6 +21,7 @@
 int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    //long desPrime = (*p)[p->lastOrdinal];
     int convergenceSteps = p->CandidateOperatorQuadre( 73, 100, false);
 //    for(int c=0; c<=100;c++)
 //    {

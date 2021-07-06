@@ -458,7 +458,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     const int tokenSize = this->tailRecordSize;// globally defined.
     char partialToken[tokenSize];
     char secondToken[tokenSize];
-    unsigned long decodedOrdinal = -1UL;
+
         if( secureRightBound<target)// required a landing-point, after the secureRightBound
         {
 //            this->dumpTailReaderByChar( this->theDumpPath);
@@ -530,16 +530,22 @@ unsigned long PrimesFinder::Primes::getLastPrime()
             throw;// TODO : manage the error case.
         }
         // TODO : manage exception on parsing.
-        decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);// TODO : manage exception on parsing. test:
-        if( decodedOrdinal>this->lastOrdinal)
+        res.Ordinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);// TODO : manage exception on parsing. test:
+        if( res.Ordinal>this->lastOrdinal)
         {
             throw;// TODO : manage the error case.
         }
+
+
+        dumpReader.seekg( -1*totalReadTokenLength, dumpReader.cur );// GO back, of the read amount.########### crucial action #####
         long presentPosition = dumpReader.tellg();//#### NB. ####
      // trascrizione dei risultati:
-     //res.Ordinal =
-     //res.Prime =
-     //res.positionByte =
+     res.Prime = (long)Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
+     res.positionByte = presentPosition;
+    // clanup:
+    delete splittedTokens;
+    //delete decodedOrdinal_str;//NB. already deleted, as parts of splittedTokens.
+    //delete decodedPrime_str;
      // ready.
      return res;
  }// readRecordAt(
@@ -548,14 +554,11 @@ unsigned long PrimesFinder::Primes::getLastPrime()
  {
      long DeltaTessutoSomma;// NB. have to be signed, cause of signedDelta.
      double DeltaTessutoProdotto;
-//     struct AsinglePointInStream  just a memo
-//     {
-//         long Ordinal;
-//         long Prime;
-//         long positionByte;
-//     };
     AsinglePointInStream beg, decoded, last;
     long LandingPoint;
+    unsigned long decodedOrdinal = -1UL;
+    long leftBoundary = 0;
+    long rightBoundary = this->actualPrimaryFileLength;
     // init   beg : beg is certain; no need to read.
     beg.Ordinal = +1;
     beg.Prime = +2;
@@ -567,6 +570,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     last.Ordinal = this->lastOrdinal;// TODO monitor the compatibility signed-unsigned.
     last.Prime = this->lastPrime;// TODO monitor the compatibility signed-unsigned.
     last.positionByte = this->actualPrimaryFileLength;// TODO monitor the compatibility signed-unsigned.
+    long usefulPartOfDump_measure = (long)this->actualPrimaryFileLength;// init. It will be updated bisecting.
      // init
      if( ! wantInitialization)
      {
@@ -577,25 +581,45 @@ unsigned long PrimesFinder::Primes::getLastPrime()
          LandingPoint = initialization;
      }
      // init   decoded
-     AsinglePointInStream test = this->readRecordAt( dumpReader, LandingPoint);
-     decoded.Ordinal = LandingPoint * +1/+1.91; // [Dim]==[ordinal]
-     //Hypothesis: position==f(ordinal)==+1.91*ordinal
-     decoded.positionByte = +1.91 * LandingPoint;
-     decoded.Prime = 0;
+     decoded.Ordinal = -1;// init to invalid, to enter the loop.test.Ordinal;
+     decoded.Prime =  -1;// init to invalid, to enter the loop.
+     decoded.positionByte =  -1;// init to invalid, to enter the loop.
      // ####
      int acc=0;// accumulator of steps, needed to converge.
      for( ; requiredOrdinal!=decoded.Ordinal; acc++)
      {
          // here do: seekg #############
+         AsinglePointInStream test = this->readRecordAt( dumpReader, LandingPoint);
+         decoded.Ordinal = test.Ordinal; //LandingPoint * +1/+1.91; // [Dim]==[ordinal] //Hypothesis: position==f(ordinal)==+1.91*ordinal
+         decoded.Prime = test.Prime;
+         decoded.positionByte = test.positionByte; // +1.91 * LandingPoint;
+         //###
          DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal;
          DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
-         LandingPoint =  decoded.positionByte + DeltaTessutoProdotto*last.positionByte;// [Dim]==[position]
-         // simulation
-         decoded.positionByte = LandingPoint;
-         decoded.Ordinal = LandingPoint * +1/+1.91; // [Dim]==[ordinal]
+         //###
+        if( decoded.Ordinal<requiredOrdinal)// #### landingPoint evaluation #####
+        {// bisection forward : right leaf
+            leftBoundary = decoded.positionByte;
+            rightBoundary = this->actualPrimaryFileLength;
+        }
+        else if( decoded.Ordinal > requiredOrdinal)
+        {// bisection backward : left leaf
+            leftBoundary = 0;
+            rightBoundary = decoded.positionByte-this->tailRecordSize; //-totalReadTokenLength;
+        }
+        else// i.e.  decodedOrdinal == requiredOrdinal
+        {
+            // restituire  decoded.Prime
+            break;
+        }
+        // common factors:
+        usefulPartOfDump_measure = rightBoundary - leftBoundary;
+        LandingPoint = ( (double)requiredOrdinal / (double)decoded.Ordinal ) * usefulPartOfDump_measure;
+        //LandingPoint =  decoded.positionByte/this->actualPrimaryFileLength * usefulPartOfDump_measure;// [Dim]==[position]
      }// for
      //###
      dumpReader.close();
+
      //ready.
      return acc;
  }// CandidateOperatorQuadre
