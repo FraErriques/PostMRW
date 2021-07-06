@@ -106,6 +106,7 @@ double rettangoli()
 
 
 
+//
 //     int d=c-1,x=0;
 //     for( ; d>=0; d--,x++ )
 //     {
