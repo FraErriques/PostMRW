@@ -33,6 +33,12 @@ class Primes
         unsigned long  ordinal;
         unsigned long  prime;
     };
+     struct AsinglePointInStream
+     {
+         long Ordinal;
+         long Prime;
+         long positionByte;
+     };
 
     /// Ctor
     Primes(unsigned long threshold);// default Section, on default config-file, dedicated for this class: i.e. ./PrimeConfig.txt
@@ -89,6 +95,8 @@ public: // TODO let private after test
     bool getLastCoupleInDefaultFile();
     DumpElement * recoverDumpTail( const char * dumpTail);
     int PropostaBisezione( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    int CandidateOperatorQuadre( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    AsinglePointInStream readRecordAt(std::ifstream & dumpReader, long offsetFromBeg);
 
 };// class
 
