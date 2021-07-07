@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="PostMRW">
+		<Project filename="Common/Common.cbp" />
+		<Project filename="Entity/Entity.cbp">
+			<Depends filename="Common/Common.cbp" />
+		</Project>
+		<Project filename="Process/Process.cbp">
+			<Depends filename="Entity/Entity.cbp" />
+		</Project>
+		<Project filename="TestConsole/TestConsole.cbp">
+			<Depends filename="Process/Process.cbp" />
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>
