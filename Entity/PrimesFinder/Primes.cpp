@@ -574,7 +574,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      // init
      if( ! wantInitialization)
      {
-         LandingPoint = (long)(  (double)requiredOrdinal/(double)last.Ordinal * (double)last.positionByte  );
+         LandingPoint = (long)(  0.5 * (double)last.positionByte  );//bisect
      }
      else
      {
@@ -594,8 +594,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
          decoded.Prime = test.Prime;
          decoded.positionByte = test.positionByte; // +1.91 * LandingPoint;
          //###
-         DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal;
-         DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
+            //DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal; #### descarded as not converging
+            //DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
          //###
         if( decoded.Ordinal<requiredOrdinal)// #### landingPoint evaluation #####
         {// bisection forward : right leaf
@@ -614,12 +614,10 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         }
         // common factors:
         usefulPartOfDump_measure = rightBoundary - leftBoundary;
-        LandingPoint = ( (double)requiredOrdinal / (double)decoded.Ordinal ) * usefulPartOfDump_measure;
-        //LandingPoint =  decoded.positionByte/this->actualPrimaryFileLength * usefulPartOfDump_measure;// [Dim]==[position]
+        LandingPoint = (long)( 0.5*usefulPartOfDump_measure+leftBoundary);//NB. apply an addition of "leftBoundary", to fit the actual stream.
      }// for
      //###
      dumpReader.close();
-
      //ready.
      return acc;
  }// CandidateOperatorQuadre
