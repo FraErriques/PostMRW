@@ -556,8 +556,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     AsinglePointInStream beg, decoded, last;
     long LandingPoint;
     unsigned long decodedOrdinal = -1UL;
-    long leftBoundary = 0;
-    long rightBoundary = this->actualPrimaryFileLength;
+    long leftBoundary = MassimoMinoranti = 0;
+    long rightBoundary = MinimoMaggioranti = this->actualPrimaryFileLength;
     // init   beg : beg is certain; no need to read.
     beg.Ordinal = +1;
     beg.Prime = +2;
@@ -598,13 +598,19 @@ unsigned long PrimesFinder::Primes::getLastPrime()
          //###
         if( decoded.Ordinal<requiredOrdinal)// #### landingPoint evaluation #####
         {// bisection forward : right leaf
-            leftBoundary = decoded.positionByte;
-            rightBoundary = this->actualPrimaryFileLength;
+            if( decoded.positionByte > MassimoMinoranti)
+            {
+                MassimoMinoranti = decoded.positionByte;
+            }// else MassimoMinoranti is already better than that.
+            // MinimoMaggioranti =  this->actualPrimaryFileLength; already got it from init.
         }
         else if( decoded.Ordinal > requiredOrdinal)
         {// bisection backward : left leaf
-            leftBoundary = 0;
-            rightBoundary = decoded.positionByte-this->tailRecordSize; //-totalReadTokenLength;
+            // leftBoundary = 0; already got it from init.
+            if(decoded.positionByte-this->tailRecordSize < MinimoMaggioranti)
+            {
+                MinimoMaggioranti = decoded.positionByte-this->tailRecordSize; //-totalReadTokenLength;
+            }// else MinimoMaggioranti is already better than that.
         }
         else// i.e.  decodedOrdinal == requiredOrdinal
         {
@@ -612,8 +618,10 @@ unsigned long PrimesFinder::Primes::getLastPrime()
             break;
         }
         // common factors:
+        leftBoundary = MassimoMinoranti;// keep memory of previous narrowings.
+        rightBoundary = MinimoMaggioranti;// keep memory of previous narrowings.
         usefulPartOfDump_measure = rightBoundary - leftBoundary;
-        LandingPoint = (long)( 0.5*usefulPartOfDump_measure+leftBoundary);//NB. apply an addition of "leftBoundary", to fit the actual stream.
+        LandingPoint = (long)( 0.5*usefulPartOfDump_measure+leftBoundary);//NB. add "leftBoundary", to fit the actual stream.
      }// for
      //###
      dumpReader.close();
