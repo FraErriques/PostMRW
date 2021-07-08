@@ -18,11 +18,13 @@
 
 
 
+
 int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
     //long desPrime = (*p)[p->lastOrdinal];
-    int convergenceSteps = p->CandidateOperatorQuadre( 73, 100, false);
+    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+    int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
 //    for(int c=0; c<=100;c++)
 //    {
 //        std::cout<<" steps needed to converge to LandingPoint_"<<c<<" are:"<< p->PropostaBisezione( c, 100, false)<<std::endl;

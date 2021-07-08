@@ -94,9 +94,10 @@ public: // TODO let private after test
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
     DumpElement * recoverDumpTail( const char * dumpTail);
-    int PropostaBisezione( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
-    int CandidateOperatorQuadre( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
-    AsinglePointInStream readRecordAt(std::ifstream & dumpReader, long offsetFromBeg);
+    int shiftInSumTissue( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    int Bisection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    int NpartSection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    AsinglePointInStream readRecordAt(std::ifstream & dumpReader, long offsetFromBeg);// lettore di Record da IntegralDump
 
 };// class
 
