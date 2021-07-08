@@ -556,8 +556,10 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     AsinglePointInStream beg, decoded, last;
     long LandingPoint;
     unsigned long decodedOrdinal = -1UL;
-    long leftBoundary = MassimoMinoranti = 0;
-    long rightBoundary = MinimoMaggioranti = this->actualPrimaryFileLength;
+    long leftBoundary = 0;
+    MassimoMinoranti = leftBoundary;// init.
+    long rightBoundary = this->actualPrimaryFileLength;
+    MinimoMaggioranti = rightBoundary;// init.
     // init   beg : beg is certain; no need to read.
     beg.Ordinal = +1;
     beg.Prime = +2;
