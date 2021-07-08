@@ -18,50 +18,55 @@
 int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-    unsigned long overflowFlag = -1UL;
-    unsigned long lastOrdinal = p->getLastOrdinal();
-    unsigned long lastPrime = p->getLastPrime();
-    unsigned long presentLength = p->getActualLength();
+    //long desPrime = (*p)[p->lastOrdinal];
+    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+    std::cout << "\n\t converging in " << bisectionConvergenceSteps <<" steps."<<std::endl;
+    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
+//    for(int c=0; c<=100;c++)
+//    {
+//        std::cout<<" steps needed to converge to LandingPoint_"<<c<<" are:"<< p->PropostaBisezione( c, 100, false)<<std::endl;
+//    }
     delete p;
-    p = new PrimesFinder::Primes(5000000); // re-use
-    p->Start_PrimeDump_FileSys();
-    lastOrdinal = p->getLastOrdinal();
-    lastPrime = p->getLastPrime();
-    presentLength = p->getActualLength();
 
-     unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
-     res = (*p)[1];
-     res = (*p)[2];
-     res = (*p)[3];
-     res = (*p)[lastOrdinal];
-     res = (*p)[lastOrdinal-1];
-     res = (*p)[lastOrdinal-2];
-     res = (*p)[lastOrdinal-3];
-     res = (*p)[lastOrdinal-100];
-     if(overflowFlag==res)
-     {
-         std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
-     }
-     for( int c=1; c<=15; c++)
-     {
-         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
-     }
-     for( int c=lastOrdinal-500; c<=lastOrdinal-50; c++)
-     {
-         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
-     }
-     const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
-     if( nullptr != theDumpPath)
-      {}// else : TODO not-healthly built.
-     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
-//PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
-     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
-
-     delete[] theDumpPath;
-     delete[] straightContentOfDumpTail;
-     delete[] factorization;
+//    p = new PrimesFinder::Primes(5000000); // re-use
+//    p->Start_PrimeDump_FileSys();
+//    lastOrdinal = p->getLastOrdinal();
+//    lastPrime = p->getLastPrime();
+//    presentLength = p->getActualLength();
+//
+//     unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
+//     res = (*p)[1];
+//     res = (*p)[2];
+//     res = (*p)[3];
+//     res = (*p)[lastOrdinal];
+//     res = (*p)[lastOrdinal-1];
+//     res = (*p)[lastOrdinal-2];
+//     res = (*p)[lastOrdinal-3];
+//     res = (*p)[lastOrdinal-100];
+//     if(overflowFlag==res)
+//     {
+//         std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
+//     }
+//     for( int c=1; c<=15; c++)
+//     {
+//         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
+//     }
+//     for( int c=lastOrdinal-500; c<=lastOrdinal-50; c++)
+//     {
+//         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
+//     }
+//     const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+//     if( nullptr != theDumpPath)
+//      {}// else : TODO not-healthly built.
+//     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
+////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
+//     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
+//
+//     delete[] theDumpPath;
+//     delete[] straightContentOfDumpTail;
+//     delete[] factorization;
     //delete[] dumpTail;
-     delete p;
+     //delete p;
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();

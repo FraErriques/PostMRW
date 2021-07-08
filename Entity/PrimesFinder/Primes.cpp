@@ -399,6 +399,309 @@ unsigned long PrimesFinder::Primes::getLastPrime()
  }
 
 
+ int PrimesFinder::Primes::shiftInSumTissue( const  long requiredOrdinal, const  long initialization, bool wantInitialization )
+ {
+     long DeltaTessutoSomma;// NB. have to be signed, cause of signedDelta.
+     double DeltaTessutoProdotto;
+     struct AsinglePointInStream
+     {
+         long Ordinal;
+         long Prime;
+         long positionByte;
+     };
+     AsinglePointInStream beg, decoded, last;
+     long LandingPoint;
+     // init   beg
+     beg.Ordinal = +1;
+     beg.Prime = +2;
+     beg.positionByte = 0;
+     // init  last
+     last.Ordinal = +100;// case study
+     last.Prime = +541;
+     last.positionByte = +600;//per eccesso
+     // init
+     if( ! wantInitialization)
+     {
+         LandingPoint = (long)(  (double)requiredOrdinal/(double)last.Ordinal * (double)last.positionByte  );
+     }
+     else
+     {
+         LandingPoint = initialization;
+     }
+     // init   decoded
+     decoded.Ordinal = LandingPoint * +1/+1.91; // [Dim]==[ordinal]
+     //Hypothesis: position==f(ordinal)==+1.91*ordinal
+     decoded.positionByte = +1.91 * LandingPoint;
+     decoded.Prime = 0;
+     // ####
+     int acc=0;// accumulator of steps, needed to converge.
+     for( ; requiredOrdinal!=decoded.Ordinal; acc++)
+     {
+         DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal;
+         DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
+         LandingPoint =  decoded.positionByte + DeltaTessutoProdotto*last.positionByte;// [Dim]==[position]
+         // simulation
+         decoded.positionByte = LandingPoint;
+         decoded.Ordinal = LandingPoint * +1/+1.91; // [Dim]==[ordinal]
+     }// for
+     //###
+     //ready.
+     return acc;
+ }// PropostaBisezione
+
+
+ PrimesFinder::Primes::AsinglePointInStream  PrimesFinder::Primes::readRecordAt(std::ifstream & dumpReader, long offsetFromBeg)
+ {
+     AsinglePointInStream res;
+    this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
+    long target = offsetFromBeg;
+    const int tokenSize = this->tailRecordSize;// globally defined.
+    char partialToken[tokenSize];
+    char secondToken[tokenSize];
+
+        if( secureRightBound<target)// required a landing-point, after the secureRightBound
+        {
+//            this->dumpTailReaderByChar( this->theDumpPath);
+//            this->recoverDumpTail( this->theDumpTailStr);
+//            for(int c=0; ; c++)
+//            {// scan the dumpTailArray
+//                if( c>this->actualCoupleCardinality-1)
+//                {
+//                    throw "element not found in file tail.";
+//                }
+//                if( requiredOrdinal==dumpTail[c].ordinal)
+//                {
+//                    decodedOrdinal = dumpTail[c].ordinal;// exit condition
+//                    requiredPrime = dumpTail[c].prime;
+//                    dumpReader.close();// TODO evaluate if leave open for ReadRange()
+//                    return requiredPrime;// NB. break is not enough!
+//                }// else continue.
+//            }// scan the dumpTailArray
+        }// required a landing-point, after the secureRightBound
+        else
+        {// NB. only seek to safe locations(i.e. <=secureRightBound) otherwise the flag-family isBad,isEOF will throw something.
+            dumpReader.seekg( target, dumpReader.beg);// GOTO required %.##################################### crucial action #####
+        }// after having landed, evaluate:
+        // first Token has to be thrown away, since it is likely to be truncated before the beginning, due to
+        // random access to seek(bisection); next record will be complete.
+        dumpReader.getline( partialToken, tokenSize, '\r' );
+        dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
+        if(0==target)//if the landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
+        {// it's needed only when searching for the first record in the dump, since it has no previous record.
+            for( int c=0; c<tokenSize; c++)
+            {// mustSwapTokens
+                secondToken[c] = partialToken[c];
+            }// mustSwapTokens
+        }// no else; when searching for records different from the absolute first, there's no need for this swap.
+        int partialToken_Length = strlen_loc( partialToken);
+        int secondToken_Length = strlen_loc( secondToken);
+        int totalReadTokenLength = partialToken_Length+secondToken_Length+2;// +the two '\r' that are descarded.
+        /* in case of need to Debug the stream seeking.
+        //## functions to check state flags:
+        bool isGood = dumpReader.good();
+        bool isEOF = dumpReader.eof();
+        bool isFailure = dumpReader.fail();
+        bool isBad = dumpReader.bad();
+        bool isRdState = dumpReader.rdstate();
+        if( !isGood
+            ||isEOF
+            ||isFailure
+            ||isBad
+            ||isRdState )
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }// else continue:
+        //## end: functions to check state flags.
+        */
+        char cStringDivisorSequence[2];
+        cStringDivisorSequence[0] = '_';
+        cStringDivisorSequence[1] = 0;
+        std::vector<std::string> * splittedTokens = Common::StrManipul::stringSplit( cStringDivisorSequence, secondToken, true);
+        int hmFoundToken = splittedTokens->size();
+        const char * decodedOrdinal_str = nullptr;
+        const char * decodedPrime_str = nullptr;
+        if(2<=hmFoundToken)// at least ordinal_prime ,i.e. 2 token.
+        {
+            decodedOrdinal_str = (*splittedTokens)[0].c_str();
+            decodedPrime_str = (*splittedTokens)[1].c_str();
+        }
+        else
+        {// TODO: evaluate a throw, due to inconsistent dumpIntegralFile.
+            throw;// TODO : manage the error case.
+        }
+        // TODO : manage exception on parsing.
+        res.Ordinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);// TODO : manage exception on parsing. test:
+        if( res.Ordinal>this->lastOrdinal)
+        {
+            throw;// TODO : manage the error case.
+        }
+        dumpReader.seekg( -1*totalReadTokenLength, dumpReader.cur );// GO back, of the read amount.########### crucial action #####
+        long presentPosition = dumpReader.tellg();//#### NB. ####
+     // trascrizione dei risultati:
+     res.Prime = (long)Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
+     res.positionByte = presentPosition;
+    // clanup:
+    delete splittedTokens;
+    //delete decodedOrdinal_str;//NB. already deleted, as parts of splittedTokens.
+    //delete decodedPrime_str;
+     // ready.
+     return res;
+ }// readRecordAt(
+
+
+  int PrimesFinder::Primes::Bisection( const  long requiredOrdinal, const  long initialization, bool wantInitialization )
+ {
+     long MassimoMinoranti, MinimoMaggioranti;// NB. have to be signed.
+     double DeltaTessutoProdotto;
+    AsinglePointInStream beg, decoded, last;
+    long LandingPoint;
+    unsigned long decodedOrdinal = -1UL;
+    long leftBoundary = 0;
+    MassimoMinoranti = leftBoundary;// init.
+    long rightBoundary = this->actualPrimaryFileLength;
+    MinimoMaggioranti = rightBoundary;// init.
+    // init   beg : beg is certain; no need to read.
+    beg.Ordinal = +1;
+    beg.Prime = +2;
+    beg.positionByte = 0;
+    // init  last : read last record
+    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
+    this->getActualLength();// this call contains three actions:
+    // NB. the previous line refreshes what follows: this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;
+    last.Ordinal = this->lastOrdinal;// TODO monitor the compatibility signed-unsigned.
+    last.Prime = this->lastPrime;// TODO monitor the compatibility signed-unsigned.
+    last.positionByte = this->actualPrimaryFileLength;// TODO monitor the compatibility signed-unsigned.
+    long usefulPartOfDump_measure = (long)this->actualPrimaryFileLength;// init. It will be updated bisecting.
+     // init
+     if( ! wantInitialization)
+     {
+         LandingPoint = (long)(  0.5 * (double)last.positionByte  );//bisect
+     }
+     else
+     {
+         LandingPoint = initialization;
+     }
+     // init   decoded
+     decoded.Ordinal = -1;// init to invalid, to enter the loop.test.Ordinal;
+     decoded.Prime =  -1;// init to invalid, to enter the loop.
+     decoded.positionByte =  -1;// init to invalid, to enter the loop.
+     // ####
+     int acc=0;// accumulator of steps, needed to converge.
+     for( ; requiredOrdinal!=decoded.Ordinal; acc++)
+     {
+         // here do: seekg #############
+         AsinglePointInStream test = this->readRecordAt( dumpReader, LandingPoint);
+         decoded.Ordinal = test.Ordinal; //LandingPoint * +1/+1.91; // [Dim]==[ordinal] //Hypothesis: position==f(ordinal)==+1.91*ordinal
+         decoded.Prime = test.Prime;
+         decoded.positionByte = test.positionByte; // +1.91 * LandingPoint;
+         //###
+            //DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal; #### descarded as not converging
+            //DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
+         //###
+        if( decoded.Ordinal<requiredOrdinal)// #### landingPoint evaluation #####
+        {// bisection forward : right leaf
+            if( decoded.positionByte > MassimoMinoranti)
+            {
+                MassimoMinoranti = decoded.positionByte;
+            }// else MassimoMinoranti is already better than that.
+            // MinimoMaggioranti =  this->actualPrimaryFileLength; already got it from init.
+        }
+        else if( decoded.Ordinal > requiredOrdinal)
+        {// bisection backward : left leaf
+            // leftBoundary = 0; already got it from init.
+            if(decoded.positionByte-this->tailRecordSize < MinimoMaggioranti)
+            {
+                MinimoMaggioranti = decoded.positionByte-this->tailRecordSize; //-totalReadTokenLength;
+            }// else MinimoMaggioranti is already better than that.
+        }
+        else// i.e.  decodedOrdinal == requiredOrdinal
+        {
+            // restituire  decoded.Prime
+            break;
+        }
+        // common factors:
+        leftBoundary = MassimoMinoranti;// keep memory of previous narrowings.
+        rightBoundary = MinimoMaggioranti;// keep memory of previous narrowings.
+        usefulPartOfDump_measure = rightBoundary - leftBoundary;
+        LandingPoint = (long)( 0.5*usefulPartOfDump_measure+leftBoundary);//NB. add "leftBoundary", to fit the actual stream.
+     }// for
+     //###
+     dumpReader.close();
+     //ready.
+     return acc;
+ }// Bisection
+
+
+   int PrimesFinder::Primes::NpartSection( const  long requiredOrdinal, const  long initialization, bool wantInitialization )
+ {
+     long MassimoMinoranti, MinimoMaggioranti;// NB. have to be signed.
+    AsinglePointInStream beg, decoded, last;
+    long LandingPoint;
+    unsigned long decodedOrdinal = -1UL;
+    long leftBoundary = 0;
+    long rightBoundary = this->actualPrimaryFileLength;
+    // init   beg : beg is certain; no need to read.
+    beg.Ordinal = +1;
+    beg.Prime = +2;
+    beg.positionByte = 0;
+    // init  last : read last record
+    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
+    this->getActualLength();// this call contains three actions:
+    // NB. the previous line refreshes what follows: this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;
+    last.Ordinal = this->lastOrdinal;// TODO monitor the compatibility signed-unsigned.
+    last.Prime = this->lastPrime;// TODO monitor the compatibility signed-unsigned.
+    last.positionByte = this->actualPrimaryFileLength;// TODO monitor the compatibility signed-unsigned.
+    long usefulPartOfDump_measure = (long)this->actualPrimaryFileLength;// init. It will be updated bisecting.
+     // init
+     if( ! wantInitialization)
+     {
+         LandingPoint = (long)(  0.5 * (double)last.positionByte  );//bisect
+     }
+     else
+     {
+         LandingPoint = initialization;
+     }
+     // init   decoded
+     decoded.Ordinal = -1;// init to invalid, to enter the loop.test.Ordinal;
+     decoded.Prime =  -1;// init to invalid, to enter the loop.
+     decoded.positionByte =  -1;// init to invalid, to enter the loop.
+     // ####
+     int acc=0;// accumulator of steps, needed to converge.
+     for( ; requiredOrdinal!=decoded.Ordinal; acc++)
+     {
+         // here do: seekg #############
+         AsinglePointInStream test = this->readRecordAt( dumpReader, LandingPoint);
+         decoded.Ordinal = test.Ordinal; //LandingPoint * +1/+1.91; // [Dim]==[ordinal] //Hypothesis: position==f(ordinal)==+1.91*ordinal
+         decoded.Prime = test.Prime;
+         decoded.positionByte = test.positionByte; // +1.91 * LandingPoint;
+         //###
+            //DeltaTessutoSomma = requiredOrdinal - decoded.Ordinal; #### descarded as not converging
+            //DeltaTessutoProdotto = (double)DeltaTessutoSomma/(double)(last.positionByte);
+         //###
+        if( decoded.Ordinal<requiredOrdinal)// #### landingPoint evaluation #####
+        {// bisection forward : right leaf
+            leftBoundary = decoded.positionByte;
+            rightBoundary = this->actualPrimaryFileLength;
+        }
+        else if( decoded.Ordinal > requiredOrdinal)
+        {// bisection backward : left leaf
+            leftBoundary = 0;
+            rightBoundary = decoded.positionByte-this->tailRecordSize; //-totalReadTokenLength;
+        }
+        else// i.e.  decodedOrdinal == requiredOrdinal
+        {
+            // restituire  decoded.Prime
+            break;
+        }
+        // common factors:
+        usefulPartOfDump_measure = rightBoundary - leftBoundary;
+        LandingPoint = (long)( 0.5*usefulPartOfDump_measure+leftBoundary);//NB. apply an addition of "leftBoundary", to fit the actual stream.
+     }// for
+     //###
+     dumpReader.close();
+     //ready.
+     return acc;
+ }// NpartSection
 
 
  // suggestions for bug-fixing on index[1]
@@ -545,6 +848,8 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
     dumpReader.close();// TODO evaluate if leave open for ReadRange()
     return requiredPrime;
 }// operator[]
+
+
 
 
 // IntegerDecomposition : the Fundamental Thm of Arithmetic.

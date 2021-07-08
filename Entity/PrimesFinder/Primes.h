@@ -33,6 +33,12 @@ class Primes
         unsigned long  ordinal;
         unsigned long  prime;
     };
+     struct AsinglePointInStream
+     {
+         long Ordinal;
+         long Prime;
+         long positionByte;
+     };
 
     /// Ctor
     Primes(unsigned long threshold);// default Section, on default config-file, dedicated for this class: i.e. ./PrimeConfig.txt
@@ -88,6 +94,10 @@ public: // TODO let private after test
     void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
     bool getLastCoupleInDefaultFile();
     DumpElement * recoverDumpTail( const char * dumpTail);
+    int shiftInSumTissue( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    int Bisection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    int NpartSection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    AsinglePointInStream readRecordAt(std::ifstream & dumpReader, long offsetFromBeg);// lettore di Record da IntegralDump
 
 };// class
 
