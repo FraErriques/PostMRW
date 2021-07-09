@@ -557,13 +557,6 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     long LandingPoint;
     unsigned long decodedOrdinal = -1UL;
     long leftBoundary = 0;
-    MassimoMinoranti = leftBoundary;// init.
-    long rightBoundary = this->actualPrimaryFileLength;
-    MinimoMaggioranti = rightBoundary;// init.
-    // init   beg : beg is certain; no need to read.
-    beg.Ordinal = +1;
-    beg.Prime = +2;
-    beg.positionByte = 0;
     // init  last : read last record
     std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
     this->getActualLength();// this call contains three actions:
@@ -571,7 +564,14 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     last.Ordinal = this->lastOrdinal;// TODO monitor the compatibility signed-unsigned.
     last.Prime = this->lastPrime;// TODO monitor the compatibility signed-unsigned.
     last.positionByte = this->actualPrimaryFileLength;// TODO monitor the compatibility signed-unsigned.
-    long usefulPartOfDump_measure = (long)this->actualPrimaryFileLength;// init. It will be updated bisecting.
+    long usefulPartOfDump_measure = (long)this->actualPrimaryFileLength;// init. It will be updated bisecting.    
+    MassimoMinoranti = leftBoundary;// init.
+    long rightBoundary = this->actualPrimaryFileLength;
+    MinimoMaggioranti = rightBoundary;// init.
+    // init   beg : beg is certain; no need to read.
+    beg.Ordinal = +1;
+    beg.Prime = +2;
+    beg.positionByte = 0;
      // init
      if( ! wantInitialization)
      {
@@ -600,7 +600,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
          //###
         if( decoded.Ordinal<requiredOrdinal)// #### landingPoint evaluation #####
         {// bisection forward : right leaf
-            if( decoded.positionByte > MassimoMinoranti)
+           if( decoded.positionByte > MassimoMinoranti)
             {
                 MassimoMinoranti = decoded.positionByte;
             }// else MassimoMinoranti is already better than that.
