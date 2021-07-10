@@ -18,15 +18,18 @@
 int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-    //long desPrime = (*p)[p->lastOrdinal];
-    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
-    std::cout << "\n\t converging in " << bisectionConvergenceSteps <<" steps."<<std::endl;
+    long desPrime = (*p)[p->lastOrdinal];
+//    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+//for(int c=0; c<=100;c++)
+//    {    
+//        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
+//    }
     //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
 //    for(int c=0; c<=100;c++)
 //    {
 //        std::cout<<" steps needed to converge to LandingPoint_"<<c<<" are:"<< p->PropostaBisezione( c, 100, false)<<std::endl;
 //    }
-    delete p;
+//    delete p;
 
 //    p = new PrimesFinder::Primes(5000000); // re-use
 //    p->Start_PrimeDump_FileSys();

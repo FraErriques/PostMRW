@@ -624,6 +624,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         rightBoundary = MinimoMaggioranti;// keep memory of previous narrowings.
         usefulPartOfDump_measure = rightBoundary - leftBoundary;
         LandingPoint = (long)( 0.5*usefulPartOfDump_measure+leftBoundary);//NB. add "leftBoundary", to fit the actual stream.
+        if(LandingPoint <0) {LandingPoint=0;}
+        
      }// for
      //###
      dumpReader.close();
