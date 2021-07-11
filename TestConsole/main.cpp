@@ -19,7 +19,7 @@ int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
     long desPrime = (*p)[p->lastOrdinal];
-//    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
 //for(int c=0; c<=100;c++)
 //    {    
 //        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
@@ -63,11 +63,11 @@ int main()
 //      {}// else : TODO not-healthly built.
 //     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 ////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
-//     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
+     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
 //
 //     delete[] theDumpPath;
 //     delete[] straightContentOfDumpTail;
-//     delete[] factorization;
+     delete[] factorization;
     //delete[] dumpTail;
      //delete p;
     //
