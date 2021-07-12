@@ -69,7 +69,7 @@ int main()
 //     delete[] straightContentOfDumpTail;
      delete[] factorization;
     //delete[] dumpTail;
-     //delete p;
+     delete p;
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();

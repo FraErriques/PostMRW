@@ -555,7 +555,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      double DeltaTessutoProdotto;
     AsinglePointInStream beg, decoded, last;
     long LandingPoint;
-    unsigned long decodedOrdinal = -1UL;
+    long prevLandingPoint;
+    long prevDecodedOrdinal;
     long leftBoundary = 0;
     // init  last : read last record
     std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
@@ -564,7 +565,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     last.Ordinal = this->lastOrdinal;// TODO monitor the compatibility signed-unsigned.
     last.Prime = this->lastPrime;// TODO monitor the compatibility signed-unsigned.
     last.positionByte = this->actualPrimaryFileLength;// TODO monitor the compatibility signed-unsigned.
-    long usefulPartOfDump_measure = (long)this->actualPrimaryFileLength;// init. It will be updated bisecting.    
+    long usefulPartOfDump_measure = (long)this->actualPrimaryFileLength;// init. It will be updated bisecting.
     MassimoMinoranti = leftBoundary;// init.
     long rightBoundary = this->actualPrimaryFileLength;
     MinimoMaggioranti = rightBoundary;// init.
@@ -581,6 +582,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      {
          LandingPoint = initialization;
      }
+     prevLandingPoint = 0;//init; NB.do not trigger the booster, initializing=LandingPoint.
+     prevDecodedOrdinal = 0;//init; NB.do not trigger the booster.
      // init   decoded
      decoded.Ordinal = -1;// init to invalid, to enter the loop.test.Ordinal;
      decoded.Prime =  -1;// init to invalid, to enter the loop.
@@ -614,7 +617,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
                 MinimoMaggioranti = decoded.positionByte-this->tailRecordSize; //-totalReadTokenLength;
             }// else MinimoMaggioranti is already better than that.
         }
-        else// i.e.  decodedOrdinal == requiredOrdinal
+        else// i.e.  decoded.Ordinal == requiredOrdinal
         {
             // restituire  decoded.Prime
             break;
@@ -625,6 +628,20 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         usefulPartOfDump_measure = rightBoundary - leftBoundary;
         LandingPoint = (long)( 0.5*usefulPartOfDump_measure+leftBoundary);//NB. add "leftBoundary", to fit the actual stream.
         if(LandingPoint <0) {LandingPoint=0;}
+        if(LandingPoint >this->actualPrimaryFileLength ) {LandingPoint=this->actualPrimaryFileLength;}
+        if( LandingPoint==prevLandingPoint || decoded.Ordinal==prevDecodedOrdinal)
+        {
+            if( decoded.Ordinal<requiredOrdinal)
+            {
+                LandingPoint+=this->tailRecordSize/2;// boost right.
+            }
+            else if( decoded.Ordinal > requiredOrdinal)
+            {
+                LandingPoint-=this->tailRecordSize/2;// boost left.
+            }// no other else, since if decoded.Ordinal == requiredOrdinal method already broken the "for".
+        }// end prevLandingPoint analysis (i.e. booster).
+        prevLandingPoint = LandingPoint;// anyway, log the current LandingPoint, for usage in the next step.
+        prevDecodedOrdinal = decoded.Ordinal;
      }// for
      //###
      dumpReader.close();
