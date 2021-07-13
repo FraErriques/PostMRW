@@ -23,13 +23,14 @@ int main()
 {
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
     //long desPrime = (*p)[p->lastOrdinal];
-    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
-    std::cout << "\n\t converging in " << bisectionConvergenceSteps <<" steps."<<std::endl;
+//    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+//    std::cout << "\n\t converging in " << bisectionConvergenceSteps <<" steps."<<std::endl;
     //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
-//    for(int c=0; c<=100;c++)
-//    {
-//        std::cout<<" steps needed to converge to LandingPoint_"<<c<<" are:"<< p->PropostaBisezione( c, 100, false)<<std::endl;
-//    }
+    for(int c=73; c<=100;c++)
+    {
+        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
+        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
+    }
     delete p;
 
 
