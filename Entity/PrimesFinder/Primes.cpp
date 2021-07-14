@@ -675,7 +675,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      // init
      if( ! wantInitialization)
      {
-         LandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) * usefulPartOfDump_measure;// NB. crucial ####
+         LandingPoint =  (long)(( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(this->actualPrimaryFileLength) );// NB. crucial ####
      }
      else
      {
@@ -721,7 +721,7 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         leftBoundary = MassimoMinoranti;// keep memory of previous narrowings.
         rightBoundary = MinimoMaggioranti;// keep memory of previous narrowings.
         usefulPartOfDump_measure = rightBoundary - leftBoundary;
-        LandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) * usefulPartOfDump_measure+leftBoundary;// NB. crucial ####
+        LandingPoint =  (long)(( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(this->actualPrimaryFileLength) );// NB. crucial ####
         if(LandingPoint <0) {LandingPoint=0;}
         if(LandingPoint >this->actualPrimaryFileLength ) {LandingPoint=this->actualPrimaryFileLength;}
         if( LandingPoint==prevLandingPoint || decoded.Ordinal==prevDecodedOrdinal)
