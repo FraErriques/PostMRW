@@ -653,7 +653,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     long MassimoMinoranti, MinimoMaggioranti;// NB. have to be signed.
     double DeltaTessutoProdotto;
     AsinglePointInStream beg, decoded, last;
-    long LandingPoint;
+    double requiredLandingPoint;
+    int target;
     long prevLandingPoint;
     long prevDecodedOrdinal;
     long leftBoundary = 0;
@@ -675,11 +676,11 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      // init
      if( ! wantInitialization)
      {
-         LandingPoint =  (long)(( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(this->actualPrimaryFileLength) );// NB. crucial ####
+         requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(this->actualPrimaryFileLength);// NB. crucial ####
      }
      else
      {
-         LandingPoint = initialization;
+         requiredLandingPoint = initialization;
      }
      prevLandingPoint = 0;//init; NB.do not trigger the booster, initializing=LandingPoint.
      prevDecodedOrdinal = 0;//init; NB.do not trigger the booster.
@@ -692,7 +693,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      for( ; requiredOrdinal!=decoded.Ordinal; acc++)
      {
          // here do: seekg #############
-         AsinglePointInStream test = this->readRecordAt( dumpReader, LandingPoint);
+         target = (int)requiredLandingPoint;
+         AsinglePointInStream test = this->readRecordAt( dumpReader, target);
          decoded.Ordinal = test.Ordinal;
          decoded.Prime = test.Prime;
          decoded.positionByte = test.positionByte;
@@ -721,23 +723,23 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         leftBoundary = MassimoMinoranti;// keep memory of previous narrowings.
         rightBoundary = MinimoMaggioranti;// keep memory of previous narrowings.
         usefulPartOfDump_measure = rightBoundary - leftBoundary;
-        LandingPoint =  (long)(( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(this->actualPrimaryFileLength) );// NB. crucial ####
-        if(LandingPoint <0) {LandingPoint=0;}
-        if(LandingPoint >this->actualPrimaryFileLength ) {LandingPoint=this->actualPrimaryFileLength;}
-        if( LandingPoint==prevLandingPoint || decoded.Ordinal==prevDecodedOrdinal)
+        requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(usefulPartOfDump_measure)+leftBoundary;// NB. crucial ####
+        if(requiredLandingPoint <0) {requiredLandingPoint=0;}
+        if(requiredLandingPoint >this->actualPrimaryFileLength ) {requiredLandingPoint=this->actualPrimaryFileLength;}
+        if( requiredLandingPoint==prevLandingPoint || decoded.Ordinal==prevDecodedOrdinal)
         {
             if( decoded.Ordinal<requiredOrdinal)
             {
-                LandingPoint+=this->tailRecordSize/2;// boost right.
+                requiredLandingPoint+=this->tailRecordSize*3;// boost right.
             }
             else if( decoded.Ordinal > requiredOrdinal)
             {
-                LandingPoint-=this->tailRecordSize/2;// boost left.
+                requiredLandingPoint-=this->tailRecordSize*3;// boost left.
             }// no other else, since if decoded.Ordinal == requiredOrdinal method already broken the "for".
         }// end prevLandingPoint analysis (i.e. booster).
-        if(LandingPoint <0) {LandingPoint=0;}
-        if(LandingPoint >this->actualPrimaryFileLength ) {LandingPoint=this->actualPrimaryFileLength;}
-        prevLandingPoint = LandingPoint;// anyway, log the current LandingPoint, for usage in the next step.
+        if(requiredLandingPoint <0) {requiredLandingPoint=0;}
+        if(requiredLandingPoint >this->actualPrimaryFileLength ) {requiredLandingPoint=this->actualPrimaryFileLength;}
+        prevLandingPoint = requiredLandingPoint;// anyway, log the current requiredLandingPoint, for usage in the next step.
         prevDecodedOrdinal = decoded.Ordinal;
      }// for
      //###
