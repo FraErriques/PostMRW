@@ -12,22 +12,27 @@ namespace Integration
 
 typedef double (*FunctionalForm)(double);
 
-double rettangoli( double inf
-                   ,double sup
-                   ,double cardPartiz
-                   ,FunctionalForm functionalForm
-                   ,bool calledFromTrapezi
-                  );
-double correttivoAlContorno( double inf
-                   ,double sup
-                   ,double cardPartiz
-                   ,FunctionalForm functionalForm
-                  );
-double trapezi( double inf
-                   ,double sup
-                   ,double cardPartiz
-                   ,FunctionalForm functionalForm
-                  );
+double rettangoli(
+                    double inf
+                    ,double sup
+                    ,double cardPartiz
+                    ,FunctionalForm functionalForm
+                    ,bool calledFromTrapezi
+                    );
+
+double correttivoAlContorno(
+                    double inf
+                    ,double sup
+                    ,double cardPartiz
+                    ,FunctionalForm functionalForm
+                    );
+
+double trapezi(
+                double inf
+                ,double sup
+                ,double cardPartiz
+                ,FunctionalForm functionalForm
+                );
 
 
 }// nmsp

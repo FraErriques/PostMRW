@@ -16,23 +16,47 @@
 #include "../Entity/PrimesFinder/Primes.h"
 #include "../Entity/Complex/Complex.h"
 
+// used here for the integral representation of NaturalLogarithm.
+double hyperbole( double x)
+{
+    return +1.0/x;
+}// hyperbole(
 
 
 
 int main()
 {
-    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    // NaturalLogarithm by Integral-representation: its derivative is the equilateral hyperbole, which is continuous and so, Riemann-integrable. So, summing
+    // the derivative -no need to use the function itself- we have a representation of the natural logarithm. With such a library there's the possibility
+    // to print the classical logarithmic tables, used for many years.
+    double desiredNaturalLog = +79.2;
+    Entity::Integration::FunctionalForm Hyperbole = hyperbole;// function pointer.
+    double Log_e_x_ = Entity::Integration::trapezi( +1.0, desiredNaturalLog, ((double)desiredNaturalLog-1.0)*4, Hyperbole );
+    double verify = log( desiredNaturalLog);
+    double error = verify - Log_e_x_;
+
+
+    //
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+/* cantina
+
+    //PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
     //long desPrime = (*p)[p->lastOrdinal];
-//    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
-//    std::cout << "\n\t converging in " << bisectionConvergenceSteps <<" steps."<<std::endl;
+    //    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+    //    std::cout << "\n\t converging in " << bisectionConvergenceSteps <<" steps."<<std::endl;
     //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
-    for(int c=03; c<=200;c++)
-    {
-        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->currentOperatorSquare( c, 100, false)<<std::endl;
-        //std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
-        //std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
-    }
-    delete p;
+//    for(int c=03; c<=200;c++)
+//    {
+//        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->currentOperatorSquare( c, 100, false)<<std::endl;
+//        //std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
+//        //std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
+//    }
+//    delete p;
 
 
 
@@ -84,15 +108,6 @@ int main()
     //     delete[] factorization;
     ////delete[] dumpTail;
     // delete p;
-
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-/* cantina
 
 //     unsigned long res = (*p)[lastOrdinal-2];// TODO bug [lastOrdinal] #######################################################
 //     if(overflowFlag==res)
