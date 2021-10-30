@@ -15,11 +15,11 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-m32" />
+					<Add option="-m64" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add option="-m32" />
+					<Add option="-m64" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -32,9 +32,11 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
+					<Add option="-m64" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-m64" />
 				</Linker>
 			</Target>
 		</Build>
@@ -71,10 +73,7 @@
 		<Unit filename="ThreadForker/ThreadForker.cpp" />
 		<Unit filename="ThreadForker/ThreadForker.h" />
 		<Extensions>
-			<envvars />
-			<code_completion />
 			<lib_finder disable_auto="1" />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
