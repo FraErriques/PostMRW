@@ -17,20 +17,20 @@
 
 int main()
 {
-    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-    long desPrime = (*p)[p->lastOrdinal];
-    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+//    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+//    long desPrime = (*p)[p->lastOrdinal];
+//    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
 //for(int c=0; c<=100;c++)
-//    {    
+//    {
 //        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
 //    }
     //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
-    for(int c=73; c<=100;c++)
-    {
-        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
-        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
-    }
-    delete p;
+//    for(int c=73; c<=100;c++)
+//    {
+//        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
+//        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
+//    }
+//    delete p;
 
 //    p = new PrimesFinder::Primes(5000000); // re-use
 //    p->Start_PrimeDump_FileSys();
@@ -64,13 +64,14 @@ int main()
 //      {}// else : TODO not-healthly built.
 //     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 ////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
-     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
+//     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
 //
 //     delete[] theDumpPath;
 //     delete[] straightContentOfDumpTail;
-     delete[] factorization;
+//     delete[] factorization;
     //delete[] dumpTail;
-     delete p;
+//     delete p;
+    int c = 2+2;
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();
