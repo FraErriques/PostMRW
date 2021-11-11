@@ -1,7 +1,7 @@
-//#include "mysql_connection.h"
-//#include <cppconn/driver.h>
-//#include <cppconn/exception.h>
-//#include <cppconn/resultset.h>
+//#include "mysql_connection.h"     NB. these includes are removed from branch::WinPlatf
+//#include <cppconn/driver.h>            MySql showed difficulties on connections and needed the "boost" library, which is huge (5GB on Windows).
+//#include <cppconn/exception.h>         So these features are disabled from this branch; they remain on branch::master.
+//#include <cppconn/resultset.h>     Oss. new Code::Blocks_20.03 on Win::ITBZOW1422 on thursday 11 November 2021
 //#include <cppconn/statement.h>
 //#include <cppconn/prepared_statement.h>
 //#include "../Common/DbConnectionService/dbCall.h"
