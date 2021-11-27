@@ -17,6 +17,7 @@
 
 int main()
 {
+ 
     PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
 //    long desPrime = (*p)[p->lastOrdinal];
 //    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
@@ -31,6 +32,7 @@ int main()
 //        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
 //    }
     delete p;
+ 
 
 //    p = new PrimesFinder::Primes(5000000); // re-use
 //    p->Start_PrimeDump_FileSys();
@@ -65,12 +67,14 @@ int main()
 //     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 ////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
 //     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
+ 
 ////
 ////     delete[] theDumpPath;
 ////     delete[] straightContentOfDumpTail;
 //     delete[] factorization;
 //    //delete[] dumpTail;
 //     delete p;
+ 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();
