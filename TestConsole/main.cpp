@@ -20,8 +20,37 @@
 double hyperbole( double x)
 {
     return +1.0/x;
-}// hyperbole(
+}// hyperbole
 
+
+//*** this should be the odbc for msWin::VS2010 to postgreSQL ****  libpq.lib
+//
+//extern PGconn *PQsetdbLogin(const char *pghost, const char *pgport,
+//             const char *pgoptions, const char *pgtty,
+//             const char *dbName,
+//             const char *login, const char *pwd);
+//
+//
+//bool ConnectToDB(PGconn *&conn,char *pghost,char *pgport,char *dbname,char *user,char *pwd)
+//{
+//    // The default parameters of pgoptions and pgtty are NULL
+//    char *pgoptions,*pgtty;
+//    pgoptions=NULL;
+//    pgtty=NULL;
+//
+//    conn=PQsetdbLogin(pghost,pgport,pgoptions,pgtty,dbname,user,pwd);
+//    if(PQstatus(conn)==CONNECTION_BAD) // or conn==NULL
+//    {
+//        cout<<"Connection db "<<dbname<<" failed!"<<endl;
+//        cout<<PQerrorMessage(conn)<<endl;
+//        return false;
+//    }
+//    else
+//    {
+//        cout<<"Connection db "<<dbname<<" success!"<<endl;
+//        return true;
+//    }
+//}
 
 
 int main()
