@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="NumericalAnalysis" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/NumericalAnalysis" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/NumericalAnalysis" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="doc/HOWTO.txt">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="doc/Integers_Z_documentation_.jpg" />
+		<Unit filename="doc/Runge_Kutta_4_.bmp" />
+		<Unit filename="doc/Runge–Kutta methods - Wikipedia, the free encyclopedia.mht" />
+		<Unit filename="src/ComplexField/Complex.cs" />
+		<Unit filename="src/ComplexField/Complex.java">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="src/ComplexField/ContourIntegral.cs" />
+		<Unit filename="src/ComplexField/Functions.cs" />
+		<Unit filename="src/ComplexField/Functions.java">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="src/ComplexField/GammaViaIntegral.cs" />
+		<Unit filename="src/LinearAlgebra/AssonometryTechniques.cs" />
+		<Unit filename="src/LinearAlgebra/CentralProjection.cs" />
+		<Unit filename="src/LinearAlgebra/CentralProjection_MixedTechnique.cs" />
+		<Unit filename="src/LinearAlgebra/Geometry_inR3.cs" />
+		<Unit filename="src/LinearAlgebra/MatrixRank.cs" />
+		<Unit filename="src/LinearAlgebra/OrthogonalProjection.cs" />
+		<Unit filename="src/LinearAlgebra/ProjectionTechniques.cs" />
+		<Unit filename="src/LinearAlgebra/R2_Point.cs" />
+		<Unit filename="src/LinearAlgebra/R3_Point.cs" />
+		<Unit filename="src/LinearAlgebra/RealMatrix.cs" />
+		<Unit filename="src/LinearAlgebra/RepresentationTechniques.cs" />
+		<Unit filename="src/PrimesFinder/ElementFullCalculation.cs" />
+		<Unit filename="src/PrimesFinder/Integrate.cs" />
+		<Unit filename="src/PrimesFinder/Primes.cs" />
+		<Unit filename="src/PrimesFinder/TestsOnNumberTheory.cs" />
+		<Unit filename="src/PrimesFinder/ZetaZeroes_10^5_.txt" />
+		<Unit filename="src/PrimesFinder/dbPrimes.cs" />
+		<Unit filename="src/RealField/AvailableAlgorithms.cs" />
+		<Unit filename="src/RealField/Integrate.cs" />
+		<Unit filename="src/RealField/JensenInequality_.cs" />
+		<Unit filename="src/RealField/Rationals_Q_.cs" />
+		<Unit filename="src/RealField/Runge_Kutta_4_.cs" />
+		<Unit filename="src/RealField/SpezzateEulero.cs" />
+		<Unit filename="src/RealField/TestsOnRationals.cs" />
+		<Unit filename="src/RealField/WeierstrassContinuity.cs" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
