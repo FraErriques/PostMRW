@@ -15,12 +15,43 @@
 #include "../Entity/Complex/Complex.h"
 
 
+Numerics::Complex IcoChain( Numerics::Complex s, Numerics::Complex z)
+{
+    Numerics::Complex numerator(-z);
+    numerator ^=s;
+    Numerics::Complex denominator((z.ExpC()-1.0)*z);
+    Numerics::Complex res = numerator / denominator;
+    return res;
+}// IcoChain
+
+
+Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta)
+{// this parametrization is: (delta*Cos[t] + I*delta*Sin[t])
+    Domain domain;//to be thrown
+    int stepCardinality = +2.0*PI/stepSize;
+    if(stepOrdinal>stepCardinality){throw domain;}
+    double Theta = +2.0*PI*(double)stepOrdinal/(double)stepCardinality;
+    Numerics::Complex * res = new Numerics::Complex( cos(Theta) , sin(Theta) );//NB. caller has to delete.
+    *res *= delta;
+    return res;
+}// originAnulus
+
 
 int main()
 {
-    Numerics::Complex *z = new Numerics::Complex(1, 3);
+    double delta = +3.7123;
+    double stepSize = +2.0*PI/100.0;
+    for(int c=0; c<100; c++)
+    {
+        Numerics::Complex * res = originAnulus( stepSize, c, delta );
+        std::cout<<"originAnulus(stepSize,c,delta)=="<<stepSize<<c<<delta<<" == "<< res->Re()<<" +I* "<< res->Im()<<" length=="<< res->length() <<std::endl;
+        delete res;
+    }
 
-    delete z;
+//    Numerics::Complex s(+0.5 , +13.7);
+//    Numerics::Complex *z = new Numerics::Complex(1, 3);
+//    Numerics::Complex icoChain( IcoChain( s, *z) );
+//    delete z;
 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";

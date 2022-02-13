@@ -64,6 +64,12 @@ Complex  Complex::operator*  (const int second)     const
                     _Im*second    );
 }
 
+Complex  Complex::operator*  (const double second)     const
+{// a Complex:: times a Double:
+   return Complex ( _Re*second ,
+                    _Im*second    );
+}
+
 Complex  Complex::operator/  (const Complex & second) const
 {
    Domain domain = 1; // to be thrown if the division by the null vector(0,0) is required
@@ -111,6 +117,12 @@ Complex  Complex::operator-  (void) const // unary: -z==(-1.0,0.0)*z. const: doe
 }
 
 Complex & Complex::operator*= (const Complex & second)
+{
+   *this =  *this * second;
+   return *this; // non const: modifies "this"
+}
+
+Complex & Complex::operator*= (const double second)
 {
    *this =  *this * second;
    return *this; // non const: modifies "this"
