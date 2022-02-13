@@ -46,7 +46,6 @@
 		</Compiler>
 		<Linker>
 			<Add option="-m64" />
-			<Add option="-lmysqlcppconn" />
 			<Add directory="/usr/local/mysql/connector-c++-8.0/lib" />
 		</Linker>
 		<Unit filename="Cantina.txt" />
@@ -54,10 +53,7 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="sqlScript.txt" />
 		<Extensions>
-			<envvars />
-			<code_completion />
 			<lib_finder disable_auto="1" />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

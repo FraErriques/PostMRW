@@ -1,10 +1,10 @@
-#include "mysql_connection.h"
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
-#include <cppconn/prepared_statement.h>
-#include "../Common/DbConnectionService/dbCall.h"
+//-----------#include "mysql_connection.h"
+//#include <cppconn/driver.h>
+//#include <cppconn/exception.h>
+//#include <cppconn/resultset.h>
+//#include <cppconn/statement.h>
+//#include <cppconn/prepared_statement.h>
+//#include "../Common/DbConnectionService/dbCall.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
 #include "../Entity/Integration/Integration.h"
 
@@ -41,13 +41,13 @@ void fantoccio()// NB. ci vuole !!! altimenti undefined_reference in Common:: !!
 {
     try
     {
-        sql::Driver *driver;
-        sql::Connection *con;
-        sql::Statement *stmt;
-        sql::ResultSet *res;
-
-        // Create a connection : steps follow:
-        driver = get_driver_instance();// get the driver
+        int four = 2+2;
+//        sql::Driver *driver;
+//        sql::Connection *con;
+//        sql::Statement *stmt;
+//        sql::ResultSet *res;
+//        // Create a connection : steps follow:
+//        driver = get_driver_instance();// get the driver
     }
     catch(...)
     {

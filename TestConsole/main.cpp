@@ -1,8 +1,8 @@
 #include <iostream>
-#include <boost/lambda/lambda.hpp>
-#include "../Common/DbConnectionService/dbCall.h"
-#include "../Common/DbConnectionService/mysql_connection.h"
-#include "../Common/DbConnectionService/DbConnectionService.h"
+//--------------------#include <boost/lambda/lambda.hpp>
+//#include "../Common/DbConnectionService/dbCall.h"
+//#include "../Common/DbConnectionService/mysql_connection.h"
+//#include "../Common/DbConnectionService/DbConnectionService.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
@@ -12,17 +12,31 @@
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
+#include "../Entity/Complex/Complex.h"
 
 
 
 int main()
 {
- 
-    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    Numerics::Complex *z = new Numerics::Complex(1, 3);
+
+    delete z;
+
+    //
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+/* --------------cantina----------------------------
+
+    //PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
 //    long desPrime = (*p)[p->lastOrdinal];
 //    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
 ////for(int c=0; c<=100;c++)
-////    {    
+////    {
 ////        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
 ////    }
 //    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
@@ -31,8 +45,8 @@ int main()
 //        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
 //        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
 //    }
-    delete p;
- 
+    //delete p;
+
 
 //    p = new PrimesFinder::Primes(5000000); // re-use
 //    p->Start_PrimeDump_FileSys();
@@ -67,24 +81,13 @@ int main()
 //     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 ////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
 //     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
- 
+
 ////
 ////     delete[] theDumpPath;
 ////     delete[] straightContentOfDumpTail;
 //     delete[] factorization;
 //    //delete[] dumpTail;
 //     delete p;
- 
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-
-/* --------------cantina----------------------------
-
 
  // MonteCarlo
     double left  = -92.809;
