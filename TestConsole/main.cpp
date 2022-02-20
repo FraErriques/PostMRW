@@ -26,6 +26,15 @@ Numerics::Complex IcoChain( Numerics::Complex s, Numerics::Complex z)
 }// IcoChain
 
 
+Numerics::Complex * pointFromOriginAnulus( double delta, double Theta )
+{// this parametrization is: (delta*Cos[t] + I*delta*Sin[t])
+    // take the desired point, on the unit ball: i.e. the versor.
+    Numerics::Complex * res = new Numerics::Complex( cos(Theta) , sin(Theta) );//NB. caller has to delete.
+    *res *= delta;// then take it on the appropriate ball, by omothetia.
+    return res;
+}// pointFromOriginAnulus
+
+
 Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta)
 {// this parametrization is: (delta*Cos[t] + I*delta*Sin[t])
     Domain domain;//to be thrown
