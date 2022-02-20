@@ -9,6 +9,7 @@
 #include "../Common/MonteCarlo/BaseConverter.h"
 #include "../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
+#include "../Common/Stream/stream_io_.h"
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
@@ -39,14 +40,53 @@ Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta
 
 int main()
 {
+	std::string thePath("./out20220219_.txt");
+	std::fstream theStream;
+	//
+	bool result = Common::Stream::outstreamOpener( thePath , theStream );
     double delta = +3.7123;
     double stepSize = +2.0*PI/100.0;
     for(int c=0; c<100; c++)
     {
         Numerics::Complex * res = originAnulus( stepSize, c, delta );
         std::cout<<"originAnulus(stepSize,c,delta)=="<<stepSize<<c<<delta<<" == "<< res->Re()<<" +I* "<< res->Im()<<" length=="<< res->length() <<std::endl;
+        Common::StringBuilder sb(90);
+        std::string * curField = nullptr;
+        //
+        curField = Common::StrManipul::doubleToString( stepSize);
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::intToString( c);
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( delta);
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( res->Re());
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( res->Im());
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( res->length());
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //-----finally dump the line
+        Common::Stream::putline( sb.str() , theStream);
         delete res;
     }
+	result = Common::Stream::outstreamCloser( theStream );
 
 //    Numerics::Complex s(+0.5 , +13.7);
 //    Numerics::Complex *z = new Numerics::Complex(1, 3);
