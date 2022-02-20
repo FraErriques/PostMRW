@@ -15,13 +15,13 @@
 #include "../Entity/PrimesFinder/Primes.h"
 #include "../Entity/Complex/Complex.h"
 
-
-Numerics::Complex IcoChain( Numerics::Complex s, Numerics::Complex z)
+/// l'integrando (-z)^s/(Exp[z]-1)dz/z
+Numerics::Complex * IcoChain( Numerics::Complex s, Numerics::Complex z)
 {
     Numerics::Complex numerator(-z);
     numerator ^=s;
     Numerics::Complex denominator((z.ExpC()-1.0)*z);
-    Numerics::Complex res = numerator / denominator;
+    Numerics::Complex * res = new Numerics::Complex( numerator / denominator);
     return res;
 }// IcoChain
 
@@ -46,6 +46,22 @@ Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta
     return res;
 }// originAnulus
 
+Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s)
+{// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
+    Numerics::Complex * accumulator = new Numerics::Complex( 0.0 , 0.0);
+    int stepCardinality = +2.0*PI/stepSize;
+    double Theta =0.0;
+    for(int curStep=0; curStep<stepCardinality; curStep++)
+    {
+        Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
+        Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
+        Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
+        *accumulator += *pointOn_COchain;
+        delete pointOnCircularChain;
+        delete pointOn_COchain;
+    }
+    return accumulator;// caller has to delete.
+}// originAnulus
 
 int main()
 {
@@ -53,49 +69,70 @@ int main()
 	std::fstream theStream;
 	//
 	bool result = Common::Stream::outstreamOpener( thePath , theStream );
-    double delta = +3.7123;
+    double radius = +3.7123;
     double stepSize = +2.0*PI/100.0;
-    for(int c=0; c<100; c++)
-    {
-        Numerics::Complex * res = originAnulus( stepSize, c, delta );
-        std::cout<<"originAnulus(stepSize,c,delta)=="<<stepSize<<c<<delta<<" == "<< res->Re()<<" +I* "<< res->Im()<<" length=="<< res->length() <<std::endl;
-        Common::StringBuilder sb(90);
-        std::string * curField = nullptr;
-        //
-        curField = Common::StrManipul::doubleToString( stepSize);
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::intToString( c);
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( delta);
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( res->Re());
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( res->Im());
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( res->length());
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //-----finally dump the line
-        Common::Stream::putline( sb.str() , theStream);
-        delete res;
-    }
-	result = Common::Stream::outstreamCloser( theStream );
+    Numerics::Complex s(+0.5, +20.15);
+    Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
+    std::string * curField = nullptr;
+    Common::StringBuilder sb(90);
+    //
+    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Re() );
+    sb.append( *curField );
+    sb.append((int)'\t');
+    delete curField;
+    //
+    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Im() );
+    sb.append( *curField );
+    sb.append((int)'\t');
+    delete curField;
+    //
+    //-----finally dump the line
+    Common::Stream::putline( sb.str() , theStream);
+    result = Common::Stream::outstreamCloser( theStream );
+    delete integralOnOriginAnulus;
+
+
+//    for(int c=0; c<100; c++)
+//    {
+//        Numerics::Complex * res = originAnulus( stepSize, c, delta );
+//        std::cout<<"originAnulus(stepSize,c,delta)=="<<stepSize<<c<<delta<<" == "<< res->Re()<<" +I* "<< res->Im()<<" length=="<< res->length() <<std::endl;
+//        Common::StringBuilder sb(90);
+//        std::string * curField = nullptr;
+//        //
+//        curField = Common::StrManipul::doubleToString( stepSize);
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::intToString( c);
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( delta);
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( res->Re());
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( res->Im());
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( res->length());
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //-----finally dump the line
+//        Common::Stream::putline( sb.str() , theStream);
+//        delete res;
+//    }
+//	result = Common::Stream::outstreamCloser( theStream );
 
 //    Numerics::Complex s(+0.5 , +13.7);
 //    Numerics::Complex *z = new Numerics::Complex(1, 3);
