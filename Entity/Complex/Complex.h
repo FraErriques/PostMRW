@@ -33,6 +33,7 @@ public:
    Complex  operator-  (const Complex & second)    const;
    Complex  operator*  (const Complex & second)    const;
    Complex  operator*  (const int second)          const;
+   Complex  operator*  (const double second)       const;
    Complex  operator/  (const Complex & second)    const;
    bool  operator==    (const Complex & second)    const;
    /// unary operators ////////////////////////////////////////////////////////
@@ -40,6 +41,7 @@ public:
    Complex & operator-= (const Complex & second);  // non-const
    Complex   operator-  (void)                     const; // unary: -z==(-1.0,0.0)*z. const: does not modify this
    Complex & operator*= (const Complex & second);  // non-const
+   Complex & operator*= (const double    second);  // non-const
    Complex & operator/= (const Complex & second);  // non-const
    Complex & operator^= (const Complex & second);  // non-const: *this = *this^second
    /// Complex Analisys section /////////////////////////////////////////////////////////////////////////////////////////
