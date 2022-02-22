@@ -65,42 +65,67 @@ Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius
 
 int main()
 {
-    Numerics::Complex z(+3.1 , 5.2);
-    for( int n=0; n<6; n++)
-    {
-        Numerics::Complex  curExponent((double)n, 0.0);
-        Numerics::Complex res = z^curExponent;
-        std::cout<<"\n\t("<<z.Re()<<"+I*"<<z.Im()<<")^"<<n<<" == "<< res.Re()<<"+I*"<<res.Im();
-    }
+//    Numerics::Complex z(+3.1 , 5.2);
+//    for( int n=0; n<6; n++)
+//    {
+////        Numerics::Complex  curExponent((double)n, 0.0);
+////        Numerics::Complex res = z^curExponent;
+//        Numerics::Complex res = z^n;
+//        std::cout<<"\n\t("<<z.Re()<<"+I*"<<z.Im()<<")^"<<n<<" == "<< res.Re()<<"+I*"<<res.Im();
+//    }
+////
+////For[
+//// t = 1; base = +2.1*t + I*3.1*t; espon = +2.3*t + I*1.6*t;,
+//// t < 6,
+//// Print["t==", t, " base^espon==" , base, "^", espon, " == ",
+////  base^espon  ];
+//// t += +0.4;
+//// base = +2.1*t + I*3.1*t;
+//// espon = +2.3*t + I*1.6*t;
+//// ]
+//for( double t=+1.0; t<+6.0; t+=+0.4 )
+//{
+//    Numerics::Complex base ( +2.1*t , 3.1*t );
+//    Numerics::Complex espon( +2.3*t , 1.6*t );
+//    Numerics::Complex res = base^espon;
+//    std::cout<<"\n\t("<<base.Re()<<"+I*"<<base.Im()<<")^"<<
+//                   "("<<espon.Re()<<"+I*"<<espon.Im()<<") == "<< res.Re()<<"+I*"<<res.Im();
+//}
 
+//for( double t=+91.0; t<+116.0; t+=+0.4 )
+//{
+//    Numerics::Complex espon( +2.3*t , 1.6*t );
+//    Numerics::Complex res = espon.ExpC();
+//    Numerics::Complex res_selfish = espon.ExpC_selfish();
+//    std::cout<<"\n\t Exp["<<espon.Re()<<"+I*"<<espon.Im()<<"] == "<< res.Re()<<"+I*"<<res.Im()<<
+//    "  selfish: "<< res_selfish.Re()<<"+I*"<<res_selfish.Im();
+//}
 
-
-
-//	std::string thePath("./out20220219_.txt");
-//	std::fstream theStream;
-//	//
-//	bool result = Common::Stream::outstreamOpener( thePath , theStream );
-//    double radius = +3.7123E-09;
-//    double stepSize = +2.0*PI/100.0;
-//    Numerics::Complex s(+3.5, +20.15);
-//    Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
-//    std::string * curField = nullptr;
-//    Common::StringBuilder sb(90);
-//    //
-//    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Re() );
-//    sb.append( *curField );
-//    sb.append((int)'\t');
-//    delete curField;
-//    //
-//    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Im() );
-//    sb.append( *curField );
-//    sb.append((int)'\t');
-//    delete curField;
-//    //
-//    //-----finally dump the line
-//    Common::Stream::putline( sb.str() , theStream);
-//    result = Common::Stream::outstreamCloser( theStream );
-//    delete integralOnOriginAnulus;
+	std::string thePath("./out20220219_.txt");
+	std::fstream theStream;
+	//
+	bool result = Common::Stream::outstreamOpener( thePath , theStream );
+    double radius = +3.7123E+01;
+    double stepSize = +2.0*PI/900.0;
+    Numerics::Complex s(+0.35, +20.15);
+    Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
+    std::string * curField = nullptr;
+    Common::StringBuilder sb(90);
+    //
+    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Re() );
+    sb.append( *curField );
+    sb.append((int)'\t');
+    delete curField;
+    //
+    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Im() );
+    sb.append( *curField );
+    sb.append((int)'\t');
+    delete curField;
+    //
+    //-----finally dump the line
+    Common::Stream::putline( sb.str() , theStream);
+    result = Common::Stream::outstreamCloser( theStream );
+    delete integralOnOriginAnulus;
 
 
 //    for(int c=0; c<100; c++)

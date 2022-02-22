@@ -213,24 +213,25 @@ Complex Complex::Nat_powC (size_t n) const // integer exponent power
    return res;
 }
 
+// scritta a Voghera nel 2001 ! :)
+Complex Complex::ExpC_selfish (void) const  // exponential e^z
+{
+   Complex res(0.0, 0.0);
+   if ( Fabs(_Im)<1e-70 )
+   {// if z is on the real axis, use the optimized real version of exp
+     res._Re = Exp (this->_Re);
+     return res;
+   }
+   size_t k;
+   double the_fact = 1.0; // the factorial in ... fk(x0)/k!
+   for (k=0; k<7e1; k++) // reduct order set at 7e1
+      {
+         if (k>1) { the_fact *= k; }
+         res += (this->Nat_powC(k)).real_factor(1.0/the_fact);
+      }
+   return res;
+}
 
-//Complex Complex::ExpC_autocontenuta (void) const  // exponential e^z
-//{
-//   Complex res(0.0, 0.0);
-//   if ( Fabs(_Im)<1e-70 )
-//   {// if z is on the real axis, use the optimized real version of exp
-//     res._Re = Exp (this->_Re);
-//     return res;
-//   }
-//   size_t k;
-//   double the_fact = 1.0; // the factorial in ... fk(x0)/k!
-//   for (k=0; k<7e1; k++) // reduct order set at 7e1
-//      {
-//         if (k>1) { the_fact *= k; }
-//         res += (this->Nat_powC(k)).real_factor(1.0/the_fact);
-//      }
-//   return res;
-//}
 Complex Complex::ExpC (void) const  // exponential e^z
 {// Exp[x+I*y]==Exp[x]*Exp[I*y]==Exp[x]*(Cos[y]+I*Sin[y])
     double Exp_Re = exp( this->Re());
