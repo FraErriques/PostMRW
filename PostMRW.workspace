@@ -5,12 +5,14 @@
 		<Project filename="Entity/Entity.cbp">
 			<Depends filename="Common/Common.cbp" />
 		</Project>
+		<Project filename="NumericalAnalysis/NumericalAnalysis.cbp">
+			<Depends filename="Common/Common.cbp" />
+		</Project>
 		<Project filename="Process/Process.cbp">
 			<Depends filename="Entity/Entity.cbp" />
 		</Project>
 		<Project filename="TestConsole/TestConsole.cbp">
 			<Depends filename="Process/Process.cbp" />
-		</Project>
-		<Project filename="NumericalAnalysis/NumericalAnalysis.cbp" />
+		</Project>		
 	</Workspace>
 </CodeBlocks_workspace_file>

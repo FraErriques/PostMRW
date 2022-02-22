@@ -1,0 +1,3 @@
+in Entity:: there's the "matlib" library, born in Voghera in the {2001,2002} years.
+in NumericalAnalysis there are many classes, written in C# in the years [2003,2008] and then in [2012, 2019].
+TODO: the objective is the merge of the two, in the static library NumericalAnalysis.
