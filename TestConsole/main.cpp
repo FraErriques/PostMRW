@@ -69,9 +69,9 @@ int main()
 	std::fstream theStream;
 	//
 	bool result = Common::Stream::outstreamOpener( thePath , theStream );
-    double radius = +3.7123;
-    double stepSize = +2.0*PI/100.0;
-    Numerics::Complex s(+0.5, +20.15);
+    double radius = +3.7123E-09;
+    double stepSize = +2.0*PI/1000.0;
+    Numerics::Complex s(+3.5, +20.15);
     Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
     std::string * curField = nullptr;
     Common::StringBuilder sb(90);
