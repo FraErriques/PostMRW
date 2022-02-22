@@ -65,31 +65,42 @@ Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius
 
 int main()
 {
-	std::string thePath("./out20220219_.txt");
-	std::fstream theStream;
-	//
-	bool result = Common::Stream::outstreamOpener( thePath , theStream );
-    double radius = +3.7123E-09;
-    double stepSize = +2.0*PI/100.0;
-    Numerics::Complex s(+3.5, +20.15);
-    Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
-    std::string * curField = nullptr;
-    Common::StringBuilder sb(90);
-    //
-    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Re() );
-    sb.append( *curField );
-    sb.append((int)'\t');
-    delete curField;
-    //
-    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Im() );
-    sb.append( *curField );
-    sb.append((int)'\t');
-    delete curField;
-    //
-    //-----finally dump the line
-    Common::Stream::putline( sb.str() , theStream);
-    result = Common::Stream::outstreamCloser( theStream );
-    delete integralOnOriginAnulus;
+    Numerics::Complex z(+3.1 , 5.2);
+    for( int n=0; n<6; n++)
+    {
+        Numerics::Complex  curExponent((double)n, 0.0);
+        Numerics::Complex res = z^curExponent;
+        std::cout<<"\n\t("<<z.Re()<<"+I*"<<z.Im()<<")^"<<n<<" == "<< res.Re()<<"+I*"<<res.Im();
+    }
+
+
+
+
+//	std::string thePath("./out20220219_.txt");
+//	std::fstream theStream;
+//	//
+//	bool result = Common::Stream::outstreamOpener( thePath , theStream );
+//    double radius = +3.7123E-09;
+//    double stepSize = +2.0*PI/100.0;
+//    Numerics::Complex s(+3.5, +20.15);
+//    Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
+//    std::string * curField = nullptr;
+//    Common::StringBuilder sb(90);
+//    //
+//    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Re() );
+//    sb.append( *curField );
+//    sb.append((int)'\t');
+//    delete curField;
+//    //
+//    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Im() );
+//    sb.append( *curField );
+//    sb.append((int)'\t');
+//    delete curField;
+//    //
+//    //-----finally dump the line
+//    Common::Stream::putline( sb.str() , theStream);
+//    result = Common::Stream::outstreamCloser( theStream );
+//    delete integralOnOriginAnulus;
 
 
 //    for(int c=0; c<100; c++)

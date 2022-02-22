@@ -235,7 +235,7 @@ Complex Complex::ExpC (void) const  // exponential e^z
 {// Exp[x+I*y]==Exp[x]*Exp[I*y]==Exp[x]*(Cos[y]+I*Sin[y])
     double Exp_Re = exp( this->Re());
     double Cos_Im = cos( this->Im());
-    double Sin_Im = exp( this->Im());
+    double Sin_Im = sin( this->Im());
     Complex res( Cos_Im, Sin_Im);
     res *= Exp_Re;
    return res;
