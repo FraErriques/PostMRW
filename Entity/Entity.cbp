@@ -46,7 +46,6 @@
 		</Compiler>
 		<Linker>
 			<Add option="-m64" />
-			<Add option="-lmysqlcppconn" />
 		</Linker>
 		<Unit filename="Complex/Complex.cpp" />
 		<Unit filename="Complex/Complex.h" />
@@ -70,10 +69,7 @@
 		<Unit filename="StringMatrix/StringMatrix.h" />
 		<Unit filename="common_data/common_data.h" />
 		<Extensions>
-			<envvars />
-			<code_completion />
 			<lib_finder disable_auto="1" />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
