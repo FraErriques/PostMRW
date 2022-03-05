@@ -64,6 +64,12 @@ Complex  Complex::operator*  (const int second)     const
                     _Im*second    );
 }
 
+Complex  Complex::operator*  (const double second)     const
+{// a Complex:: times a Double:
+   return Complex ( _Re*second ,
+                    _Im*second    );
+}
+
 Complex  Complex::operator/  (const Complex & second) const
 {
    Domain domain = 1; // to be thrown if the division by the null vector(0,0) is required
@@ -111,6 +117,12 @@ Complex  Complex::operator-  (void) const // unary: -z==(-1.0,0.0)*z. const: doe
 }
 
 Complex & Complex::operator*= (const Complex & second)
+{
+   *this =  *this * second;
+   return *this; // non const: modifies "this"
+}
+
+Complex & Complex::operator*= (const double second)
 {
    *this =  *this * second;
    return *this; // non const: modifies "this"
@@ -201,8 +213,8 @@ Complex Complex::Nat_powC (size_t n) const // integer exponent power
    return res;
 }
 
-
-Complex Complex::ExpC (void) const  // exponential e^z
+// scritta a Voghera nel 2001 ! :)
+Complex Complex::ExpC_selfish (void) const  // exponential e^z
 {
    Complex res(0.0, 0.0);
    if ( Fabs(_Im)<1e-70 )
@@ -219,6 +231,17 @@ Complex Complex::ExpC (void) const  // exponential e^z
       }
    return res;
 }
+
+Complex Complex::ExpC (void) const  // exponential e^z
+{// Exp[x+I*y]==Exp[x]*Exp[I*y]==Exp[x]*(Cos[y]+I*Sin[y])
+    double Exp_Re = exp( this->Re());
+    double Cos_Im = cos( this->Im());
+    double Sin_Im = sin( this->Im());
+    Complex res( Cos_Im, Sin_Im);
+    res *= Exp_Re;
+   return res;
+}
+
 
 
 Complex  Complex::operator^  (const Complex & exponent) const

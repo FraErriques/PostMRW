@@ -9,26 +9,249 @@
 #include "../Common/MonteCarlo/BaseConverter.h"
 #include "../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
+#include "../Common/Stream/stream_io_.h"
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
+#include "../Entity/Complex/Complex.h"
+
+/// l'integrando (-z)^s/(Exp[z]-1)dz/z
+Numerics::Complex * IcoChain( Numerics::Complex s, Numerics::Complex z)
+{
+    Numerics::Complex numerator(-z);
+    numerator ^=s;
+    Numerics::Complex denominator((z.ExpC()-1.0)*z);
+    Numerics::Complex * res = new Numerics::Complex( numerator / denominator);//---caller has to delete----------
+    return res;
+}// IcoChain
 
 
+Numerics::Complex * pointFromOriginAnulus( double delta, double Theta )
+{// this parametrization is: (delta*Cos[t] + I*delta*Sin[t])
+    // take the desired point, on the unit ball: i.e. the versor.
+    Numerics::Complex * res = new Numerics::Complex( cos(Theta) , sin(Theta) );//NB. caller has to delete.
+    *res *= delta;// then take it on the appropriate ball, by omothetia.
+    return res;
+}// pointFromOriginAnulus
+
+
+Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta)
+{// this parametrization is: (delta*Cos[t] + I*delta*Sin[t])
+    Domain domain;//to be thrown
+    int stepCardinality = +2.0*PI/stepSize;
+    if(stepOrdinal>stepCardinality){throw domain;}
+    double Theta = +2.0*PI*(double)stepOrdinal/(double)stepCardinality;
+    Numerics::Complex * res = new Numerics::Complex( cos(Theta) , sin(Theta) );//NB. caller has to delete.
+    *res *= delta;
+    return res;
+}// originAnulus
+
+// NB. cannot step for numerical integration in Complex plane like this: the real and immaginary parts of the image( i.e. u(x,y) and v(x,y) ) have
+// to be separated, to step.
+Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s)
+{// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
+    Numerics::Complex * accumulator = new Numerics::Complex( 0.0 , 0.0);
+    int stepCardinality = +2.0*PI/stepSize;
+    double Theta =0.0;
+    for(int curStep=0; curStep<stepCardinality; curStep++)
+    {
+        Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
+        Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
+        Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
+        *accumulator += *pointOn_COchain;
+        delete pointOnCircularChain;
+        delete pointOn_COchain;
+    }
+    return accumulator;// caller has to delete.
+}// originAnulus
+
+Numerics::Complex * imageStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s, int curStep)
+{// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
+    int stepCardinality = +2.0*PI/stepSize;
+    double Theta =0.0; 
+    Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
+    Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
+    Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
+    delete pointOnCircularChain;
+    //
+    return pointOn_COchain;// caller has to delete.
+}// originAnulus
+
+Numerics::Complex * imageStepIntoLinearHankelBranch( Numerics::Complex s, Numerics::Complex z)
+{// this parametrization is: z=:(t  + I*epsilon). It is used both to go from +Infinity to the origin and back.
+    Numerics::Complex * pointOn_COchain = IcoChain( s, z);
+    return pointOn_COchain;// caller has to delete.
+}// originAnulus
 
 int main()
 {
- 
-    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
- 
+    Numerics::Complex s(+0.35, +20.15);
+    const double epsilon = -9.0;// a macro distance
+    const double step = +1.0;// a macro step
+    Numerics::Complex z( fabs(epsilon), epsilon);
+    int stepCardinality = 10;
+    //
+    //--dump on txtFile ----------------------------
+	std::string thePath("./out20220219_.txt");
+	std::fstream theStream;
+	bool result = Common::Stream::outstreamOpener( thePath , theStream );    
+    std::string * curField = nullptr;
+    
+    
+    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here). 
+    Numerics::Complex * imagePoint = nullptr;
+    for(int curStep=0; curStep<stepCardinality; curStep++)
+    {
+        Common::StringBuilder sb(90);// the stringBuilder needs to be reset at every loop-step.
+        imagePoint = imageStepIntoLinearHankelBranch( s, z);//-----calculation------the imagePoint gets allocated inside the calculation and gets freed at each for-step.
+        //-----prepare the StringBuilder for a single line------
+        //------------------------------- s ----------------------------------------------------
+        curField = Common::StrManipul::doubleToString( s.Re() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( s.Im() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        //------------------------------- z ----------------------------------------------------
+        curField = Common::StrManipul::doubleToString( z.Re() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( z.Im() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        //------------------------------- image ----------------------------------------------------
+        curField = Common::StrManipul::doubleToString( imagePoint->Re() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( imagePoint->Im() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //----------------------------------------this last parameter end the line, in the txtDump.----------------------------
+        //--------update params-------------------------------
+        z += Numerics::Complex( step, 0);// Hankel linear branches require to stay parallel to the abscissa.
+        //
+        //-----finally dump the line
+        Common::Stream::putline( sb.str() , theStream);/
+        delete imagePoint;
+    }
+    result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
+    
+
+    //
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+
+
+/* --------------cantina----------------------------
+    double radius = +3.7123E+01;
+    double stepSize = +2.0*PI/900.0;
+//    for(int c=0; c<100; c++)
+//    {
+//        Numerics::Complex * res = originAnulus( stepSize, c, delta );
+//        std::cout<<"originAnulus(stepSize,c,delta)=="<<stepSize<<c<<delta<<" == "<< res->Re()<<" +I* "<< res->Im()<<" length=="<< res->length() <<std::endl;
+//        Common::StringBuilder sb(90);
+//        std::string * curField = nullptr;
+//        //
+//        curField = Common::StrManipul::doubleToString( stepSize);
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::intToString( c);
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( delta);
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( res->Re());
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( res->Im());
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( res->length());
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //-----finally dump the line
+//        Common::Stream::putline( sb.str() , theStream);
+//        delete res;
+//    }
+//	result = Common::Stream::outstreamCloser( theStream );
+
+//    Numerics::Complex s(+0.5 , +13.7);
+//    Numerics::Complex *z = new Numerics::Complex(1, 3);
+//    Numerics::Complex icoChain( IcoChain( s, *z) );
+//    delete z;
+
+//    Numerics::Complex z(+3.1 , 5.2);
+//    for( int n=0; n<6; n++)
+//    {
+////        Numerics::Complex  curExponent((double)n, 0.0);
+////        Numerics::Complex res = z^curExponent;
+//        Numerics::Complex res = z^n;
+//        std::cout<<"\n\t("<<z.Re()<<"+I*"<<z.Im()<<")^"<<n<<" == "<< res.Re()<<"+I*"<<res.Im();
+//    }
+////
+////For[
+//// t = 1; base = +2.1*t + I*3.1*t; espon = +2.3*t + I*1.6*t;,
+//// t < 6,
+//// Print["t==", t, " base^espon==" , base, "^", espon, " == ",
+////  base^espon  ];
+//// t += +0.4;
+//// base = +2.1*t + I*3.1*t;
+//// espon = +2.3*t + I*1.6*t;
+//// ]
+//for( double t=+1.0; t<+6.0; t+=+0.4 )
+//{
+//    Numerics::Complex base ( +2.1*t , 3.1*t );
+//    Numerics::Complex espon( +2.3*t , 1.6*t );
+//    Numerics::Complex res = base^espon;
+//    std::cout<<"\n\t("<<base.Re()<<"+I*"<<base.Im()<<")^"<<
+//                   "("<<espon.Re()<<"+I*"<<espon.Im()<<") == "<< res.Re()<<"+I*"<<res.Im();
+//}
+
+//for( double t=+91.0; t<+116.0; t+=+0.4 )
+//{
+//    Numerics::Complex espon( +2.3*t , 1.6*t );
+//    Numerics::Complex res = espon.ExpC();
+//    Numerics::Complex res_selfish = espon.ExpC_selfish();
+//    std::cout<<"\n\t Exp["<<espon.Re()<<"+I*"<<espon.Im()<<"] == "<< res.Re()<<"+I*"<<res.Im()<<
+//    "  selfish: "<< res_selfish.Re()<<"+I*"<<res_selfish.Im();
+//}
+
+    //PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
 //    long desPrime = (*p)[p->lastOrdinal];
 //    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
- 
-//for(int c=0; c<=100;c++)
-//    {    
-//        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
-//    }
-    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
- 
+////for(int c=0; c<=100;c++)
+////    {    
+////        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
+////    }
+//    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
 //    for(int c=73; c<=100;c++)
 //    {
 //        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
@@ -70,13 +293,14 @@ int main()
 //     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 ////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
 //     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
-
+ 
 ////
 ////     delete[] theDumpPath;
 ////     delete[] straightContentOfDumpTail;
 //     delete[] factorization;
 //    //delete[] dumpTail;
 //     delete p;
+ 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();
