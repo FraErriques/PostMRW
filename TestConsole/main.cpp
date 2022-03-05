@@ -94,7 +94,7 @@ int main()
     int stepCardinality = 10;
     //
     //--dump on txtFile ----------------------------
-	std::string thePath("./out20220219_.txt");
+	std::string thePath("./out20220219_.txt");// TODO read with Java and push to PostgreSql.
 	std::fstream theStream;
 	bool result = Common::Stream::outstreamOpener( thePath , theStream );    
     std::string * curField = nullptr;

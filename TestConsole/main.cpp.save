@@ -1,8 +1,8 @@
 #include <iostream>
-#include <boost/lambda/lambda.hpp>
-#include "../Common/DbConnectionService/dbCall.h"
-#include "../Common/DbConnectionService/mysql_connection.h"
-#include "../Common/DbConnectionService/DbConnectionService.h"
+//--------------------#include <boost/lambda/lambda.hpp>
+//#include "../Common/DbConnectionService/dbCall.h"
+//#include "../Common/DbConnectionService/mysql_connection.h"
+//#include "../Common/DbConnectionService/DbConnectionService.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
@@ -46,6 +46,7 @@ Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta
     return res;
 }// originAnulus
 
+
 // NB. cannot step for numerical integration in Complex plane like this: the real and immaginary parts of the image( i.e. u(x,y) and v(x,y) ) have
 // to be separated, to step.
 Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s)
@@ -64,6 +65,7 @@ Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius
     }
     return accumulator;// caller has to delete.
 }// originAnulus
+
 
 Numerics::Complex * imageStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s, int curStep)
 {// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
@@ -92,7 +94,7 @@ int main()
     int stepCardinality = 10;
     //
     //--dump on txtFile ----------------------------
-	std::string thePath("./out20220219_.txt");
+	std::string thePath("./out20220219_.txt");//
 	std::fstream theStream;
 	bool result = Common::Stream::outstreamOpener( thePath , theStream );    
     std::string * curField = nullptr;
@@ -142,7 +144,7 @@ int main()
         z += Numerics::Complex( step, 0);// Hankel linear branches require to stay parallel to the abscissa.
         //
         //-----finally dump the line
-        Common::Stream::putline( sb.str() , theStream);/
+        Common::Stream::putline( sb.str() , theStream);//---this appends a \n
         delete imagePoint;
     }
     result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
@@ -161,6 +163,74 @@ int main()
 /* --------------cantina----------------------------
     double radius = +3.7123E+01;
     double stepSize = +2.0*PI/900.0;
+=======
+
+int main()
+{
+//    Numerics::Complex z(+3.1 , 5.2);
+//    for( int n=0; n<6; n++)
+//    {
+////        Numerics::Complex  curExponent((double)n, 0.0);
+////        Numerics::Complex res = z^curExponent;
+//        Numerics::Complex res = z^n;
+//        std::cout<<"\n\t("<<z.Re()<<"+I*"<<z.Im()<<")^"<<n<<" == "<< res.Re()<<"+I*"<<res.Im();
+//    }
+////
+////For[
+//// t = 1; base = +2.1*t + I*3.1*t; espon = +2.3*t + I*1.6*t;,
+//// t < 6,
+//// Print["t==", t, " base^espon==" , base, "^", espon, " == ",
+////  base^espon  ];
+//// t += +0.4;
+//// base = +2.1*t + I*3.1*t;
+//// espon = +2.3*t + I*1.6*t;
+//// ]
+//for( double t=+1.0; t<+6.0; t+=+0.4 )
+//{
+//    Numerics::Complex base ( +2.1*t , 3.1*t );
+//    Numerics::Complex espon( +2.3*t , 1.6*t );
+//    Numerics::Complex res = base^espon;
+//    std::cout<<"\n\t("<<base.Re()<<"+I*"<<base.Im()<<")^"<<
+//                   "("<<espon.Re()<<"+I*"<<espon.Im()<<") == "<< res.Re()<<"+I*"<<res.Im();
+//}
+
+//for( double t=+91.0; t<+116.0; t+=+0.4 )
+//{
+//    Numerics::Complex espon( +2.3*t , 1.6*t );
+//    Numerics::Complex res = espon.ExpC();
+//    Numerics::Complex res_selfish = espon.ExpC_selfish();
+//    std::cout<<"\n\t Exp["<<espon.Re()<<"+I*"<<espon.Im()<<"] == "<< res.Re()<<"+I*"<<res.Im()<<
+//    "  selfish: "<< res_selfish.Re()<<"+I*"<<res_selfish.Im();
+//}
+
+	std::string thePath("./out20220219_.txt");
+	std::fstream theStream;
+	//
+	bool result = Common::Stream::outstreamOpener( thePath , theStream );
+    double radius = +3.7123E+01;
+    double stepSize = +2.0*PI/900.0;
+    Numerics::Complex s(+0.35, +20.15);
+    Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
+    std::string * curField = nullptr;
+    Common::StringBuilder sb(90);
+    //
+    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Re() );
+    sb.append( *curField );
+    sb.append((int)'\t');
+    delete curField;
+    //
+    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Im() );
+    sb.append( *curField );
+    sb.append((int)'\t');
+    delete curField;
+    //
+    //-----finally dump the line
+    Common::Stream::putline( sb.str() , theStream);
+    result = Common::Stream::outstreamCloser( theStream );
+    delete integralOnOriginAnulus;
+
+
+>>>>>>> refs/remotes/origin/master
 //    for(int c=0; c<100; c++)
 //    {
 //        Numerics::Complex * res = originAnulus( stepSize, c, delta );
@@ -208,6 +278,7 @@ int main()
 //    Numerics::Complex icoChain( IcoChain( s, *z) );
 //    delete z;
 
+<<<<<<< HEAD
 //    Numerics::Complex z(+3.1 , 5.2);
 //    for( int n=0; n<6; n++)
 //    {
@@ -243,12 +314,23 @@ int main()
 //    std::cout<<"\n\t Exp["<<espon.Re()<<"+I*"<<espon.Im()<<"] == "<< res.Re()<<"+I*"<<res.Im()<<
 //    "  selfish: "<< res_selfish.Re()<<"+I*"<<res_selfish.Im();
 //}
+=======
+    //
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+/* --------------cantina----------------------------
+>>>>>>> refs/remotes/origin/master
 
     //PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
 //    long desPrime = (*p)[p->lastOrdinal];
 //    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
 ////for(int c=0; c<=100;c++)
-////    {    
+////    {
 ////        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
 ////    }
 //    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
@@ -257,8 +339,8 @@ int main()
 //        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
 //        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
 //    }
-    delete p;
- 
+    //delete p;
+
 
 //    p = new PrimesFinder::Primes(5000000); // re-use
 //    p->Start_PrimeDump_FileSys();
@@ -293,24 +375,13 @@ int main()
 //     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
 ////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
 //     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
- 
+
 ////
 ////     delete[] theDumpPath;
 ////     delete[] straightContentOfDumpTail;
 //     delete[] factorization;
 //    //delete[] dumpTail;
 //     delete p;
- 
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-
-/* --------------cantina----------------------------
-
 
  // MonteCarlo
     double left  = -92.809;
