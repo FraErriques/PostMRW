@@ -21,7 +21,7 @@ Numerics::Complex * IcoChain( Numerics::Complex s, Numerics::Complex z)
     Numerics::Complex numerator(-z);
     numerator ^=s;
     Numerics::Complex denominator((z.ExpC()-1.0)*z);
-    Numerics::Complex * res = new Numerics::Complex( numerator / denominator);
+    Numerics::Complex * res = new Numerics::Complex( numerator / denominator);//---caller has to delete----------
     return res;
 }// IcoChain
 
@@ -46,6 +46,9 @@ Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta
     return res;
 }// originAnulus
 
+
+// NB. cannot step for numerical integration in Complex plane like this: the real and immaginary parts of the image( i.e. u(x,y) and v(x,y) ) have
+// to be separated, to step.
 Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s)
 {// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
     Numerics::Complex * accumulator = new Numerics::Complex( 0.0 , 0.0);
@@ -62,6 +65,105 @@ Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius
     }
     return accumulator;// caller has to delete.
 }// originAnulus
+
+
+Numerics::Complex * imageStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s, int curStep)
+{// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
+    int stepCardinality = +2.0*PI/stepSize;
+    double Theta =0.0; 
+    Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
+    Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
+    Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
+    delete pointOnCircularChain;
+    //
+    return pointOn_COchain;// caller has to delete.
+}// originAnulus
+
+Numerics::Complex * imageStepIntoLinearHankelBranch( Numerics::Complex s, Numerics::Complex z)
+{// this parametrization is: z=:(t  + I*epsilon). It is used both to go from +Infinity to the origin and back.
+    Numerics::Complex * pointOn_COchain = IcoChain( s, z);
+    return pointOn_COchain;// caller has to delete.
+}// originAnulus
+
+int main()
+{
+    Numerics::Complex s(+0.35, +20.15);
+    const double epsilon = -9.0;// a macro distance
+    const double step = +1.0;// a macro step
+    Numerics::Complex z( fabs(epsilon), epsilon);
+    int stepCardinality = 10;
+    //
+    //--dump on txtFile ----------------------------
+	std::string thePath("./out20220219_.txt");// TODO read with Java and push to PostgreSql.
+	std::fstream theStream;
+	bool result = Common::Stream::outstreamOpener( thePath , theStream );    
+    std::string * curField = nullptr;
+    
+    
+    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here). 
+    Numerics::Complex * imagePoint = nullptr;
+    for(int curStep=0; curStep<stepCardinality; curStep++)
+    {
+        Common::StringBuilder sb(90);// the stringBuilder needs to be reset at every loop-step.
+        imagePoint = imageStepIntoLinearHankelBranch( s, z);//-----calculation------the imagePoint gets allocated inside the calculation and gets freed at each for-step.
+        //-----prepare the StringBuilder for a single line------
+        //------------------------------- s ----------------------------------------------------
+        curField = Common::StrManipul::doubleToString( s.Re() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( s.Im() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        //------------------------------- z ----------------------------------------------------
+        curField = Common::StrManipul::doubleToString( z.Re() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( z.Im() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        //------------------------------- image ----------------------------------------------------
+        curField = Common::StrManipul::doubleToString( imagePoint->Re() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //
+        curField = Common::StrManipul::doubleToString( imagePoint->Im() );
+        sb.append( *curField );
+        sb.append((int)'\t');
+        delete curField;
+        //----------------------------------------this last parameter end the line, in the txtDump.----------------------------
+        //--------update params-------------------------------
+        z += Numerics::Complex( step, 0);// Hankel linear branches require to stay parallel to the abscissa.
+        //
+        //-----finally dump the line
+        Common::Stream::putline( sb.str() , theStream);//---this appends a \n
+        delete imagePoint;
+    }
+    result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
+    
+
+    //
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+
+
+/* --------------cantina----------------------------
+    double radius = +3.7123E+01;
+    double stepSize = +2.0*PI/900.0;
+=======
 
 int main()
 {
