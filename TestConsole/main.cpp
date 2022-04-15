@@ -70,7 +70,7 @@ Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius
 Numerics::Complex * imageStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s, int curStep)
 {// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
     int stepCardinality = +2.0*PI/stepSize;
-    double Theta =0.0; 
+    double Theta =0.0;
     Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
     Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
     Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
@@ -87,68 +87,72 @@ Numerics::Complex * imageStepIntoLinearHankelBranch( Numerics::Complex s, Numeri
 
 int main()
 {
-    Numerics::Complex s(+0.35, +20.15);
-    const double epsilon = -9.0;// a macro distance
-    const double step = +1.0;// a macro step
-    Numerics::Complex z( fabs(epsilon), epsilon);
-    int stepCardinality = 10;
-    //
-    //--dump on txtFile ----------------------------
-	std::string thePath("./out20220219_.txt");// TODO read with Java and push to PostgreSql.
-	std::fstream theStream;
-	bool result = Common::Stream::outstreamOpener( thePath , theStream );    
-    std::string * curField = nullptr;
-    
-    
-    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here). 
-    Numerics::Complex * imagePoint = nullptr;
-    for(int curStep=0; curStep<stepCardinality; curStep++)
-    {
-        Common::StringBuilder sb(90);// the stringBuilder needs to be reset at every loop-step.
-        imagePoint = imageStepIntoLinearHankelBranch( s, z);//-----calculation------the imagePoint gets allocated inside the calculation and gets freed at each for-step.
-        //-----prepare the StringBuilder for a single line------
-        //------------------------------- s ----------------------------------------------------
-        curField = Common::StrManipul::doubleToString( s.Re() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( s.Im() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        //------------------------------- z ----------------------------------------------------
-        curField = Common::StrManipul::doubleToString( z.Re() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( z.Im() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        //------------------------------- image ----------------------------------------------------
-        curField = Common::StrManipul::doubleToString( imagePoint->Re() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( imagePoint->Im() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //----------------------------------------this last parameter end the line, in the txtDump.----------------------------
-        //--------update params-------------------------------
-        z += Numerics::Complex( step, 0);// Hankel linear branches require to stay parallel to the abscissa.
-        //
-        //-----finally dump the line
-        Common::Stream::putline( sb.str() , theStream);//---this appends a \n
-        delete imagePoint;
-    }
-    result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
-    
+    PrimesFinder::Primes p(100);
+    bool CtorStatus = p.isHealthlyConstructed;
+    int64_t aPrime = p[20];
+
+//    Numerics::Complex s(+0.35, +20.15);
+//    const double epsilon = -9.0;// a macro distance
+//    const double step = +1.0;// a macro step
+//    Numerics::Complex z( fabs(epsilon), epsilon);
+//    int stepCardinality = 10;
+//    //
+//    //--dump on txtFile ----------------------------
+//	std::string thePath("./out20220219_.txt");// TODO read with Java and push to PostgreSql.
+//	std::fstream theStream;
+//	bool result = Common::Stream::outstreamOpener( thePath , theStream );
+//    std::string * curField = nullptr;
+//
+//
+//    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here).
+//    Numerics::Complex * imagePoint = nullptr;
+//    for(int curStep=0; curStep<stepCardinality; curStep++)
+//    {
+//        Common::StringBuilder sb(90);// the stringBuilder needs to be reset at every loop-step.
+//        imagePoint = imageStepIntoLinearHankelBranch( s, z);//-----calculation------the imagePoint gets allocated inside the calculation and gets freed at each for-step.
+//        //-----prepare the StringBuilder for a single line------
+//        //------------------------------- s ----------------------------------------------------
+//        curField = Common::StrManipul::doubleToString( s.Re() );
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( s.Im() );
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        //------------------------------- z ----------------------------------------------------
+//        curField = Common::StrManipul::doubleToString( z.Re() );
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( z.Im() );
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        //------------------------------- image ----------------------------------------------------
+//        curField = Common::StrManipul::doubleToString( imagePoint->Re() );
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //
+//        curField = Common::StrManipul::doubleToString( imagePoint->Im() );
+//        sb.append( *curField );
+//        sb.append((int)'\t');
+//        delete curField;
+//        //----------------------------------------this last parameter end the line, in the txtDump.----------------------------
+//        //--------update params-------------------------------
+//        z += Numerics::Complex( step, 0);// Hankel linear branches require to stay parallel to the abscissa.
+//        //
+//        //-----finally dump the line
+//        Common::Stream::putline( sb.str() , theStream);//---this appends a \n
+//        delete imagePoint;
+//    }
+//    result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
+
 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
