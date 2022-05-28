@@ -1,4 +1,4 @@
-
+/*
 
 namespace LinearAlgebra
 {
@@ -61,8 +61,8 @@ namespace LinearAlgebra
 
 
 
-		
-        
+
+
         /// <summary>
         /// equazioni cartesiane dei due piani generatori di una retta.
         /// i.e. equazioni cartesiane di due piani, appartenenti al fascio proprio generato da una retta, individuata da due suoi punti.
@@ -82,7 +82,7 @@ namespace LinearAlgebra
 			// the procedure consists in finding two points, each of which does not belong to the line. The two points must
 			// also lie on different plans, each of which contains the line. Such plans characterize a proper bundle, whose
 			// generating line is the line between the points in input.
-			// Operatively: 
+			// Operatively:
 			//				- the first point will be found from the parametric form of the input line, for a given
 			//				  value of the parameter, altering only the third coordinate. Such point evidently lies out
 			//				  of the line.
@@ -97,7 +97,7 @@ namespace LinearAlgebra
 			//				- now we got two set of three points. Two of them are the one that generate the input-line.
 			//				  Considering them along with each of the recently calculated points, I will have two cartesian
 			//				  equations, representing the plans that generate the input-line. Such representation of the
-			//				  line is alternative to the parametric one, and is particularly useful when looking for the 
+			//				  line is alternative to the parametric one, and is particularly useful when looking for the
 			//				  intersection from a line and a plane. Enjoy :-)
 			//
             //
@@ -185,7 +185,7 @@ namespace LinearAlgebra
 		}// end cartesianLineForTwoPoints()
 
 
-		
+
 
 		/// <summary>
 		///   Metodo che genera le equazioni parametriche di un piano a partire dalla equazione cartesiana.
@@ -199,7 +199,7 @@ namespace LinearAlgebra
 		///  x = x(t,u) = t
 		///  y = y(t,u) = u
 		///  z = z(t,u) = f(x,y) = f(x(t,u),y(t,u))= f(t,u)
-		/// 
+		///
 		///  nevertheless in the input cartesian plane equation some of the coefficients may be zero.
 		///  So as first will be located the first non-zero coefficient, then the others will be made
 		///  explicit using this denominator. Suppose that in the equation ax+by+cz+d=0 c is not zero.
@@ -329,7 +329,7 @@ namespace LinearAlgebra
             }// else continue.
             return false;// non sono complanari
         }// end complanaritaThreeR3Points()
-            
+
 
 
 
@@ -390,7 +390,7 @@ namespace LinearAlgebra
             if (// the three 2x2 minors, have to be all nulls, to have linear dependency.
                    System.Math.Abs( detMinorUnoDue ) < 1.0E-11
                 && System.Math.Abs( detMinorUnoTre ) < 1.0E-11
-                && System.Math.Abs( detMinorDueTre ) < 1.0E-11 
+                && System.Math.Abs( detMinorDueTre ) < 1.0E-11
             )
             {
                 throw new System.Exception( "invalid vector set : there is no linear independence." );
@@ -418,7 +418,7 @@ namespace LinearAlgebra
 
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="directionCosine_A_preNormalization"></param>
         /// <param name="directionCosine_B_preNormalization"></param>
@@ -439,7 +439,7 @@ namespace LinearAlgebra
             // 	    y(t,u)== t*ay + u*by + cy
             // 	    z(t,u)== t*az + u*bz + cz
             // 	   }
-            // 	
+            //
             //
             double[] directionCosine_A;
             double[] directionCosine_B;
@@ -508,8 +508,8 @@ namespace LinearAlgebra
 
 
 
-       
-        
+
+
         /// <summary>
         /// equazione cartesiana di un piano per tre punti non allineati; in questo metodo i tre punti sono qualsiasi terna di vettori linearmente indipendenti.
         /// </summary>
@@ -721,12 +721,12 @@ namespace LinearAlgebra
 
 		/// <summary>
 		/// this method considers the case of a line, neither belonging to a plane nor in parallel with it.
-		/// such line has one and only one intersection point with the plane. This is obtained by means of 
+		/// such line has one and only one intersection point with the plane. This is obtained by means of
 		/// a non-omogeneous( in general. Some times it could be but in this case the solution is trivially
 		/// the null-vector) liner system 3x3. Ax=b, where A is the 3x3 matrix of the cartesian coefficients.
 		/// These are the three coordinates coefficients in the three input-cartesian-equations.
-		/// So the system is composed of the director-cosines of the considered plane and of the 
-		/// two planes which individuate the line. Note that this system has the same solution if the 
+		/// So the system is composed of the director-cosines of the considered plane and of the
+		/// two planes which individuate the line. Note that this system has the same solution if the
 		/// equations are changed of order, since it changes also the result vector. So Ax=b is equivalent
 		/// to (A~)x=(b~). Anyway A^(-1) and (A~)^(-1) will bw unique and multiplied (respectively) by
 		/// b and (b~) will give the same x vector.
@@ -810,12 +810,12 @@ namespace LinearAlgebra
 
 		/// <summary>
 		/// Composes a linear system devoted to find the intersection between plane and line.
-		/// The linear system will be composed with the cartesian equation of the plane and 
+		/// The linear system will be composed with the cartesian equation of the plane and
 		/// with the parametrization of the line.
 		/// The expressions that the three coordinate functions assume in the line parametrization
 		/// will be substituted in the cartesian equation of the plane.
 		/// A value of the independent parameter will be found. Substituting such value in the
-		/// parametric equations of the line, the three coordinate functions will assume the 
+		/// parametric equations of the line, the three coordinate functions will assume the
 		/// values of the intersection-point coordinates.
 		/// </summary>
 		/// <param name="cartesianPlane">the three coordinate-coefficients and the traslation term</param>
@@ -887,7 +887,7 @@ namespace LinearAlgebra
 		/// <param name="pointToPassThrough">the point to pass through</param>
 		/// <returns>the parametric equations of the line, having the same orientation of
 		/// the originalParametricLine, but passing through the pointToPassThrough</returns>
-		static public double[,] parametricLineSubjectToAnAffinity( 
+		static public double[,] parametricLineSubjectToAnAffinity(
 										double[,] originalParametricLine,
 										double[] pointToPassThrough         )
 		{// the result will be stored in the format:
@@ -917,3 +917,6 @@ namespace LinearAlgebra
 
 	}// end class Geometry_inR3
 }// end namespace LinearAlgebra
+
+
+*/

@@ -1,4 +1,6 @@
-﻿//#define LogSinkFs
+﻿/*
+
+//#define LogSinkFs
 
 using System;
 using System.Collections.Generic;
@@ -212,7 +214,7 @@ namespace LinearAlgebra
 		{
 		}// END : get the memory-address of a variable already containing an appropriate double[,].
 
-		
+
         /// <summary>
         /// create in RAM and, if desired, dump on a file. Tou can choose to randomize.
         /// </summary>
@@ -239,17 +241,17 @@ namespace LinearAlgebra
 
 
 
-		
+
         /// <summary>
         /// Copy Constructor, with row exchange. Determinant preserved via a sign exchange.
-        /// 
+        ///
         ///      ooooooooo                  ooooooooo
         ///      ooooooooo                  ooooooooo
         ///      o from  o                  o  -to  o
         ///      ooooooooo ----------->     ooooooooo
         ///      o  to   o                  o from  o
         ///      ooooooooo                  ooooooooo
-        /// 
+        ///
         /// </summary>
         /// <param name="original">the original matrix, before the row exchange</param>
         /// <param name="from">the position of the row to be moved</param>
@@ -260,12 +262,12 @@ namespace LinearAlgebra
         }// end Copy Constructor, with row exchange
 
 
-		
+
 
 
         /// <summary>
         /// Copy Constructor, with column exchange. Determinant preserved via a sign exchange.
-        /// 
+        ///
         ///         ooooooooooo                 ooooooooooo
         ///         ooooooooooo                 ooooooooooo
         ///         o   ooo  oo                 o   ooo   o
@@ -276,7 +278,7 @@ namespace LinearAlgebra
         ///         o   ooo   o                 o   ooo   o
         ///         ooooooooooo                 ooooooooooo
         ///         ooooooooooo                 ooooooooooo
-        /// 
+        ///
         /// </summary>
         /// <param name="original">the original matrix, before the column exchange</param>
         /// <param name="from">the position of the column to be moved</param>
@@ -323,15 +325,15 @@ namespace LinearAlgebra
         /// -   selezione di "curDimension": distingue i casi quadrata-rettangolare e imposta "curDimension"
         /// -   "producer" : genera la sottomatrice da analizzare( combinando colonne)
         /// -   "ePermutazioneDi" : valuta se una certa sequenza di indici di colonna sia una permutazione di una gia' valutata; si serve della sottofunzione "appartieneA"
-        /// -   "appartieneA" : prende uno scalare, indice di una colonna, e dice se appartiene ad una collezione di indici di colonna, ricevuta a parametro. E' una funzione elementare, con 
-        ///     schema {1}appartieneA({1,2,3})==true; {7}appartieneA({1,2,3})==false; la precedente funzione "ePermutazioneDi", va implementata considerando il risultato booleano cumulativo 
+        /// -   "appartieneA" : prende uno scalare, indice di una colonna, e dice se appartiene ad una collezione di indici di colonna, ricevuta a parametro. E' una funzione elementare, con
+        ///     schema {1}appartieneA({1,2,3})==true; {7}appartieneA({1,2,3})==false; la precedente funzione "ePermutazioneDi", va implementata considerando il risultato booleano cumulativo
         ///     di "appartieneA", ovvero: {1,3,2}"ePermutazioneDi"({1,2,3})==({1}appartieneA({1,2,3})and{2}appartieneA({1,2,3})and{3}appartieneA({1,2,3}) ).
         /// </summary>
         /// <returns></returns>
         public int Rango()// LinearAlgebra.RealMatrix sourceMat )
         {// schema operativo:
             //NB. il numero antistante la riga, indica la funzione nella quale viene svolto il task.
-            // legenda: 
+            // legenda:
             // (1)==EntryPoint()( i. e. rango).
             // (2)==gestioneQuadrata().
             // (3)==gestioneRettangolare().
@@ -364,7 +366,7 @@ namespace LinearAlgebra
                 workCopy = new MatrixRank( this );// keep it as is.
                 curDimension = this.Get_rows;//---###################### the minimum between the two dimensions, becomes curDimension ##############
             }// end if Get_cols >= Get_rows
-            else //   this.Get_cols == this.Get_rows 
+            else //   this.Get_cols == this.Get_rows
             {
                 workCopy = new MatrixRank( this );// keep it as is.
                 curDimension = this.Get_rows;//---###################### the minimum between the two dimensions, becomes curDimension ##############
@@ -545,7 +547,7 @@ namespace LinearAlgebra
 
 
         /// <summary>
-        /// Tiene costanti tutti gli indici di colonna, tranne uno. Su questo itera, attribuendo tutti gli indici del range(i.e. la dimensione massima fra le due; a valle della 
+        /// Tiene costanti tutti gli indici di colonna, tranne uno. Su questo itera, attribuendo tutti gli indici del range(i.e. la dimensione massima fra le due; a valle della
         /// trasposizione e' l'indice delle colonne>righe).
         /// Cosi' facendo produce configurazioni, che vanno date in esame a "selettore", per verificare che siano effettivamente nuove.
         /// Data una rettangolare nXk (con n>k; in caso sia kxn si traspone, senza effetti sui minori), ci sono n_binomio_k combinazioni semplici( i.e. senza ripetizione)
@@ -558,7 +560,7 @@ namespace LinearAlgebra
         /// configurazione, quando fosse intervenuto un "--curDimension".
         /// </summary>
         private int gestioneRettangolare( LinearAlgebra.MatrixRank rettangolareAnalizzanda )
-        {// since columns are more than Get_rows( always after translation), the simple combinations are cardinality of sorceMat.Get_cols taken 
+        {// since columns are more than Get_rows( always after translation), the simple combinations are cardinality of sorceMat.Get_cols taken
             // rettangolareAnalizzanda.Get_rows each time ( i.e. sorceMat.Get_cols Newton binomial rettangolareAnalizzanda.Get_rows ).
             this.combinationParams = new CombinationParams( rettangolareAnalizzanda );//  nullify on exit, for gc.
             int binomioN = binomioNewton( rettangolareAnalizzanda.Get_cols, rettangolareAnalizzanda.Get_rows );
@@ -641,8 +643,8 @@ namespace LinearAlgebra
 
         /// <summary>
         /// produce a configuration int[]
-        /// NB. la configurazione presente, deve essere passata uguale alla precedente, in quanto sia l'incremento naturale che la ristrutturazione, vengono fatte a 
-        /// partire dalla configurazione precedente. 
+        /// NB. la configurazione presente, deve essere passata uguale alla precedente, in quanto sia l'incremento naturale che la ristrutturazione, vengono fatte a
+        /// partire dalla configurazione precedente.
         /// </summary>
         private void producer( int[] columnIndexes )
         {
@@ -923,3 +925,5 @@ namespace LinearAlgebra
     }// end class
 
 }// end nmsp
+
+*/

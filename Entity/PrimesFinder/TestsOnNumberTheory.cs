@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -178,3 +179,4 @@ namespace PrimesFinder
             //System.Console.WriteLine("\t|-----------------------------------------------------");
 
 #endregion cantina
+*/

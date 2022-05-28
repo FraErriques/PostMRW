@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 
 
 namespace ComplexField
@@ -12,7 +13,7 @@ namespace ComplexField
 
         // memo: an implementation in the f:R->R case.
         // restrizione ad R+, dell'integrando della Gamma di Eulero. TODO: Complex analytical continuation.
-        // 
+        //
         //public static double IntegrandoGamma(double t)
         //{// Note: Gamma[z] is the Mellin transform of Exp[-t]. For real "t" it interpolates Factorial(t).
         //    // There's a product representation which highlights the poles on R- since they appear as zeros in the denominator. Such representation is due to Gauss
@@ -37,7 +38,7 @@ namespace ComplexField
         //    res += (functional_form(a) + functional_form(b)) * 0.5 * delta; // add extrema * base/2
         //    //
         //    return res;
-        //}//        
+        //}//
         #endregion Notes
 
 
@@ -54,8 +55,8 @@ namespace ComplexField
         /// <returns></returns>
         private static double GammaIntegrand_u_part(
             double sigma, double t, // the complex argument. It's not integrated towards. It's a parameter.
-            double x // the Gamma special function is defined(also) as an improper integral on R+, towards the mute variable x>0. The "trapezia" method will 
-            // pass the actual value of x, at each step. The values of (sigma,t) will be the same during all of the steps in a trapezia procedure. Tehy change just 
+            double x // the Gamma special function is defined(also) as an improper integral on R+, towards the mute variable x>0. The "trapezia" method will
+            // pass the actual value of x, at each step. The values of (sigma,t) will be the same during all of the steps in a trapezia procedure. Tehy change just
             // when the request is to represent a different point.
          )
         {// NB. note there is no dependence on y in the integration measure. So dy is identically 0.
@@ -63,7 +64,7 @@ namespace ComplexField
             return Math.Exp((sigma - 1.0) * Math.Log(x) - x) * Math.Cos(t * Math.Log(x));
             // the returned value is a real number, which is a chunk of the real part of the result of Gamma[s], namely is Gamma[s,x0]==Gamma[sigma,t,x0]
             // the actual value of x0 will be updated at each call and used as a basis of a trapezium. The height is Dx. The sum of the measures of the involved
-            // trapezia, will constitute the Real-Part of Gamma[s] where there's no more dependence on the saturation variable x. There's instead dependence on 
+            // trapezia, will constitute the Real-Part of Gamma[s] where there's no more dependence on the saturation variable x. There's instead dependence on
             // the selected value of s in C. Note: Gamma[s] is real for real-s and so Gamma benefits of Schwartz symmetry, i.e. Gamma[conjugate[s]]==conjugate[Gamma[s]
             // Gamma is n times meromorphic on R-, namely on x=-n ,n in N.
         }// u_part
@@ -79,8 +80,8 @@ namespace ComplexField
         /// <returns></returns>
         private static double GammaIntegrand_v_part(
             double sigma, double t, // the complex argument. It's not integrated towards. It's a parameter.
-            double x // the Gamma special function is defined(also) as an improper integral on R+, towards the mute variable x>0. The "trapezia" method will 
-            // pass the actual value of x, at each step. The values of (sigma,t) will be the same during all of the steps in a trapezia procedure. Tehy change just 
+            double x // the Gamma special function is defined(also) as an improper integral on R+, towards the mute variable x>0. The "trapezia" method will
+            // pass the actual value of x, at each step. The values of (sigma,t) will be the same during all of the steps in a trapezia procedure. Tehy change just
             // when the request is to represent a different point.
          )
         {
@@ -97,7 +98,7 @@ namespace ComplexField
         /// as a special one, by means of an improper real integral, where y=0 identically and so dy=0.
         /// Therefore u*dx-v*dy + I*( u*dy+v*dx)== u*dx+I*v*dx
         /// and
-        /// u(sigma,t)==  Exp[(sigma-1)*Log[x]-x]*Cos[t*Log[x]] ,where the complex variable is denoted "s" and s=:sigma+I*t to 
+        /// u(sigma,t)==  Exp[(sigma-1)*Log[x]-x]*Cos[t*Log[x]] ,where the complex variable is denoted "s" and s=:sigma+I*t to
         /// avoid any confusion with the real variable x, which is appropriated for saturation on R+.
         /// and
         /// v(sigma,t)==  Exp[(sigma-1)*Log[x]-x]*Sin[t*Log[x]] this is the immaginary part and the result of the integration is multiplied for I==Sqrt[-1].
@@ -132,7 +133,7 @@ namespace ComplexField
         /// as a special one, by means of an improper real integral, where y=0 identically and so dy=0.
         /// Therefore u*dx-v*dy + I*( u*dy+v*dx)== u*dx+I*v*dx
         /// and
-        /// u(sigma,t)==  Exp[(sigma-1)*Log[x]-x]*Cos[t*Log[x]] ,where the complex variable is denoted "s" and s=:sigma+I*t to 
+        /// u(sigma,t)==  Exp[(sigma-1)*Log[x]-x]*Cos[t*Log[x]] ,where the complex variable is denoted "s" and s=:sigma+I*t to
         /// avoid any confusion with the real variable x, which is appropriated for saturation on R+.
         /// and
         /// v(sigma,t)==  Exp[(sigma-1)*Log[x]-x]*Sin[t*Log[x]] this is the immaginary part and the result of the integration is multiplied for I==Sqrt[-1].
@@ -162,7 +163,7 @@ namespace ComplexField
 
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sigma">the Real part of the complex argument</param>
         /// <param name="t">the Immaginary part of the complex argument</param>
@@ -182,3 +183,4 @@ namespace ComplexField
 
     }// class
 }// nmsp
+*/

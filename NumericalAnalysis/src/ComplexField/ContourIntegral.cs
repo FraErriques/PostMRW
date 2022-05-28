@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 
 
 namespace ComplexField
@@ -262,6 +263,7 @@ namespace ComplexField
     }// class
 }// nmsp
 
+*/
 
 /******* cantina  ********
  a useful test:

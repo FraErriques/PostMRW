@@ -1,4 +1,4 @@
-
+/*
 namespace LinearAlgebra
 {
 
@@ -18,7 +18,7 @@ namespace LinearAlgebra
 		/// coordinate elimination damages less the perspective rendering. As a rule of thumb, if the board-plane
 		/// lies in parallel to a coordinate plane the projected points will be constant in one coordinate.
 		/// Such coordinate surely stores less perspective information than the other two.
-		/// In case the three coordinates vary together a test is necessary to understand the 
+		/// In case the three coordinates vary together a test is necessary to understand the
 		/// figure-specific geometry. Enjoy. :-)
 		/// </returns>
 		public abstract double[] representedPoint( double[] toBeRepresentedPoint);
@@ -26,3 +26,4 @@ namespace LinearAlgebra
 
 
 }// end namespace LinearAlgebra
+*/

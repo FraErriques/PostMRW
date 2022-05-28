@@ -1,4 +1,4 @@
-
+/*
 namespace LinearAlgebra
 {
 
@@ -12,8 +12,8 @@ namespace LinearAlgebra
         private double y;
 
 
-        
-        
+
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -100,3 +100,4 @@ namespace LinearAlgebra
 
 
 }// END namespace LinearAlgebra
+*/

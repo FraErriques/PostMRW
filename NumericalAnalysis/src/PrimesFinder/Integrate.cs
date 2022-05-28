@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 
 
 
@@ -134,3 +135,4 @@ namespace PrimesFinder
 
 
 }
+*/
