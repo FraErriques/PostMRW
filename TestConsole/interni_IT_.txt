@@ -1,0 +1,43 @@
+Prenome	Cognome	email	Tel.	officeExt	Cellulare	Reparto	BRANCH_DESCRIPTION	Tipologia di contabilità	Immagine	Sigle
+Thomas	Albarello	thomas.albarello@bbt-se.com	+39 0471 062	244	+39 328 014 7156	PE	Bolzano	BBT-IT	Albarello Thomas.JPG	AlTh
+Ugo	Bacchiega	ugo.bacchiega@bbt-se.com	+39 0471 062	240	+39 320 478 3015	BA_I	Bolzano	BBT-IT	Bacchiega Ugo.JPG	BaUg
+Alessandro	Bellante	alessandro.bellante@bbt-se.com	+39 0471 062	282	+39 338 5071287	PE	Bolzano	BBT-IT	Bellante Alessandro.jpg	BeAe
+Filippo	Bonasso	filippo.bonasso@bbt-se.com	+39 0471 062	217	+39 3371102803	VW	Bolzano	BBT-IT	Bonasso Filippo.JPG	BoFi
+Alessandro	Bonazza	alessandro.bonazza@bbt-se.com	+39 0471 062	253		CO	Bolzano	BBT-IT	Bonazza Alessandro.JPG	BoAl
+Gilberto	Cardola	gilberto.cardola@bbt-se.com	+39 0471 062	276	+39 335 5230409	VO	Bolzano	BBT-IT	DSC_2830 (1).jpg	GiCa
+Alex	Corradini	alex.corradini@bbt-se.com	+39 0471 062	255	+39 3316307449	DÜ	Bolzano	BBT-IT	Corradini Alex.JPG	CoAl
+Alessio	Cuel	alessio.cuel@bbt-se.com	+39 0471 062	228		PI	Bolzano	BBT-IT	Cuel Alessio.JPG	CuAl
+Rosalia	Di Bella	Rosalia.DiBella@bbt-se.com	+39 0471 062	233	+39 3204783012	BC	Bolzano	BBT-IT	Di Bella Rosalia.JPG	DiRo
+Daniela	Eisenstecken	daniela.eisenstecken@bbt-se.com	+39 0471 062	224	+39 320 478 3011	SE	Bolzano	BBT-IT	Eisenstecken Daniela.JPG	EiDa
+Francesco	Erriques	francesco.erriques@bbt-se.com	+39 0471 062	273	+39 3316342823	VW	Bolzano	BBT-IT	Erriques Francesco.JPG	ErFr
+Manfredi	Fedele di Catrano	manfredi.fedeledicatrano@bbt-se.com	+39 0471 062	208	+39 3667578215	BC	Bolzano	BBT-IT	Fedele di Catrano Manfredi.JPG	FeMa
+Alessandro	Ferrari	alessandro.ferrari@bbt-se.com	+39 0471 062	280	+39 3351960460	PL	Bolzano	BBT-IT	Ferrari Alessandro.JPG	FeAl
+Rinaldo	Ferrario	rinaldo.ferrario@bbt-se.com	+39 0471 062	274	+39 3371261152	FI	Bolzano	BBT-IT	Ferrario Rinaldo.JPG	FeRi
+Claudio	Floretta	claudio.floretta@bbt-se.com	+39 0471 062	205	+39 3316143179	VO	Bolzano	BBT-IT	Floretta Claudio.JPG	FlCl
+Caterina	Framba	caterina.framba@bbt-se.com	+39 0471 062	271		SE	Bolzano	BBT-IT	Framba Caterina.JPG	FrCa
+Sandro	Francesconi	sandro.francesconi@bbt-se.com	+39 0471 062	277	+39 331 664 3571	VW	Bolzano	BBT-IT	Francesconi Sandro.JPG	FrSa
+Laura	Frascarelli	laura.frascarelli@bbt-se.com	+39 0471 062	334	+39 3371094065	DÜ	Bolzano	BBT-IT	Frascarelli Laura.png	FrLa
+Michael	Gasser	michael.gasser@bbt-se.com	+39 0471 062	285	+39 3386917529	EDV	Bolzano	BBT-IT	Gasser Michael.jpg	GaMi
+Alberto	Geat	alberto.geat@bbt-se.com	+39 0471 062	297		DÜ	Bolzano	BBT-IT	Geat Alberto.png	GeAl
+Ina	Gremi	ina.gremi@bbt-se.com	+39 0471 062	287		VO	Bolzano	BBT-IT	Gremi Ina.jpg	GrIn
+Julia	Gruber	julia.gruber@bbt-se.com	+39 0471 062	283	+39 3316800248	PI	Bolzano	BBT-IT	Gruber.jpg	GrJu
+Stefan	Iusco	Stefan.Gabriel.Iusco@bbt-se.com	+39 0471 062	243	+39 3667658819	VW	Bolzano	BBT-IT	Iusco Stefan Gabriel.JPEG	IuSt
+Roberto	Masciullo	roberto.masciullo@bbt-se.com	+39 0471 062	269	+39 3665762206	RE	Bolzano	BBT-IT	Masciullo Roberto.jpg	MaRb
+Arturo Piero	Mazzucato	arturo.piero.mazzucato@bbt-se.com	+39 0471 062	251	+39 3357246347	BE	Bolzano	BBT-IT	Mazzucato Arturo Piero.JPG	MaAr
+Marcella	Miraglia	marcella.miraglia@bbt-se.com	+39 0471 062	204	+39 3346799692		Bolzano	BBT-IT	Miraglia Marcella.JPG	MiMa
+Christine	Mittermann	christine.mittermann@bbt-se.com	+39 0471 062	256		DÜ	Bolzano	BBT-IT	Mittermann Christine.JPG	MiCh
+Daniela	Pichierri	daniela.pichierri@bbt-se.com	+39 0471 062	210	+39 3371283365	SE	Bolzano	BBT-IT	Pichierri Daniela.JPG	PiDa
+Nicola	Ristich	nicola.ristich@bbt-se.com	+39 0471 062	216 (BZ) / 221 (FZ)	+39 3346103258	BA_I	Bolzano	BBT-IT	Ristich Nicola.png	RiNi
+Iolanda Maria	Rodrigues de Oliveira Costa	Iolanda.RodriguesCosta@bbt-se.com	+39 0471 062	224		VO	Bolzano	BBT-IT	Rodrigues Costa Iolanda.png	RoIo
+Luca	Salvi	luca.salvi@bbt-se.com	+39 0471 062	219	+39 3316326928	VW	Bolzano	BBT-IT	Salvi Luca.JPG	SaLu
+Monika	Schivari	monika.schivari@bbt-se.com	+39 0471 062	231	+39 3371425945	VM	Bolzano	BBT-IT	Schivari Monika.JPG	ScMo
+Pierluigi	Sibilla	pierluigi.sibilla@bbt-se.com	+39 0471 062	220	+39 320 478 3005	VO	Bolzano	BBT-IT	Sibilla Pierluigi.JPG	SiPi
+Anna	Siracusa	anna.siracusa@bbt-se.com	+39 0471 062	298	+39 3669010504	VO	Bolzano	BBT-IT	Siracusa Anna.JPG	SiAn
+Sebastiano	Sorbello	sebastiano.sorbello@bbt-se.com	+39 0471 062	270	+39 3371282045	VW	Bolzano	BBT-IT	Sorbello Sebastiano.JPG	SoSe
+Lisa	Terzariol	lisa.terzariol@bbt-se.com	+39 0471 062	239	+39 3386431235	DÜ	Bolzano	BBT-IT	Terzariol Lisa Marie.JPG	TeLi
+Barbara	Toso	barbara.toso@bbt-se.com	+39 0471 062	235		FIBU	Bolzano	BBT-IT	Toso Barbara.JPG	ToBa
+Francesco	Troncone	francesco.troncone@bbt-se.com	+39 0471 062	303	+39 3387380794	BT	Bolzano	BBT-IT	Troncone Francesco.jpg	TrFr
+Lidia	Valguarnera	lidia.valguarnera@bbt-se.com	+39 0471 062	248		BE	Bolzano	BBT-IT	Valguarnera Lidia.JPG	VaLi
+Mauro	Zanei	mauro.zanei@bbt-se.com	+39 0471 062	223	+39 3346137671		Bolzano	BBT-IT	Zanei Mauro.JPG	ZaMa
+Fiorenzo	Zanforlin	fiorenzo.zanforlin@bbt-se.com	+39 0471 062	264	+39 3357459585	CO	Bolzano	BBT-IT	Zanforlin.jpg	ZaFi
+Fabio	Zanini	fabio.zanini@bbt-se.com	+39 0471 062	284	+39 335430880	BC	Bolzano	BBT-IT	Fabio Zanini.jpg	ZaFa

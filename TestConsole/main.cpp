@@ -13,6 +13,33 @@
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
 #include "../Entity/Complex/Complex.h"
+#include "../Common/Dictionary/MapOperation.h"
+
+int main()
+{
+    std::string phoneBookStreamPath("./interni_IT_.txt");
+    Common::Dictionary::MapOperation * phoneMap = new Common::Dictionary::MapOperation();
+    phoneMap->readFileByLines( phoneBookStreamPath);
+//    mapListener( dataAcquisitionResult, "Erriques");
+//    mapListener( dataAcquisitionResult, "fake");
+//    mapTraverseForward( dataAcquisitionResult);
+//    mapTraverseReverse( dataAcquisitionResult);
+    phoneMap->mapListener( );
+    delete phoneMap;
+    // garbage collect
+    //phoneMap.mapNodeDestructorCaller( dataAcquisitionResult);
+    //delete dataAcquisitionResult;
+    //
+
+    //
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+/* --------------cantina----------------------------
 
 
 Numerics::Complex IcoChain( Numerics::Complex s, Numerics::Complex z)
@@ -37,8 +64,6 @@ Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta
 }// originAnulus
 
 
-int main()
-{
     double delta = +3.7123;
     double stepSize = +2.0*PI/100.0;
     for(int c=0; c<100; c++)
@@ -53,15 +78,6 @@ int main()
 //    Numerics::Complex icoChain( IcoChain( s, *z) );
 //    delete z;
 
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-
-/* --------------cantina----------------------------
 
     //PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
 //    long desPrime = (*p)[p->lastOrdinal];
