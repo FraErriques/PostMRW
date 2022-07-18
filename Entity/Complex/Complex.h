@@ -47,6 +47,8 @@ public:
    /// Complex Analisys section /////////////////////////////////////////////////////////////////////////////////////////
    Complex LnC          (void)                     const;
    Complex ExpC         (void)                     const;
+   Complex ExpC_selfish (void)                     const;  // exponential e^z mediante serie di McLaurin
+   Complex Nat_powC     (size_t n)                 const;// integer exponent power
    Complex operator^    (const Complex & exponent) const;
    Complex operator^    (const int exponent)       const;
    // trigonometric sub-section /////////////////////////
@@ -65,13 +67,10 @@ public:
    Complex SetTanhC     (void)                     const;
 
 private:
-   /// data //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   /// data /////////////////////////////////////////////////////////////////////////////////////////
    double _Re;
    double _Im;
-   /// methoda ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-   // integer exponent power
-   Complex Nat_powC (size_t n) const;
-};
+};// end Class Complex
 
 const Complex i(0.0, 1.0);
 

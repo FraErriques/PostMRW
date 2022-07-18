@@ -1,15 +1,15 @@
-
+/*
 namespace ComplexField
 {
 
 	public class Functions
 	{
-			
+
 		// a collection of the elementary functions f:C->C
 
 		public static ComplexField.Complex Exp( ComplexField.Complex z)
 		{// Exp(x+iy) = Exp(x)*Exp(iy)=Exp(x)*(Cos(y)+i*Sin(y))=(Exp(x)*Cos(y))+i*(Exp(x)*Sin(y))
-			return new ComplexField.Complex( 
+			return new ComplexField.Complex(
 				System.Math.Exp( z.get_real)*System.Math.Cos( z.get_immaginary),
 				System.Math.Exp( z.get_real)*System.Math.Sin( z.get_immaginary)
 			);
@@ -71,7 +71,7 @@ namespace ComplexField
             //
             for (long k = 1L; k <= threshold; k++)
             {
-                // numeratore *= (1+1/n)^z        complex power 
+                // numeratore *= (1+1/n)^z        complex power
                 numeratore *= new ComplexField.Complex(
                     new ComplexField.Complex(1.0 + 1.0 / (double)k, 0.0) ^ zeta);
                 // denominatore *= (1+z/n)        complex ratio
@@ -99,7 +99,7 @@ namespace ComplexField
         ///     ove s =: (sigma + i*t),  sigma,t in R
         /// C'e' un polo in s =  (sigma + i*t) = (+1, 0)
         /// L'equazione funzionale permette di esprimere Zeta(s) in funzione di Zeta(1-s)
-        /// Il fatto che Eta sia convergente per ogni sigma>0( escluso s =  (sigma + i*t) = (+1, 0)), 
+        /// Il fatto che Eta sia convergente per ogni sigma>0( escluso s =  (sigma + i*t) = (+1, 0)),
         /// permette dunque di rappresentare Zeta
         /// su tutto il piano C( escluso s =  (sigma + i*t) = (+1, 0)).
         /// </summary>
@@ -130,7 +130,7 @@ namespace ComplexField
 
         /// <summary>
         /// Zeta( sigma + I*t) = Eta( sigma + I*t) / (1-2^(1-(sigma + I*t)))
-        /// 
+        ///
         /// NB. as is, only works for Re(s)>0 strictly. For Re(s)smaller_or_equal(0) the functional equation is required.
         /// TODO iff( Re(esse)smaller_or_equal(0)) return functional_equation(esse)
         /// TODO iff( Re(esse)greater(1) return Dirichlet series; the one with all positive terms: faster convergence.
@@ -164,9 +164,9 @@ namespace ComplexField
                  * sigma<=0 porta a valutare (1-s) in functional_equation().
                  * tale valutazione comporta una call-back a zeta_Riemann(1-s).
                  * tale call-back comporterebbe un'ulteriore chiamata a functional_equation(),
-                 *      qualora Re(1-s)<=0. Cio' si verificherebbe solo per sigma>=1. La prima chiamata a  
-                 *      functional_equation() avviene se e solo se sigma<=0. 
-                 *      L'intersezione vuota fra i due insiemi 
+                 *      qualora Re(1-s)<=0. Cio' si verificherebbe solo per sigma>=1. La prima chiamata a
+                 *      functional_equation() avviene se e solo se sigma<=0.
+                 *      L'intersezione vuota fra i due insiemi
                  *      garantisce che la call-back non inneschi un ciclo infinito.
                  */
                 res = Zeta_functionalEquation( esse, threshold);
@@ -179,14 +179,14 @@ namespace ComplexField
 
 
         /// <summary>
-        ///  
+        ///
         /// functional equation Zeta( s) = f( Zeta( 1-s))
         /// 1-s =(1,0)-(sigma,t)=(1-sigma,-t)
         /// Zeta[s] = 2^s Pi^(s - 1) Sin[Pi s/2] Gamma[1 - s] Zeta[1 - s]
         ///    NB. variables in the implementation are labeled as:
         ///    factor_a = 2^s
         ///    factor_b = Pi^(s - 1)
-        ///    factor_c = Sin[Pi s/2] 
+        ///    factor_c = Sin[Pi s/2]
         ///    follow the factors Gamma and Zeta[1 - s]
         /// </summary>
         /// <param name="esse"></param>
@@ -219,3 +219,6 @@ namespace ComplexField
 
 
 }// end nmsp
+
+*/
+

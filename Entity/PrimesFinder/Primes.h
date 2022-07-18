@@ -97,6 +97,7 @@ public: // TODO let private after test
     int shiftInSumTissue( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
     int Bisection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
     int NpartSection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    int currentOperatorSquare( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
     AsinglePointInStream readRecordAt(std::ifstream & dumpReader, long offsetFromBeg);// lettore di Record da IntegralDump
 
 };// class

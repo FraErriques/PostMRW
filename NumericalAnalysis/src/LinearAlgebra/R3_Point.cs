@@ -1,4 +1,4 @@
-
+/*
 namespace LinearAlgebra
 {
 
@@ -10,8 +10,8 @@ namespace LinearAlgebra
 		private double x;
 		private double y;
 		private double z;
-		
-        
+
+
 
         /// <summary>
         /// public access point: Ctor( coordinates).
@@ -25,8 +25,8 @@ namespace LinearAlgebra
 			this.y = y;
 			this.z = z;
 		}// Ctor.
-		
-        
+
+
         /// <summary>
         /// public access point: Ctor.
         /// </summary>
@@ -49,8 +49,8 @@ namespace LinearAlgebra
             this.y = theOriginal.getY;
             this.z = theOriginal.getZ;
         }// Ctor.
-		
-        
+
+
         /// <summary>
         /// get the Abscissa
         /// </summary>
@@ -58,7 +58,7 @@ namespace LinearAlgebra
 		{
 			get{ return this.x;}
 		}
-		        
+
         /// <summary>
         /// get the Ordinate
         /// </summary>
@@ -66,7 +66,7 @@ namespace LinearAlgebra
 		{
 			get{ return this.y;}
 		}
-		
+
         /// <summary>
         /// get the Height
         /// </summary>
@@ -74,11 +74,11 @@ namespace LinearAlgebra
 		{
 			get{ return this.z;}
 		}
-		
-        
+
+
 
         /// <summary>
-        /// get the three coordinates in one-shot 
+        /// get the three coordinates in one-shot
         /// </summary>
         public double[] getPointCoordinates
 		{
@@ -94,7 +94,7 @@ namespace LinearAlgebra
 
 
         /// <summary>
-        /// get the three coordinates, as a vector. 
+        /// get the three coordinates, as a vector.
         /// </summary>
         public PointR3 getPointVector()
         {
@@ -197,3 +197,4 @@ namespace LinearAlgebra
 
 
 }// END namespace LinearAlgebra
+*/

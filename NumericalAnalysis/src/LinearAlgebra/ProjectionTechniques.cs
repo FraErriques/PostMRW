@@ -1,4 +1,4 @@
-
+/*
 
 
 
@@ -14,7 +14,7 @@
 //    /// when they will be thought. Such flexibility is provided by means of object oriented
 //    /// polimorphism. The hierarchy is composed of a father class, which is the common storage
 //    /// area for static data( class-wise data). Each son class will implement its own version
-//    /// of the projection algorithm. By now (August 2005) there will be only two sons: 
+//    /// of the projection algorithm. By now (August 2005) there will be only two sons:
 //    /// CentralProjection and OrthogonalAssonometry. The former is the classic projective-geometry
 //    /// concept, from Girard Desargues. The latter is a more building-project used technique and
 //    /// is also called military-assonometry.
@@ -60,7 +60,7 @@
 //        /// Its purpose is to initialize all of the data that will shared by the sons among
 //        /// the hierarchy.
 //        /// </summary>
-//        public ProjectionTechniques( 
+//        public ProjectionTechniques(
 //            // the central projector-point coordinates
 //            double projectionPointX,
 //            double projectionPointY,
@@ -138,3 +138,5 @@
 
 
 //}// END namespace LinearAlgebra
+
+/*

@@ -313,7 +313,7 @@ void SinkFs::SectionTrace( const string &what, int sectionVerbosity)
     {
         return;// the verbosity of CurrentSection is not adequate for writing.
     }//else can continue.
-    // maximum verbosity leves is zero. Higher verbosity-levels prune the lower-level messages.
+    // maximum verbosity level is zero. Higher verbosity-levels prune the lower-level messages.
     if( ! hasPermissionsToWrite)
     {// without write-permission, silently skip.
         return;// this->semaphore is red, so no writing.

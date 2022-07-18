@@ -1,3 +1,4 @@
+/*
 
 //namespace LinearAlgebra
 //{
@@ -27,7 +28,7 @@
 //            // board plane: third point coordinates
 //            double planeX2,
 //            double planeY2,
-//            double planeZ2     ) : base( 
+//            double planeZ2     ) : base(
 //            // the central projector-point coordinates
 //            projectionPointX,
 //            projectionPointY,
@@ -56,7 +57,7 @@
 //            // using the shared data: "projection-board"
 //            // this method will find the normal line to projection board, through
 //            // the "toBeProjectedPoint".
-//            // the normal line to projection board is the parametric-line wich has the 
+//            // the normal line to projection board is the parametric-line wich has the
 //            // first three coefficients of the cartesian equation of the projection-board
 //            // as director-cosines.
 //            // The affine to it, passing through the "toBeProjectedPoint" has parametric
@@ -88,3 +89,5 @@
 
 //    }// END class OrthogonalProjection
 //}// end namespace LinearAlgebra
+
+*/

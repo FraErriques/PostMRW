@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Text;
 
 
@@ -60,7 +61,7 @@ namespace PrimesFinder
         /// </summary>
         /// <param name="tmpTableNamePrefix"></param>
         public dbPrimes(string tmpTableNamePrefix)
-        { 
+        {
         }
 
 
@@ -230,9 +231,9 @@ namespace PrimesFinder
 
         /// <summary>
         /// extract from N(naturals) a subsequence of the primes, i.e. the primes until a threshold.
-        /// 
+        ///
         /// db record layout:
-        /// 
+        ///
         ///  [ordinal] [bigint] IDENTITY(1,1) NOT NULL,
         ///  [prime] [bigint] NOT NULL,
         ///
@@ -256,10 +257,10 @@ namespace PrimesFinder
                 //             open set (1,n). So 2 is the smallest possible.
                 for (
                         innerLoopPrimeIndex = 0L,// start from the first prime.
-                        quotient = divider + 1.0;// due to inner loop rules, must be initialized >divider. 
+                        quotient = divider + 1.0;// due to inner loop rules, must be initialized >divider.
                     //
                         quotient > divider;// for monotonicity of P, cannot search smallers, going ahead.
-                    //NB. no more Diophantine quotient exist in the open set (1,n), for the monotonicity of function 
+                    //NB. no more Diophantine quotient exist in the open set (1,n), for the monotonicity of function
                     //    quotient=:ToBeDivided/x. It's hyperbolic.
                     //
                     // no increment whatsoever.
@@ -314,9 +315,9 @@ namespace PrimesFinder
 
         /// <summary>
         /// extract from N(naturals) a subsequence of the primes, i.e. the primes until a threshold.
-        /// 
+        ///
         /// db record layout:
-        /// 
+        ///
         ///  [ordinal] [bigint]  NOT NULL,   NB. without IDENTITY(1,1)
         ///  [prime] [bigint] NOT NULL,
         ///
@@ -340,10 +341,10 @@ namespace PrimesFinder
                 //             open set (1,n). So 2 is the smallest possible.
                 for (
                         divider = 2L,// first of the Primes.
-                        quotient = divider + 1.0;// due to inner loop rules, must be initialized >divider. 
+                        quotient = divider + 1.0;// due to inner loop rules, must be initialized >divider.
                     //
                         quotient > divider;// for monotonicity of P, cannot search smallers, going ahead.
-                    //NB. no more Diophantine quotient exist in the open set (1,n), for the monotonicity of function 
+                    //NB. no more Diophantine quotient exist in the open set (1,n), for the monotonicity of function
                     //    quotient=:ToBeDivided/x. It's hyperbolic.
                     //
                     // no increment whatsoever.
@@ -411,3 +412,4 @@ namespace PrimesFinder
 
 
 }
+*/

@@ -1,3 +1,4 @@
+/*
 //# define debug
 
 namespace LinearAlgebra
@@ -121,8 +122,8 @@ namespace LinearAlgebra
 		}
 
 
-		
-		
+
+
         /// <summary>
         /// create in RAM and, if desired, dump on a file. Tou can choose to randomize.
         /// </summary>
@@ -157,7 +158,7 @@ namespace LinearAlgebra
 		}
 
 
-		 
+
 
         /// <summary>
         /// Copy Constructor
@@ -178,17 +179,17 @@ namespace LinearAlgebra
 
 
 
-		
+
         /// <summary>
         /// Copy Constructor, with row exchange. Determinant preserved via a sign exchange.
-        /// 
+        ///
         ///      ooooooooo                  ooooooooo
         ///      ooooooooo                  ooooooooo
         ///      o from  o                  o  -to  o
         ///      ooooooooo ----------->     ooooooooo
         ///      o  to   o                  o from  o
         ///      ooooooooo                  ooooooooo
-        /// 
+        ///
         /// </summary>
         /// <param name="original">the original matrix, before the row exchange</param>
         /// <param name="from">the position of the row to be moved</param>
@@ -225,12 +226,12 @@ namespace LinearAlgebra
 
 
 
-		
+
 
 
         /// <summary>
         /// Copy Constructor, with column exchange. Determinant preserved via a sign exchange.
-        /// 
+        ///
         ///         ooooooooooo                 ooooooooooo
         ///         ooooooooooo                 ooooooooooo
         ///         o   ooo  oo                 o   ooo   o
@@ -241,7 +242,7 @@ namespace LinearAlgebra
         ///         o   ooo   o                 o   ooo   o
         ///         ooooooooooo                 ooooooooooo
         ///         ooooooooooo                 ooooooooooo
-        /// 
+        ///
         /// </summary>
         /// <param name="original">the original matrix, before the column exchange</param>
         /// <param name="from">the position of the column to be moved</param>
@@ -332,7 +333,7 @@ namespace LinearAlgebra
         {
             this.deallocate();
         }
-		
+
         // END memory management routines
 
 
@@ -398,7 +399,7 @@ namespace LinearAlgebra
 			int  index;
 			double det = 1.0;  // init to product invariant (both for real and complex cases)!
 			for (index=0; index<n; index++)
-			{ 
+			{
 				det *= copy.m[index,index];// det on a triangular matrix
 			}
             //
@@ -545,7 +546,7 @@ namespace LinearAlgebra
 
 
 
- 
+
         /// <summary>
         /// transpose "this".
         /// </summary>
@@ -565,7 +566,7 @@ namespace LinearAlgebra
         }// end transpose()
 
 
-		
+
 
         /// <summary>
         /// the scalar product between vectors (isomorphic obviously)
@@ -577,7 +578,7 @@ namespace LinearAlgebra
 		{
 			if( first.Length != second.Length)
 			{
-				throw new System.Exception("Only isomorphic vectors can combine by scalar product. It's an internal product."); 
+				throw new System.Exception("Only isomorphic vectors can combine by scalar product. It's an internal product.");
 			}
 			double res = 0.0;
 			int index;
@@ -636,8 +637,8 @@ namespace LinearAlgebra
             return res;
         }/// end prodotto righe per colonne.
 
-			
-        
+
+
 		RealMatrix   operator_add ( RealMatrix second )
 		{
 			if (rows!=second.rows || cols!=second.cols){throw new System.Exception("incompatible indexes for sum");}
@@ -716,7 +717,7 @@ namespace LinearAlgebra
 		}// end operator_assignment
 
 
-         
+
         /// <summary>
         /// assigns a scalar element, to the position (iRow,jCol)
         /// </summary>
@@ -741,7 +742,7 @@ namespace LinearAlgebra
             // ready.
             return esito;
         }// end element_assignment
-	
+
 
 
         /// <summary>
@@ -755,7 +756,7 @@ namespace LinearAlgebra
 			int  row_this, col_this,  row_smaller, col_smaller;
 			int smallerRowCardinality, smallerColCardinality;
             if ( delendaRow < 0 )//NB. delendaLine<0 means:"delete no such line!", i.e. delendaRow<0 -> keep all the rows.
-			{// 
+			{//
 				smallerRowCardinality = this.rows;
 			}
 			else
@@ -763,7 +764,7 @@ namespace LinearAlgebra
 				smallerRowCardinality = this.rows-1;
 			}
             if ( delendaCol < 0 )//NB. delendaLine<0 means:"delete no such line!", i.e. delendaRow<0 -> keep all the rows.
-			{// 
+			{//
 				smallerColCardinality = this.cols;
 			}
 			else
@@ -829,7 +830,7 @@ namespace LinearAlgebra
 			}
             return trasp_cof; // already normalized, by the det of original matrix.
 		}// end inverse
-		
+
         #endregion Algorithms
 
 
@@ -922,7 +923,7 @@ namespace LinearAlgebra
 		public void show( )
 		{// print a matrix on the console
 			int  row, col;
-			if ( m == null ) return;			
+			if ( m == null ) return;
 			System.Console.WriteLine( "\n\n");
 			for (row=0; row<rows; row++)  //  show matrix
 			{
@@ -1145,7 +1146,7 @@ namespace LinearAlgebra
 
 
 
-		 
+
 
 
         /// <summary>
@@ -1206,7 +1207,7 @@ namespace LinearAlgebra
                     return false;// exit on wrong tensor. This could be only columns in defect, since for columns in excess there is a parameter in the Split() call.
 				}// else ok
 				++curRows;// another row, correctly read.
-                // N.B. syntax note:  result = (boolean_evaluation) ? value_to_be_assigned_onTrue : value_to_be_assigned_onFalse ; 
+                // N.B. syntax note:  result = (boolean_evaluation) ? value_to_be_assigned_onTrue : value_to_be_assigned_onFalse ;
                 // if tokens in row were too few, already caught. If == ok! If tokens too many, cut on last useful one.
                 int appropriateElements =  (tokens.Length >= validationCols) ? validationCols : tokens.Length;// see note above.
                 elements += appropriateElements;// all the elements of a correct row, are added to the tensor cardinality ( i.e. Length over all tensor dimensions).
@@ -1236,7 +1237,7 @@ namespace LinearAlgebra
 
 
 
-         
+
         /// <summary>
         /// validation of a file content.
         /// </summary>
@@ -1288,7 +1289,7 @@ namespace LinearAlgebra
                     }// else ok
                 }// end of row, in the matrix-file.
                 ++curRows;// another row, correctly read.
-                // N.B. syntax note:  result = (boolean_evaluation) ? value_to_be_assigned_onTrue : value_to_be_assigned_onFalse ; 
+                // N.B. syntax note:  result = (boolean_evaluation) ? value_to_be_assigned_onTrue : value_to_be_assigned_onFalse ;
                 // if tokens in row were too few, already caught. If == ok! If tokens too many, cut on last useful one.
                 int appropriateElements =  ( tokens.Length >= validationCols ) ? validationCols : tokens.Length;// see note above.
                 elements += appropriateElements;// all the elements of a correct row, are added to the tensor cardinality ( i.e. Length over all tensor dimensions).
@@ -1419,3 +1420,4 @@ namespace LinearAlgebra
 
     }// end class RealMatrix
 } //closing namespace LinearAlgebra
+*/

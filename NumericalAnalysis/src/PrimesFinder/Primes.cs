@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 
 
 namespace PrimesFinder
@@ -192,7 +193,7 @@ namespace PrimesFinder
                     this.canOperate = true;
                 }// end "suggested file path, but file is empty".
                 else
-                {// existing previous shot. 
+                {// existing previous shot.
                     previousShot.Seek(-1, System.IO.SeekOrigin.End);// goto read last published prime; -1 is last char before EOF. EOF==-1.
                     int lastKnownPrime_figureToken = 0;
                     string lastKnownPrimeReversed = "";
@@ -438,7 +439,7 @@ namespace PrimesFinder
         /// Come ordinale di ingresso, nel caso non si disponga dell'ordinale esatto, sono utili le stime logaritmiche:
         /// Ord ==circa:  Soglia / Log[Soglia]
         /// Soglia ==circa:  Ord * Log[Ord] (vedasi considerazioni di Derbyshire)
-        /// 
+        ///
         /// </summary>
         /// <param name="ordinal"></param>
         /// <returns></returns>
@@ -463,8 +464,8 @@ namespace PrimesFinder
 
 
 
-        
-        
+
+
         /// <summary>
         /// read the Prime at a specified ordinal.
         /// </summary>
@@ -546,9 +547,9 @@ namespace PrimesFinder
         /// disregard the ordinal. Prime only is needed in collection-enriching.
         /// NB. one "\r\n" at beginning of file.
         ///     neither "\r" nor "\n" at EOF.
-        ///     
+        ///
         /// ex ReadOneMultiFigureInteger
-        /// 
+        ///
         /// </summary>
         /// <param name="this.previousShot"></param>
         /// <returns></returns>
@@ -629,7 +630,7 @@ namespace PrimesFinder
         /// <summary>
         /// NB. one "\r\n" at beginning or of file.
         ///     neither "\r" nor "\n" at EOF.
-        ///     
+        ///
         ///     syntax for generic element is "\r\n"prime_ordinal.
         /// </summary>
         /// <param name="ToBeDivided"></param>
@@ -678,7 +679,7 @@ namespace PrimesFinder
             const double epsilon = double.Epsilon;// system constant ~+4.9e-324
             bool isStillPotentialPrime = true;
             Int64 divider = 2L;// the prime I'm actually using as divider. P[1]=2, i.e. first prime is 2.
-            double quotient = 1.0;// due to inner loop rules, must be initialized >divider. 
+            double quotient = 1.0;// due to inner loop rules, must be initialized >divider.
             //
             for (// OUTER LOOP: i.e. test each( n in N), until threshold.
                 ; // ToBeDivided already assigned, based on "input file", "NO input file".
@@ -690,10 +691,10 @@ namespace PrimesFinder
                 //             open set (1,n). So 2 is the smallest possible.
                 for (
                         previousShot.Seek(0L, System.IO.SeekOrigin.Begin),// start from the first prime.
-                        quotient = divider + 1.0;// due to inner loop rules, must be initialized >divider. 
+                        quotient = divider + 1.0;// due to inner loop rules, must be initialized >divider.
                         //
                         quotient > divider;// for monotonicity of P, cannot search smallers, going ahead.
-                        //NB. no more Diophantine quotient exist in the open set (1,n), for the monotonicity of function 
+                        //NB. no more Diophantine quotient exist in the open set (1,n), for the monotonicity of function
                         //    quotient=:ToBeDivided/x. It's hyperbolic.
                         //
                         // no increment whatsoever.
@@ -756,7 +757,7 @@ namespace PrimesFinder
         ///    s in C
         ///    s =: (sigma + i*t)
         ///    in an istance variable.
-        /// 
+        ///
         /// </summary>
         /// <param name="threshold"> in N; p in P, p_not_greater_of_threshold </param>
         /// <returns></returns>
@@ -781,7 +782,7 @@ namespace PrimesFinder
 
         /// <summary>
         /// Product 1 / (1-(1/p)^s)
-        /// 
+        ///
         /// where p in Primes
         /// s in Complex plane
         /// </summary>
@@ -832,10 +833,10 @@ namespace PrimesFinder
 
         /// <summary>
         /// Sum 1 / n^s
-        /// 
+        ///
         /// n in Naturals
         /// s in Complex plane
-        /// 
+        ///
         /// n^-s = exp( -s * ln(n) ).
         /// being s =: sigma + i*t  -> n^-s = exp( -sigma*ln(n) -i*t*ln(n) )
         /// exp(-sigma*ln(n)) * exp(-i*t*ln(n)) = exp(-sigma*ln(n)) * ( cos(-t ln(n)) +i*sin(-t ln(n)))
@@ -863,10 +864,10 @@ namespace PrimesFinder
 
         /// <summary>
         ///  1 / n^s
-        /// 
+        ///
         /// n in Naturals
         /// s in Complex plane
-        /// 
+        ///
         /// n^-s = exp( -s * ln(n) ).
         /// being s =: sigma + i*t  -> n^-s = exp( -sigma*ln(n) -i*t*ln(n) )
         /// exp(-sigma*ln(n)) * exp(-i*t*ln(n)) = exp(-sigma*ln(n)) * ( cos(-t ln(n)) +i*sin(-t ln(n)))
@@ -1004,7 +1005,7 @@ namespace PrimesFinder
             long theInfinPrimes;
             //
             long CumulatedOrdinalNotOverThreshold = this.GetCumulatedOrdinalNotOverThreshold(arg_intPart, out theInfinPrimes);
-            // don't; if (Math.Abs(arg - theInfinPrimes) < double.Epsilon); 
+            // don't; if (Math.Abs(arg - theInfinPrimes) < double.Epsilon);
             PrimeCardinality_untilArg = (double)CumulatedOrdinalNotOverThreshold;
             //
             return PrimeCardinality_untilArg;
@@ -1028,7 +1029,7 @@ namespace PrimesFinder
             {
                 NthRoot = Math.Pow(arg, 1.0 / c);
                 if (NthRoot < +2.0) { break; }
-                else 
+                else
                 {
                     theNthRoots.Add(NthRoot);
                     c++;
@@ -1085,7 +1086,7 @@ namespace PrimesFinder
             // NB. this is not yet a result, since Pi is still counted in the first place. So J is fed with a counted Pi(x). But then, by means of Moebius inversion,
             //     the Pi gets calculated on the J -which although was still tabulated on the counted Pi(x)-
             //     The crucial step by Riemann, will be to obtain J=J(Z(s)) by a Mellin transform of J(x), which gives 1/s*Log(Z(s))
-            //     and then, having J=J(Z(s)) there will be a fully calculated version of Pi(x)=Pi(J(Z(s)) where no more tabulated versions 
+            //     and then, having J=J(Z(s)) there will be a fully calculated version of Pi(x)=Pi(J(Z(s)) where no more tabulated versions
             //     of neither of Pi nor of J appear. The whole package is computed by means of Z-Analysis.
             //
             System.Collections.ArrayList theNthRoots = new System.Collections.ArrayList();
@@ -1120,3 +1121,4 @@ namespace PrimesFinder
 
 
 }// end nmsp
+*/

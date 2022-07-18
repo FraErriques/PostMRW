@@ -653,7 +653,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
     long MassimoMinoranti, MinimoMaggioranti;// NB. have to be signed.
     double DeltaTessutoProdotto;
     AsinglePointInStream beg, decoded, last;
-    long LandingPoint;
+    double requiredLandingPoint;
+    int target;
     long prevLandingPoint;
     long prevDecodedOrdinal;
     long leftBoundary = 0;
@@ -675,11 +676,11 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      // init
      if( ! wantInitialization)
      {
-         LandingPoint =  (long)( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *this->actualPrimaryFileLength;// NB. crucial ####
+         requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(this->actualPrimaryFileLength);// NB. crucial ####
      }
      else
      {
-         LandingPoint = initialization;
+         requiredLandingPoint = initialization;
      }
      prevLandingPoint = 0;//init; NB.do not trigger the booster, initializing=LandingPoint.
      prevDecodedOrdinal = 0;//init; NB.do not trigger the booster.
@@ -692,7 +693,8 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      for( ; requiredOrdinal!=decoded.Ordinal; acc++)
      {
          // here do: seekg #############
-         AsinglePointInStream test = this->readRecordAt( dumpReader, LandingPoint);
+         target = (int)requiredLandingPoint;
+         AsinglePointInStream test = this->readRecordAt( dumpReader, target);
          decoded.Ordinal = test.Ordinal;
          decoded.Prime = test.Prime;
          decoded.positionByte = test.positionByte;
@@ -721,23 +723,23 @@ unsigned long PrimesFinder::Primes::getLastPrime()
         leftBoundary = MassimoMinoranti;// keep memory of previous narrowings.
         rightBoundary = MinimoMaggioranti;// keep memory of previous narrowings.
         usefulPartOfDump_measure = rightBoundary - leftBoundary;
-        LandingPoint = (long)( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *this->actualPrimaryFileLength+leftBoundary;// NB. crucial ####
-        if(LandingPoint <0) {LandingPoint=0;}
-        if(LandingPoint >this->actualPrimaryFileLength ) {LandingPoint=this->actualPrimaryFileLength;}
-        if( LandingPoint==prevLandingPoint || decoded.Ordinal==prevDecodedOrdinal)
+        requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) *(double)(usefulPartOfDump_measure)+leftBoundary;// NB. crucial ####
+        if(requiredLandingPoint <0) {requiredLandingPoint=0;}
+        if(requiredLandingPoint >this->actualPrimaryFileLength ) {requiredLandingPoint=this->actualPrimaryFileLength;}
+        if( requiredLandingPoint==prevLandingPoint || decoded.Ordinal==prevDecodedOrdinal)
         {
             if( decoded.Ordinal<requiredOrdinal)
             {
-                LandingPoint+=this->tailRecordSize/2;// boost right.
+                requiredLandingPoint+=this->tailRecordSize*3;// boost right.
             }
             else if( decoded.Ordinal > requiredOrdinal)
             {
-                LandingPoint-=this->tailRecordSize/2;// boost left.
+                requiredLandingPoint-=this->tailRecordSize*3;// boost left.
             }// no other else, since if decoded.Ordinal == requiredOrdinal method already broken the "for".
         }// end prevLandingPoint analysis (i.e. booster).
-        if(LandingPoint <0) {LandingPoint=0;}
-        if(LandingPoint >this->actualPrimaryFileLength ) {LandingPoint=this->actualPrimaryFileLength;}
-        prevLandingPoint = LandingPoint;// anyway, log the current LandingPoint, for usage in the next step.
+        if(requiredLandingPoint <0) {requiredLandingPoint=0;}
+        if(requiredLandingPoint >this->actualPrimaryFileLength ) {requiredLandingPoint=this->actualPrimaryFileLength;}
+        prevLandingPoint = requiredLandingPoint;// anyway, log the current requiredLandingPoint, for usage in the next step.
         prevDecodedOrdinal = decoded.Ordinal;
      }// for
      //###
@@ -745,6 +747,130 @@ unsigned long PrimesFinder::Primes::getLastPrime()
      //ready.
      return acc;
  }// NpartSection
+
+
+ int PrimesFinder::Primes::currentOperatorSquare( const  long requiredOrdinal, const  long initialization, bool wantInitialization )
+ {
+    AsinglePointInStream beg, decoded, last;
+    this->feedDumpPath();
+    if( nullptr == this->theDumpPath)
+    {
+        return -1UL;// as an error code, since the correct response has to be >0.
+    }// else continue:
+    unsigned long requiredPrime;
+    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
+    this->getActualLength();//
+    long usefulPartOfDump_measure = this->actualPrimaryFileLength;// init. It will be updated bisecting.
+    long leftBoundary = 0;
+    long rightBoundary = this->actualPrimaryFileLength;
+    // start bisecting:
+    this->getLastCoupleInDefaultFile();// this call writes into members: {lastOrdinal, lastPrime}.
+    if( requiredOrdinal>this->lastOrdinal// NB. do NOT attempt reading after EOF, which throws.
+        || requiredOrdinal<=0 )
+    {
+        return -1UL;// as an error code, since the correct response has to be >0.
+    }// else continue:
+    double requiredLandingPoint = ( (double)requiredOrdinal / (double)(this->lastOrdinal) ) * usefulPartOfDump_measure;// NB. crucial ####
+    int target;
+    const int tokenSize = this->tailRecordSize;// globally defined.
+    char partialToken[tokenSize];
+    char secondToken[tokenSize];
+    unsigned long decodedOrdinal = -1UL;
+    //
+    int acc=0;// accumulator of steps, needed to converge.
+    for( ; requiredOrdinal!= decodedOrdinal; acc++)
+    {// loop della bisezione:
+        target = (int)(requiredLandingPoint);// find required %.
+         AsinglePointInStream test = this->readRecordAt( dumpReader, target);
+         decoded.Ordinal = test.Ordinal;
+         decoded.Prime = test.Prime;
+         decoded.positionByte = test.positionByte;
+
+
+        dumpReader.seekg( target, dumpReader.beg);// GOTO required %.##################################### crucial action #####
+
+        // first Token has to be thrown away, since it is likely to be truncated before the beginning, due to
+        // random access to seek(bisection); next record will be complete.
+        dumpReader.getline( partialToken, tokenSize, '\r' );
+        dumpReader.getline( secondToken, tokenSize, '\r' );// read the whole line, until newline.
+        if(0==target)//if the landing-point is the beginning of stream, then the useful token is the first one, since there's no previous one.
+        {// it's needed only when searching for the first record in the dump, since it has no previous record.
+            for( int c=0; c<tokenSize; c++)
+            {// mustSwapTokens
+                secondToken[c] = partialToken[c];
+            }// mustSwapTokens
+        }// no else; when searching for records different from the absolute first, there's no need for this swap.
+        int partialToken_Length = strlen_loc( partialToken);
+        int secondToken_Length = strlen_loc( secondToken);
+        int totalReadTokenLength = partialToken_Length+secondToken_Length+2;// +the two '\r' that are descarded.
+        /* in case of need to Debug the stream seeking.
+        //## functions to check state flags:
+        bool isGood = dumpReader.good();
+        bool isEOF = dumpReader.eof();
+        bool isFailure = dumpReader.fail();
+        bool isBad = dumpReader.bad();
+        bool isRdState = dumpReader.rdstate();
+        if( !isGood
+            ||isEOF
+            ||isFailure
+            ||isBad
+            ||isRdState )
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }// else continue:
+        //## end: functions to check state flags.
+        */
+        char cStringDivisorSequence[2];
+        cStringDivisorSequence[0] = '_';
+        cStringDivisorSequence[1] = 0;
+        std::vector<std::string> * splittedTokens = Common::StrManipul::stringSplit( cStringDivisorSequence, secondToken, true);
+        int hmFoundToken = splittedTokens->size();
+        const char * decodedOrdinal_str = nullptr;
+        const char * decodedPrime_str = nullptr;
+        if(2<=hmFoundToken)// at least ordinal_prime ,i.e. 2 token.
+        {
+            decodedOrdinal_str = (*splittedTokens)[0].c_str();
+            decodedPrime_str = (*splittedTokens)[1].c_str();
+        }
+        else
+        {// TODO: evaluate a throw, due to inconsistent dumpIntegralFile.
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }
+        // TODO : manage exception on parsing.
+        decodedOrdinal = Common::StrManipul::stringToUnsignedLong( decodedOrdinal_str);// TODO : manage exception on parsing. test:
+        if( decodedOrdinal>this->lastOrdinal)
+        {
+            return -1UL;// as an error code, since the correct response has to be >0.
+        }
+        long presentPosition = dumpReader.tellg();//#### NB. ####
+        if( decodedOrdinal<requiredOrdinal)// #### landingPoint evaluation #####
+        {// bisection forward : right leaf
+            leftBoundary = presentPosition;
+            rightBoundary = this->actualPrimaryFileLength;
+        }
+        else if( decodedOrdinal > requiredOrdinal)
+        {// bisection backward : left leaf
+            leftBoundary = 0;
+            rightBoundary = presentPosition-totalReadTokenLength;
+        }
+        else// i.e.  decodedOrdinal == requiredOrdinal
+        {
+            requiredPrime =  Common::StrManipul::stringToUnsignedLong( decodedPrime_str);
+            break;
+        }
+        // common factors:
+        usefulPartOfDump_measure = rightBoundary - leftBoundary;
+        requiredLandingPoint = ( (double)requiredOrdinal / (double)decodedOrdinal ) * usefulPartOfDump_measure;
+        // clanup:
+        delete splittedTokens;
+        //delete decodedOrdinal_str;//NB. already deleted, as parts of splittedTokens.
+        //delete decodedPrime_str;
+    }// loop della bisezione.
+    // ready.
+    dumpReader.close();// TODO evaluate if leave open for ReadRange()
+    return acc;// steps to converge
+ }//currentOperatorSquare(
+
 
 
  // suggestions for bug-fixing on index[1]

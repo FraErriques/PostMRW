@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,11 +11,11 @@ namespace PrimesFinder
     public static class ElementFullCalculation
     {
 
- 
+
         /// <summary>
         /// This method is homologous of Primes::CoreLoop(), but it's static since there is no need of any
         /// instance variables. So no Process is needed to instantiate; interface can call here directly.
-        /// This is due to the fact that it does not interact with the integral file dump.txt. It does only punctual 
+        /// This is due to the fact that it does not interact with the integral file dump.txt. It does only punctual
         /// evaluation of an isolated natural number. Integral functions such as Pi(n) and J(n) need to use the integral file
         /// and so an instance of the class is necessary.
         /// </summary>
@@ -23,7 +24,7 @@ namespace PrimesFinder
         /// <param name="DiophantineQuotient">output</param>
         /// <returns></returns>
         public static bool ElementFullEvaluation(
-            Int64 ToBeDivided, 
+            Int64 ToBeDivided,
             out Int64 LastCandidateDivider,
             out Int64 DiophantineQuotient
             )
@@ -180,7 +181,7 @@ namespace PrimesFinder
             long factorAccumulator = 1;// I need it already initialized.
             long currentMultiplicity = 0;// I need it already initialized.
             System.Collections.ArrayList factorLager = new System.Collections.ArrayList();
-            factorLager.Add(new omegaCouple(currentPrime, +1));// init 
+            factorLager.Add(new omegaCouple(currentPrime, +1));// init
             //
             for (int c = 0; c < factors.Count; c++)
             {
@@ -503,3 +504,4 @@ namespace PrimesFinder
 
 
 }// end nmsp.
+*/
