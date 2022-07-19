@@ -18,6 +18,7 @@ class MapOperation
     MapOperation();// Ctor
     ~MapOperation();// Dtor
     void readFileByLines(std::string &where);
+    bool prune_RecordLayout( std::vector<std::string> * tokenizedLine);
     void mapTraverseForward();
     void mapTraverseReverse();
     void mapNodeDestructorCaller();

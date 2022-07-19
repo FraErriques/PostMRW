@@ -97,7 +97,7 @@ Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius
 Numerics::Complex * imageStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s, int curStep)
 {// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
     int stepCardinality = +2.0*PI/stepSize;
-    double Theta =0.0; 
+    double Theta =0.0;
     Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
     Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
     Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
@@ -123,11 +123,11 @@ int main()
     //--dump on txtFile ----------------------------
 	std::string thePath("./out20220219_.txt");// TODO read with Java and push to PostgreSql.
 	std::fstream theStream;
-	bool result = Common::Stream::outstreamOpener( thePath , theStream );    
+	bool result = Common::Stream::outstreamOpener( thePath , theStream );
     std::string * curField = nullptr;
-    
-    
-    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here). 
+
+
+    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here).
     Numerics::Complex * imagePoint = nullptr;
     for(int curStep=0; curStep<stepCardinality; curStep++)
 >>>>>>> refs/remotes/origin/master
@@ -176,7 +176,7 @@ int main()
         delete imagePoint;
     }
     result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
-    
+
 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
@@ -185,10 +185,6 @@ int main()
 }// main
 
 
-
-
-
-/* --------------cantina----------------------------
     double radius = +3.7123E+01;
     double stepSize = +2.0*PI/900.0;
 =======
@@ -305,7 +301,7 @@ int main()
 //    Numerics::Complex *z = new Numerics::Complex(1, 3);
 //    Numerics::Complex icoChain( IcoChain( s, *z) );
 //    delete z;
- 
+
 //    Numerics::Complex z(+3.1 , 5.2);
 //    for( int n=0; n<6; n++)
 //    {
@@ -349,8 +345,6 @@ int main()
 }// main
 
 
-
-/* --------------cantina----------------------------
 >>>>>>> refs/remotes/origin/master
 >>>>>>> refs/remotes/origin/master
 

@@ -32,15 +32,12 @@ void Common::Dictionary::MapOperation::readFileByLines( std::string &where)
             if(testFile.eof()){break;}
             const std::string tokenToSplitOn("\t");
             std::vector<std::string> * tokenizedLine = Common::StrManipul::stringSplit( tokenToSplitOn, curr_data, false );
-            PhoneBookRecord * curRecord = new PhoneBookRecord(
-                        (*tokenizedLine)[1],
-                        (*tokenizedLine)[2],
-                        (*tokenizedLine)[4],
-                        (*tokenizedLine)[5]
-                                      );
-            // push the read line in a struct and then in the map
-            (*dictionary).operator[]((*tokenizedLine)[1])=curRecord;
-            // DBG  (*dictionary).operator[]((*tokenizedLine)[1])->internalPrint();
+            // call insertion prune-filter
+            bool hasBeenAcceptedForInsertion = prune_RecordLayout( tokenizedLine);
+            if( ! hasBeenAcceptedForInsertion)
+            {
+                std::cout<<"\n\t Record pruned due to inadequacy : "<<curr_data<<"\n\n";
+            }// else was correctly inserted.
             // cleanup
             delete tokenizedLine;
         }
@@ -52,6 +49,29 @@ void Common::Dictionary::MapOperation::readFileByLines( std::string &where)
     }
     //ready
 }// readFileByLines
+
+
+
+bool Common::Dictionary::MapOperation::prune_RecordLayout( std::vector<std::string> * tokenizedLine)
+{// NB. put here REcordLayout knowledge about field position and content;
+    bool res = false;// init to invalid
+    if(+1)// NB. put here REcordLayout knowledge about field position and content;
+    {
+        PhoneBookRecord * curRecord = new PhoneBookRecord(
+                (*tokenizedLine)[1],
+                (*tokenizedLine)[2],
+                (*tokenizedLine)[4],
+                (*tokenizedLine)[5]
+                              );
+        // NB. add here pruning concept, like notNULLABLE fields check.
+        // push the read line in a node-class and then in the map
+        (*dictionary).operator[]((*tokenizedLine)[1])=curRecord;
+        // DBG  (*dictionary).operator[]((*tokenizedLine)[1])->internalPrint();
+        res = true;
+    }// if pruning evaluation passed; else prune record and return false.
+    // ready
+    return res;
+}// prune_RecordLayout
 
 
 
