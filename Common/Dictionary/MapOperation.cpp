@@ -137,7 +137,7 @@ void Common::Dictionary::MapOperation::mapNodeDestructorCaller()
              bkwd++
         )
         {
-            std::cout<<"\tcallig Dtor of node : "<< bkwd->first << "\t";
+            // DBG std::cout<<"\tcallig Dtor of node : "<< bkwd->first << "\t";
             if(nullptr!= bkwd->second)
             {// second has its content
                 delete bkwd->second;// pair' second Dtor
@@ -156,16 +156,17 @@ void Common::Dictionary::MapOperation::mapNodeDestructorCaller()
 
 void Common::Dictionary::MapOperation::mapListener()
 {
-    std::string requiredRecord;
+    std::string requiredRecord("init");
     for(;;)
     {
+        std::cout<<"Enter Required Map-key: ";
         std::getline(std::cin, requiredRecord);
         if(requiredRecord=="Exit loop")
         {
             std::cout<< "Good bye !";
             break;
-        }
-        std::cout<<" required record  "<< requiredRecord;
+        }// else continue.
+        std::cout<<"\n\t required record:  "<< requiredRecord;
         nodeFinder( requiredRecord);
     }
 }
