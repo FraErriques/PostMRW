@@ -19,12 +19,12 @@ void Common::Dictionary::MapOperation::readFileByLines( std::string &where)
 {
     std::fstream testFile;
     std::string curr_data;
-    std::cout<<"\n\t Stream to be opened: "<<where.c_str()<<std::endl;
+    // DBG std::cout<<"\n\t Stream to be opened: "<<where.c_str()<<std::endl;
     // Open for read : Input
 	testFile.open( where.c_str(), std::ios::in );
     if (testFile.is_open())
     {
-        std::cout<<"\n\t the Stream is open: "<<where.c_str()<<std::endl;
+        // DBG std::cout<<"\n\t the Stream is open: "<<where.c_str()<<std::endl;
         this->dictionary = new std::map<std::string, PhoneBookRecord * >();// init,since file is open.
         while (!testFile.eof())
         {
@@ -79,6 +79,7 @@ void Common::Dictionary::MapOperation::mapTraverseForward()
 {
     if( nullptr!=this->dictionary)
     {
+        std::cout<<"\n\n\t The map size is \t"<<this->dictionary->size()<<"\n";
         for( std::map<std::string, PhoneBookRecord * >::iterator fwd=this->dictionary->begin();
              fwd != this->dictionary->end();
              fwd++
@@ -160,28 +161,41 @@ void Common::Dictionary::MapOperation::mapListener()
     std::string requiredRecord("init");
     for(;;)
     {
-        std::cout<<"Enter Required Map-key: ";
+        std::cout<<"\n\t Enter FFWD to Traverse Forward the Map";
+        std::cout<<"\n\t Enter BKWD to Traverse Backward the Map";
+        std::cout<<"\n\t Enter Required Map-key: ";
+        std::cout<<"\n\t Enter \"Exit loop\" to abandon the application\n\n\t";
         std::getline(std::cin, requiredRecord);
         if(requiredRecord=="Exit loop")
         {
-            std::cout<< "Good bye !";
+            std::cout<< "\n\n\t Good bye !";
             break;
         }// else continue.
-        std::cout<<"\n\t required record:  "<< requiredRecord;
-        nodeFinder( requiredRecord);
-    }
-}
+        else if("FFWD"==requiredRecord)
+        {
+            this->mapTraverseForward();
+        }
+        else if("BKWD"==requiredRecord)
+        {
+            this->mapTraverseReverse();
+        }
+        else
+        {
+            // DBG std::cout<<"\n\t required record:  "<< requiredRecord;
+            nodeFinder( requiredRecord);
+        }
+    }//for
+}// Listener
 
 
 void Common::Dictionary::MapOperation::nodeFinder( std::string requiredkey)
 {
     if( nullptr!=this->dictionary)
     {
-        if(+1==(*dictionary).count( requiredkey))
-        //if(nullptr!=(*dictionary).operator[]( requiredkey)) DON'T :this inserts a new pair.
-        {
-            (*dictionary).at( requiredkey)->internalPrint();
-            //(*dictionary).operator[]( requiredkey)->internalPrint();
+        if(+1==(*dictionary).count( requiredkey))// which means te key is present
+        {//if(nullptr!=(*dictionary).operator[]( requiredkey)) DON'T :this inserts a new pair.
+            (*dictionary).at( requiredkey)->internalPrint();//NB. right way to search the value of a key.
+            //(*dictionary).operator[]( requiredkey)->internalPrint(); do NOT use operator[] ,which is a writer.
         }// else skip, since the required key is absent in the map.
         else
         {

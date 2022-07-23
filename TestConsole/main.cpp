@@ -21,15 +21,9 @@ int main()
     std::string phoneBookStreamPath("./interni_IT_.txt");
     Common::Dictionary::MapOperation * phoneMap = new Common::Dictionary::MapOperation();
     phoneMap->readFileByLines( phoneBookStreamPath);
-//    mapTraverseForward();
-    phoneMap->mapTraverseReverse( );
     phoneMap->mapListener( );
-    phoneMap->mapTraverseReverse( );
     // garbage collect
     delete phoneMap;
-
-
-    //
 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
