@@ -106,6 +106,7 @@ void Common::Dictionary::MapOperation::mapTraverseReverse()
 {
     if( nullptr!=this->dictionary)
     {
+        std::cout<<"\n\n\t The map size is \t"<<this->dictionary->size()<<"\n";
         for( std::map<std::string, PhoneBookRecord * >::reverse_iterator bkwd=this->dictionary->rbegin();
              bkwd != this->dictionary->rend();
              bkwd++
@@ -179,7 +180,8 @@ void Common::Dictionary::MapOperation::nodeFinder( std::string requiredkey)
         if(+1==(*dictionary).count( requiredkey))
         //if(nullptr!=(*dictionary).operator[]( requiredkey)) DON'T :this inserts a new pair.
         {
-            (*dictionary).operator[]( requiredkey)->internalPrint();
+            (*dictionary).at( requiredkey)->internalPrint();
+            //(*dictionary).operator[]( requiredkey)->internalPrint();
         }// else skip, since the required key is absent in the map.
         else
         {

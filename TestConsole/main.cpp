@@ -21,15 +21,14 @@ int main()
     std::string phoneBookStreamPath("./interni_IT_.txt");
     Common::Dictionary::MapOperation * phoneMap = new Common::Dictionary::MapOperation();
     phoneMap->readFileByLines( phoneBookStreamPath);
-//    mapListener( dataAcquisitionResult, "Erriques");
-//    mapListener( dataAcquisitionResult, "fake");
-//    mapTraverseForward( dataAcquisitionResult);
-//    mapTraverseReverse( dataAcquisitionResult);
+//    mapTraverseForward();
+    phoneMap->mapTraverseReverse( );
     phoneMap->mapListener( );
-    delete phoneMap;
+    phoneMap->mapTraverseReverse( );
     // garbage collect
-    //phoneMap.mapNodeDestructorCaller( dataAcquisitionResult);
-    //delete dataAcquisitionResult;
+    delete phoneMap;
+
+
     //
 
     //
