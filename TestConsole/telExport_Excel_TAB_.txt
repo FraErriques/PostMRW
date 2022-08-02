@@ -1,0 +1,193 @@
+416	Robert	Abfalterer	robert.abfalterer@bbt-se.com	+43 512 4030	544	+43 664 8216709	BT	Innsbruck	BBT-AT	Robert Abfalterer.jpg	AbRo
+383	Stefan	Ahrer	stefan.ahrer@bbt-se.com	+43 512 4030		+43 664 8422018	BA_Ö	Wolf	BBT-AT	Ahrer_Stefan.jpg	AhSt
+129	Thomas	Albarello	thomas.albarello@bbt-se.com	+39 0471 062	244	+39 328 014 7156	PE	Bolzano	BBT-IT	Albarello Thomas.JPG	AlTh
+19	Daniel	Alfreider	daniel.alfreider@bbt-se.com	+39 0471 062	241	+39 3311727731	PL	Fortezza	BBT-IT	Daniel Alfreider.jpg	AlDa
+346	Andreas	Ambrosi	andreas.ambrosi@bbt-se.com	+43 512 4030	545	+43 664 8216728	PI	Innsbruck	BBT-AT	Andreas Ambrosi.jpg	AmAn
+412	Rosella Maria Grazia	Audino	Rosella.Audino@bbt-se.com	+39 0471 062	288		BA_I	Fortezza	BBT-IT	Audino Rosella Maria Grazia.png	AuRo
+56	Ugo	Bacchiega	ugo.bacchiega@bbt-se.com	+39 0471 062	240	+39 320 478 3015	BA_I	Bolzano	BBT-IT	Bacchiega Ugo.JPG	BaUg
+474	Cristina	Baldini	cristina.baldini@bbt-se.com	+39 0471 062	289	+39 3386585644	BC	Fortezza	BBT-IT	Baldini Cristina.png	BaCr
+57	Andrea	Barbari	andrea.barbari@bbt-se.com	+39 0471 062	225 (BZ) / 238 (FZ)	+39 320 478 3007		Fortezza	BBT-IT	Barbari Andrea.JPG	BaAn
+287	Emanuele	Barnabei	emanuele.barnabei@bbt-se.com	+39 0471 062	296	+39 3358458861	BA_I	Mauls	BBT-IT	Barnabei Emanuele.JPG	BaEm
+358	Arturo	Barovero	arturo.barovero@bbt-se.com	+39 0471 062	241	+39 3346099380	BA_I	Mauls	BBT-IT	Arturo Barovero.jpg	BaAr
+268	Esther Maria	Bartel	esther.bartel@bbt-se.com	+43 512 4030		+43 664 8216716	BA_Ö	Wolf	BBT-AT	Esther Bartel - 2014 10 24.jpg	BaEs
+429	Alessandro	Bellante	alessandro.bellante@bbt-se.com	+39 0471 062	282	+39 338 5071287	PE	Bolzano	BBT-IT	Bellante Alessandro.jpg	BeAe
+326	Alessandro	Benucci	alessandro.benucci@bbt-se.com	+39 0471 062	203	+39 3666164614	BA_I	Mauls	BBT-IT	Benucci Alessandro.JPG	BeAl
+374	Jean-Pierre	Binetruy	Jean-Pierre.Binetruy@bbt-se.com	+43 512 4030		+43 664 8422023	BA_Ö	Wolf	BBT-AT	Jean-Pierre_BINETRUY.jpg	BiJe
+435	Ivan	Boccolari	ivan.boccolari@bbt-se.com	+43 512 4030		+43 664 8422042	BA_Ö	Wolf	BBT-AT	Ivan Boccolari.jpg	BoIv
+302	Filippo	Bonasso	filippo.bonasso@bbt-se.com	+39 0471 062	217	+39 3371102803	VW	Bolzano	BBT-IT	Bonasso Filippo.JPG	BoFi
+407	Alessandro	Bonazza	alessandro.bonazza@bbt-se.com	+39 0471 062	253		CO	Bolzano	BBT-IT	Bonazza Alessandro.JPG	BoAl
+341	Stefan	Boscheri	stefan.boscheri@bbt-se.com	+43 512 4030		+43 664 8216705	BT	Innsbruck	BBT-AT	Boscheri Stefan.jpg	BoSt
+516	Matthias	Brandt	matthias.brandt@bbt-se.com	+43 512 4030		+43 664 8422048	VO	Innsbruck	BBT-AT	Brandt Matthias.jpg	BrMa
+20	Ulrich	Burger	ulrich.burger@bbt-se.com	+43 512 4030	510	+43 664 8216719	PL	Innsbruck	BBT-AT	Burger Ulrich.jpg	BuUl
+232	Simone	Cappelletto	simone.cappelletto@bbt-se.com	+39 0471 062	279	+39 3669002815	BA_I	Fortezza	BBT-IT	Cappelletto Simone.JPG	CaSi
+456	Gilberto	Cardola	gilberto.cardola@bbt-se.com	+39 0471 062	276	+39 335 5230409	VO	Bolzano	BBT-IT	DSC_2830 (1).jpg	GiCa
+495	Maurizio	Catapano	maurizio.catapano@bbt-se.com	+39 0471 062	302		BA_I	Mauls	BBT-IT	Catapano Maurizio.jpg	CaMa
+411	Andrea Mariano	Cavolo	Mariano.Cavolo@bbt-se.com	+39 0471 062	247	+39 331 695 3322	BA_I	Fortezza	BBT-IT	Cavolo Mariano Andrea.png	CaAn
+44	Mara	Collizzolli	mara.collizzolli@bbt-se.com	+43 512 4030	520	+43 664 88660530	VO	Innsbruck	BBT-AT	Collizolli Mara.jpg	CoMa
+243	Tobias	Cordes	tobias.cordes@bbt-se.com	+43 512 4030	315	+43 664 8216714	PL	Sillschlucht	BBT-AT	Cordes.jpg	CoTo
+122	Alex	Corradini	alex.corradini@bbt-se.com	+39 0471 062	255	+39 3316307449	DÜ	Bolzano	BBT-IT	Corradini Alex.JPG	CoAl
+530	Sara	Cristalli	sara.cristalli@bbt-se.com	+39 0471 062	234		BA_I	Mauls	BBT-IT	Cristalli Sara.jpg	CrSa
+525	Alessio	Cuel	alessio.cuel@bbt-se.com	+39 0471 062	228		PI	Bolzano	BBT-IT	Cuel Alessio.JPG	CuAl
+360	Oliver	de Jager-Janisch	oliver.dejager@bbt-se.com	+43 512 4030		+43 664 8216717	BA_Ö	Wolf	BBT-AT	Oliver_de JAGER-JANISCH_15011986.jpg	JaOl
+372	Jérémie	Dejean de la Bâtie	Jeremie.DejeandelaBatie@bbt-se.com	+43 512 4030			BA_Ö	Wolf	BBT-AT	Jérémie Dejean de la Bâtie.jpg	DeJe
+61	Rosalia	Di Bella	Rosalia.DiBella@bbt-se.com	+39 0471 062	233	+39 3204783012	BC	Bolzano	BBT-IT	Di Bella Rosalia.JPG	DiRo
+491	Daniele	Di Maria	daniele.dimaria@bbt-se.com	+39 0471 062		+39 3371421725	BA_I	Fortezza	BBT-IT	Di Maria Daniele.jpeg	DiDa
+534	Ingrid	Döller	ingrid.doeller@bbt-se.com	+43 512 4030		+43 664 8422019	RE	Innsbruck	BBT-AT		DöIn
+22	Walter	Eckbauer	walter.eckbauer@bbt-se.com	+43 512 4030	380	+43 664 8216733	PL	Sillschlucht	BBT-AT	Eckbauer Walter.jpg	EcWa
+174	Harald	Egger	harald.egger@bbt-se.com	+39 0471 062	261	+39 3351252394	BA_I	Fortezza	BBT-IT	Egger Harald.jpg	EgHa
+62	Daniela	Eisenstecken	daniela.eisenstecken@bbt-se.com	+39 0471 062	224	+39 320 478 3011	SE	Bolzano	BBT-IT	Eisenstecken Daniela.JPG	EiDa
+397	Tolga	Erbas	tolga.erbas@bbt-se.com	+43 512 4030			VW	Innsbruck	BBT-AT		ErTo
+63	Francesco	Erriques	francesco.erriques@bbt-se.com	+39 0471 062	273	+39 3316342823	VW	Bolzano	BBT-IT	Erriques Francesco.JPG	ErFr
+271	Giulia	Fabrizi	giulia.fabrizi@bbt-se.com	+43 512 4030	562		DÜ	Innsbruck	BBT-AT	Giulia FABRIZI - 2014 10 21.JPG	FaGi
+269	Manfredi	Fedele di Catrano	manfredi.fedeledicatrano@bbt-se.com	+39 0471 062	208	+39 3667578215	BC	Bolzano	BBT-IT	Fedele di Catrano Manfredi.JPG	FeMa
+70	Alessandro	Ferrari	alessandro.ferrari@bbt-se.com	+39 0471 062	280	+39 3351960460	PL	Bolzano	BBT-IT	Ferrari Alessandro.JPG	FeAl
+64	Rinaldo	Ferrario	rinaldo.ferrario@bbt-se.com	+39 0471 062	274	+39 3371261152	FI	Bolzano	BBT-IT	Ferrario Rinaldo.JPG	FeRi
+188	Amelie	Fidler	amelie.fidler@bbt-se.com	+43 512 4030	402	+43 664 8422003	SE	Wolf	BBT-AT	Amelie Fidler.jpg	FiAm
+23	Patrizia	Fink-Ekmark	patrizia.fink@bbt-se.com	+43 512 4030	200	+43 664 8216722	RE	Innsbruck	BBT-AT	Fink-Ekmark Patrizia.jpg	FiPa
+300	Claudio	Floretta	claudio.floretta@bbt-se.com	+39 0471 062	205	+39 3316143179	VO	Bolzano	BBT-IT	Floretta Claudio.JPG	FlCl
+355	Giuseppe Marco	Foderà	giuseppe.fodera@bbt-se.com	+39 0471 062	259	+39 3665687997	BA_I	Mauls	BBT-IT	Foderá Giuseppe Marco.JPG	FdMa
+65	Marco	Fornari	marco.fornari@bbt-se.com	+39 0471 062	215	+39 320 478 3016	BA_I	Mauls	BBT-IT	Fornari Marco.JPG	FoMa
+145	Caterina	Framba	caterina.framba@bbt-se.com	+39 0471 062	271		SE	Bolzano	BBT-IT	Framba Caterina.JPG	FrCa
+66	Sandro	Francesconi	sandro.francesconi@bbt-se.com	+39 0471 062	277	+39 331 664 3571	VW	Bolzano	BBT-IT	Francesconi Sandro.JPG	FrSa
+484	Laura	Frascarelli	laura.frascarelli@bbt-se.com	+39 0471 062	334	+39 3371094065	DÜ	Bolzano	BBT-IT	Frascarelli Laura.png	FrLa
+267	Stefan	Freimüller	stefan.freimueller@bbt-se.com	+43 512 4030			BA_Ö	Wolf	BBT-AT	Stefan Freimüller - 2014 10 27.jpg	FrSt
+489	Francesco	Gallo	Francesco.Gallo@bbt-se.com	+39 0471 062	272	+39 334 691 3826	BA_I	Fortezza	BBT-IT	Gallo Francesco.jpg	FrGa
+322	Aurelio	Gallotto	aurelio.gallotto@bbt-se.com	+39 0471 062	242	+39 3316964809	BA_I	Fortezza	BBT-IT	Gallotto Aurelio.JPG	GaAu
+74	Thomas	Gangkofner	thomas.gangkofner@bbt-se.com	+43 512 4030	735	+43 664 8216735	PL	Sillschlucht	BBT-AT	Gankofner Thomas.jpg	GaTh
+139	Christiane	Gappmaier	christiane.gappmaier@bbt-se.com	+43 512 4030	810		PI	Innsbruck	BBT-AT	Gappmaier neu.jpg	GaCh
+514	Michael	Gasser	michael.gasser@bbt-se.com	+39 0471 062	285	+39 3386917529	EDV	Bolzano	BBT-IT	Gasser Michael.jpg	GaMi
+526	Alberto	Geat	alberto.geat@bbt-se.com	+39 0471 062	297		DÜ	Bolzano	BBT-IT	Geat Alberto.png	GeAl
+278	Veronika	Geißler-Klebinder	veronika.geissler-klebinder@bbt-se.com	+43 512 4030	202		BA_Ö	Ahrental-Zenzenhof	BBT-AT	Veronika Geißler-Klebinder - klein - 2014 10 22.jpg	GeVe
+359	Robert	Glatzl	robert.glatzl@bbt-se.com	+43 512 4030		+43 664 8216736	BT	Innsbruck	BBT-AT	Glatzl Robert.jpg	GlRo
+24	Herbert	Gögele	herbert.goegele@bbt-se.com	+43 512 4030	700	+43 664 8216720	EDV	Innsbruck	BBT-AT	Goegele-Herbert.gif	GoHe
+436	Christian	Gögele	christian.goegele@bbt-se.com	+43 512 4030			BA_Ö	Wolf	BBT-AT	Christian Gögele.jpg	GöCh
+504	Valentina	Goldin	valentina.goldin@bbt-se.com	+43 512 4030	563		DÜ	Innsbruck	BBT-AT		GoVa
+134	Andreas	Goller	andreas.goller@bbt-se.com	+43 512 4030	500	+43 664 8422014	BA_Ö	Wolf	BBT-AT	Goller Andreas.JPG	GoAn
+490	Sabine	Grabner	sabine.grabner@bbt-se.com	+43 512 4030	535	+43 664 8422001	VO	Innsbruck	BBT-AT		GrSa
+455	Martin	Gradnitzer	martin.gradnitzer@bbt-se.com	+43 512 4030	100		VO	Innsbruck	BBT-AT	Martin Gradnitzer.jpg	MaGr
+337	Marion	Graus	marion.graus@bbt-se.com	+43 512 4030	555	+43 664 8216749	VO	Innsbruck	BBT-AT	Graus Marion.jpg	GrMa
+75	Nikola	Greier	nikola.greier@bbt-se.com				DÜ	Heimarbeit	BBT-AT	Greier_neu.jpg	GrNi
+524	Ina	Gremi	ina.gremi@bbt-se.com	+39 0471 062	287		VO	Bolzano	BBT-IT	Gremi Ina.jpg	GrIn
+453	Manfred	Griesenauer	Manfred. Griesenauer@bbt-se.com	05124030		+43 664 88660524	VW	Sillschlucht	BBT-AT	Manfred Griesenauer.jpg	GrMn
+402	Julia	Gruber	julia.gruber@bbt-se.com	+39 0471 062	283	+39 3316800248	PI	Bolzano	BBT-IT	Gruber.jpg	GrJu
+76	Mario	Guadagnini	mario.guadagnini@bbt-se.com	+39 0471 062	249	+39 366 5838267	BA_I	Mauls	BBT-IT	Guadagnini Mario.JPG	GuMa
+369	Bruno	Haunschmid	bruno.haunschmid@bbt-se.com	+43 512 4030			BA_Ö	Wolf	BBT-AT	Bruno Haunschmid.jpg	HaBr
+28	Verena	Heiss	Verena.Heiss@bbt-se.com	+43 512 4030	561		DÜ	Innsbruck	BBT-AT	Koch Verena.jpg	HeVe
+418	Markus	Heiß	markus.heiss@bbt-se.com	+43 512 4030	732	+43 664 8422011	BE	Innsbruck	BBT-AT	Markus_Heiss.jpg	HeMa
+49	Ulrike	Hofmann	ulrike.hofmann@bbt-se.com	+43 512 4030		+43 664 8216712	BA_Ö	Wolf	BBT-AT	Hofmann Ulrike.jpg	HoUl
+263	Matthias	Hofmann	matthias.hofmann@bbt-se.com	+43 512 4030	306	+43 664 8216744	BA_Ö	Wolf	BBT-AT	Matthias Hofmann.jpg	HoMa
+150	Michele	Ianeselli	michele.ianeselli@bbt-se.com	+39 0471 062	229	+39 3385384196	BA_I	Fortezza	BBT-IT	Ianeselli Michele.JPG	IaMi
+135	Romedius	Insam	romed.insam@bbt-se.com	+43 512 4030	350	+43 664 8216704	BA_Ö	Ahrental-Zenzenhof	BBT-AT	Insam_Romed.JPG	InRo
+492	Stefan	Iusco	Stefan.Gabriel.Iusco@bbt-se.com	+39 0471 062	243	+39 3667658819	VW	Bolzano	BBT-IT	Iusco Stefan Gabriel.JPEG	IuSt
+149	Notburga	Kapferer	notburga.kapferer@bbt-se.com	+43 512 4030	570		BA_Ö	Ahrental-Zenzenhof	BBT-AT	Kapferer Notburga.JPG	KaNo
+160	Martin	Keinprecht	martin.keinprecht@bbt-se.com	+43 512 4030	450	+43 664 88660526	BA_Ö	Sillschlucht	BBT-AT	Keinprecht Martin.jpg	KeMa
+50	Eva	Kiechl-Kaim	eva.kiechl@bbt-se.com	+43 512 4030	730	+43 664 8216726	BA_Ö	Sillschlucht	BBT-AT	Kiechl Eva.jpg	KiEv
+205	Michael	Knapp	michael.knapp@bbt-se.com	+43 512 4030	355	+43 664 8216700	BA_Ö	Wolf	BBT-AT	Knapp Michael low res.jpg	KnMi
+166	Lars	Knappstein	lars.knappstein@bbt-se.com	+43 512 4030		+43 664 88660535	BA_Ö	Sillschlucht	BBT-AT	Knappstein Lars.jpg	KnLa
+312	Barbara	Koch	barbara.koch@bbt-se.com	+43 512 4030	740	+43 664 8216740	BA_Ö	Innsbruck	BBT-AT	Eberharter Barbara.jpg	KoBa
+27	Corinna	Koch-Traar	corinna.koch@bbt-se.com				DÜ	Heimarbeit	BBT-AT	Koch-Traar Corinna.JPG	KoCo
+29	Heimo	Krassnitzer	heimo.krassnitzer@bbt-se.com	+43 512 4030	320	+43 664 8216715	BC	Innsbruck	BBT-AT	Krassnitzer Heimo.jpg	KrHe
+532	Eva-Maria	Kronast	eva-maria.kronast@bbt-se.com	+43 512 4030	104	+43 664 8216748	VO	Innsbruck	BBT-AT	Kronast Eva-Maria.jpg	KrEv
+422	Carolina	Kunstetter-Frauche	carolina.kunstetter-frauche@bbt-se.com	+43 512 4030		+43 664 8422020	BA_Ö	Sillschlucht	BBT-AT	Carolina_Kunstetter-Frauche.jpg	KuCa
+266	Manfred	Lackner	manfred.lackner@bbt-se.com	+43 512 4030		+43 664 8216721	BA_Ö	Wolf	BBT-AT	Lackner-Manfred.jpg	LaMa
+148	Heidemarie	Lampl	heidemarie.lampl@bbt-se.com	+43 512 4030		+43 664 88660522	BA_Ö	Wolf	BBT-AT	Lampl Heidemarie.jpg	LaHe
+296	Matteo	Lanconelli	matteo.lanconelli@bbt-se.com	+39 0471 062	265	+39 3387218603	BA_I	Mauls	BBT-IT	Lanconelli Matteo.JPG	LaMa
+250	Florian	Lehner	florian.lehner@bbt-se.com	+43 512 4030		+43 664 88660534	PL	Innsbruck	BBT-AT	Florian_LEHNER.JPG	LeFl
+459	Dietmar	Lerchbaumer	dietmar.lerchbaumer@bbt-se.com	+43 512 4030		+43 664 8422041	BA_Ö	Wolf	BBT-AT		LeDi
+465	Gianluca	Liuzzi	Gianluca.Liuzzi@bbt-se.com	+39 0471 062		+39 3346618064	BA_I	Fortezza	BBT-IT	Liuzzi Gianluca.JPG	LiGi
+330	Marco	Loffredo	marco.loffredo@bbt-se.com	+39 0471 062	232	+39 3371134676	BA_I	Fortezza	BBT-IT	Loffredo Marco.JPG	LoMa
+78	Angelo	Lombardi	angelo.lombardi@bbt-se.com	+39 0471 062	222	+39 320 478 3004	BA_I	Fortezza	BBT-IT	Lombardi Angelo.JPG	LoAn
+30	Andrea	Lussu	andrea.lussu@bbt-se.com	+43 512 4030	370	+43 664 8216734	BA_Ö	Ahrental-Zenzenhof	BBT-AT	Lussu Andrea.jpg	LuAn
+466	Gianluca	Maggio	Gianluca.Maggio@bbt-se.com	+39 0471 062	293	+39 3316329884	BA_I	Fortezza	BBT-IT	Maggio Gianluca.jpg	MgGi
+80	Sara	Mair	sara.mair@bbt-se.com	+43 512 4030	564		DÜ	Innsbruck	BBT-AT	Mair Sara.jpg	MaSa
+367	Andrea	Malerba	andrea.malerba@bbt-se.com	+39 0471 062	267	+39 331 616 4168	BA_I	Mauls	BBT-IT	Malerba Andrea.JPG	MaAn
+305	Giorgio	Malucelli	giorgio.malucelli@bbt-se.com	+39 0471 062	299	+39 3371662413	BA_I	Mauls	BBT-IT	Malucelli Giorgio.JPG	MaGi
+81	David	Marini	david.marini@bbt-se.com	+39 0471 062	230	+39 3204783019	BA_I	Fortezza	BBT-IT	Marini David_thumb.jpg	MaDa
+259	Alessandro	Marottoli	alessandro.marottoli@bbt-se.com	+39 0471 062	281	+39 3667572802	BA_I	Fortezza	BBT-IT	Foto Marottoli.jpg	MaAl
+488	Roberta	Marrazzo	roberta.marrazzo@bbt-se.com	+39 0471 062	290 (BZ) / 294 (FZ)	+39 334 682 5138	BA_I	Fortezza	BBT-IT	Marrazzo Roberta.jpg	MaRo
+529	Roberto	Masciullo	roberto.masciullo@bbt-se.com	+39 0471 062	269	+39 3665762206	RE	Bolzano	BBT-IT	Masciullo Roberto.jpg	MaRb
+162	Arturo Piero	Mazzucato	arturo.piero.mazzucato@bbt-se.com	+39 0471 062	251	+39 3357246347	BE	Bolzano	BBT-IT	Mazzucato Arturo Piero.JPG	MaAr
+527	Irena	Meladze	irena.meladze@bbt-se.com	+43 512 4030		+43 664 8422026	PL	Sillschlucht	BBT-AT	Irena Meladze.bmp	MeIr
+237	Christof	Mellitzer	christof.mellitzer@bbt-se.com	+43 512 4030	733	+43 664 88660529	BA_Ö	Wolf	BBT-AT	Wild Christof.jpg	MeCh
+48	Markus	Meudt	markus.meudt@bbt-se.com	+43 512 4030		+43 664 8216711	BA_Ö	Wolf	BBT-AT	Meudt Markus.jpg	MeMa
+425	Benedikt	Minutillo	benedikt.minutillo@bbt-se.com	+43 512 4030			BA_Ö	Wolf	BBT-AT	Benedikt Minutillo.jpg	MiBe
+311	Marcella	Miraglia	marcella.miraglia@bbt-se.com	+39 0471 062	204	+39 3346799692		Bolzano	BBT-IT	Miraglia Marcella.JPG	MiMa
+82	Christine	Mittermann	christine.mittermann@bbt-se.com	+39 0471 062	256		DÜ	Bolzano	BBT-IT	Mittermann Christine.JPG	MiCh
+297	Roland	Murr	roland.murr@bbt-se.com	+43 512 4030		+43 664 88660543	BA_Ö	Wolf	BBT-AT	Murr Roland.bmp	MuRo
+31	Christian	Nemec	christian.nemec@bbt-se.com	+43 512 4030	300	+43 664 8216710	BA_Ö	Innsbruck	BBT-AT	Nemec Christian.jpg	NeCh
+85	Claudia	Nocker	claudia.nocker@bbt-se.com	+43 512 4030		+43 664 8216727	PL	Ahrental-Zenzenhof	BBT-AT	Nocker Claudia.jpg	NoCl
+155	Georg	Orsi	georg.orsi@bbt-se.com	+43 512 4030	705	+43 664 88660523	PL	Innsbruck	BBT-AT	Orisi Georg.jpg	OrGe
+496	Stefan	Ortner	stefan.ortner@bbt-se.com	+43 512 4030		+43 664 8422015	BC	Innsbruck	BBT-AT		OrSt
+427	Christian	Osternig	christian.osternig@bbt-se.com	+43 512 4030		+43 664 8422037	BA_Ö	Wolf	BBT-AT		OsCh
+87	Dario	Palugan	dario.palugan@bbt-se.com	+39 0471 062	214		BA_I	Fortezza	BBT-IT	Palugan Dario.JPG	PaDa
+515	Davide	Papa	davide.papa@bbt-se.com	+39 0471 062		+39 3665763370	BA_I	Fortezza	BBT-IT	Papa Davide.jpg	PaDv
+163	Carmelo	Pappalardo	carmelo.pappalardo@bbt-se.com	+39 0471 062	286	+39 3666164619	BA_I	Fortezza	BBT-IT	Pappalardo Carmelo.JPG	PaCa
+438	Lisa	Peer	Lisa.Peer@bbt-se.com	+43 512 4030	404		BA_Ö	Wolf	BBT-AT	Lisa Peer.jpg	PeLi
+254	Daniela	Pichierri	daniela.pichierri@bbt-se.com	+39 0471 062	210	+39 3371283365	SE	Bolzano	BBT-IT	Pichierri Daniela.JPG	PiDa
+201	Walter	Pointner	walter.pointner@bbt-se.com	+43 512 4030	752		RE	Innsbruck	BBT-AT	Pointner Walter.jpg	PoWa
+536	Antonio	Pugliese	antonio.pugliese@bbt-se.com	+39 0471 062	285		BA_I	Mauls	BBT-AT		PuAn
+483	Gilbert	Rass	gilbert.rass@bbt-se.com	+43 512 4030		+43 664 8216742	BA_Ö	Wolf	BBT-AT	Rass Gilbert.jpg	RaGi
+236	Ewald	Rass	ewald.rass@bbt-se.com	+43 512 4030	530	+43 664 88660533	BA_Ö	Ahrental-Zenzenhof	BBT-AT	Rass Ewald.jpg	RaEw
+417	Wolfgang	Rauter	wolfgang.rauter@bbt-se.com	+43 512 4030		+43 664 8422008	BT	Innsbruck	BBT-AT	Wolfgang Rauter.jpg	RaWo
+92	Raffaello	Ravera	raffaello.ravera@bbt-se.com	+39 0471 062	213	+39 320 478 3018	BA_I	Fortezza	BBT-IT	Ravera Raffaello.JPG	RaRa
+528	Christian	Reich	christian.reich@bbt-se.com	+43 512 4030		+43 664 8422044	BA_Ö	Innsbruck	BBT-AT	Christian Reich.bmp	ReCr
+303	Erwin	Reichel	erwin.reichel@bbt-se.com	+43 512 4030	220	+43 664 8216745	BA_Ö	Innsbruck	BBT-AT	Reichel Erwin .jpg	ReEr
+423	Sebastian	Reimann	sebastian.reimann@bbt-se.com	+43 512 4030		+43 664 8422012	BA_Ö	Wolf	BBT-AT	Sebastian_Reimann.jpg	ReSe
+55	Chris	Reinhold	chris.reinhold@bbt-se.com	+43 512 4030		+43 664 8216724	BA_Ö	Wolf	BBT-AT	Reinhold Chris.jpg	ReCh
+382	Davide	Renghi	Davide.Renghi@bbt-se.com	+39 0471 062	262	+39 3316142592	BA_I	Mauls	BBT-IT	Foto Renghi Davide.jpg	ReDa
+361	Aaron	Rieder	aaron.rieder@bbt-se.com	+43 512 4030			BA_Ö	Wolf	BBT-AT	Aaron Rieder.jpg	RiAa
+206	Stephan	Rieder	stephan.rieder@bbt-se.com	+43 512 4030	345	+43 664 8216723	VO	Innsbruck	BBT-AT	Rieder Stefan low res.jpg	RiSt
+475	Nicola	Ristich	nicola.ristich@bbt-se.com	+39 0471 062	216 (BZ) / 221 (FZ)	+39 3346103258	BA_I	Bolzano	BBT-IT	Ristich Nicola.png	RiNi
+520	Iolanda Maria	Rodrigues de Oliveira Costa	Iolanda.RodriguesCosta@bbt-se.com	+39 0471 062	224		VO	Bolzano	BBT-IT	Rodrigues Costa Iolanda.png	RoIo
+13	Ingrid	Ruhland	ingrid.ruhland@bbt-se.com	+43 512 4030	900	+43 664 88660539	FIBU	Innsbruck	BBT-AT	Ruhland Ingrid.jpg	RuIn
+387	Christina	Sailer	christina.sailer@bbt-se.com	+43 512 4030	102	+43 664 8422005		Innsbruck	BBT-AT	Christina Sailer.jpg	SaCh
+198	Luca	Salvi	luca.salvi@bbt-se.com	+39 0471 062	219	+39 3316326928	VW	Bolzano	BBT-IT	Salvi Luca.JPG	SaLu
+47	Heimo	Schierl	heimo.schierl@bbt-se.com	+43 512 4030	365	+43 664 8216713	BA_Ö	Wolf	BBT-AT	Schierl Heimo.jpg	ScHe
+93	Monika	Schivari	monika.schivari@bbt-se.com	+39 0471 062	231	+39 3371425945	VM	Bolzano	BBT-IT	Schivari Monika.JPG	ScMo
+413	Martin	Schneider	martin.schneider@bbt-se.com	+43 512 4030	400	+43 664 8422009	PI	Tunnelwelt Steinach	BBT-AT	Schneider Martin.jpg	ScMt
+424	Manuel	Schwab	manuel.schwab@bbt-se.com	+43 512 4030		+43 664 88660527	PI	Tunnelwelt Steinach	BBT-AT	Schwab Manuel.jpg	ScMn
+301	Christian	Schwarz	christian.schwarz@bbt-se.com	+43 512 4030	747	+43 664 8216747	BA_Ö	Ahrental-Zenzenhof	BBT-AT	Schwarz Christian.jpg	ScCh
+15	Gebhard	Schweiger	gebhard.schweiger@bbt-se.com	+43 512 4030	610	+43 664 8216732	PE	Innsbruck	BBT-AT	Schweiger Gebhard.jpg	ScGe
+348	Angelo	Serra	angelo.serra@bbt-se.com	+39 0471 062	254	+39 3387819627	BA_I	Mauls	BBT-IT	Serra Angelo.JPG	SeAn
+95	Pierluigi	Sibilla	pierluigi.sibilla@bbt-se.com	+39 0471 062	220	+39 320 478 3005	VO	Bolzano	BBT-IT	Sibilla Pierluigi.JPG	SiPi
+34	Sonja	Siegele	sonja.siegele@bbt-se.com	+43 512 4030	301	+43 664 8422032	BA_Ö	Innsbruck	BBT-AT	Siegele Sonja.jpg	SiSo
+35	Sonja	Sint	sonja.sint@bbt-se.com	+43 512 4030	560		DÜ	Innsbruck	BBT-AT	Sint-Sonja_thumb.jpg	SinS
+231	Anna	Siracusa	anna.siracusa@bbt-se.com	+39 0471 062	298	+39 3669010504	VO	Bolzano	BBT-IT	Siracusa Anna.JPG	SiAn
+96	Stefan	Skuk	stefan.skuk@bbt-se.com	+39 0471 062	226	+39 320 478 3009	BA_I	Fortezza	BBT-IT	Skuk-Stefan_thumb.jpg	SkSt
+36	Monika	Sock	monika.sock@bbt-se.com	+43 512 4030	330	+43 664 8216707	BA_Ö	Innsbruck	BBT-AT	Sock Monika.jpg	SoMo
+283	Sebastiano	Sorbello	sebastiano.sorbello@bbt-se.com	+39 0471 062	270	+39 3371282045	VW	Bolzano	BBT-IT	Sorbello Sebastiano.JPG	SoSe
+472	Antonio	Spaziani	antonio.spaziani@bbt-se.com	+39 0471 062	218	+39 3346843431	BA_I	Fortezza	BBT-IT	Spaziani Antonio.jpg	SpAn
+409	Antonio	Squillante	Antonio.Squillante@bbt-se.com	+39 0471 062	201	+39 337 135 1687	BA_I	Mauls	BBT-IT	Antonio Squillante.jpg	SqAn
+37	Josef	Steck	josef.steck@bbt-se.com	+43 512 4030	340	+43 664 8216703	BA_Ö	Innsbruck	BBT-AT	Steck Josef.jpg	StJo
+349	Matteo	Stelitano	matteo.stelitano@bbt-se.com	+39 0471 062	278	+39 3371212176	BA_I	Fortezza	BBT-IT	Stelitano Matteo.JPG	SteMa
+247	Felicitas	Stübe	felicitas.stuebe@bbt-se.com	+43 512 4030	760	+43 664 8422024	PL	Sillschlucht	BBT-AT	Stübe Felizitas.jpg	StFe
+97	Lisa	Terzariol	lisa.terzariol@bbt-se.com	+39 0471 062	239	+39 3386431235	DÜ	Bolzano	BBT-IT	Terzariol Lisa Marie.JPG	TeLi
+531	Mario	Tittes	mario.tittes@bbt-se.com	+43 512 4030		+43 664 8422033	BT	Innsbruck	BBT-AT		TiMa
+147	Andreas	Töchterle	andreas.toechterle@bbt-se.com	+43 512 4030		+43 664 88660520	BA_Ö	Wolf	BBT-AT	Töchterle Andreas.jpg	ToAn
+329	Matteo	Toro	matteo.toro@bbt-se.com	+39 0471 062	257	+39 3666161658	BA_I	Fortezza	BBT-IT	Foto Toro.jpg	ToMa
+98	Barbara	Toso	barbara.toso@bbt-se.com	+39 0471 062	235		FIBU	Bolzano	BBT-IT	Toso Barbara.JPG	ToBa
+503	Francesco	Troncone	francesco.troncone@bbt-se.com	+39 0471 062	303	+39 3387380794	BT	Bolzano	BBT-IT	Troncone Francesco.jpg	TrFr
+331	David	Unteregger	david.unteregger@bbt-se.com	+43 512 4030	385	+43 664 8216739	BA_Ö	Innsbruck	BBT-AT	David Unteregger.jpg	UnDa
+354	Lidia	Valguarnera	lidia.valguarnera@bbt-se.com	+39 0471 062	248		BE	Bolzano	BBT-IT	Valguarnera Lidia.JPG	VaLi
+408	Giuditta	Vecchione	Giuditta.Vecchione@bbt-se.com	+39 0471 062	268	+39 335 1534430	BA_I	Fortezza	BBT-IT	Giuditta Vecchione.jpg	VeGi
+473	Giuseppe	Venditti	giuseppe.venditti@bbt-se.com	+39 0471 062	258	+39 3346335551	BA_I	Fortezza	BBT-IT	Giuseppe Venditti.jpg	VeGu
+137	Roland	Vogltanz	roland.vogltanz@bbt-se.com	+43 512 4030	540	+43 664 88660528	PI	Innsbruck	BBT-AT	Vogltanz Roland.jpg	VoRo
+460	Juri	Vonmetz	juri.vonmetz@bbt-se.com	+43 512 4030	360	+43 664 8216730	PL	Sillschlucht	BBT-AT	Vonmetz Juri 1.jpg	VoJu
+186	Antonio	Voza	antonio.voza@bbt-se.com	+39 0471 062	263	+39 3351958639	BA_I	Fortezza	BBT-IT	Voza Antonio.JPG	VoAn
+46	Liane	Wagger	liane.wagger@bbt-se.com	+43 512 4030	101	+43 664 8216708	PE	Innsbruck	BBT-AT	Wagger Liane.jpg	WaLi
+54	Marion	Walch	marion.walch@bbt-se.com	+43 512 4030		+43 664 8216725	BA_Ö	Wolf	BBT-AT	Walch Marion.jpg	WaMa
+461	Christoph	Waldhör	christoph.waldhoer@bbt-se.com	+43 512 4030		+43 664 8216743	BA_Ö	Ahrental-Zenzenhof	BBT-AT	Christoph_Waldhör.jpg	WaCr
+511	Markus	Weger	markus.weger@bbt-se.com	+43 512 4030	770	+43 664 8422021	BE	Innsbruck	BBT-AT		WeMr
+146	Tassilo	Weifner	tassilo.weifner@bbt-se.com	+43 512 4030	375	+43 664 88660521	PL	Sillschlucht	BBT-AT	Weifner Tassilo.jpg	WeTa
+253	Markus	Wenzel	markus.wenzel@bbt-se.com	+43 512 4030	701	+43 664 8216701	EDV	Innsbruck	BBT-AT	Wenzel Markus.jpg	WeMa
+38	Gregor	Windischer	gregor.windischer@bbt-se.com	+43 512 4030	620	+43 664 8216702	BA_Ö	Innsbruck	BBT-AT	Windischer Gregor.jpg	WiGr
+39	Markus	Woletz	markus.woletz@bbt-se.com	+43 512 4030	800	+43 664 8216718	BA_Ö	Innsbruck	BBT-AT	Woletz Markus.jpg	WoMa
+165	Alexandra	Wolkenstein-Rodenegg	alexandra.wolkenstein@bbt-se.com	+43 512 4030	860	+43 664 88660544	BA_Ö	Innsbruck	BBT-AT	Wolkenstein Alexandra.jpg	WoAl
+521	Fabian	Yamamoto	fabian.yamamoto@bbt-se.com	+43 512 4030	702	+43 664 8422022	EDV	Innsbruck	BBT-AT		YaFa
+338	Ivan	Zamberlan	ivan.zamberlan@bbt-se.com	+43 512 4030	307	+43 664 8422006	BA_Ö	Ahrental-Zenzenhof	BBT-AT		ZaIv
+415	Giacomo	Zamolo	giacomo.zamolo@bbt-se.com	+39 0471 062	295	+39 337 140 7130	BA_I	Mauls	BBT-IT	Zamolo.jpg	ZaGi
+171	Mauro	Zanei	mauro.zanei@bbt-se.com	+39 0471 062	223	+39 3346137671		Bolzano	BBT-IT	Zanei Mauro.JPG	ZaMa
+246	Fiorenzo	Zanforlin	fiorenzo.zanforlin@bbt-se.com	+39 0471 062	264	+39 3357459585	CO	Bolzano	BBT-IT	Zanforlin.jpg	ZaFi
+471	Fabio	Zanini	fabio.zanini@bbt-se.com	+39 0471 062	284	+39 335430880	BC	Bolzano	BBT-IT	Fabio Zanini.jpg	ZaFa
+42	Werner	Zimmerhofer	werner.zimmerhofer@bbt-se.com	+43 512 4030	335	+43 664 8216706	BA_Ö	Innsbruck	BBT-AT	Zimmerhofer Werner.jpg	ZiWe
+375	Daniel	Zingerle	daniel.zingerle@bbt-se.com	+43 512 4030	789	+43 664 8422007	FIBU	Innsbruck	BBT-AT	Zingerle Daniel.jpg	ZiDa
