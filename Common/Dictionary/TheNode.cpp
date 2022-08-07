@@ -31,10 +31,11 @@
 
     void Common::Dictionary::PhoneBookRecord::internalPrint()
     {
+        std::string emptyField("");
         std::cout<<"\n--------------Recapiti:";
         //--------------------------
         if( nullptr!=this->name
-             && ""!= Common::StrManipul::trimBoth( *(this->name) )
+             && emptyField.compare( Common::StrManipul::trimBoth( *(this->name) ))
             )
         {
             std::cout<<"\n\t Name: "<< *(this->name);
