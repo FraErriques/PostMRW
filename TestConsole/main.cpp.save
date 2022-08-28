@@ -14,6 +14,43 @@
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
 #include "../Entity/Complex/Complex.h"
+#include "../Common/Dictionary/MapOperation.h"
+
+int main()
+{
+    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    long desPrime = (*p)[p->lastOrdinal];
+    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+//for(int c=0; c<=100;c++)
+//    {
+//        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
+//    }
+    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
+    for(int c=73; c<=100;c++)
+    {
+        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
+        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
+    }
+    delete p;
+    
+
+
+    //
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+/* --------------cantina----------------------------
+
+    std::string phoneBookStreamPath("./interni_IT_.txt");
+    Common::Dictionary::MapOperation * phoneMap = new Common::Dictionary::MapOperation();
+    phoneMap->readFileByLines( phoneBookStreamPath);
+    phoneMap->mapListener( );
+    // garbage collect
+    delete phoneMap;
 
 /// l'integrando (-z)^s/(Exp[z]-1)dz/z
 Numerics::Complex * IcoChain( Numerics::Complex s, Numerics::Complex z)
@@ -46,7 +83,7 @@ Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta
     return res;
 }// originAnulus
 
-
+ f
 // NB. cannot step for numerical integration in Complex plane like this: the real and immaginary parts of the image( i.e. u(x,y) and v(x,y) ) have
 // to be separated, to step.
 Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s)
@@ -70,7 +107,7 @@ Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius
 Numerics::Complex * imageStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s, int curStep)
 {// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
     int stepCardinality = +2.0*PI/stepSize;
-    double Theta =0.0; 
+    double Theta =0.0;
     Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
     Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
     Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
@@ -94,15 +131,16 @@ int main()
     int stepCardinality = 10;
     //
     //--dump on txtFile ----------------------------
-	std::string thePath("./out20220219_.txt");//
+	std::string thePath("./out20220219_.txt");// TODO read with Java and push to PostgreSql.
 	std::fstream theStream;
-	bool result = Common::Stream::outstreamOpener( thePath , theStream );    
+	bool result = Common::Stream::outstreamOpener( thePath , theStream );
     std::string * curField = nullptr;
-    
-    
-    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here). 
+
+
+    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here).
     Numerics::Complex * imagePoint = nullptr;
     for(int curStep=0; curStep<stepCardinality; curStep++)
+>>>>>>> refs/remotes/origin/master
     {
         Common::StringBuilder sb(90);// the stringBuilder needs to be reset at every loop-step.
         imagePoint = imageStepIntoLinearHankelBranch( s, z);//-----calculation------the imagePoint gets allocated inside the calculation and gets freed at each for-step.
@@ -148,7 +186,7 @@ int main()
         delete imagePoint;
     }
     result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
-    
+
 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
@@ -157,10 +195,6 @@ int main()
 }// main
 
 
-
-
-
-/* --------------cantina----------------------------
     double radius = +3.7123E+01;
     double stepSize = +2.0*PI/900.0;
 =======
@@ -278,7 +312,6 @@ int main()
 //    Numerics::Complex icoChain( IcoChain( s, *z) );
 //    delete z;
 
-<<<<<<< HEAD
 //    Numerics::Complex z(+3.1 , 5.2);
 //    for( int n=0; n<6; n++)
 //    {
@@ -322,8 +355,7 @@ int main()
 }// main
 
 
-
-/* --------------cantina----------------------------
+>>>>>>> refs/remotes/origin/master
 >>>>>>> refs/remotes/origin/master
 
     //PrimesFinder::Primes * p = new PrimesFinder::Primes(100);

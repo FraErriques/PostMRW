@@ -18,12 +18,22 @@
 
 int main()
 {
-    std::string phoneBookStreamPath("./interni_IT_.txt");
-    Common::Dictionary::MapOperation * phoneMap = new Common::Dictionary::MapOperation();
-    phoneMap->readFileByLines( phoneBookStreamPath);
-    phoneMap->mapListener( );
-    // garbage collect
-    delete phoneMap;
+    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    long desPrime = (*p)[p->lastOrdinal];
+    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+    for(int c=1; c<=100;c++)// NB. you cannot require an ordinal<+1.
+    {
+        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
+    }
+    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
+    for(int c=73; c<=100;c++)
+    {
+        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
+        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
+    }
+    delete p;
+    
+
 
     //
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
@@ -34,6 +44,13 @@ int main()
 
 
 /* --------------cantina----------------------------
+
+    std::string phoneBookStreamPath("./interni_IT_.txt");
+    Common::Dictionary::MapOperation * phoneMap = new Common::Dictionary::MapOperation();
+    phoneMap->readFileByLines( phoneBookStreamPath);
+    phoneMap->mapListener( );
+    // garbage collect
+    delete phoneMap;
 
 /// l'integrando (-z)^s/(Exp[z]-1)dz/z
 Numerics::Complex * IcoChain( Numerics::Complex s, Numerics::Complex z)

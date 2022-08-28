@@ -44,14 +44,22 @@
 		<Unit filename="src/ComplexField/Complex.java">
 			<Option compile="0" />
 			<Option link="0" />
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="src/ComplexField/ContourIntegral.cs" />
-		<Unit filename="src/ComplexField/Functions.cs" />
+		<Unit filename="src/ComplexField/ContourIntegral.cs">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/ComplexField/Functions.cs">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/ComplexField/Functions.java">
 			<Option compile="0" />
 			<Option link="0" />
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="src/ComplexField/GammaViaIntegral.cs" />
+		<Unit filename="src/ComplexField/GammaViaIntegral.cs">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="src/LinearAlgebra/AssonometryTechniques.cs" />
 		<Unit filename="src/LinearAlgebra/CentralProjection.cs" />
 		<Unit filename="src/LinearAlgebra/CentralProjection_MixedTechnique.cs" />
