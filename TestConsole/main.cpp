@@ -22,7 +22,7 @@
 int main()
 {
     // system("pwd");
-    system("dir");
+    // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
     PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
     long desPrime = (*p)[p->lastOrdinal];
