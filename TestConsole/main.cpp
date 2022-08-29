@@ -14,6 +14,67 @@
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
 #include "../Entity/Complex/Complex.h"
+#include "../Common/Dictionary/MapOperation.h"
+
+
+
+//---entry point-------------------------
+int main()
+{
+    // system("pwd");
+    system("dir");
+    Common::LogWrappers::SectionOpen("main", 0);
+    PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
+    long desPrime = (*p)[p->lastOrdinal];
+     desPrime = (*p)[25];
+     desPrime = (*p)[3];
+    //-----
+    delete p;
+    Common::LogWrappers::SectionClose();
+
+
+    //---ready---------------
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+
+
+/* --------------cantina----------------------------
+
+    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
+    for(int c=1; c<=100;c++)// NB. you cannot require an ordinal<+1.
+    {
+        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
+    }
+    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
+    for(int c=73; c<=100;c++)
+    {
+        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
+        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
+    }
+
+//    as is
+//    "testCowsCanBeMilked"
+//    "testSheepAreNotTheOnlyFruit"
+//    // to be
+//    "Cows can be milked"
+//    "Sheep are not the only fruit"
+//
+
+    std::vector<std::string> * camelToken = nullptr;// many usages: allocated & deleted each time.
+    //
+    std::string * original_one = new std::string("testCowsCanBeMilked");
+    testCallerQuestTwo( original_one);
+
+    std::string * original_two = new std::string("testSheepAreNotTheOnlyFruit");
+    testCallerQuestTwo( original_two);
+
+    std::string * original_three = new std::string("testSheep WrittenNot123#So23@Good really");
+    testCallerQuestTwo( original_two);
 
 
 char toLower(const char par)
@@ -45,20 +106,20 @@ bool isUpper(const char par)
 
 
 
-/* as is
-"testCowsCanBeMilked"
-"testSheepAreNotTheOnlyFruit"
-// to be
-"Cows can be milked"
-"Sheep are not the only fruit"
-*/
+// as is
+//"testCowsCanBeMilked"
+//"testSheepAreNotTheOnlyFruit"
+//// to be
+//"Cows can be milked"
+//"Sheep are not the only fruit"
+//
 std::vector<std::string> * camelTokenizer( const std::string * original_one )
 {
     std::vector<std::string> * camelToken = new std::vector<std::string>();
     Common::StringBuilder * curToken = new Common::StringBuilder( original_one->length());// round in excess
-    /* if(curChar is NOT upper -> pushBack)
-    else if(curChar is upper -> terminateCurStrBuilder -> Start a new one with toLower(curChar) )
-    */
+    // if(curChar is NOT upper -> pushBack)
+    // else if(curChar is upper -> terminateCurStrBuilder -> Start a new one with toLower(curChar) )
+    //
     int c=0;//needed after endOfLoop
     for( ; c<original_one->length(); c++)
     {
@@ -103,41 +164,5 @@ void testCallerQuestTwo( const std::string * original_one )
 }// end testCallerQuestTwo(
 
 
-
-//---entry point-------------------------
-int main()
-{
-    /* as is
-    "testCowsCanBeMilked"
-    "testSheepAreNotTheOnlyFruit"
-    // to be
-    "Cows can be milked"
-    "Sheep are not the only fruit"
-    */
-
-    std::vector<std::string> * camelToken = nullptr;// many usages: allocated & deleted each time.
-    //
-    std::string * original_one = new std::string("testCowsCanBeMilked");
-    testCallerQuestTwo( original_one);
-
-    std::string * original_two = new std::string("testSheepAreNotTheOnlyFruit");
-    testCallerQuestTwo( original_two);
-
-    std::string * original_three = new std::string("testSheep WrittenNot123#So23@Good really");
-    testCallerQuestTwo( original_two);
-
-
-
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-
-
-
-/* --------------cantina----------------------------
 
 */

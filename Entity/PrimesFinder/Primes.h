@@ -87,7 +87,7 @@ public: // TODO let private after test
     // construction helper:
     const char * feedDumpPath(); // non const
     const char * feed_CustomDumpPath(); // non const
-    // operator= only between isomorphic matrixes
+    // assignement : operator=
     Primes & operator=   ( const Primes & second );
     /// method
     const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
