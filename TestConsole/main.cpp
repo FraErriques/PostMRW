@@ -26,8 +26,20 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
     long desPrime = (*p)[p->lastOrdinal];
-     desPrime = (*p)[25];
-     desPrime = (*p)[3];
+    //
+    desPrime = (*p)[25];
+    std::string logMsg = "desPrime = (*p)[25]==";
+    std::string * desinenza = Common::StrManipul::uLongToString( desPrime);
+    logMsg += *desinenza;
+    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+    delete desinenza;
+    //
+    desPrime = (*p)[3];
+    logMsg = "desPrime = (*p)[3]==";
+    desinenza = Common::StrManipul::uLongToString( desPrime);
+    logMsg += *desinenza;
+    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+    delete desinenza;
     //-----
     delete p;
     Common::LogWrappers::SectionClose();
