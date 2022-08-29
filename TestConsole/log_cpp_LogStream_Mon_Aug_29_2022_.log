@@ -1,0 +1,8 @@
+
+ S=start, C=content, K=close -=separator 	20:33:09	
+
+-
+S   main_______start
+C        inside main: Mon Aug 29 2022 20:33:09 desPrime = (*p)[25]==97
+C        inside main: Mon Aug 29 2022 20:33:09 desPrime = (*p)[3]==5
+K   closing____main_______end

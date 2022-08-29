@@ -16,26 +16,36 @@
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 
+
+
+//---entry point-------------------------
 int main()
 {
-    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
+    // system("pwd");
+    // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
+    Common::LogWrappers::SectionOpen("main", 0);
+    PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
     long desPrime = (*p)[p->lastOrdinal];
-    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
-    for(int c=1; c<=100;c++)// NB. you cannot require an ordinal<+1.
-    {
-        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
-    }
-    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
-    for(int c=73; c<=100;c++)
-    {
-        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
-        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
-    }
-    delete p;
-    
-
-
     //
+    desPrime = (*p)[25];
+    std::string logMsg = "desPrime = (*p)[25]==";
+    std::string * desinenza = Common::StrManipul::uLongToString( desPrime);
+    logMsg += *desinenza;
+    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+    delete desinenza;
+    //
+    desPrime = (*p)[3];
+    logMsg = "desPrime = (*p)[3]==";
+    desinenza = Common::StrManipul::uLongToString( desPrime);
+    logMsg += *desinenza;
+    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+    delete desinenza;
+    //-----
+    delete p;
+    Common::LogWrappers::SectionClose();
+
+
+    //---ready---------------
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();
     return 0;

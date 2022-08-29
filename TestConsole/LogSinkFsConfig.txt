@@ -5,7 +5,7 @@ key_verbosity
 
 #
 
-./log/cpp
+./log_cpp
 on
 0
 

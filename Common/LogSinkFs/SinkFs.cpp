@@ -152,19 +152,29 @@ SinkFs::SinkFs()
                                 std::string dateStamp(LogFsName.substr(0,11) + LogFsName.substr(20,4) + "_" );// size()==11+4+1==16// this string is the one to replace in.
                                 std::string timeStamp(LogFsName.substr(11,8) );
                                 // some necessary replacements, to let the filename legal, within the Operating Sys syntax rules.
-                                StrManipul::replaceAllOccurencesOf( " ", dateStamp, "_" );
-                                StrManipul::replaceAllOccurencesOf( ":", dateStamp, "#" );
-                                StrManipul::replaceAllOccurencesOf( ":", dateStamp, "#" );
-                                StrManipul::replaceAllOccurencesOf( "\n", dateStamp, "_" );
-                                StrManipul::replaceAllOccurencesOf( "\r", dateStamp, "_" );
+                                std::string * progressiveReplacement = nullptr;
+                                progressiveReplacement = StrManipul::replaceAllOccurencesOf( " ", dateStamp, "_" );
+                                std::string * tmp = progressiveReplacement;
+                                progressiveReplacement = StrManipul::replaceAllOccurencesOf( ":", *progressiveReplacement, "#" );
+                                delete tmp;
+                                tmp = progressiveReplacement;
+                                progressiveReplacement = StrManipul::replaceAllOccurencesOf( ";", *progressiveReplacement, "#" );
+                                delete tmp;
+                                tmp = progressiveReplacement;
+                                progressiveReplacement = StrManipul::replaceAllOccurencesOf( "\n", *progressiveReplacement, "_" );
+                                delete tmp;
+                                tmp = progressiveReplacement;
+                                progressiveReplacement = StrManipul::replaceAllOccurencesOf( "\r", *progressiveReplacement, "_" );
+                                delete tmp;
                                 // Now the datetime string is appropriate, but we have to cut off the time portion, since the logFile is daily
                                 // and so it needs only the date. The time will be used after, inside the Log.
                                 StringBuilder sb( 500);// 500 bytes of extimated lenght for the LogFile path.
                                 sb.append( *logFullPathPrefix_config);
                                 sb.append( std::string("_LogStream_") );
-                                sb.append( dateStamp);
+                                sb.append( *progressiveReplacement);
                                 sb.append( std::string(".log") );
                                 this->fName = sb.str();// get the whole package.
+                                delete progressiveReplacement;
                                 // NB. tryOpen here: on fail the exception will be caught a few rows below here.
                                 bool has_tryOpen_succeded = tryOpen();// on success sets this->hasPermissionToWrite=true. the caller of tryOpen has to catch and to close the stream.
                                 this->where << "\r\n S=start, C=content, K=close -=separator \t"<< timeStamp <<"\t\r\n" << std::endl;// NB. ::endl flushes the buffer.

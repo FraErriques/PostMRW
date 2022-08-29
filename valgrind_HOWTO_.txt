@@ -1,3 +1,2 @@
 
-valgrind  --leak-check=full  --show-leak-kinds=all  TestConsole/bin/Debug/TestConsole 
-
+valgrind  --leak-check=full  --show-leak-kinds=all  -v TestConsole/bin/Debug/TestConsole 
