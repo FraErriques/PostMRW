@@ -61,7 +61,7 @@ class Primes
 // TODO let private after test
     const char * theDumpPath = nullptr;// NB. remember to share and delete[].
 
-public: // TODO let private after test
+private: // TODO let private after test
     /// Data
     unsigned long lastOrdinal;
     unsigned long lastPrime;

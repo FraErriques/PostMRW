@@ -25,9 +25,9 @@ int main()
     // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
     PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
-    long desPrime = (*p)[p->lastOrdinal];
+    // long desPrime = (*p)[p->lastOrdinal]; TODO give it a public reader
     //
-    desPrime = (*p)[25];
+    long desPrime = (*p)[25];
     std::string logMsg = "desPrime = (*p)[25]==";
     std::string * desinenza = Common::StrManipul::uLongToString( desPrime);
     logMsg += *desinenza;
