@@ -50,8 +50,6 @@
 		<Linker>
 			<Add directory="/usr/local/mysql/connector-c++-8.0/lib" />
 		</Linker>
-		<Unit filename="../Entity/PrimesFinder/Cantiere_Primes_2022September01_.cpp" />
-		<Unit filename="../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h" />
 		<Unit filename="Cantina.txt" />
 		<Unit filename="Ei_parametrization_.txt" />
 		<Unit filename="Fantoccio.cpp" />

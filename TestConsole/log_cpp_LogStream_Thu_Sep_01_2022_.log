@@ -1,0 +1,29 @@
+
+ S=start, C=content, K=close -=separator 	16:03:09	
+
+-
+S   main_______start
+C        inside main: Thu Sep 01 2022 16:04:33 desPrime = (*p)[25]==97
+C        inside main: Thu Sep 01 2022 16:04:58 desPrime = (*p)[3]==5
+K   closing____main_______end
+
+ S=start, C=content, K=close -=separator 	16:14:07	
+
+-
+S   main_______start
+C        inside main: Thu Sep 01 2022 16:20:00 desPrime = (*p)[25]==97
+C        inside main: Thu Sep 01 2022 16:20:00 desPrime = (*p)[3]==5
+K   closing____main_______end
+
+ S=start, C=content, K=close -=separator 	16:26:55	
+
+-
+S   main_______start
+
+ S=start, C=content, K=close -=separator 	16:32:37	
+
+-
+S   main_______start
+C        inside main: Thu Sep 01 2022 16:35:17 desPrime = (*p)[25]==97
+C        inside main: Thu Sep 01 2022 16:35:17 desPrime = (*p)[3]==5
+K   closing____main_______end

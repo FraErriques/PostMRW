@@ -13,6 +13,7 @@
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
+#include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 
@@ -24,7 +25,14 @@ int main()
     // system("pwd");
     // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
-    PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
+    const std::string customFileConfigSectionName( "primeCustomFile");
+    Cantiere_Primes_2022September01_::Primes *p = new Cantiere_Primes_2022September01_::Primes(
+       7
+       ,25
+       ,customFileConfigSectionName  );
+    const char * customDumpFullPath = p->feed_CustomDumpPath();// sets a member : TODO
+    p->Start_PrimeDump_FileSys();// NB. callable from both "fromOrigin" & "custom" TODO
+    // official_one PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
     // long desPrime = (*p)[p->lastOrdinal]; TODO give it a public reader
     //
     long desPrime = (*p)[25];
