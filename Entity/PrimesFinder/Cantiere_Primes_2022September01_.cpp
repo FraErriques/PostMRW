@@ -8,10 +8,77 @@
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../../Entity/Integration/Integration.h"
+#include "InternalAlgos.h"
 
-namespace Cantiere_Primes_2022September01_
+
+
+
+// empty Ctor : reads both the sequentialFile and randomFile fullpath
+Cantiere_Primes_2022September01_::Primes::Primes( )
 {
+    bool dumpPathAcquisitionFromConfig = false;// init to invalid
+    //
+    this->feedDumpPath();// default section, in default file.
+    if( nullptr != this->theDumpPath)
+    {
+        this->createOrAppend( this->theDumpPath);
+        this->dumpTailReaderByChar( this->theDumpPath);
+        if( nullptr != this->theDumpTailStr)
+        {
+            recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+        }// else : no valid last record : start from zero!
+        // the upper bound for research, in R+, will be a parameter for the sequentialCalcInterface()
+        dumpPathAcquisitionFromConfig = true;
+    } // else dumpPathAcquisitionFromConfig already false from init.
+    //----end of SequentialPath --- start of RandomPath -------
+    this->feed_CustomDumpPath();// CUSTOM section, in default file.
+    if( nullptr != this->customDumpPath)
+    {
+        this->createOrAppend( this->customDumpPath);
 
+        dumpPathAcquisitionFromConfig = true;
+    }// else :  not-healthly built:  dumpPathAcquisitionFromConfig already false from init.
+    //---check operations' result and document the error for the user.
+    if( false==dumpPathAcquisitionFromConfig)// something wrong reading from config files.
+    {// not-healthly built.
+        this->isHealthlyConstructed = false;
+        this->canOperate = false;
+    }// not-healthly built.
+}// empty Ctor : reads both the sequentialFile and randomFile fullpath
+
+
+bool Cantiere_Primes_2022September01_::Primes::SequentialCalcInterface( unsigned long Threshold )
+{
+    bool res = false;
+    //
+    // TODO this->Start_PrimeDump_FileSys()
+    //
+    return res;
+}
+
+bool Cantiere_Primes_2022September01_::Primes::RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
+{
+    bool res = false;
+    //
+    // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
+    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+    this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+    this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
+    this->desiredThreshold = maxRight;
+    // write a stamp, about what we're doing and when.
+    time_t ttime = time(0);
+    char* dt = ctime(&ttime);
+    //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
+    //dt = asctime(gmt_time);
+    ofstream stampWriter( this->customDumpPath, std::fstream::out | std::fstream::app);
+    stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
+    stampWriter.close();
+    //
+    // TODO this->Start_PrimeDump_FileSys()
+    //
+    return res;
+}
 
 
     /*
@@ -58,76 +125,16 @@ const char * Cantiere_Primes_2022September01_::Primes::feed_CustomDumpPath() // 
     return this->customDumpPath;
 }// feed_CustomDumpPath()
 
-
-namespace internalAlgos
+const char * Cantiere_Primes_2022September01_::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 {
-
-
-
-    // an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
-    double LogIntegral_coChain( double x)
-    {// an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
-        return +1.0/log(x);
-    }// LogIntegral_coChain
-
-
-unsigned long factorial( unsigned int par)
-{
-    unsigned long res = +1UL;
-    for( int c=par; c>+1; c--)
-    {
-        res *= c;
-    }
-    return res;
-}// factorial
-
-
-// TODO:
-    void ExpIntegralEi_Ramanujan( double x)//( Complex x)
-    {// notes on a convergent series
-//
-//        N[(+EulerGamma + Log[x]) +
-//          Exp[x/2]*Sum[((-1)^(n - 1) (+x)^n)/((n!)*(2^(n - 1)))*
-//             Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
-//
-//        /*
-//        N[(+EulerGamma + Log[x]) +
-//          Exp[x/2]*Sum[((-1)^(n - 1) (+x)^n)/((n!)*(2^(n - 1)))*
-//             Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
-//        */
-
-//        double internalFactor = 0.0;
-//        double externalFactor = 0.0;
-//        for( int n=+1; n<=+99; n++)
-//        {
-//            for(int k=0; k<floor(((double)n - 1.0)/2.0); k++)
-//            {
-//                internalFactor += +1.0/(2.0*(double)k + 1.0);
-//            }
-//            externalFactor += ((-1.0)^((double)n - 1.0) (+x)^(double)n)/((n!)*(2.0^(n - 1))) * internal_factor;
-//            internalFactor = 0.0;// reset.
-//        }
-//        externalFactor += EulerGamma + Log[x];
-
-        const double EulerGamma = +0.577216;
-        double internalFactor = 0.0;
-        double externalFactor = 0.0;
-        for( int n=+1; n<=+99; n++)
-        {
-            for(int k=0; k< floor(((double)n - 1.0)/2.0); k++ )
-            {
-                internalFactor += +1.0/(2.0*(double)k + 1.0);
-            }
-
-            externalFactor += pow((-1.0),((double)n - 1.0)) * pow(+x,(double)n) /(factorial(n)* pow(2.0,((double)n - 1)) ) * internalFactor;
-            internalFactor = 0.0;// reset.
-        }
-        externalFactor += EulerGamma + log(x);
-
-  }// Ramanujan series
-
-
-}// end nmsp internalAlgos
+    const char *  res = nullptr;
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for Primes:: in this file.
+    const std::string * desiredSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
+    res = desiredSectionContent->c_str();
+    delete primeNamedConfig;
+//delete desiredSectionContent;  TODO study how to delete it.
+    return res;// caller has to delete.
+}// getPrimeDumpFullPath
 
 
 
@@ -199,6 +206,9 @@ unsigned long factorial( unsigned int par)
     }// Dtor(
 
 
+
+
+
 bool Cantiere_Primes_2022September01_::Primes::getLastCoupleInDefaultFile()
 {
     bool res = false;// init to invalid.
@@ -220,16 +230,6 @@ bool Cantiere_Primes_2022September01_::Primes::getLastCoupleInDefaultFile()
 }// getLastCoupleInDefaultFile
 
 
-const char * Cantiere_Primes_2022September01_::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
-{
-    const char *  res = nullptr;
-    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for Primes:: in this file.
-    const std::string * desiredSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
-    res = desiredSectionContent->c_str();
-    delete primeNamedConfig;
-//delete desiredSectionContent;  TODO study how to delete it.
-    return res;// caller has to delete.
-}// getPrimeDumpFullPath
 
 
 
@@ -1187,6 +1187,66 @@ Cantiere_Primes_2022September01_::Primes::DumpElement * Cantiere_Primes_2022Sept
 
 
     // state of the art.
+void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys(
+                                                                        unsigned long Left
+                                                                        ,unsigned long Right
+                                                                        ,ofstream appendStream
+                                                                    ) const
+{
+    unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
+    bool isStillPrime = true;
+    double realQuotient;
+    unsigned long intQuotient;
+    unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
+// NB now a parameter ; ofstream appendStream( this->theDumpPath, std::fstream::out | std::fstream::app);
+    //
+    for( ; cursor<=this->desiredThreshold; cursor++)//NB. cursor==dividend.
+    {
+        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
+        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
+        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
+        unsigned long divisor=+2;
+        for( ; divisor<=soglia; divisor++)
+        {
+            realQuotient = (double)cursor/(double)divisor;
+            intQuotient = cursor/divisor;
+            if( realQuotient-intQuotient <+1.0E-80 )
+            {// divisione diofantea
+                isStillPrime = false;// NB. #################
+                break;// NB. #################
+            }// else  continue searching for primality.
+        }// the internal for : the one from [+2, cursor]
+        // if after all idoneous divisors..
+        if( isStillPrime)
+        {
+            ++ordinal;//another one foud, starting from zero, so that Prime[1]=2
+            std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
+            std::string * primeStr = Common::StrManipul::uLongToString( cursor );
+            int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
+            Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
+            strBuild->append(ordinalStr->c_str());
+            strBuild->append("_");
+            strBuild->append(primeStr->c_str());
+            strBuild->append("\r");// choose one btw '\r' or '\n'
+            delete ordinalStr;
+            delete primeStr;
+            // instead of returning it, dump it on the file.
+            appendStream.write( strBuild->str().c_str(), strBuild->str().length() );
+            delete strBuild;// clean up the token-buffer.
+            strBuild = nullptr;
+        }// else ripristino del flag-primalita' per il candidato divisore successivo.
+        else
+        {// ripristino della primalita', dopo un composto(i.e. non primo).
+            isStillPrime = true;
+        }// ripristino della primalita', dopo un composto(i.e. non primo).
+    }// external for : the one where cursor cicles from inf to sup, on dividends.
+    appendStream.close();
+    // ready.
+}// newDeal IntegralFileFromStartFSproducer
+
+
+
+// state of the art.
 void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys() const
 {
     unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
@@ -1242,5 +1302,3 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys() const
 
 
 
-
-}// namespace Cantiere_Primes_2022September01_

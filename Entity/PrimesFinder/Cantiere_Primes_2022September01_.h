@@ -3,6 +3,8 @@
 
 #include <string>
 #include <fstream>
+#include <math.h>
+#include <iostream>
 
 namespace Cantiere_Primes_2022September01_
 {
@@ -30,6 +32,11 @@ class Primes
      };
 
     /// Ctor
+    // ---start new deal
+    Primes();
+    bool SequentialCalcInterface( unsigned long Threshold);
+    bool RandomCalcInterface( unsigned long Left, unsigned long Right);
+    // ---end new deal
     Primes(unsigned long threshold);// default Section, on default config-file, dedicated for this class: i.e. ./PrimeConfig.txt
     // below: a Ctor to span (inf, max] :
     Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName);// CUSTOM Section, on default config-file.
@@ -46,6 +53,11 @@ class Primes
     const char * dumpTailReaderByChar( const std::string & fullPath);
     /// method /// algo ///////////////////////////////////////////////////////////////////////
     void Start_PrimeDump_FileSys() const;
+    void Start_PrimeDump_FileSys(
+                                    unsigned long Left
+                                    ,unsigned long Right
+                                    ,std::ofstream appendStream
+                                ) const;
     SingleFactor * IntegerDecomposition( const unsigned long dividend);
 // TODO let private after test
     const char * theDumpPath = nullptr;// NB. remember to share and delete[].
@@ -71,9 +83,9 @@ private: // TODO let private after test
     double sigma;
     double t;
     /// Ctor
-    Primes();// empty Ctor not available; a threshold is required.
+    // Primes();// no more hiding of empty Ctor.
     // copying methoda : not usable->private.
-    // Copy Constructor
+    // hide Copy Constructor
     Primes   ( const Primes & original );
     // construction helper:
     const char * feedDumpPath(); // non const
@@ -94,6 +106,5 @@ private: // TODO let private after test
 };// class
 
 }// namespace Cantiere_Primes_2022September01_
-
 
 #endif // CANTIERE_PRIMES_2022SEPTEMBER01__H_INCLUDED
