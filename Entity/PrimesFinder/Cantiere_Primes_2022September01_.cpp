@@ -28,15 +28,14 @@ Cantiere_Primes_2022September01_::Primes::Primes( )
             recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
         }// else : no valid last record : start from zero!
         // the upper bound for research, in R+, will be a parameter for the sequentialCalcInterface()
-        dumpPathAcquisitionFromConfig = true;
+        dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
     } // else dumpPathAcquisitionFromConfig already false from init.
     //----end of SequentialPath --- start of RandomPath -------
     this->feed_CustomDumpPath();// CUSTOM section, in default file.
     if( nullptr != this->customDumpPath)
     {
         this->createOrAppend( this->customDumpPath);
-
-        dumpPathAcquisitionFromConfig = true;
+        dumpPathAcquisitionFromConfig &= true;// NB &= only if both files are found, the flag gets true.
     }// else :  not-healthly built:  dumpPathAcquisitionFromConfig already false from init.
     //---check operations' result and document the error for the user.
     if( false==dumpPathAcquisitionFromConfig)// something wrong reading from config files.
@@ -69,14 +68,14 @@ bool Cantiere_Primes_2022September01_::Primes::RandomCalcInterface( unsigned lon
     // write a stamp, about what we're doing and when.
     time_t ttime = time(0);
     char* dt = ctime(&ttime);
-    //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
-    //dt = asctime(gmt_time);
+    //   NB. for UTC Greenwich tm *gmt_time = gmtime(&ttime);
+    //   NB. for UTC Greenwich dt = asctime(gmt_time);
     ofstream stampWriter( this->customDumpPath, std::fstream::out | std::fstream::app);
     stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
+    //
+    Start_PrimeDump_FileSys( infLeft, maxRight );
+    //
     stampWriter.close();
-    //
-    // TODO this->Start_PrimeDump_FileSys()
-    //
     return res;
 }
 
@@ -1190,15 +1189,14 @@ Cantiere_Primes_2022September01_::Primes::DumpElement * Cantiere_Primes_2022Sept
 void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys(
                                                                         unsigned long Left
                                                                         ,unsigned long Right
-                                                                        ,ofstream appendStream
-                                                                    ) const
+                                                                    )
 {
     unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
     bool isStillPrime = true;
     double realQuotient;
     unsigned long intQuotient;
     unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
-// NB now a parameter ; ofstream appendStream( this->theDumpPath, std::fstream::out | std::fstream::app);
+    // NB now a data-member ; ofstream appendStream( this->theDumpPath, std::fstream::out | std::fstream::app);
     //
     for( ; cursor<=this->desiredThreshold; cursor++)//NB. cursor==dividend.
     {
@@ -1240,7 +1238,7 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys(
             isStillPrime = true;
         }// ripristino della primalita', dopo un composto(i.e. non primo).
     }// external for : the one where cursor cicles from inf to sup, on dividends.
-    appendStream.close();
+// NO MORE : interface does it : appendStream.close();
     // ready.
 }// newDeal IntegralFileFromStartFSproducer
 

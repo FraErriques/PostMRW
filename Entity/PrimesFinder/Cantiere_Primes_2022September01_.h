@@ -56,10 +56,8 @@ class Primes
     void Start_PrimeDump_FileSys(
                                     unsigned long Left
                                     ,unsigned long Right
-                                    ,std::ofstream appendStream
-                                ) const;
+                                );
     SingleFactor * IntegerDecomposition( const unsigned long dividend);
-// TODO let private after test
     const char * theDumpPath = nullptr;// NB. remember to share and delete[].
 
 private: // TODO let private after test
@@ -78,7 +76,8 @@ private: // TODO let private after test
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     // methods:{bisection,getToNextRecord,getToPrevRecord,StepThroughNrecordsFFWD,StepThroughNrecordsBKWD} all share the stream.
-    std::ifstream sharedReader;
+    std::ifstream sharedReader;// read
+    std::ofstream appendStream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
     double sigma;
     double t;

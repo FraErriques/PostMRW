@@ -26,13 +26,13 @@ int main()
     // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
     const std::string customFileConfigSectionName( "primeCustomFile");
-    Cantiere_Primes_2022September01_::Primes *p = new Cantiere_Primes_2022September01_::Primes(
+    Cantiere_Primes_2022September01_::Primes *p = new Cantiere_Primes_2022September01_::Primes();
+    bool res = p->RandomCalcInterface(
        20000000
-       ,20000100
-       ,customFileConfigSectionName  );
+       ,20000100 );
+    //
     //const char * customDumpFullPath = p->feed_CustomDumpPath();// sets a member : TODO
-    p->Start_PrimeDump_FileSys();// NB. callable from both "fromOrigin" & "custom" TODO
-    // official_one PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
+    //p->Start_PrimeDump_FileSys();// NB. callable from both "fromOrigin" & "custom" TODO
     long LastOrdinal = p->getLastOrdinal(); //  (*p)[p->lastOrdinal]; TODO give it a public reader
     long LastPrime = p->getLastPrime();
     //
