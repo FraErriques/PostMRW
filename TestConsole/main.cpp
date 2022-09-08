@@ -13,6 +13,7 @@
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
+#include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 
@@ -24,22 +25,29 @@ int main()
     // system("pwd");
     // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
-    PrimesFinder::Primes * p = new PrimesFinder::Primes( 100);
-    long desPrime = (*p)[p->lastOrdinal];
-    //
-    desPrime = (*p)[25];
-    std::string logMsg = "desPrime = (*p)[25]==";
-    std::string * desinenza = Common::StrManipul::uLongToString( desPrime);
-    logMsg += *desinenza;
-    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
-    delete desinenza;
-    //
-    desPrime = (*p)[3];
-    logMsg = "desPrime = (*p)[3]==";
-    desinenza = Common::StrManipul::uLongToString( desPrime);
-    logMsg += *desinenza;
-    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
-    delete desinenza;
+    const std::string customFileConfigSectionName( "primeCustomFile");
+    Cantiere_Primes_2022September01_::Primes *p = new Cantiere_Primes_2022September01_::Primes();
+    bool res = p->RandomCalcInterface(
+       1
+       ,100 );
+    // private  p->Start_PrimeDump_FileSys( 2,4, nullptr);// NB. callable from both "fromOrigin" & "custom" TODO
+    long LastOrdinal = p->getLastOrdinal(); //  (*p)[p->lastOrdinal]; TODO give it a public reader
+    long LastPrime = p->getLastPrime();
+    res = p->SequentialCalcInterface( 100);
+//    //
+//    long desPrime = (*p)[25];
+//    std::string logMsg = "desPrime = (*p)[25]==";
+//    std::string * desinenza = Common::StrManipul::uLongToString( desPrime);
+//    logMsg += *desinenza;
+//    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+//    delete desinenza;
+//    //
+//    desPrime = (*p)[3];
+//    logMsg = "desPrime = (*p)[3]==";
+//    desinenza = Common::StrManipul::uLongToString( desPrime);
+//    logMsg += *desinenza;
+//    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+//    delete desinenza;
     //-----
     delete p;
     Common::LogWrappers::SectionClose();
