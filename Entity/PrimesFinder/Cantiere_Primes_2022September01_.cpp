@@ -18,11 +18,11 @@ Cantiere_Primes_2022September01_::Primes::Primes( )
 {
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     //
-    this->feedDumpPath();// default section, in default file.
-    if( nullptr != this->theDumpPath)
+    this->feedDumpPath();// SEQUENTIAL : default section, in default file.
+    if( nullptr != this->sequentialDumpPath )
     {
-        this->createOrAppend( this->theDumpPath);
-        this->dumpTailReaderByChar( this->theDumpPath);
+        this->createOrAppend( this->sequentialDumpPath);
+        this->dumpTailReaderByChar( this->sequentialDumpPath);
         if( nullptr != this->theDumpTailStr)
         {
             recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -32,9 +32,9 @@ Cantiere_Primes_2022September01_::Primes::Primes( )
     } // else dumpPathAcquisitionFromConfig already false from init.
     //----end of SequentialPath --- start of RandomPath -------
     this->feed_CustomDumpPath();// CUSTOM section, in default file.
-    if( nullptr != this->customDumpPath)
+    if( nullptr != this->randomDumpPath )
     {
-        this->createOrAppend( this->customDumpPath);
+        this->createOrAppend( this->randomDumpPath);
         dumpPathAcquisitionFromConfig &= true;// NB &= only if both files are found, the flag gets true.
     }// else :  not-healthly built:  dumpPathAcquisitionFromConfig already false from init.
     //---check operations' result and document the error for the user.
@@ -48,12 +48,27 @@ Cantiere_Primes_2022September01_::Primes::Primes( )
 
 bool Cantiere_Primes_2022September01_::Primes::SequentialCalcInterface( unsigned long Threshold )
 {
-    bool res = false;
+    bool dumpPathAcquisitionFromConfig = false;// init to invalid
+    if( nullptr != this->sequentialDumpPath )
+    {
+        this->createOrAppend( this->sequentialDumpPath);
+        this->dumpTailReaderByChar( this->sequentialDumpPath);
+        if( nullptr != this->theDumpTailStr)
+        {
+            recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+        }// else : no valid last record : start from zero!
+        // the upper bound for research, in R+, will be a parameter for the sequentialCalcInterface()
+        dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
+    } // else dumpPathAcquisitionFromConfig already false from init.
     //
-    // TODO this->Start_PrimeDump_FileSys()
+    this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
+    // ---call with params
+    this->Start_PrimeDump_FileSys( this->getLastPrime() , Threshold , append_Sequential_Stream );
+    this->append_Sequential_Stream->close();
     //
-    return res;
+    return dumpPathAcquisitionFromConfig;
 }
+
 
 bool Cantiere_Primes_2022September01_::Primes::RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
 {
@@ -70,58 +85,37 @@ bool Cantiere_Primes_2022September01_::Primes::RandomCalcInterface( unsigned lon
     char* dt = ctime(&ttime);
     //   NB. for UTC Greenwich tm *gmt_time = gmtime(&ttime);
     //   NB. for UTC Greenwich dt = asctime(gmt_time);
-    ofstream stampWriter( this->customDumpPath, std::fstream::out | std::fstream::app);
-    stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
     //
-    Start_PrimeDump_FileSys( infLeft, maxRight );
+    this->append_Random_Stream = new std::ofstream( this->randomDumpPath , std::fstream::out | std::fstream::app);
+    *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
+    *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
     //
-    stampWriter.close();
+    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream );
+    //
+    this->append_Random_Stream->close();
     return res;
 }
 
 
-    /*
-    this Construction path is devoted to log the results on the default IntegralFile; the one that starts from origin(i.e. +2).
-    Another Ctor will be provided, to log on a partial-File, which consists in a custom analysis, in [min, max]. For such
-    Ctor the params will be Ctor( min, max, desiredConfigSectionName)
-    */
-    Cantiere_Primes_2022September01_::Primes::Primes(unsigned long threshold)
-    {// default section, in default file.
-        this->feedDumpPath();
-        if( nullptr != this->theDumpPath)
-        {
-            this->createOrAppend( this->theDumpPath);
-            this->dumpTailReaderByChar( this->theDumpPath);
-            if( nullptr != this->theDumpTailStr)
-            {
-                recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
-            }// else : no valid last record : start from zero!
-            this->desiredThreshold = threshold;// set the upper bound for research, in R+.
-        }
-        else// else : not-healthly built.
-        {// else : not-healthly built.
-            this->isHealthlyConstructed = false;
-            this->canOperate = false;
-        }// else : not-healthly built.
-    }// Ctor
+
 
 
 const char * Cantiere_Primes_2022September01_::Primes::feedDumpPath() // non const
 {// default section, in default file.
-    if( nullptr==this->theDumpPath)
+    if( nullptr==this->sequentialDumpPath )
     {
-        this->theDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+        this->sequentialDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
     }//else ready.
-    return this->theDumpPath;
+    return this->sequentialDumpPath;
 }// feedDumpPath()
 
 const char * Cantiere_Primes_2022September01_::Primes::feed_CustomDumpPath() // non const
 {// custom section, in default file.
-    if( nullptr==this->customDumpPath)
+    if( nullptr==this->randomDumpPath )
     {
-        this->customDumpPath = this->getPrimeDumpFullPath( "primeCustomFile");// CUSTOM Section Name, for non complete dumping.
+        this->randomDumpPath = this->getPrimeDumpFullPath( "primeCustomFile");// CUSTOM Section Name, for non complete dumping.
     }//else ready.
-    return this->customDumpPath;
+    return this->randomDumpPath;
 }// feed_CustomDumpPath()
 
 const char * Cantiere_Primes_2022September01_::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
@@ -137,53 +131,20 @@ const char * Cantiere_Primes_2022September01_::Primes::getPrimeDumpFullPath( con
 
 
 
-    /*
-    This Construction path is devoted to log the results on a CUSTOM IntegralFile.
-    This Ctor is devoted to log on a partial-File, which consists in a custom analysis, in (infLeft, maxRight]. For such
-    Ctor the params are: Ctor( infLeft, maxRight, desiredConfigSectionName).
-    */
-    Cantiere_Primes_2022September01_::Primes::Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName)
-    {// CUSTOM section, in default file.
-        this->feed_CustomDumpPath();
-        if( nullptr != this->customDumpPath)
-        {
-            this->createOrAppend( this->customDumpPath);
-            // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-            Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-            double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
-            this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
-            this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
-            this->desiredThreshold = maxRight;
-            // write a stamp, about what we're doing and when.
-            time_t ttime = time(0);
-            char* dt = ctime(&ttime);
-            //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
-            //dt = asctime(gmt_time);
-            ofstream stampWriter( this->customDumpPath, std::fstream::out | std::fstream::app);
-            stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
-            stampWriter.close();
-        }// else :  not-healthly built.
-        else// else : not-healthly built.
-        {// else : not-healthly built.
-            this->isHealthlyConstructed = false;
-            this->canOperate = false;
-        }// else : not-healthly built.
-    }// Ctor
-
 
 
     /// Dtor()
     Cantiere_Primes_2022September01_::Primes::~Primes()
     {/// Dtor() : closes the append_handle.
-        if( nullptr != this->theDumpPath)
+        if( nullptr != this->sequentialDumpPath )
         {
-            delete[] this->theDumpPath;
-            this->theDumpPath = nullptr;
+            delete[] this->sequentialDumpPath;
+            this->sequentialDumpPath = nullptr;
         }
-        if( nullptr != this->customDumpPath)
+        if( nullptr != this->randomDumpPath )
         {
-            delete[] this->customDumpPath;
-            this->customDumpPath = nullptr;
+            delete[] this->randomDumpPath;
+            this->randomDumpPath = nullptr;
         }
         if( nullptr != this->theDumpTailStr )
         {
@@ -212,12 +173,12 @@ bool Cantiere_Primes_2022September01_::Primes::getLastCoupleInDefaultFile()
 {
     bool res = false;// init to invalid.
     this->feedDumpPath();
-    if( nullptr != this->theDumpPath)
+    if( nullptr != this->sequentialDumpPath )
     {
-        this->createOrAppend( this->theDumpPath);
+        this->createOrAppend( this->sequentialDumpPath);
     }// else : TODO not-healthly built.
     else {return res;}// which is still "false".
-    this->dumpTailReaderByChar( this->theDumpPath);
+    this->dumpTailReaderByChar( this->sequentialDumpPath);
     if( nullptr != this->theDumpTailStr)
     {
         recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -334,15 +295,15 @@ const char * Cantiere_Primes_2022September01_::Primes::dumpTailReaderByChar( con
 unsigned long Cantiere_Primes_2022September01_::Primes::getActualLength()
 {
     this->feedDumpPath();
-    if( nullptr == this->theDumpPath)
+    if( nullptr == this->sequentialDumpPath )
     {
         this->isHealthlyConstructed = false;
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    std::ifstream dumpReader(  this->theDumpPath, std::fstream::in );// read-only.
+    std::ifstream dumpReader(  this->sequentialDumpPath, std::fstream::in );// read-only.
     dumpReader.seekg( 0, dumpReader.end);
-    this->actualPrimaryFileLength = dumpReader.tellg();
+    this->actualPrimaryFileLength = dumpReader.tellg(); // TODO eliminate instance-data-members.
     this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;// refresh it now!
     // ready.
     return this->actualPrimaryFileLength;
@@ -351,13 +312,13 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getActualLength()
 unsigned long Cantiere_Primes_2022September01_::Primes::getLastOrdinal()
 {
     this->feedDumpPath();// default section, in default file.
-    if( nullptr == this->theDumpPath)
+    if( nullptr == this->sequentialDumpPath)
     {
         this->isHealthlyConstructed = false;
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    this->dumpTailReaderByChar( this->theDumpPath);
+    this->dumpTailReaderByChar( this->sequentialDumpPath);
     if( nullptr != this->theDumpTailStr)
     {
         recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -373,13 +334,13 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getLastOrdinal()
 unsigned long Cantiere_Primes_2022September01_::Primes::getLastPrime()
 {// default section, in default file.
     this->feedDumpPath();
-    if( nullptr == this->theDumpPath)
+    if( nullptr == this->sequentialDumpPath)
     {
         this->isHealthlyConstructed = false;
         this->canOperate = false;
         throw;
     }// else :  healthly built: continue:
-    this->dumpTailReaderByChar( this->theDumpPath);
+    this->dumpTailReaderByChar( this->sequentialDumpPath);
     if( nullptr != this->theDumpTailStr)
     {
         recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
@@ -465,7 +426,7 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getLastPrime()
 
         if( secureRightBound<target)// required a landing-point, after the secureRightBound
         {
-//            this->dumpTailReaderByChar( this->theDumpPath);
+//            this->dumpTailReaderByChar( this->sequentialDumpPath);
 //            this->recoverDumpTail( this->theDumpTailStr);
 //            for(int c=0; ; c++)
 //            {// scan the dumpTailArray
@@ -563,7 +524,7 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getLastPrime()
     long prevDecodedOrdinal;
     long leftBoundary = 0;
     // init  last : read last record
-    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
+    std::ifstream dumpReader( this->sequentialDumpPath, std::fstream::in );// read-only.
     this->getActualLength();// this call contains three actions:
     // NB. the previous line refreshes what follows: this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;
     last.Ordinal = this->lastOrdinal;// TODO monitor the compatibility signed-unsigned.
@@ -663,7 +624,7 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getLastPrime()
     long prevDecodedOrdinal;
     long leftBoundary = 0;
     // init  last : read last record
-    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
+    std::ifstream dumpReader( this->sequentialDumpPath, std::fstream::in );// read-only.
     this->getActualLength();// this call contains three actions:
     // NB. the previous line refreshes what follows: this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;
     last.Ordinal = this->lastOrdinal;// TODO monitor the compatibility signed-unsigned.
@@ -757,12 +718,12 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getLastPrime()
  {
     AsinglePointInStream beg, decoded, last;
     this->feedDumpPath();
-    if( nullptr == this->theDumpPath)
+    if( nullptr == this->sequentialDumpPath)
     {
         return -1UL;// as an error code, since the correct response has to be >0.
     }// else continue:
     unsigned long requiredPrime;
-    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
+    std::ifstream dumpReader( this->sequentialDumpPath, std::fstream::in );// read-only.
     this->getActualLength();//
     long usefulPartOfDump_measure = this->actualPrimaryFileLength;// init. It will be updated bisecting.
     long leftBoundary = 0;
@@ -886,12 +847,12 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getLastPrime()
 unsigned long   Cantiere_Primes_2022September01_::Primes::operator[] ( const unsigned long requiredOrdinal )
 {// linear bisection on IntegralFile.
     this->feedDumpPath();
-    if( nullptr == this->theDumpPath)
+    if( nullptr == this->sequentialDumpPath)
     {
         return -1UL;// as an error code, since the correct response has to be >0.
     }// else continue:
     unsigned long requiredPrime;
-    std::ifstream dumpReader( this->theDumpPath, std::fstream::in );// read-only.
+    std::ifstream dumpReader( this->sequentialDumpPath, std::fstream::in );// read-only.
     this->getActualLength();// ths call contains the three actions, deleted below.
     // NB. the previous line refreshes what follows: this->secureRightBound = this->actualPrimaryFileLength - this->tailRecordSize;
 //    dumpReader.seekg( 0, dumpReader.end);
@@ -919,7 +880,7 @@ unsigned long   Cantiere_Primes_2022September01_::Primes::operator[] ( const uns
         target = (int)(requiredLandingPoint);// find required %.
         if( secureRightBound<target)// required a landing-point, after the secureRightBound
         {
-            this->dumpTailReaderByChar( this->theDumpPath);
+            this->dumpTailReaderByChar( this->sequentialDumpPath);
             this->recoverDumpTail( this->theDumpTailStr);
             for(int c=0; ; c++)
             {// scan the dumpTailArray
@@ -1189,6 +1150,7 @@ Cantiere_Primes_2022September01_::Primes::DumpElement * Cantiere_Primes_2022Sept
 void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys(
                                                                         unsigned long Left
                                                                         ,unsigned long Right
+                                                                        ,std::ofstream * appendStream
                                                                     )
 {
     unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
@@ -1196,9 +1158,10 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys(
     double realQuotient;
     unsigned long intQuotient;
     unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
-    // NB now a data-member ; ofstream appendStream( this->theDumpPath, std::fstream::out | std::fstream::app);
+    if( cursor<+2){cursor=+2;}// 1 (i.e. one) is the product-invariant; so, not a prime.
+    // NB now a data-member ; ofstream appendStream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
     //
-    for( ; cursor<=this->desiredThreshold; cursor++)//NB. cursor==dividend.
+    for( ; cursor<=Right; cursor++)//NB. cursor==dividend.
     {
         double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
         // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
@@ -1229,7 +1192,7 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys(
             delete ordinalStr;
             delete primeStr;
             // instead of returning it, dump it on the file.
-            appendStream.write( strBuild->str().c_str(), strBuild->str().length() );
+            appendStream->write( strBuild->str().c_str(), strBuild->str().length() );
             delete strBuild;// clean up the token-buffer.
             strBuild = nullptr;
         }// else ripristino del flag-primalita' per il candidato divisore successivo.
@@ -1243,6 +1206,8 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys(
 }// newDeal IntegralFileFromStartFSproducer
 
 
+/* cantina
+
 
 // state of the art.
 void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys() const
@@ -1252,7 +1217,7 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys() const
     double realQuotient;
     unsigned long intQuotient;
     unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
-    ofstream appendStream( this->theDumpPath, std::fstream::out | std::fstream::app);
+    ofstream appendStream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
     //
     for( ; cursor<=this->desiredThreshold; cursor++)//NB. cursor==dividend.
     {
@@ -1299,4 +1264,61 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys() const
 }// IntegralFileFromStartFSproducer
 
 
+    this Construction path is devoted to log the results on the default IntegralFile; the one that starts from origin(i.e. +2).
+    Another Ctor will be provided, to log on a partial-File, which consists in a custom analysis, in [min, max]. For such
+    Ctor the params will be Ctor( min, max, desiredConfigSectionName)
+    Cantiere_Primes_2022September01_::Primes::Primes(unsigned long threshold)
+    {// default section, in default file.
+        this->feedDumpPath();
+        if( nullptr != this->sequentialDumpPath)
+        {
+            this->createOrAppend( this->sequentialDumpPath);
+            this->dumpTailReaderByChar( this->sequentialDumpPath);
+            if( nullptr != this->theDumpTailStr)
+            {
+                recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+            }// else : no valid last record : start from zero!
+            this->desiredThreshold = threshold;// set the upper bound for research, in R+.
+        }
+        else// else : not-healthly built.
+        {// else : not-healthly built.
+            this->isHealthlyConstructed = false;
+            this->canOperate = false;
+        }// else : not-healthly built.
+    }// Ctor
 
+
+    This Construction path is devoted to log the results on a CUSTOM IntegralFile.
+    This Ctor is devoted to log on a partial-File, which consists in a custom analysis, in (infLeft, maxRight]. For such
+    Ctor the params are: Ctor( infLeft, maxRight, desiredConfigSectionName).
+    Cantiere_Primes_2022September01_::Primes::Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName)
+    {// CUSTOM section, in default file.
+        this->feed_CustomDumpPath();
+        if( nullptr != this->customDumpPath)
+        {
+            this->createOrAppend( this->customDumpPath);
+            // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
+            Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+            double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+            this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+            this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
+            this->desiredThreshold = maxRight;
+            // write a stamp, about what we're doing and when.
+            time_t ttime = time(0);
+            char* dt = ctime(&ttime);
+            //tm *gmt_time = gmtime(&ttime);  NB. for UTC Greenwich
+            //dt = asctime(gmt_time);
+            ofstream stampWriter( this->customDumpPath, std::fstream::out | std::fstream::app);
+            stampWriter<<"\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt<<"\n";
+            stampWriter.close();
+        }// else :  not-healthly built.
+        else// else : not-healthly built.
+        {// else : not-healthly built.
+            this->isHealthlyConstructed = false;
+            this->canOperate = false;
+        }// else : not-healthly built.
+    }// Ctor
+
+
+
+**** cantina ******/
