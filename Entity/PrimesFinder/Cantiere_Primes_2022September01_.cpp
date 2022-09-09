@@ -65,6 +65,8 @@ bool Cantiere_Primes_2022September01_::Primes::SequentialCalcInterface( unsigned
     // ---call with params
     this->Start_PrimeDump_FileSys( this->getLastPrime() , Threshold , append_Sequential_Stream );
     this->append_Sequential_Stream->close();
+    delete this->append_Sequential_Stream;
+    this->append_Sequential_Stream = nullptr;
     //
     return dumpPathAcquisitionFromConfig;
 }
@@ -89,10 +91,11 @@ bool Cantiere_Primes_2022September01_::Primes::RandomCalcInterface( unsigned lon
     this->append_Random_Stream = new std::ofstream( this->randomDumpPath , std::fstream::out | std::fstream::app);
     *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
     *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
-    //
+    // ---call with params
     Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream );
-    //
     this->append_Random_Stream->close();
+    delete this->append_Random_Stream;
+    this->append_Random_Stream = nullptr;
     return res;
 }
 
@@ -146,11 +149,11 @@ const char * Cantiere_Primes_2022September01_::Primes::getPrimeDumpFullPath( con
             delete[] this->randomDumpPath;
             this->randomDumpPath = nullptr;
         }
-        if( nullptr != this->theDumpTailStr )
-        {
-            delete[] this->theDumpTailStr;
-            this->theDumpTailStr = nullptr;
-        }
+//        if( nullptr != this->theDumpTailStr ) TODO buggy : let it local and delete after usage
+//        {
+//            delete[] this->theDumpTailStr;
+//            this->theDumpTailStr = nullptr;
+//        }
         if( nullptr != this->dumpTail )
         {
             delete[] this->dumpTail;
@@ -234,7 +237,7 @@ const char * Cantiere_Primes_2022September01_::Primes::dumpTailReader( const std
             lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
         }// end of if( streamsize..)->seek( howMuch, end).
     //
-    int multeplicity = 2;// less two times backwards, from EOF.
+    int multeplicity = 5;// less two times backwards, from EOF.
     lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
     this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
     lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
@@ -275,7 +278,7 @@ const char * Cantiere_Primes_2022September01_::Primes::dumpTailReaderByChar( con
             lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
         }// end of if( streamsize..)->seek( howMuch, end).
     //
-    int multeplicity = 4;// less "multeplicity" times backwards, from EOF.
+    int multeplicity = 5;// less "multeplicity" times backwards, from EOF.
 // avoid it:lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
     lastrecReader.seekg( streamSize-multeplicity*lastTokenHypothesizedLength, lastrecReader.beg );
 //this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test

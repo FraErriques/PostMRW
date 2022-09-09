@@ -29,10 +29,18 @@ int main()
     Cantiere_Primes_2022September01_::Primes *p = new Cantiere_Primes_2022September01_::Primes();
     bool res = p->RandomCalcInterface(
        1
-       ,100 );
+       ,10 );
+    res = p->RandomCalcInterface(
+       20
+       ,30 );
+    res = p->RandomCalcInterface(
+       40
+       ,50 );
     // private  p->Start_PrimeDump_FileSys( 2,4, nullptr);// NB. callable from both "fromOrigin" & "custom" TODO
     long LastOrdinal = p->getLastOrdinal(); //  (*p)[p->lastOrdinal]; TODO give it a public reader
     long LastPrime = p->getLastPrime();
+    res = p->SequentialCalcInterface(  10);
+    res = p->SequentialCalcInterface(  50);
     res = p->SequentialCalcInterface( 100);
 //    //
 //    long desPrime = (*p)[25];
