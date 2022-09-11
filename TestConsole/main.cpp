@@ -27,13 +27,22 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     const std::string customFileConfigSectionName( "primeCustomFile");
     Cantiere_Primes_2022September01_::Primes *p = new Cantiere_Primes_2022September01_::Primes();
-    bool res = p->RandomCalcInterface(
-       1
-       ,100 );
-    // private  p->Start_PrimeDump_FileSys( 2,4, nullptr);// NB. callable from both "fromOrigin" & "custom" TODO
-    long LastOrdinal = p->getLastOrdinal(); //  (*p)[p->lastOrdinal]; TODO give it a public reader
-    long LastPrime = p->getLastPrime();
-    res = p->SequentialCalcInterface( 100);
+    bool res = p->SequentialCalcInterface(  50);
+//    bool res = p->RandomCalcInterface(
+//       1
+//       ,10 );
+//    res = p->RandomCalcInterface(
+//       20
+//       ,30 );
+//    res = p->RandomCalcInterface(
+//       40
+//       ,50 );
+//    // private  p->Start_PrimeDump_FileSys( 2,4, nullptr);// NB. callable from both "fromOrigin" & "custom" TODO
+//    long LastOrdinal = p->getLastOrdinal(); //  (*p)[p->lastOrdinal]; TODO give it a public reader
+//    long LastPrime = p->getLastPrime();
+//    res = p->SequentialCalcInterface(  10);
+//    res = p->SequentialCalcInterface(  50);
+//    res = p->SequentialCalcInterface(  60);
 //    //
 //    long desPrime = (*p)[25];
 //    std::string logMsg = "desPrime = (*p)[25]==";
