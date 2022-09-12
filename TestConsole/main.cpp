@@ -785,11 +785,29 @@ void Start_PrimeDump_FileSys(
 }// namespace UnderTest
 
 
+tryReadBackwards()
+{
+    std::ifstream in;
+    in.open("nelMezzo.txt");
+    char ch;
+    int pos;
+    in.seekg(-1,ios::end);
+    pos=in.tellg();
+    for(int i=0;i<pos;i++)
+    {
+        ch=in.get();
+        cout<<ch;
+        in.seekg(-2,ios::cur);
+    }
+    in.close();
+}//tryReadBackwards
+
 
 
 //---entry point-------------------------
 int main()
 {
+    // tryReadBackwards();
     // system("pwd");
     // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
@@ -801,8 +819,8 @@ int main()
     // delete[] lastRecord;
     //
     bool res = p->RandomCalcInterface(
-       900
-       ,999 );
+       999900
+       ,999999 );
     res = p->RandomCalcInterface(
        20
        ,30 );
