@@ -424,11 +424,17 @@ const char * dumpTailReader( const std::string & fullPath)
 //
 const char * lastRecordReaderByChar( const std::string & fullPath)
 {
+    char * directTailDump = new char[120];// tune it.
     ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( 0, lastrecReader.end);
-    int streamSize = lastrecReader.tellg();
+    int streamSize = lastrecReader.tellg();// filesize
+    if( 1024>streamSize)
+    {
+        sprintf( directTailDump, "1_2");// means start from sratch.
+        return directTailDump;
+    }// else continue.
     Common::StringBuilder * sb = new Common::StringBuilder( 100);// forecasted size.
-    lastrecReader.seekg( -1, lastrecReader.end);// get in place to read last char.
+    lastrecReader.seekg( -100, lastrecReader.end);// get in place to read last char[100].
     int currentPosition;
     int step = 0;
     int howManyLineEndings = 0;
@@ -438,21 +444,12 @@ const char * lastRecordReaderByChar( const std::string & fullPath)
         sb->append(c);
         step++;
         currentPosition = lastrecReader.tellg();
-        lastrecReader.seekg( -1*step , lastrecReader.end);
-        if( 10==c || 13==c)
-            {howManyLineEndings++;}
-        if(2==howManyLineEndings)
-            {break;}
     }// for
     std::string bufferedReverseTail = sb->str();
     int bufferedReverseTail_len = bufferedReverseTail.length();
-    const char * reverseTailDump = sb->str().c_str();
-    char * directTailDump = new char[step+1];
-    for(int c=0; c<step; c++)
-    {
-        directTailDump[c] = reverseTailDump[step-c];
-    }
-    delete sb;
+    const char * const_directTailDump = sb->str().c_str();
+    directTailDump = (char *)const_directTailDump;
+    // delete sb; ?really?
     // ready
     return directTailDump;// caller has to delete
 }// lastRecordReaderByChar
@@ -799,21 +796,25 @@ int main()
     const std::string customFileConfigSectionName( "primeCustomFile");
     // UnderTest:: NB.
     UnderTest::Primes *p = new UnderTest::Primes();
+    // p->recoverLastRecord( p->theDumpTailStr);
+    // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
+    // delete[] lastRecord;
+    //
     bool res = p->RandomCalcInterface(
-       1
-       ,10 );
+       900
+       ,999 );
     res = p->RandomCalcInterface(
        20
        ,30 );
-    res = p->RandomCalcInterface(
-       40
-       ,50 );
-    // private  p->Start_PrimeDump_FileSys( 2,4, nullptr);// NB. callable from both "fromOrigin" & "custom" TODO
-    long LastOrdinal = p->getLastOrdinal(); //  (*p)[p->lastOrdinal]; TODO give it a public reader
+
+    long LastOrdinal = p->getLastOrdinal();
     long LastPrime = p->getLastPrime();
-    res = p->SequentialCalcInterface(  10);
-    res = p->SequentialCalcInterface(  50);
-    res = p->SequentialCalcInterface( 100);
+    res = p->SequentialCalcInterface( 200);
+    LastOrdinal = p->getLastOrdinal();
+    LastPrime = p->getLastPrime();
+
+//    res = p->SequentialCalcInterface(  50);
+//    res = p->SequentialCalcInterface( 100);
 //    //
 //    long desPrime = (*p)[25];
 //    std::string logMsg = "desPrime = (*p)[25]==";

@@ -1,49 +1,9 @@
 
 
- Custom Interval (1, 10] ,worked on: Fri Sep 09 15:01:13 2022
+ Custom Interval (900, 999] ,worked on: Mon Sep 12 15:55:47 2022
  Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-1_22_33_54_7
+162_907163_911164_919165_929166_937167_941168_947169_953170_967171_971172_977173_983174_991175_997
 
- Custom Interval (20, 30] ,worked on: Fri Sep 09 15:01:46 2022
+ Custom Interval (20, 30] ,worked on: Mon Sep 12 15:55:52 2022
  Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
 9_2310_29
-
- Custom Interval (40, 50] ,worked on: Fri Sep 09 15:02:07 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-15_4116_4317_47
-
- Custom Interval (1, 10] ,worked on: Fri Sep 09 15:39:37 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-1_22_33_54_7
-
- Custom Interval (20, 30] ,worked on: Fri Sep 09 15:39:37 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (40, 50] ,worked on: Fri Sep 09 15:39:37 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-15_4116_4317_47
-
- Custom Interval (1, 10] ,worked on: Fri Sep 09 16:03:33 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-1_22_33_54_7
-
- Custom Interval (20, 30] ,worked on: Fri Sep 09 16:03:33 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (40, 50] ,worked on: Fri Sep 09 16:03:33 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-15_4116_4317_47
-
- Custom Interval (1, 10] ,worked on: Mon Sep 12 11:56:08 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-1_22_33_54_7
-
- Custom Interval (20, 30] ,worked on: Mon Sep 12 11:56:17 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (40, 50] ,worked on: Mon Sep 12 11:56:17 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-15_4116_4317_47
