@@ -9,754 +9,540 @@
 #include "../Common/MonteCarlo/BaseConverter.h"
 #include "../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
+#include "../Common/Config_wrap/Config_wrap.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Entity/Integration/Integration.h"
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
+#include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 
-int main()
+namespace UnderTest
 {
-    PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-    long desPrime = (*p)[p->lastOrdinal];
-    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
-//for(int c=0; c<=100;c++)
-//    {
-//        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
-//    }
-    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
-    for(int c=73; c<=100;c++)
+
+
+namespace internalAlgos
+{
+  
+
+// an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
+double LogIntegral_coChain( double x)
+{// an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
+    return +1.0/log(x);
+}// LogIntegral_coChain
+
+
+unsigned long factorial( unsigned int par)
+{
+    unsigned long res = +1UL;
+    for( int c=par; c>+1; c--)
     {
-        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
-        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
+        res *= c;
     }
-    delete p;
-    
-
-
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-
-/* --------------cantina----------------------------
-
-    std::string phoneBookStreamPath("./interni_IT_.txt");
-    Common::Dictionary::MapOperation * phoneMap = new Common::Dictionary::MapOperation();
-    phoneMap->readFileByLines( phoneBookStreamPath);
-    phoneMap->mapListener( );
-    // garbage collect
-    delete phoneMap;
-
-/// l'integrando (-z)^s/(Exp[z]-1)dz/z
-Numerics::Complex * IcoChain( Numerics::Complex s, Numerics::Complex z)
-{
-    Numerics::Complex numerator(-z);
-    numerator ^=s;
-    Numerics::Complex denominator((z.ExpC()-1.0)*z);
-    Numerics::Complex * res = new Numerics::Complex( numerator / denominator);//---caller has to delete----------
     return res;
-}// IcoChain
+}// factorial
 
 
-Numerics::Complex * pointFromOriginAnulus( double delta, double Theta )
-{// this parametrization is: (delta*Cos[t] + I*delta*Sin[t])
-    // take the desired point, on the unit ball: i.e. the versor.
-    Numerics::Complex * res = new Numerics::Complex( cos(Theta) , sin(Theta) );//NB. caller has to delete.
-    *res *= delta;// then take it on the appropriate ball, by omothetia.
-    return res;
-}// pointFromOriginAnulus
-
-
-Numerics::Complex * originAnulus( double stepSize, int stepOrdinal, double delta)
-{// this parametrization is: (delta*Cos[t] + I*delta*Sin[t])
-    Domain domain;//to be thrown
-    int stepCardinality = +2.0*PI/stepSize;
-    if(stepOrdinal>stepCardinality){throw domain;}
-    double Theta = +2.0*PI*(double)stepOrdinal/(double)stepCardinality;
-    Numerics::Complex * res = new Numerics::Complex( cos(Theta) , sin(Theta) );//NB. caller has to delete.
-    *res *= delta;
-    return res;
-}// originAnulus
-
- f
-// NB. cannot step for numerical integration in Complex plane like this: the real and immaginary parts of the image( i.e. u(x,y) and v(x,y) ) have
-// to be separated, to step.
-Numerics::Complex * integralStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s)
-{// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
-    Numerics::Complex * accumulator = new Numerics::Complex( 0.0 , 0.0);
-    int stepCardinality = +2.0*PI/stepSize;
-    double Theta =0.0;
-    for(int curStep=0; curStep<stepCardinality; curStep++)
-    {
-        Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
-        Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
-        Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
-        *accumulator += *pointOn_COchain;
-        delete pointOnCircularChain;
-        delete pointOn_COchain;
-    }
-    return accumulator;// caller has to delete.
-}// originAnulus
-
-
-Numerics::Complex * imageStepIntoOriginAnulus( double stepSize, double radius, Numerics::Complex s, int curStep)
-{// this parametrization is: (radius*Cos[t] + I*radius*Sin[t])
-    int stepCardinality = +2.0*PI/stepSize;
-    double Theta =0.0;
-    Theta = +2.0*PI*(double)curStep/(double)stepCardinality;
-    Numerics::Complex * pointOnCircularChain = pointFromOriginAnulus( radius, Theta );
-    Numerics::Complex * pointOn_COchain = IcoChain( s, *pointOnCircularChain);
-    delete pointOnCircularChain;
-    //
-    return pointOn_COchain;// caller has to delete.
-}// originAnulus
-
-Numerics::Complex * imageStepIntoLinearHankelBranch( Numerics::Complex s, Numerics::Complex z)
-{// this parametrization is: z=:(t  + I*epsilon). It is used both to go from +Infinity to the origin and back.
-    Numerics::Complex * pointOn_COchain = IcoChain( s, z);
-    return pointOn_COchain;// caller has to delete.
-}// originAnulus
-
-int main()
-{
-    Numerics::Complex s(+0.35, +20.15);
-    const double epsilon = -9.0;// a macro distance
-    const double step = +1.0;// a macro step
-    Numerics::Complex z( fabs(epsilon), epsilon);
-    int stepCardinality = 10;
-    //
-    //--dump on txtFile ----------------------------
-	std::string thePath("./out20220219_.txt");// TODO read with Java and push to PostgreSql.
-	std::fstream theStream;
-	bool result = Common::Stream::outstreamOpener( thePath , theStream );
-    std::string * curField = nullptr;
-
-
-    // calculate each image point via the coChain (-x)^s/(x*(Exp[x]-1))dx (x is a Complex variable here).
-    Numerics::Complex * imagePoint = nullptr;
-    for(int curStep=0; curStep<stepCardinality; curStep++)
->>>>>>> refs/remotes/origin/master
-    {
-        Common::StringBuilder sb(90);// the stringBuilder needs to be reset at every loop-step.
-        imagePoint = imageStepIntoLinearHankelBranch( s, z);//-----calculation------the imagePoint gets allocated inside the calculation and gets freed at each for-step.
-        //-----prepare the StringBuilder for a single line------
-        //------------------------------- s ----------------------------------------------------
-        curField = Common::StrManipul::doubleToString( s.Re() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( s.Im() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        //------------------------------- z ----------------------------------------------------
-        curField = Common::StrManipul::doubleToString( z.Re() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( z.Im() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        //------------------------------- image ----------------------------------------------------
-        curField = Common::StrManipul::doubleToString( imagePoint->Re() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //
-        curField = Common::StrManipul::doubleToString( imagePoint->Im() );
-        sb.append( *curField );
-        sb.append((int)'\t');
-        delete curField;
-        //----------------------------------------this last parameter end the line, in the txtDump.----------------------------
-        //--------update params-------------------------------
-        z += Numerics::Complex( step, 0);// Hankel linear branches require to stay parallel to the abscissa.
-        //
-        //-----finally dump the line
-        Common::Stream::putline( sb.str() , theStream);//---this appends a \n
-        delete imagePoint;
-    }
-    result = Common::Stream::outstreamCloser( theStream );// only after the complete loop, close the dumpStream.
-
-
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-    double radius = +3.7123E+01;
-    double stepSize = +2.0*PI/900.0;
-=======
-
-int main()
-{
-//    Numerics::Complex z(+3.1 , 5.2);
-//    for( int n=0; n<6; n++)
-//    {
-////        Numerics::Complex  curExponent((double)n, 0.0);
-////        Numerics::Complex res = z^curExponent;
-//        Numerics::Complex res = z^n;
-//        std::cout<<"\n\t("<<z.Re()<<"+I*"<<z.Im()<<")^"<<n<<" == "<< res.Re()<<"+I*"<<res.Im();
-//    }
-////
-////For[
-//// t = 1; base = +2.1*t + I*3.1*t; espon = +2.3*t + I*1.6*t;,
-//// t < 6,
-//// Print["t==", t, " base^espon==" , base, "^", espon, " == ",
-////  base^espon  ];
-//// t += +0.4;
-//// base = +2.1*t + I*3.1*t;
-//// espon = +2.3*t + I*1.6*t;
-//// ]
-//for( double t=+1.0; t<+6.0; t+=+0.4 )
-//{
-//    Numerics::Complex base ( +2.1*t , 3.1*t );
-//    Numerics::Complex espon( +2.3*t , 1.6*t );
-//    Numerics::Complex res = base^espon;
-//    std::cout<<"\n\t("<<base.Re()<<"+I*"<<base.Im()<<")^"<<
-//                   "("<<espon.Re()<<"+I*"<<espon.Im()<<") == "<< res.Re()<<"+I*"<<res.Im();
-//}
-
-//for( double t=+91.0; t<+116.0; t+=+0.4 )
-//{
-//    Numerics::Complex espon( +2.3*t , 1.6*t );
-//    Numerics::Complex res = espon.ExpC();
-//    Numerics::Complex res_selfish = espon.ExpC_selfish();
-//    std::cout<<"\n\t Exp["<<espon.Re()<<"+I*"<<espon.Im()<<"] == "<< res.Re()<<"+I*"<<res.Im()<<
-//    "  selfish: "<< res_selfish.Re()<<"+I*"<<res_selfish.Im();
-//}
-
-	std::string thePath("./out20220219_.txt");
-	std::fstream theStream;
-	//
-	bool result = Common::Stream::outstreamOpener( thePath , theStream );
-    double radius = +3.7123E+01;
-    double stepSize = +2.0*PI/900.0;
-    Numerics::Complex s(+0.35, +20.15);
-    Numerics::Complex * integralOnOriginAnulus = integralStepIntoOriginAnulus( stepSize, radius, s);
-    std::string * curField = nullptr;
-    Common::StringBuilder sb(90);
-    //
-    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Re() );
-    sb.append( *curField );
-    sb.append((int)'\t');
-    delete curField;
-    //
-    curField = Common::StrManipul::doubleToString( integralOnOriginAnulus->Im() );
-    sb.append( *curField );
-    sb.append((int)'\t');
-    delete curField;
-    //
-    //-----finally dump the line
-    Common::Stream::putline( sb.str() , theStream);
-    result = Common::Stream::outstreamCloser( theStream );
-    delete integralOnOriginAnulus;
-
-
->>>>>>> refs/remotes/origin/master
-//    for(int c=0; c<100; c++)
-//    {
-//        Numerics::Complex * res = originAnulus( stepSize, c, delta );
-//        std::cout<<"originAnulus(stepSize,c,delta)=="<<stepSize<<c<<delta<<" == "<< res->Re()<<" +I* "<< res->Im()<<" length=="<< res->length() <<std::endl;
-//        Common::StringBuilder sb(90);
-//        std::string * curField = nullptr;
-//        //
-//        curField = Common::StrManipul::doubleToString( stepSize);
-//        sb.append( *curField );
-//        sb.append((int)'\t');
-//        delete curField;
-//        //
-//        curField = Common::StrManipul::intToString( c);
-//        sb.append( *curField );
-//        sb.append((int)'\t');
-//        delete curField;
-//        //
-//        curField = Common::StrManipul::doubleToString( delta);
-//        sb.append( *curField );
-//        sb.append((int)'\t');
-//        delete curField;
-//        //
-//        curField = Common::StrManipul::doubleToString( res->Re());
-//        sb.append( *curField );
-//        sb.append((int)'\t');
-//        delete curField;
-//        //
-//        curField = Common::StrManipul::doubleToString( res->Im());
-//        sb.append( *curField );
-//        sb.append((int)'\t');
-//        delete curField;
-//        //
-//        curField = Common::StrManipul::doubleToString( res->length());
-//        sb.append( *curField );
-//        sb.append((int)'\t');
-//        delete curField;
-//        //-----finally dump the line
-//        Common::Stream::putline( sb.str() , theStream);
-//        delete res;
-//    }
-//	result = Common::Stream::outstreamCloser( theStream );
-
-//    Numerics::Complex s(+0.5 , +13.7);
-//    Numerics::Complex *z = new Numerics::Complex(1, 3);
-//    Numerics::Complex icoChain( IcoChain( s, *z) );
-//    delete z;
-
-//    Numerics::Complex z(+3.1 , 5.2);
-//    for( int n=0; n<6; n++)
-//    {
-////        Numerics::Complex  curExponent((double)n, 0.0);
-////        Numerics::Complex res = z^curExponent;
-//        Numerics::Complex res = z^n;
-//        std::cout<<"\n\t("<<z.Re()<<"+I*"<<z.Im()<<")^"<<n<<" == "<< res.Re()<<"+I*"<<res.Im();
-//    }
-////
-////For[
-//// t = 1; base = +2.1*t + I*3.1*t; espon = +2.3*t + I*1.6*t;,
-//// t < 6,
-//// Print["t==", t, " base^espon==" , base, "^", espon, " == ",
-////  base^espon  ];
-//// t += +0.4;
-//// base = +2.1*t + I*3.1*t;
-//// espon = +2.3*t + I*1.6*t;
-//// ]
-//for( double t=+1.0; t<+6.0; t+=+0.4 )
-//{
-//    Numerics::Complex base ( +2.1*t , 3.1*t );
-//    Numerics::Complex espon( +2.3*t , 1.6*t );
-//    Numerics::Complex res = base^espon;
-//    std::cout<<"\n\t("<<base.Re()<<"+I*"<<base.Im()<<")^"<<
-//                   "("<<espon.Re()<<"+I*"<<espon.Im()<<") == "<< res.Re()<<"+I*"<<res.Im();
-//}
-
-//for( double t=+91.0; t<+116.0; t+=+0.4 )
-//{
-//    Numerics::Complex espon( +2.3*t , 1.6*t );
-//    Numerics::Complex res = espon.ExpC();
-//    Numerics::Complex res_selfish = espon.ExpC_selfish();
-//    std::cout<<"\n\t Exp["<<espon.Re()<<"+I*"<<espon.Im()<<"] == "<< res.Re()<<"+I*"<<res.Im()<<
-//    "  selfish: "<< res_selfish.Re()<<"+I*"<<res_selfish.Im();
-//}
-=======
-    //
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
->>>>>>> refs/remotes/origin/master
->>>>>>> refs/remotes/origin/master
-
-    //PrimesFinder::Primes * p = new PrimesFinder::Primes(100);
-//    long desPrime = (*p)[p->lastOrdinal];
-//    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
-////for(int c=0; c<=100;c++)
-////    {
-////        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
-////    }
-//    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
-//    for(int c=73; c<=100;c++)
-//    {
-//        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
-//        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
-//    }
-    //delete p;
-
-
-//    p = new PrimesFinder::Primes(5000000); // re-use
-//    p->Start_PrimeDump_FileSys();
-//    lastOrdinal = p->getLastOrdinal();
-//    lastPrime = p->getLastPrime();
-//    presentLength = p->getActualLength();
+// TODO:
+    void ExpIntegralEi_Ramanujan( double x)//( Complex x)
+    {// notes on a convergent series
 //
-//     unsigned long res = (*p)[25];// TODO bug [lastOrdinal] #######################################################
-//     res = (*p)[1];
-//     res = (*p)[2];
-//     res = (*p)[3];
-//     res = (*p)[lastOrdinal];
-//     res = (*p)[lastOrdinal-1];
-//     res = (*p)[lastOrdinal-2];
-//     res = (*p)[lastOrdinal-3];
-//     res = (*p)[lastOrdinal-100];
-//     if(overflowFlag==res)
-//     {
-//         std::cout<<"\n\t invalid index fed to operator[] "<<std::endl;
-//     }
-//     for( int c=1; c<=15; c++)
-//     {
-//         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
-//     }
-//     for( int c=lastOrdinal-500; c<=lastOrdinal-50; c++)
-//     {
-//         std::cout<<"\n\t Prime["<<c<<"]=="<<(*p)[c];
-//     }
-//     const char * theDumpPath = p->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
-//     if( nullptr != theDumpPath)
-//      {}// else : TODO not-healthly built.
-//     const char * straightContentOfDumpTail  = p->dumpTailReader( theDumpPath);
-////PrimesFinder::Primes::DumpElement * dumpTail = p->recoverDumpTail( straightContentOfDumpTail);
-//     PrimesFinder::Primes::SingleFactor * factorization = p->IntegerDecomposition( (*p)[30123]*7);
+//        N[(+EulerGamma + Log[x]) +
+//          Exp[x/2]*Sum[((-1)^(n - 1) (+x)^n)/((n!)*(2^(n - 1)))*
+//             Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
+//
+//
+//        N[(+EulerGamma + Log[x]) +
+//          Exp[x/2]*Sum[((-1)^(n - 1) (+x)^n)/((n!)*(2^(n - 1)))*
+//             Sum[+1/(2*k + 1), {k, 0, Floor[(n - 1)/2]}], {n, +1, +99}]]
+//
 
-////
-////     delete[] theDumpPath;
-////     delete[] straightContentOfDumpTail;
-//     delete[] factorization;
-//    //delete[] dumpTail;
-//     delete p;
+//        double internalFactor = 0.0;
+//        double externalFactor = 0.0;
+//        for( int n=+1; n<=+99; n++)
+//        {
+//            for(int k=0; k<floor(((double)n - 1.0)/2.0); k++)
+//            {
+//                internalFactor += +1.0/(2.0*(double)k + 1.0);
+//            }
+//            externalFactor += ((-1.0)^((double)n - 1.0) (+x)^(double)n)/((n!)*(2.0^(n - 1))) * internal_factor;
+//            internalFactor = 0.0;// reset.
+//        }
+//        externalFactor += EulerGamma + Log[x];
 
- // MonteCarlo
-    double left  = -92.809;
-    double right = +12.209;
-
-    int populationCardinality = 9000;
-    //
-    Common::MonteCarlo::ClassicalDiscreteGenerator * monteCGen =
-    new Common::MonteCarlo::ClassicalDiscreteGenerator();// Ctor
-    monteCGen->resetExtractionInterval( left, right);// NB. compulsory
-    for( int c=0; c<populationCardinality;c++)
-    {
-        monteCGen->nextIntegerInInterval();
-    }
-    //monteCGen->showDiscretePopulation();
-    monteCGen->buildOmega( left, right );
-    monteCGen->buildDiscreteFrequencyDistribution();
-    std::cout<<"\n\n\t -------- START discrete model;"<<std::endl;
-    monteCGen->showFrequencyDistribution();
-    monteCGen->showCumulatedFrequency();
-    delete monteCGen;
-
-    std::cout<<"\n\t -------- END discrete model; START continuous model \n"<<std::endl;
-
-    Common::MonteCarlo::ClassicalContinuousGenerator * monteCGen_D =
-    new Common::MonteCarlo::ClassicalContinuousGenerator();// Ctor
-    monteCGen_D->resetExtractionInterval( left, right);// NB. compulsory
-    for( int c=0; c<populationCardinality;c++)
-    {
-        monteCGen_D->nextDoubleInInterval();
-    }
-    //monteCGen_D->showContinuousPopulation();
-    monteCGen_D->buildOmega( left, right );
-    monteCGen_D->buildContinuousFrequencyDistribution();
-    monteCGen_D->showFrequencyDistribution();
-    monteCGen_D->showCumulatedFrequency();
-
-    delete monteCGen_D;
- // MonteCarlo
-
-
-  std::string s("Nel mezzo#@# del cammin#@# di nostra vita,#@# mi ritrovai#@#  #@# #@# #@# per una selva oscura#@#.");
-  std::vector<std::string> * tokens = Common::StrManipul::stringSplit("#@#", s, false);
-  std::vector<std::string> * cleanTokens = Common::StrManipul::removeEmptyEntries( tokens);
-
-  if( NULL != tokens)
-  {
-  for( std::vector<std::string>::const_iterator readerTk = tokens->begin();
-        readerTk != tokens->end();
-        readerTk++
-     )
-    {
-        std::cout<< *readerTk<<std::endl;
-    }
-  }// else skip on NULL.
-  //
-  if( NULL != cleanTokens)
-  {
-  for( std::vector<std::string>::const_iterator readerCleanTk = cleanTokens->begin();
-        readerCleanTk != cleanTokens->end();
-        readerCleanTk++
-     )
-    {
-        std::cout<< *readerCleanTk<<std::endl;
-    }
-  }// else skip on NULL.
-  //
-  delete tokens;
-  delete cleanTokens;
-
-
-    Common::MonteCarlo::BaseConverter b(false);
-    const unsigned long threshold = +1.5E6;
-
-    for(unsigned long c=0; c<threshold; c++)
-    {
-        for( int base=2; base<=64; base++)
+        const double EulerGamma = +0.577216;
+        double internalFactor = 0.0;
+        double externalFactor = 0.0;
+        for( int n=+1; n<=+99; n++)
         {
-            std::string * converted = b.baseOtherConverterTo( c, base);
-            unsigned long reConverted = b.base10ConverterTo( *converted, base);
-            if( reConverted != c)
+            for(int k=0; k< floor(((double)n - 1.0)/2.0); k++ )
             {
-                std::cout<<"\n\t Allarme ! c:"<<c<<" base:"<<base<<std::endl;
+                internalFactor += +1.0/(2.0*(double)k + 1.0);
             }
-            else
-            {
-//                std::cout<<"\n\t OK ! converted: "<<*converted
-//                <<" reConverted:"<<reConverted
-//                <<" original:"<<c
-//                <<" base:"<<base<<std::endl;
-            }
-            delete converted;
+
+            externalFactor += pow((-1.0),((double)n - 1.0)) * pow(+x,(double)n) /(factorial(n)* pow(2.0,((double)n - 1)) ) * internalFactor;
+            internalFactor = 0.0;// reset.
         }
-    }
+        externalFactor += EulerGamma + log(x);
 
-void boost_test()
+  }// Ramanujan series
+
+}// end nmsp internalAlgos
+
+class Primes
 {
-    using namespace boost::lambda;
-    typedef std::istream_iterator<int> in;
+    public:
+    /// Data
+    struct SingleFactor
+    {
+        unsigned long  factorBase;//pi;
+        unsigned long  factorMultiplicity;//ai;
+    };
+    struct DumpElement
+    {
+        unsigned long  ordinal;
+        unsigned long  prime;
+    };
+     struct AsinglePointInStream
+     {
+         long Ordinal;
+         long Prime;
+         long positionByte;
+     };
 
-    std::for_each(
-                    in(std::cin)
-                    , in()
-                    , std::cout << (_1 * 3) << " "
-                  );
-}// end boost_test
+
+    //~Primes  ( void );
+    /// method
+//    unsigned long getActualLength();
+//    unsigned long getLastOrdinal();
+//    unsigned long getLastPrime();
+//    // NON const; updates the members {lastOrdinal, lastPrime}.syntax: Prime[ordinal]==...
+//    unsigned long operator[] (const unsigned long requiredOrdinal);
+//    const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
+//    void  createOrAppend( const std::string & );
+//    const char * dumpTailReader( const std::string & fullPath);// --- no more used  -------
+//    const char * dumpTailReaderByChar( const std::string & fullPath);
+//    const char * lastRecordReaderByChar( const std::string & fullPath);
+//    SingleFactor * IntegerDecomposition( const unsigned long dividend);
+// TODO no more : const char * theDumpPath = nullptr;// NB. remember to share and delete[].
+
+ // TODO let private after test
+    /// Data
+    unsigned long lastOrdinal;
+    unsigned long lastPrime;
+    unsigned long desiredOrdinal;
+    unsigned long desiredThreshold;// in R+
+    unsigned long actualPrimaryFileLength;
+    const int tailRecordSize = 60;
+
+    char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
+    int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
+    DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
+
+    bool isHealthlyConstructed = false;
+    bool canOperate = false;
+    // methods:{bisection,getToNextRecord,getToPrevRecord,StepThroughNrecordsFFWD,StepThroughNrecordsBKWD} all share the stream.
+    //
+    const char * sequentialDumpPath = nullptr;// NB. remember to share and delete[].
+    const char * randomDumpPath = nullptr;// NB. remember to share and delete[].
+    std::ifstream * sharedReader;// read
+    std::ofstream * append_Sequential_Stream;// write
+    std::ofstream * append_Random_Stream;// write
+    // Riemann exponent s in C; s=:(sigma + i*t).
+    double sigma;
+    double t;
+    /// Ctor
+    // Primes();// no more hiding of empty Ctor.
+    // copying methoda : not usable->private.
+    // hide Copy Constructor
+    Primes   ( const Primes & original );
+    // construction helper:
+    //const char * feed_CustomDumpPath(); // non const
+    // assignement : operator=
+    Primes & operator=   ( const Primes & second );
+    /// method
+    /// method /// algo ///////////////////////////////////////////////////////////////////////
+
+    // state of the art.
+//void Start_PrimeDump_FileSys(
+//                                                                        unsigned long Left
+//                                                                        ,unsigned long Right
+//                                                                        ,std::ofstream * appendStream
+//                                                                    );
+//    const char * feedDumpPath(); // non const
+//    const std::string & tokenEncoder( unsigned long ordinal, unsigned long prime ) const;
+//    void recoverLastRecord( const char * fromFile);// cannot be const: fills lastOrdinal, lastPrime.
+//    bool getLastCoupleInDefaultFile();
+//    DumpElement * recoverDumpTail( const char * dumpTail);
+//    int shiftInSumTissue( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+//    int Bisection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    //int currentOperatorSquare( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
 
 
-
-double f(double x)
+// empty Ctor : reads both the sequentialFile and randomFile fullpath
+Primes( )
 {
-    //return exp(x)*cos(x);
-    return x*x;
+    bool dumpPathAcquisitionFromConfig = false;// init to invalid
+    //
+    this->feedDumpPath();// SEQUENTIAL : default section, in default file.
+    if( nullptr != this->sequentialDumpPath )
+    {
+        this->createOrAppend( this->sequentialDumpPath);
+        //this->dumpTailReaderByChar( this->sequentialDumpPath);//-----indiziato
+        const char * lastRecString = this->lastRecordReaderByChar(  this->sequentialDumpPath);
+        if( nullptr != this->theDumpTailStr)
+        {
+            recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+        }// else : no valid last record : start from zero!
+        // the upper bound for research, in R+, will be a parameter for the sequentialCalcInterface()
+        dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
+    } // else dumpPathAcquisitionFromConfig already false from init.
+    //----end of SequentialPath --- start of RandomPath -------
+    this->feed_CustomDumpPath();// CUSTOM section, in default file.
+    if( nullptr != this->randomDumpPath )
+    {
+        this->createOrAppend( this->randomDumpPath);
+        dumpPathAcquisitionFromConfig &= true;// NB &= only if both files are found, the flag gets true.
+    }// else :  not-healthly built:  dumpPathAcquisitionFromConfig already false from init.
+    //---check operations' result and document the error for the user.
+    if( false==dumpPathAcquisitionFromConfig)// something wrong reading from config files.
+    {// not-healthly built.
+        this->isHealthlyConstructed = false;
+        this->canOperate = false;
+    }// not-healthly built.
+}// empty Ctor : reads both the sequentialFile and randomFile fullpath
+
+
+
+bool SequentialCalcInterface( unsigned long Threshold )
+{
+    bool dumpPathAcquisitionFromConfig = false;// init to invalid
+    if( nullptr != this->sequentialDumpPath )
+    {
+        this->createOrAppend( this->sequentialDumpPath);
+        this->dumpTailReaderByChar( this->sequentialDumpPath);
+        if( nullptr != this->theDumpTailStr)
+        {
+            recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+        }// else : no valid last record : start from zero!
+        // the upper bound for research, in R+, will be a parameter for the sequentialCalcInterface()
+        dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
+    } // else dumpPathAcquisitionFromConfig already false from init.
+    //
+    this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
+    // ---call with params
+    this->Start_PrimeDump_FileSys( this->getLastPrime() , Threshold , append_Sequential_Stream );
+    this->append_Sequential_Stream->close();
+    delete this->append_Sequential_Stream;
+    this->append_Sequential_Stream = nullptr;
+    //
+    return dumpPathAcquisitionFromConfig;
 }
 
 
-//
-//    std::string * charToString( const char par)
-//    {
-//        std::string * res = new std::string();
-//        std::stringstream localSstream;
-//        localSstream << par;//put the char into the stringStream
-//        *res = localSstream.str();// get the string from the stringStream
-//        // N.B. the caller has to delete the return value.
-//        return res;
-//    }
-//
+bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
+{
+    bool res = false;
+    //
+    // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
+    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+    this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+    this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
+    this->desiredThreshold = maxRight;
+    // write a stamp, about what we're doing and when.
+    time_t ttime = time(0);
+    char* dt = ctime(&ttime);
+    //   NB. for UTC Greenwich tm *gmt_time = gmtime(&ttime);
+    //   NB. for UTC Greenwich dt = asctime(gmt_time);
+    //
+    this->append_Random_Stream = new std::ofstream( this->randomDumpPath , std::fstream::out | std::fstream::app);
+    *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
+    *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+    // ---call with params
+    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream );
+    //
+    this->append_Random_Stream->close();
+    delete this->append_Random_Stream;
+    this->append_Random_Stream = nullptr;
+    return res;
+}
 
 
-//typedef struct _GUID {
-//    unsigned long  Data1;
-//    unsigned short Data2;
-//    unsigned short Data3;
-//    unsigned char  Data4[8];
-//} GUID;
-//std::string * getGUID( int randInitializer)
-//{
-//    Common::MonteCarlo * mCarlo = new Common::MonteCarlo( randInitializer);// user suggested seed.
-//    Common::StringBuilder * sb = new Common::StringBuilder(17) ;
-//    for( int c=0; c<16; c++)
-//    {
-//        int tmp = -1;
-//        while( 33>tmp || 126<tmp)
+
+
+const char * feedDumpPath() // non const
+{// default section, in default file.
+    if( nullptr==this->sequentialDumpPath )
+    {
+        this->sequentialDumpPath = this->getPrimeDumpFullPath( "primeDefaultFile");// Default Section Name.
+    }//else ready.
+    return this->sequentialDumpPath;
+}// feedDumpPath()
+
+const char * feed_CustomDumpPath() // non const
+{// custom section, in default file.
+    if( nullptr==this->randomDumpPath )
+    {
+        this->randomDumpPath = this->getPrimeDumpFullPath( "primeCustomFile");// CUSTOM Section Name, for non complete dumping.
+    }//else ready.
+    return this->randomDumpPath;
+}// feed_CustomDumpPath()
+
+const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const
+{
+    const char *  res = nullptr;
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for  in this file.
+    const std::string * desiredSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
+    res = desiredSectionContent->c_str();
+    delete primeNamedConfig;
+//delete desiredSectionContent;  TODO study how to delete it.
+    return res;// caller has to delete.
+}// getPrimeDumpFullPath
+
+    /// Dtor()
+    ~Primes()
+    {/// Dtor() : closes the append_handle.
+        if( nullptr != this->sequentialDumpPath )
+        {
+            delete[] this->sequentialDumpPath;
+            this->sequentialDumpPath = nullptr;
+        }
+        if( nullptr != this->randomDumpPath )
+        {
+            delete[] this->randomDumpPath;
+            this->randomDumpPath = nullptr;
+        }
+//        if( nullptr != this->theDumpTailStr ) TODO buggy : let it local and delete after usage
 //        {
-//            tmp = mCarlo->nextProbabilityMeasure() * 127;// selected code
+//            delete[] this->theDumpTailStr;
+//            this->theDumpTailStr = nullptr;
 //        }
-//        sb->append( tmp);
-//    }
-//    delete mCarlo;
-//    std::string * res = new std::string( sb->str() );// caller has to delete.
-//    delete sb;
-//    return res;
-//}// getGUID()
+        if( nullptr != this->dumpTail )
+        {
+            delete[] this->dumpTail;
+            this->dumpTail = nullptr;
+        }
+        /*
+        if( nullptr != this->appendStream)  no more a global class::variable.
+        {
+            this->appendStream->close();
+            this->appendStream = nullptr;
+        }// else already closed.
+        */
+    }// Dtor(
 
 
 
-
-
-namespace Common{
-namespace MonteCarloNamespace{
-namespace Development{
-
-// DeltaOmega is the DeltaAscissa in a Riemann partition of the Omega Event-space.
-class DeltaOmega
-{// an instance of DeltaOmega is a single step in the Riemann partition. The friend function "buildOmega" builds a vector, which contains the whole population of
- // DeltaOmega, which constitutes the whole Omega event space.
-private:
-    friend class MonteCarloGenerator;
-    double mediana;
-    double eta;
-    double categoryFrequency;
-public:
-    DeltaOmega( double medianaPoint, double etaMeasure)
+bool getLastCoupleInDefaultFile()
+{
+    bool res = false;// init to invalid.
+    this->feedDumpPath();
+    if( nullptr != this->sequentialDumpPath )
     {
-        this->mediana = medianaPoint;
-        this->eta = etaMeasure;
-        this->categoryFrequency = 0.0;// init and then add on.
-    }// Ctor
-    double getMediana(){return this->mediana;}
-    bool belongsToDeltaOmega( double candidate)
+        this->createOrAppend( this->sequentialDumpPath);
+    }// else : TODO not-healthly built.
+    else {return res;}// which is still "false".
+    this->dumpTailReaderByChar( this->sequentialDumpPath);
+    if( nullptr != this->theDumpTailStr)
     {
-        bool res = fabs( candidate-this->mediana)<this->eta;
-        return res;
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+    }// else : no valid last record : start from zero!
+    else {return res;}// which is still "false".
+    // ready:
+    res = true;// all ok.
+    return res;
+}// getLastCoupleInDefaultFile
+
+
+void createOrAppend( const std::string & fullPath)
+{
+    ofstream createOrApp(fullPath, std::fstream::out | std::fstream::app);
+    createOrApp.close();
+}// dumpFile createOrAppend
+
+
+
+/*   no more used
+const char * dumpTailReader( const std::string & fullPath)
+{
+    if(nullptr!=this->theDumpTailStr)
+    {
+        return this->theDumpTailStr;
+    }// else build it.
+    ifstream lastrecReader(fullPath, std::fstream::in );
+    lastrecReader.seekg( 0, lastrecReader.end);
+    int streamSize = lastrecReader.tellg();
+    int lastTokenHypothesizedLength;// f(streamSize).
+    // cannot use runtime-expressions in switch-case: case-labels have to be compile-time constants.
+    if( streamSize<4)
+        {// no valid last-record in place.
+            this->lastOrdinal=0UL;
+            this->lastPrime=+1UL;//##### +2 first of the Primes p in P in N. this->lastPrime gets a ++ before start.
+            return nullptr;// NB ##### do NOT call recoverLastRecord on a null ptr !!! ####################
+        }
+    else if( streamSize>=4 && streamSize<=10)
+        {
+            lastTokenHypothesizedLength = streamSize;
+        }
+    else if( streamSize>10 && streamSize<=200)
+        {
+            lastTokenHypothesizedLength = 10;
+        }
+    else// i.e. case >200
+        {
+            lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
+        }// end of if( streamsize..)->seek( howMuch, end).
+    //
+    int multeplicity = 5;// less two times backwards, from EOF.
+    lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
+    this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
+    lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
+    this->theDumpTailStr[multeplicity*lastTokenHypothesizedLength]=0;//terminate.
+    lastrecReader.close();
+    // ready.
+    return this->theDumpTailStr;
+}// dumpTailReader
+*/
+
+//
+const char * lastRecordReaderByChar( const std::string & fullPath)
+{
+    char * directTailDump = new char[120];// tune it.
+    ifstream lastrecReader(fullPath, std::fstream::in );
+    lastrecReader.seekg( 0, lastrecReader.end);
+    int streamSize = lastrecReader.tellg();// filesize
+    if( 1024>streamSize)
+    {
+        sprintf( directTailDump, "1_2");// means start from sratch.
+        return directTailDump;
+    }// else continue.
+    Common::StringBuilder * sb = new Common::StringBuilder( 100);// forecasted size.
+    lastrecReader.seekg( -100, lastrecReader.end);// get in place to read last char[100].
+    int currentPosition;
+    int step = 0;
+    int howManyLineEndings = 0;
+    for( char c=0; ! lastrecReader.eof(); )
+    {
+        lastrecReader.get( c);
+        sb->append(c);
+        step++;
+        currentPosition = lastrecReader.tellg();
+    }// for
+    std::string bufferedReverseTail = sb->str();
+    int bufferedReverseTail_len = bufferedReverseTail.length();
+    const char * const_directTailDump = sb->str().c_str();
+    directTailDump = (char *)const_directTailDump;
+    // delete sb; ?really?
+    // ready
+    return directTailDump;// caller has to delete
+}// lastRecordReaderByChar
+
+ 
+
+const char * dumpTailReaderByChar( const std::string & fullPath)
+{
+    if(nullptr!=this->theDumpTailStr)
+    {
+        return this->theDumpTailStr;
+    }// else build it.
+    ifstream lastrecReader(fullPath, std::fstream::in );
+    lastrecReader.seekg( 0, lastrecReader.end);
+    int streamSize = lastrecReader.tellg();
+    int lastTokenHypothesizedLength;// f(streamSize).
+    // cannot use runtime-expressions in switch-case: case-labels have to be compile-time constants.
+    if( streamSize<4)
+        {// no valid last-record in place.
+            this->lastOrdinal=0UL;
+            this->lastPrime=+1UL;//##### +2 first of the Primes p in P in N. this->lastPrime gets a ++ before start.
+            return nullptr;// NB ##### do NOT call recoverLastRecord on a null ptr !!! ####################
+        }
+    else if( streamSize>=4 && streamSize<=10)
+        {
+            lastTokenHypothesizedLength = streamSize;
+        }
+    else if( streamSize>10 && streamSize<=200)
+        {
+            lastTokenHypothesizedLength = 10;
+        }
+    else// i.e. case >200
+        {
+            lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
+        }// end of if( streamsize..)->seek( howMuch, end).
+    //
+    int multeplicity = 5;// less "multeplicity" times backwards, from EOF.
+// avoid it:lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
+    lastrecReader.seekg( streamSize-multeplicity*lastTokenHypothesizedLength, lastrecReader.beg );
+//this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
+//Substituted lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
+    Common::StringBuilder * sb = new Common::StringBuilder(multeplicity*lastTokenHypothesizedLength+1);// forecasted size.
+    for( char c=0; lastrecReader.get(c); )
+    {
+        sb->append(c);
     }
-};// class DeltaOmega
+    this->theDumpTailStr = (char *)(sb->str().c_str());// caller has to delete!
+    lastrecReader.close();
+    // ready.
+    return this->theDumpTailStr;
+}//dumpTailReaderByChar()
 
 
-    class MonteCarloGenerator
+unsigned long getLastOrdinal()
+{
+    this->feedDumpPath();// default section, in default file.
+    if( nullptr == this->sequentialDumpPath)
     {
-    private:
-        friend class DeltaOmega;
-        bool ConstructorCanContinue;
-        std::string * ReasonForAbortingConstructor;
-        double theIntervalMeasure;
-        double Min, Sup;
-        double omothetia;
-        bool leftClosed, rightClosed;
-        std::vector<double> * population;
-        std::vector<DeltaOmega> * frequencyDistribution;
+        this->isHealthlyConstructed = false;
+        this->canOperate = false;
+        throw;
+    }// else :  healthly built: continue:
+    this->dumpTailReaderByChar( this->sequentialDumpPath);
+    if( nullptr != this->theDumpTailStr)
+    {
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+    }// else : no valid last record : start from zero!
+    else
+    {
+        this->lastOrdinal = 0;
+        this->lastPrime = 0;
+    }
+    return this->lastOrdinal;
+}//getLastOrdinal
 
-    public:
-     MonteCarloGenerator( double left, bool isLeftIncluded
-                         ,double right, bool isRightIncluded
-                         ,bool wantContinuousModel ):ConstructorCanContinue(true)
-                         ,ReasonForAbortingConstructor(new std::string("NOT YET.") )
-                         ,theIntervalMeasure(right-left)
-                         ,Min(left), Sup(right)
-                         ,leftClosed( isLeftIncluded), rightClosed( isRightIncluded)
-                         ,population( new std::vector<double>() )
-                         ,frequencyDistribution(  new std::vector<DeltaOmega>() )
-         {
-             //theIntervalMeasure = right-left;// init for both models; correct only for discrete ones.
-             // default model is [min,sup) on [0,RAND_MAX)==[0,32767)
-             if( ! wantContinuousModel)//---------------------- discrete -------------------------------------------------
-             {
-                 if( fabs(left-(int)left)>+1E-80
-                     || fabs(right-(int)right)>+1E-80 )
-                 {
-                     ConstructorCanContinue = false;
-                     delete this->ReasonForAbortingConstructor;//free memory of default Ctor message.
-                     this->ReasonForAbortingConstructor = new std::string("Invocation of a discrete model, with non Diophantine boundaries. Aborting.");
-                 }
-                 else // estremi interi
-                 {// non default boundary conditions.
-                     if( !isLeftIncluded)
-                     {
-                         left += +1.0;
-                         theIntervalMeasure -= +1.0;// NB. such corrections only affect the discrete case, since they have zero measure on continuous models.
-                     }// else the default is already appropriate
-                     if( isRightIncluded)
-                     {
-                         right += +1.0;
-                         theIntervalMeasure += +1.0;
-                     }// else the default is already appropriate
-                 }// estremi interi
-             }////-------END--------------- discrete -------------------------------------------------
-             this->omothetia = this->theIntervalMeasure/((double)RAND_MAX);
-             //
-         }// Ctor
-
-        void nextIntegerInInterval() const
-        {
-            double temp =  rand()*this->omothetia+this->Min;
-            this->population->push_back( (int)temp);
-        }// END nextIntegerInInterval
-
-        void nextDoubleInInterval() const
-        {
-            double temp = rand()*this->omothetia+this->Min;
-            if( this->rightClosed)
-            {
-                while( temp>this->Sup)
-                {
-                    temp = rand()*this->omothetia+this->Min;
-                }
-            }
-            this->population->push_back( temp);
-        }// END nextIntegerInInterval
-
-        void showPopulation() const
-        {
-            for( std::vector<double>::const_iterator it=this->population->begin();
-                 it!=this->population->end();
-                 it++
-                )
-                {
-                    std::cout<< *it<<std::endl;
-                }
-        }// END showPopulation() const
-
-        void showFrequencyDistribution() const
-        {
-            for( std::vector<DeltaOmega>::const_iterator it=this->frequencyDistribution->begin();
-                 it!=this->frequencyDistribution->end();
-                 it++
-                )
-                {
-
-                        double mediana;
-                        double eta;
-                        double categoryFrequency;
-
-                    std::cout<<" mediana "<< *Common::StrManipul::doubleToString(it->mediana)<<" eta "
-                    << *Common::StrManipul::doubleToString(it->eta)
-                    <<" categoryFrequency "<<*Common::StrManipul::doubleToString(it->categoryFrequency) <<std::endl;
-                }
-        }// END showFrequencyDistribution() const
-
-        void showCumulatedFrequency() const
-        {
-           double CumulatedFrequency = 0.0;
-           for( std::vector<DeltaOmega>::iterator frequencyWriter=this->frequencyDistribution->begin();
-                frequencyWriter != this->frequencyDistribution->end();
-                frequencyWriter++
-              )
-              {
-                 CumulatedFrequency += frequencyWriter->categoryFrequency;
-              }// for frequencyWriter
-              std::cout<< "\n\n\t CumulatedFrequency : " << CumulatedFrequency <<std::endl;
-        }// END showCumulatedFrequency() const
-
-
-        void buildFrequencyDistribution()
-        {
-            int populationCardinality = this->population->size();
-            double elementPresenceWeight = +1.0/populationCardinality;
-            for( std::vector<double>::const_iterator populationReader=this->population->begin();
-                 populationReader != this->population->end();
-                 populationReader++
-               )
-               {
-                   for( std::vector<DeltaOmega>::iterator frequencyWriter=this->frequencyDistribution->begin();
-                        frequencyWriter != this->frequencyDistribution->end();
-                        frequencyWriter++
-                      )
-                      {
-                          if( frequencyWriter->belongsToDeltaOmega( *populationReader) )
-                          {
-                              frequencyWriter->categoryFrequency += elementPresenceWeight;
-                              break;// belonging class found.
-                          }
-                      }// for frequencyWriter
-
-               }// for populationReader
-        }// buildFrequencyDistribution()
+unsigned long getLastPrime()
+{// default section, in default file.
+    this->feedDumpPath();
+    if( nullptr == this->sequentialDumpPath)
+    {
+        this->isHealthlyConstructed = false;
+        this->canOperate = false;
+        throw;
+    }// else :  healthly built: continue:
+    this->dumpTailReaderByChar( this->sequentialDumpPath);
+    if( nullptr != this->theDumpTailStr)
+    {
+        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+    }// else : no valid last record : start from zero!
+    else
+    {
+        this->lastOrdinal = 0;
+        this->lastPrime = 0;
+    }
+    return this->lastPrime;
+}//getLastPrime
 
 
 
-        void buildOmega( double partizioneLeft
-                         ,double partizioneRight
-                         ,double eta
-                       )
-        {//this->frequencyDistribution has been built by Ctor.
-            for( double position=partizioneLeft-eta; position<=partizioneRight+eta; position+=2*eta)
-            {
-                DeltaOmega * curDeltaOmega = new DeltaOmega( position+eta, eta);// TODO verify
-                this->frequencyDistribution->push_back( *curDeltaOmega );
-            }//for
-        }//buildOmega
+ unsigned strlen_loc( char * par)
+ {
+     int res = 0;
+     if(nullptr==par) {return res;}
+     for( ; par[res]!=0; res++);
+     return res;
+ }
 
 
-
-    };// class MonteCarloGenerator
 
 
 std::string * exadecimalConverterTo( unsigned int par )
@@ -779,222 +565,306 @@ std::string * exadecimalConverterTo( unsigned int par )
     return res;// caller has to delete.
 }
 
-std::string * base64ConverterTo( unsigned int par )
+/*  IntegerDecomposition : the Fundamental Thm of Arithmetic.
+SingleFactor * IntegerDecomposition( const unsigned long dividend)
 {
-
-        [48,57]
-        [65,90]
-        [97,126]
-
-    Common::StringBuilder sbB4symbols( 66);
-    for( int c=48;c<=57;c++)// figures
-    {//NB. append(int) appende alla stringa il simbolo corrispondente al codice int.
-        sbB4symbols.append(c);
+    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
+    unsigned long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
+    SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
+    // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
+    for(int c=0; c<ordinaleStimato; c++)
+    {// init to zeroContentMemory.
+        factorization[c].factorBase = 0;
+        factorization[c].factorMultiplicity = 0;
     }
-    for( int c=65;c<=90;c++)
-    {// upper case letters
-        sbB4symbols.append(c);
-    }
-    for( int c=97;c<=126;c++)
-    {// lower case letters + some symbols
-        sbB4symbols.append(c);
-    }
-
-    std::string base64Figures( sbB4symbols.str() );
-    std::cout<< base64Figures<<std::endl;
-
-
-
-    Common::StringBuilder sb( 100);
-    sb.append("b64_");//start with base64 prefix.
-    int abacusLeftMostPosition = log(par)/log(64);
-    double dividendo = (double)par;
-    for( ;abacusLeftMostPosition>=0; abacusLeftMostPosition--)
+    // TODO readRange( 1, ordinaleStimato);
+    unsigned long * involvedPrimes = new unsigned long[ordinaleStimato];
+    for(int c=0; c<ordinaleStimato; c++)
     {
-        double quotient = dividendo/ pow(+64.0,(double)abacusLeftMostPosition);
-        double resto = dividendo - ((int)quotient)*pow(+64.0,(double)abacusLeftMostPosition);
-        // update
-        sb.append( base64Figures[(int)quotient]);
-        dividendo = resto;
+        involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
+    }// end filling up the candidate prime-factor array.
+    unsigned long dividendo, divisore;
+    dividendo = dividend;
+    double realQuotient;
+    unsigned long intQuotient;
+    int i=0;// start from +2. indice nel vettore dei primi.
+    int acc=0;// indice nel vettore dei risultati.
+    divisore=involvedPrimes[i];
+    bool lastDivisionWasDiophantine =  false;
+    // #### start factorization loop ######################################################################################
+    for(  ; +1<dividendo; )
+    {// dividendo will be substituted by Quotient, until dividendo==+1.
+        realQuotient = (double)dividendo/(double)divisore;
+        intQuotient = dividendo/divisore;
+        if( realQuotient-intQuotient <+1.0E-80 )// ####### ramo lastDivisionWasDiophantine ##
+        {// divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
+            if(  lastDivisionWasDiophantine)
+            {//NB. factorization[acc].pi is already correct: do nothing on current factor "pi"
+            }//if(  lastDivisionWasDiophantine)
+            else if( ! lastDivisionWasDiophantine)
+            {// a new divisor gets promoted.
+                factorization[acc].factorBase = divisore;// promote current prime and its exponent.
+            }// No other else.
+            // NB. Actions in common btw curDivDiophantine:
+            factorization[acc].factorMultiplicity++;// increment the exponent of this factor: i.e. pi^ai
+            lastDivisionWasDiophantine =  true;// that's something we need to track.
+            dividendo = intQuotient;// NB. swap the dividendo, after a successful Diophantine-ratio.
+        }// if // divisione diofantea : the prime acting as divisor is a factor (i.e. divides dividendo).
+        else// ### no Diophantine division ##
+        {// ### no Diophantine division ##
+            if(  lastDivisionWasDiophantine)
+            {// use next divisor slot, in the results array.
+                acc++;// next factor slot, in the results array.
+            }
+            else if( ! lastDivisionWasDiophantine)
+            {// NO acc++ we don't have an idoneous factor, yet.
+            }// No other else.
+            // NB. Actions in common btw lastDivisionWasDiophantine when curDivNOTDiophantine
+            i++;// test next prime, as factor.
+            lastDivisionWasDiophantine =  false;
+            divisore=involvedPrimes[i];// NB. to next prime, if cur one works no more
+        }// else// ### no Diophantine division ##
+    }// #### start factorization loop ######################################################################################
+    //..
+    delete[] involvedPrimes;// no more use of them.
+    // NB. swap the prudentially oversized array, in a fit-size one.
+    SingleFactor * factorization_srk_ = new SingleFactor[acc+2];// the #divisors, counting from zero + a termination_record, zero filled.
+    for(int c=0; c<acc+2; c++)
+    {
+        factorization_srk_[c] = factorization[c];
     }
-    //ready.
-    std::string * res = new std::string( sb.str());
-    return res;// caller has to delete.
-}
+    if( factorization[acc+1].factorBase != 0) {throw;}// check on the nullity of last record. It's a placeholder.
+    delete[] factorization;// NB. delete the prudentially oversized array, after copying it, in a fit-size one.
+    // ready.
+    return factorization_srk_;// NB. the caller has to delete.
+}// IntegerDecomposition : the Fundamental Thm of Arithmetic.
+*/
 
-unsigned long base10ConverterTo( const std::string & base64par )
+
+void  recoverLastRecord( const char * dumpTail)
 {
-
-        [48,57]
-        [65,90]
-        [97,126]
-
-    Common::StringBuilder sbB4symbols( 66);
-    for( int c=48;c<=57;c++)// figures
-    {//NB. append(int) appende alla stringa il simbolo corrispondente al codice int.
-        sbB4symbols.append(c);
-    }
-    for( int c=65;c<=90;c++)
-    {// upper case letters
-        sbB4symbols.append(c);
-    }
-    for( int c=97;c<=126;c++)
-    {// lower case letters + some symbols
-        sbB4symbols.append(c);
-    }
-
-    std::string base64Figures( sbB4symbols.str() );
-    std::map<char,int> * base64Map = new std::map<char,int>();
-    for( int c=0; c<base64Figures.size(); c++)
+    std::string parFromFile(dumpTail);
+    int inputParamLength = parFromFile.length();
+    std::string filteredLastToken("");
+    for( int c=0; c<inputParamLength;c++)
     {
-        (*base64Map)[base64Figures[c]]= c;
-    }
+        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
+        {
+            filteredLastToken.append( 1, parFromFile[c] );
+        }
+        else// not digit
+        {
+            filteredLastToken.append( 1, '_' );// subst. with '_'
+        }
+    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
+    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+    int i=+1;
+    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin(); it!=tokenArray->rend(); ++it, i++)
+    {// preserve only the last two semi-records: they are lastOrdinal and LastPrime.
+        if( 1==i)
+        {// last Prime
+            this->lastPrime = Common::StrManipul::stringToUnsignedLong(*it);
+        }
+        else if( 2==i)
+        {// last ordinal
+            this->lastOrdinal = Common::StrManipul::stringToUnsignedLong(*it);
+        }// else the token is not interesting; it was included in the read portion, but is not part of the last row.
+    }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
+}//recoverLastRecord
 
-    for( std::map<char,int>::const_iterator reader=base64Map->begin();
-         reader != base64Map->end();
-         reader++ )
-         {
-             std::cout<< (*reader).first<<"  "<< (*reader).second<<std::endl;
-         }
 
-    unsigned long decimalQuantity = 0;// init and sum on it.
-    std::string * cleanVersion = Common::StrManipul::replaceAllOccurencesOf("b64_",base64par,"");
-    int abacusLeftMostPosition = cleanVersion->size()-1;// zero based
-    for( int c=0 ;abacusLeftMostPosition>=0; abacusLeftMostPosition--,c++)
+// produce an array of couples {ordinal,prime} from the dumpTail.
+DumpElement * recoverDumpTail( const char * dumpTail)
+{
+    if( nullptr != this->dumpTail)
+    {// do not build again.
+        return this->dumpTail;
+    }// else build it; it will be a shared dataMember and Dtor will delete.
+    std::string parFromFile(dumpTail);
+    int inputParamLength = parFromFile.length();
+    std::string filteredLastToken("");
+    for( int c=0; c<inputParamLength;c++)
     {
-        unsigned long figureQuantity = (*base64Map)[ (*cleanVersion)[c]];// value of the symbol.
-        double abacusPositionQuantity = pow( +64.0 , (double)abacusLeftMostPosition );
-        figureQuantity *= abacusPositionQuantity;
-        decimalQuantity += figureQuantity;
+        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
+        {
+            filteredLastToken.append( 1, parFromFile[c] );
+        }
+        else// not digit
+        {
+            filteredLastToken.append( 1, '_' );// subst. with '_'
+        }
+    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
+    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+    int entryCardinality = tokenArray->size();
+// already init this->actualCoupleCardinality = 0;//NB: tagliare al massimo dei minoranti pari
+    // NB: stabilire se pari
+    if( (double)entryCardinality/2.0 - entryCardinality/2 <+1E-80 )
+    {// parita'
+        this->actualCoupleCardinality = entryCardinality/2;
     }
-    delete cleanVersion;
+    else
+    {// DISparita'
+        this->actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
+    }
+    // NB: allocare per tale misura
+    this->dumpTail = new DumpElement[actualCoupleCardinality];// member struct-array {ordinal,prime}.
+    // NB: fill-up reverse
+    int currentCouple=actualCoupleCardinality-1;
+    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();
+     it!=tokenArray->rend() && currentCouple>=0;
+       currentCouple--) // no more increment on the iterator
+    {// preserve the last complete-records: they have to be {Ordinal,Prime}. Use index-parity for this task:
+        // get a Prime from tailEnd, coming back:
+        this->dumpTail[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
+        // get an ordinal from tailEnd, coming back:
+        this->dumpTail[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
+    }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
+    delete tokenArray;
     //ready.
-    return decimalQuantity;
-}
-
-}// Development
-}// MonteCarloNamespace
-}// Common
+    return this->dumpTail;// caller has to delete.
+}//recoverDumpTail
 
 
-    std::string * converted =
-    Common::MonteCarloNamespace::Development::base64ConverterTo( 4294967295);// max(unsigned long)
-    std::cout<<"dec 64 == B64 "<< *converted<<std::endl;
+    // state of the art.
+void Start_PrimeDump_FileSys(
+                                                                        unsigned long Left
+                                                                        ,unsigned long Right
+                                                                        ,std::ofstream * appendStream
+                                                                    )
+{
+    unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
+    bool isStillPrime = true;
+    double realQuotient;
+    unsigned long intQuotient;
+    unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
+    if( cursor<+2){cursor=+2;}// 1 (i.e. one) is the product-invariant; so, not a prime.
+    // NB now a data-member ; ofstream appendStream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
+    //
+    for( ; cursor<=Right; cursor++)//NB. cursor==dividend.
+    {
+        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
+        // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
+        // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
+        unsigned long divisor=+2;
+        for( ; divisor<=soglia; divisor++)
+        {
+            realQuotient = (double)cursor/(double)divisor;
+            intQuotient = cursor/divisor;
+            if( realQuotient-intQuotient <+1.0E-80 )
+            {// divisione diofantea
+                isStillPrime = false;// NB. #################
+                break;// NB. #################
+            }// else  continue searching for primality.
+        }// the internal for : the one from [+2, cursor]
+        // if after all idoneous divisors..
+        if( isStillPrime)
+        {
+            ++ordinal;//another one foud, starting from zero, so that Prime[1]=2
+            std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
+            std::string * primeStr = Common::StrManipul::uLongToString( cursor );
+            int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
+            Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
+            strBuild->append(ordinalStr->c_str());
+            strBuild->append("_");
+            strBuild->append(primeStr->c_str());
+            strBuild->append("\r");// choose one btw '\r' or '\n'
+            delete ordinalStr;
+            delete primeStr;
+            // instead of returning it, dump it on the file.
+            appendStream->write( strBuild->str().c_str(), strBuild->str().length() );
+            delete strBuild;// clean up the token-buffer.
+            strBuild = nullptr;
+        }// else ripristino del flag-primalita' per il candidato divisore successivo.
+        else
+        {// ripristino della primalita', dopo un composto(i.e. non primo).
+            isStillPrime = true;
+        }// ripristino della primalita', dopo un composto(i.e. non primo).
+    }// external for : the one where cursor cicles from inf to sup, on dividends.
+// NO MORE : interface does it : appendStream.close();
+    // ready.
+}// newDeal IntegralFileFromStartFSproducer
 
-    unsigned long backFromB64 =// NB. avoid backSlashes due to escape sequences.
-     Common::MonteCarloNamespace::Development::base10ConverterTo( *converted);
-    delete converted;
+};// class Primes
 
-    converted =
-    Common::MonteCarloNamespace::Development::base64ConverterTo( backFromB64);
-    std::cout<<"dec 64 == B64 "<< *converted<<std::endl;
+
+}// namespace UnderTest
+
+
+voidd tryReadBackwards()
+{
+    std::ifstream in;
+    in.open("nelMezzo.txt");
+    char ch;
+    int pos;
+    in.seekg(-1,ios::end);
+    pos=in.tellg();
+    for(int i=0;i<pos;i++)
+    {
+        ch=in.get();
+        cout<<ch;
+        in.seekg(-2,ios::cur);
+    }
+    in.close();
+}//tryReadBackwards
+
+
+
+//---entry point-------------------------
+int main()
+{
+    tryReadBackwards();
+    // system("pwd");
+    // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
+    Common::LogWrappers::SectionOpen("main", 0);
+    const std::string customFileConfigSectionName( "primeCustomFile");
+    // UnderTest:: NB.
+    UnderTest::Primes *p = new UnderTest::Primes();
+    // p->recoverLastRecord( p->theDumpTailStr);
+    // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
+    // delete[] lastRecord;
+    //
+    bool res = p->RandomCalcInterface(
+       999900
+       ,999999 );
+    res = p->RandomCalcInterface(
+       20
+       ,30 );
+
+    long LastOrdinal = p->getLastOrdinal();
+    long LastPrime = p->getLastPrime();
+    res = p->SequentialCalcInterface( 200);
+    LastOrdinal = p->getLastOrdinal();
+    LastPrime = p->getLastPrime();
+
+//    res = p->SequentialCalcInterface(  50);
+//    res = p->SequentialCalcInterface( 100);
+//    //
+//    long desPrime = (*p)[25];
+//    std::string logMsg = "desPrime = (*p)[25]==";
+//    std::string * desinenza = Common::StrManipul::uLongToString( desPrime);
+//    logMsg += *desinenza;
+//    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+//    delete desinenza;
+//    //
+//    desPrime = (*p)[3];
+//    logMsg = "desPrime = (*p)[3]==";
+//    desinenza = Common::StrManipul::uLongToString( desPrime);
+//    logMsg += *desinenza;
+//    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+//    delete desinenza;
+    //-----
+    delete p;
+    Common::LogWrappers::SectionClose();
 
     converted =
      Common::MonteCarloNamespace::Development::exadecimalConverterTo( 9898798);
     std::cout<<"dec 9898798 == B16 "<< *converted<<std::endl;
     delete converted;
 
-    std::cout<<"sizeof(unsigned long) : "<<sizeof(unsigned long)<<std::endl;
-    std::cout<<"sizeof(unsigned short) : "<<sizeof(unsigned short)<<std::endl;
-    std::cout<<"sizeof(unsigned char) : "<<sizeof(unsigned char)<<std::endl;
-//    unsigned long  Data1;  4 bytes == 32bit
-//    unsigned short Data2;  2 == 16bit
-//    unsigned short Data3;  2
-//    unsigned char  Data4[8]; 1x8 == 64bit
-
-//    int input =0;
-//    for(;;)
-//    {
-//        std::cout << "Enter decimal number: " ;
-//        std::cin >> input ;
-//        if( 0 > input) {break;}
-//        std::cout << "0x" << std::hex << input << '\n' ;
-//    }
-
-
-
-    double left  = +2.0;
-    double right = +5.0;
-    int populationCardinality = 4;
-    double eta = +0.5;
-    //
-    Common::MonteCarloNamespace::Development::MonteCarloGenerator * monteCGen =
-    new Common::MonteCarloNamespace::Development::MonteCarloGenerator(
-                        left,true
-                        ,right,true
-                        ,true // is_continuous
-                         );
-    for( int c=0; c<populationCardinality;c++)
-    {
-        //monteCGen->nextIntegerInInterval();
-        monteCGen->nextDoubleInInterval();
-    }
-    monteCGen->showPopulation();
-    monteCGen->buildOmega( left, right, eta);
-    monteCGen->buildFrequencyDistribution();
-    monteCGen->showFrequencyDistribution();
-    monteCGen->showCumulatedFrequency();
-
-    delete monteCGen;
-
-    //Common::Stream::showASCII();
-
-//    for( int c=32; c<127; c++)
-//    {
-//        std::string * strASCIIcode = Common::StrManipul::intToString( c);
-//        std::string * strASCIIsymb = Common::StrManipul::charToString( c);
-//        //
-//        std::cout<< " ASCII code "+ *strASCIIcode
-//        + " corresponds to symbol : "
-//        + *strASCIIsymb
-//        << std::endl;
-//        //
-//        delete strASCIIcode;// free at each step, the allocated memory.
-//        delete strASCIIsymb;
-//    }// for
-
-
-//    Common::dbCall::cantiere_numericTable_INSERT_SINGLE( -5.67005 );
-//    Common::dbCall::cantiere_sede_INSERT_SINGLE();
-//    Common::dbCall::cantiere_sede_LOAD_MULTI_();
-
-
-//    boost_test();
-
-    // Common::command_PREPARE(); tested : hangs with noexcept.
-
-//    Entity::Integration::rettangoli( +100.0,
-//                                     +120.0,
-//                                     28,
-//                                     f
-//                                     , false // i.e. not called from inside "trapezi"
-//                                     );
-//
-//    Entity::Integration::trapezi( +100.0,
-//                                     +120.0,
-//                                     28,
-//                                     f
-//                                     );
-
-    // sqlParameters();
-    //preparedStatement();
-//    Process::testCpp11_MonteCarlo();
-
-
-
-//    Common::MonteCarlo * mcInitializer = new Common::MonteCarlo();// time based seed.
-//    int min = +2;
-//    int sup = +4;
-//    std::string * minStr = Common::StrManipul::intToString( min);
-//    std::string * maxStr = Common::StrManipul::intToString( sup-1);
-//    for( int c=0; c<20; c++)
-//    {
-//        std::string * tmp = Common::StrManipul::intToString(mcInitializer->nextIntegerInInterval( min, sup));
-//        std::cout<< "int in ["+ *minStr +", "+ *maxStr +"] : " + *tmp <<std::endl;
-//        delete tmp;
-//    }
-//    delete minStr;
-//    delete maxStr;
-//    delete mcInitializer;
-
-*/
+    //---ready---------------
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+ 
