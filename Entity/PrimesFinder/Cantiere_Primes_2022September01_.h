@@ -46,8 +46,9 @@ class Primes
     unsigned long operator[] (const unsigned long requiredOrdinal);
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
     void  createOrAppend( const std::string & );
-    const char * dumpTailReader( const std::string & fullPath);
+    const char * dumpTailReader( const std::string & fullPath);// --- no more used  -------
     const char * dumpTailReaderByChar( const std::string & fullPath);
+    const char * lastRecordReaderByChar( const std::string & fullPath);
     SingleFactor * IntegerDecomposition( const unsigned long dividend);
 // TODO no more : const char * theDumpPath = nullptr;// NB. remember to share and delete[].
 
@@ -59,7 +60,7 @@ private: // TODO let private after test
     unsigned long desiredThreshold;// in R+
     unsigned long actualPrimaryFileLength;
     const int tailRecordSize = 60;
-    unsigned long secureRightBound = actualPrimaryFileLength - this->tailRecordSize;
+    
     char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
     int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
     DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
@@ -99,9 +100,9 @@ private: // TODO let private after test
     DumpElement * recoverDumpTail( const char * dumpTail);
     int shiftInSumTissue( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
     int Bisection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
-    int NpartSection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
+    
     int currentOperatorSquare( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
-    AsinglePointInStream readRecordAt(std::ifstream & dumpReader, long offsetFromBeg);// lettore di Record da IntegralDump
+    
 
 };// class
 
@@ -117,6 +118,8 @@ private: // TODO let private after test
     // below: a Ctor to span (inf, max] :
     Primes(unsigned long infLeft, unsigned long maxRight, const std::string& desiredConfigSectionName);// CUSTOM Section, on default config-file.
 
-
+// unsigned long secureRightBound = actualPrimaryFileLength - this->tailRecordSize;
+// AsinglePointInStream readRecordAt(std::ifstream & dumpReader, long offsetFromBeg);// lettore di Record da IntegralDump
+int NpartSection( const  long requiredOrdinal, const  long initialization, bool wantInitialization );
 
 */
