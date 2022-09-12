@@ -7,3 +7,19 @@
  Custom Interval (20, 30] ,worked on: Mon Sep 12 15:55:52 2022
  Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
 9_2310_29
+
+ Custom Interval (900, 999] ,worked on: Mon Sep 12 16:00:12 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+162_907163_911164_919165_929166_937167_941168_947169_953170_967171_971172_977173_983174_991175_997
+
+ Custom Interval (20, 30] ,worked on: Mon Sep 12 16:00:12 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+9_2310_29
+
+ Custom Interval (900, 999] ,worked on: Mon Sep 12 16:01:37 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+162_907163_911164_919165_929166_937167_941168_947169_953170_967171_971172_977173_983174_991175_997
+
+ Custom Interval (20, 30] ,worked on: Mon Sep 12 16:01:37 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+9_2310_29
