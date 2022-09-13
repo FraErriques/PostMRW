@@ -432,7 +432,11 @@ const char * lastRecordReaderByChar( const std::string & fullPath)
     int streamSize = lastrecReader.tellg();// filesize
     if( 1024>streamSize)
     {
+        this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out );// NO  | std::fstream::app rewrite from scratch.
         sprintf( directTailDump, "1_2");// means start from sratch.
+        this->append_Sequential_Stream->close();
+        delete this->append_Sequential_Stream;
+        this->append_Sequential_Stream = nullptr;
         return directTailDump;
     }// else continue.
     Common::StringBuilder * sb = new Common::StringBuilder( 100);// forecasted size.
@@ -807,8 +811,8 @@ void Start_PrimeDump_FileSys(
 }// namespace UnderTest
 
 
-void tryReadBackwards()
-{
+void tryReadBackwards()// platform dependent.
+{// NB. works on Linux but not on Windows.
     std::ifstream in;
     in.open("nelMezzo.txt");
     char ch;
@@ -824,12 +828,31 @@ void tryReadBackwards()
     in.close();
 }//tryReadBackwards
 
+void tryReadForewards()
+{
+    std::ifstream in;
+    in.open("nelMezzo.txt");
+    char ch;
+    int pos;
+    in.seekg(-1,ios::end);
+    pos=in.tellg();
+    in.seekg(0,ios::beg );// go back to the starting point.
+    for(int i=0;i<pos;i++)
+    {
+        ch=in.get();
+        cout<<ch;
+        // NB. no seek reading forewards; it's implicitly in.seekg(+1,ios::cur);
+    }
+    in.close();
+}//tryReadBackwards
+
 
 
 //---entry point-------------------------
 int main()
 {
-    // tryReadBackwards();
+//    tryReadForewards();
+//    tryReadBackwards();
     // system("pwd");
     // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
