@@ -167,6 +167,8 @@ class Primes
     Primes & operator=   ( const Primes & second );
     /// method
     /// method /// algo ///////////////////////////////////////////////////////////////////////
+
+    // state of the art.
 //    void Start_PrimeDump_FileSys(
 //                                    unsigned long Left
 //                                    ,unsigned long Right
@@ -559,6 +561,26 @@ unsigned long getLastPrime()
 
 
 
+std::string * exadecimalConverterTo( unsigned int par )
+{
+    const std::string exaFigures("0123456789ABCDEF");
+    Common::StringBuilder sb(20);
+    sb.append("0x");//start with Hex prefix.
+    int abacusLeftMostPosition = log(par)/log(16);
+    double dividendo = (double)par;
+    for( ;abacusLeftMostPosition>=0; abacusLeftMostPosition--)
+    {
+        double quotient = dividendo/ pow(+16.0,(double)abacusLeftMostPosition);
+        double resto = dividendo - ((int)quotient)*pow(+16.0,(double)abacusLeftMostPosition);
+        // update
+        sb.append( exaFigures[(int)quotient]);
+        dividendo = resto;
+    }
+    //ready.
+    std::string * res = new std::string( sb.str());
+    return res;// caller has to delete.
+}
+
 /*  IntegerDecomposition : the Fundamental Thm of Arithmetic.
 SingleFactor * IntegerDecomposition( const unsigned long dividend)
 {
@@ -785,7 +807,7 @@ void Start_PrimeDump_FileSys(
 }// namespace UnderTest
 
 
-tryReadBackwards()
+void tryReadBackwards()
 {
     std::ifstream in;
     in.open("nelMezzo.txt");
