@@ -189,20 +189,17 @@ class Primes
 Primes( )
 {
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
-    //
+    //---start sequential_file treatment
     this->feedDumpPath();// SEQUENTIAL : default section, in default file.
     if( nullptr != this->sequentialDumpPath )
     {
-        this->createOrAppend( this->sequentialDumpPath);
-        //this->dumpTailReaderByChar( this->sequentialDumpPath);//-----indiziato
-        const char * lastRecString = this->lastRecordReaderByChar(  this->sequentialDumpPath);
-        if( nullptr != this->theDumpTailStr)
-        {
-            recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
-        }// else : no valid last record : start from zero!
-        // the upper bound for research, in R+, will be a parameter for the sequentialCalcInterface()
         dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
     } // else dumpPathAcquisitionFromConfig already false from init.
+    else
+    {
+        dumpPathAcquisitionFromConfig = false;
+    }
+    //
     //----end of SequentialPath --- start of RandomPath -------
     this->feed_CustomDumpPath();// CUSTOM section, in default file.
     if( nullptr != this->randomDumpPath )
@@ -210,6 +207,10 @@ Primes( )
         this->createOrAppend( this->randomDumpPath);
         dumpPathAcquisitionFromConfig &= true;// NB &= only if both files are found, the flag gets true.
     }// else :  not-healthly built:  dumpPathAcquisitionFromConfig already false from init.
+    else
+    {
+        dumpPathAcquisitionFromConfig = false;
+    }
     //---check operations' result and document the error for the user.
     if( false==dumpPathAcquisitionFromConfig)// something wrong reading from config files.
     {// not-healthly built.
@@ -224,25 +225,38 @@ bool SequentialCalcInterface( unsigned long Threshold )
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     if( nullptr != this->sequentialDumpPath )
     {
-        this->createOrAppend( this->sequentialDumpPath);
-        this->dumpTailReaderByChar( this->sequentialDumpPath);
-        if( nullptr != this->theDumpTailStr)
-        {
-            recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
-        }// else : no valid last record : start from zero!
-        // the upper bound for research, in R+, will be a parameter for the sequentialCalcInterface()
         dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
     } // else dumpPathAcquisitionFromConfig already false from init.
-    //
+    else
+    {// else dumpPathAcquisitionFromConfig already false from init.
+        return dumpPathAcquisitionFromConfig;
+    }// only if not exited -> continue.
     this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
     // ---call with params
-    this->Start_PrimeDump_FileSys( this->getLastPrime() , Threshold , append_Sequential_Stream );
+    const char * stringDumpTail = this->newDeal_dumpTailReaderByChar( this->sequentialDumpPath );// last few records in a string.
+    UnderTest::Primes::DumpElement * lastRec = nullptr;// the very last record, deciphered from a func:newDeal_recoverLastRecord
+    if(nullptr!=stringDumpTail)
+    {
+        lastRec = this->newDeal_recoverLastRecord( stringDumpTail);
+    }// else sequentialFile not present.
+    else
+    {// else dumpPathAcquisitionFromConfig already false from init.
+        return dumpPathAcquisitionFromConfig;
+    }// only if not exited -> continue.
+    long LastOrdinal = lastRec->ordinal; // p->getLastOrdinal();
+    long LastPrime = lastRec->prime;// p->getLastPrime();
+    //---call with appropriate params---------
+    this->Start_PrimeDump_FileSys(
+                                  LastPrime
+                                  , Threshold , append_Sequential_Stream );
     this->append_Sequential_Stream->close();
     delete this->append_Sequential_Stream;
     this->append_Sequential_Stream = nullptr;
-    //
+    delete[] stringDumpTail;
+    delete lastRec;
+    // ready.
     return dumpPathAcquisitionFromConfig;
-}
+}//
 
 
 
@@ -460,6 +474,28 @@ const char * lastRecordReaderByChar( const std::string & fullPath)
     return directTailDump;// caller has to delete
 }// lastRecordReaderByChar
 
+const char * newDeal_dumpTailReaderByChar( const std::string & fullPath)
+{
+    const char * sequentialFile_tail = new char[101];// caller has to delete
+    ifstream lastrecReader(fullPath, std::fstream::in );
+    lastrecReader.seekg( -1, ios::end ); // lastrecReader.end);
+    int streamSize = lastrecReader.tellg();
+    if( 100>streamSize)// for such small data, it's better to create a new sequeltial file from scratch.
+    {
+        return nullptr;
+    }// else continue.
+    lastrecReader.seekg( -100, std::ifstream::end );
+    Common::StringBuilder * sb = new Common::StringBuilder( 101);// forecasted size.
+    for( char c=0; lastrecReader.get(c); )
+    {
+        sb->append(c);
+    }
+    sequentialFile_tail = (char *)(sb->str().c_str());// caller has to delete!
+    lastrecReader.close();
+    // ready.
+    return sequentialFile_tail;// caller has to delete
+}// newDeal_dumpTailReaderByChar()
+
 
 const char * dumpTailReaderByChar( const std::string & fullPath)
 {
@@ -661,6 +697,39 @@ SingleFactor * IntegerDecomposition( const unsigned long dividend)
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
 */
 
+UnderTest::Primes::DumpElement * newDeal_recoverLastRecord( const char * dumpTail)
+{
+    UnderTest::Primes::DumpElement * lastRecord = new UnderTest::Primes::DumpElement();
+    std::string parFromFile(dumpTail);
+    int inputParamLength = parFromFile.length();
+    std::string filteredLastToken("");
+    for( int c=0; c<inputParamLength;c++)
+    {
+        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
+        {
+            filteredLastToken.append( 1, parFromFile[c] );
+        }
+        else// not digit
+        {// this measure affects both '\r' and '\n' and all the non-digits.
+            filteredLastToken.append( 1, '_' );// substitute every non-digit with '_'
+        }
+    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
+    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+    int i=+1;// the choice of a reverse_iterator is due the need of reading just lastRecord.
+    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin(); it!=tokenArray->rend(); ++it, i++)
+    {// preserve only the last two semi-records: they are lastOrdinal and LastPrime.
+        if( 1==i)// the reverse order lets the first entry be a prime, and the second an ordinal.
+        {// last Prime
+            lastRecord->prime = Common::StrManipul::stringToUnsignedLong(*it);
+        }
+        else if( 2==i)
+        {// last ordinal
+            lastRecord->ordinal = Common::StrManipul::stringToUnsignedLong(*it);
+        }// else the token is not interesting; it was included in the read portion, but is not part of the last row.So skip when i>2
+    }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
+    // ready.
+    return lastRecord;// caller has to delete.
+}// newDeal_recoverLastRecord
 
 void  recoverLastRecord( const char * dumpTail)
 {
@@ -746,12 +815,12 @@ DumpElement * recoverDumpTail( const char * dumpTail)
 }//recoverDumpTail
 
 
-    // state of the art.
+// newDeal : state of the art.
 void Start_PrimeDump_FileSys(
-                                                                        unsigned long Left
-                                                                        ,unsigned long Right
-                                                                        ,std::ofstream * appendStream
-                                                                    )
+        unsigned long Left
+        ,unsigned long Right
+        ,std::ofstream * appendStream
+    )
 {
     unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
     bool isStillPrime = true;
@@ -851,30 +920,38 @@ void tryReadForewards()
 //---entry point-------------------------
 int main()
 {
-//    tryReadForewards();
-//    tryReadBackwards();
-    // system("pwd");
-    // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
     Common::LogWrappers::SectionOpen("main", 0);
+    //
     const std::string customFileConfigSectionName( "primeCustomFile");
     // UnderTest:: NB.
     UnderTest::Primes *p = new UnderTest::Primes();
+    bool res = p->SequentialCalcInterface( 200);
+    res = p->SequentialCalcInterface( 9200);
+    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
+    UnderTest::Primes::DumpElement * lastRec = nullptr;
+    if(nullptr!=stringDumpTail)
+    {
+        lastRec = p->newDeal_recoverLastRecord( stringDumpTail);
+    }// else sequentialFile not present.  TODO
+    // if null != lastRec TODO
+    long LastOrdinal = lastRec->ordinal; // p->getLastOrdinal();
+    long LastPrime = lastRec->prime;// p->getLastPrime();
+
     // p->recoverLastRecord( p->theDumpTailStr);
     // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
     // delete[] lastRecord;
     //
-    bool res = p->RandomCalcInterface(
-       999900
-       ,999999 );
-    res = p->RandomCalcInterface(
-       20
-       ,30 );
+//    bool res = p->RandomCalcInterface(
+//       999900
+//       ,999999 );
+//    res = p->RandomCalcInterface(
+//       20
+//       ,30 );
 
-    long LastOrdinal = p->getLastOrdinal();
-    long LastPrime = p->getLastPrime();
-    res = p->SequentialCalcInterface( 200);
-    LastOrdinal = p->getLastOrdinal();
-    LastPrime = p->getLastPrime();
+
+//    res = p->SequentialCalcInterface( 200);
+//    LastOrdinal = p->getLastOrdinal();
+//    LastPrime = p->getLastPrime();
 
 //    res = p->SequentialCalcInterface(  50);
 //    res = p->SequentialCalcInterface( 100);
@@ -908,125 +985,8 @@ int main()
 
 
 /* --------------cantina----------------------------
-
-    int bisectionConvergenceSteps = p->Bisection( 73, 100, false);
-    for(int c=1; c<=100;c++)// NB. you cannot require an ordinal<+1.
-    {
-        std::cout << "\n\t converging in " << p->Bisection( c, 100, false) <<" steps."<<std::endl;
-    }
-    //int NsectionConvergenceSteps = p->NpartSection( 73, 100, false);
-    for(int c=73; c<=100;c++)
-    {
-        std::cout<<" steps for Bisection to converge to LandingPoint_"<<c<<" are:"<< p->Bisection( c, 100, false)<<std::endl;
-        std::cout<<" steps for NpartSection to converge to LandingPoint_"<<c<<" are:"<< p->NpartSection( c, 100, false)<<std::endl;
-    }
-
-//    as is
-//    "testCowsCanBeMilked"
-//    "testSheepAreNotTheOnlyFruit"
-//    // to be
-//    "Cows can be milked"
-//    "Sheep are not the only fruit"
-//
-
-    std::vector<std::string> * camelToken = nullptr;// many usages: allocated & deleted each time.
-    //
-    std::string * original_one = new std::string("testCowsCanBeMilked");
-    testCallerQuestTwo( original_one);
-
-    std::string * original_two = new std::string("testSheepAreNotTheOnlyFruit");
-    testCallerQuestTwo( original_two);
-
-    std::string * original_three = new std::string("testSheep WrittenNot123#So23@Good really");
-    testCallerQuestTwo( original_two);
-
-
-char toLower(const char par)
-{
-    if( (int)par>=65 && (int)par<=90)
-    {
-        return ( (char)((int)(par)+32));
-    }
-    else
-    {
-        return par;// if it's not an upper case letter, don't convert it.
-    }
-}
-
-bool isUpper(const char par)
-{
-    bool res = false;
-    if( (int)par>=65 && (int)par<=90)
-    {
-        res = true;
-    }// else stay false.
-    //    if( (int)par>=97 && (int)par<=122)
-    //    {
-    //        res = false;
-    //    } this is should be for lower case
-    // done
-    return res;
-}
-
-
-
-// as is
-//"testCowsCanBeMilked"
-//"testSheepAreNotTheOnlyFruit"
-//// to be
-//"Cows can be milked"
-//"Sheep are not the only fruit"
-//
-std::vector<std::string> * camelTokenizer( const std::string * original_one )
-{
-    std::vector<std::string> * camelToken = new std::vector<std::string>();
-    Common::StringBuilder * curToken = new Common::StringBuilder( original_one->length());// round in excess
-    // if(curChar is NOT upper -> pushBack)
-    // else if(curChar is upper -> terminateCurStrBuilder -> Start a new one with toLower(curChar) )
-    //
-    int c=0;//needed after endOfLoop
-    for( ; c<original_one->length(); c++)
-    {
-        if( ! isUpper( original_one->at(c) ) )
-        {
-            curToken->append( original_one->at(c) );
-        }
-        else // not upper
-        {
-            camelToken->push_back( curToken->str() );
-//std::cout<< curToken->str() <<std::endl;
-            delete curToken;
-            curToken = nullptr;
-            curToken = new Common::StringBuilder( original_one->length());// get ready for another one
-            curToken->append( toLower( original_one->at(c) ) );
-        }// end else  not upper
-    }// end for
-    //---recover last token, which has no capitalLetter to signal its registration
-    camelToken->push_back( curToken->str() );
-//std::cout<< curToken->str() <<std::endl;
-    delete curToken;
-    curToken = nullptr;
-    // no successive token, to get ready for.
-    return camelToken;
-}// end camelTokenizer(
-
-
-void testCallerQuestTwo( const std::string * original_one )
-{
-    std::vector<std::string> * camelToken = camelTokenizer( original_one);
-    // rewind
-    for( std::vector<std::string>::iterator theTokens=camelToken->begin();
-        theTokens != camelToken->end();
-        theTokens++
-    )
-    {
-        std::cout << *theTokens << " ";
-    }
-    std::cout << std::endl;
-    delete original_one;
-    delete camelToken;
-}// end testCallerQuestTwo(
-
-
-
+//    tryReadForewards();
+//    tryReadBackwards();
+    // system("pwd");
+    // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
 */
