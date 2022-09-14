@@ -133,12 +133,12 @@ class Primes
 
  // TODO let private after test
     /// Data
-    unsigned long lastOrdinal;
-    unsigned long lastPrime;
-    unsigned long desiredOrdinal;
-    unsigned long desiredThreshold;// in R+
-    unsigned long actualPrimaryFileLength;
-    const int tailRecordSize = 60;
+//    unsigned long lastOrdinal;
+//    unsigned long lastPrime;
+//    unsigned long desiredOrdinal;
+//    unsigned long desiredThreshold;// in R+
+//    unsigned long actualPrimaryFileLength;
+//    const int tailRecordSize = 60;
 
     char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
     int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
@@ -154,8 +154,8 @@ class Primes
     std::ofstream * append_Sequential_Stream;// write
     std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
-    double sigma;
-    double t;
+//    double sigma;
+//    double t;
     /// Ctor
     // Primes();// no more hiding of empty Ctor.
     // copying methoda : not usable->private.
@@ -222,40 +222,37 @@ Primes( )
 
 bool SequentialCalcInterface( unsigned long Threshold )
 {
-    bool dumpPathAcquisitionFromConfig = false;// init to invalid
-    if( nullptr != this->sequentialDumpPath )
-    {
-        dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
-    } // else dumpPathAcquisitionFromConfig already false from init.
-    else
-    {// else dumpPathAcquisitionFromConfig already false from init.
-        return dumpPathAcquisitionFromConfig;
-    }// only if not exited -> continue.
-    this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
+    bool hasSequentialDumpBeenReset = false;// it's true on filesize<1k and of course on non existing file
     // ---call with params
     const char * stringDumpTail = this->newDeal_dumpTailReaderByChar( this->sequentialDumpPath );// last few records in a string.
     UnderTest::Primes::DumpElement * lastRec = nullptr;// the very last record, deciphered from a func:newDeal_recoverLastRecord
+    long LastOrdinal = 0UL; //nullptr; // TODO dele p->getLastOrdinal();
+    long LastPrime = 0UL; //nullptr;     // TODO dele p->getLastPrime();
     if(nullptr!=stringDumpTail)
     {
         lastRec = this->newDeal_recoverLastRecord( stringDumpTail);
+        LastOrdinal = lastRec->ordinal;
+        LastPrime = lastRec->prime;
+        this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
     }// else sequentialFile not present.
     else
     {// else dumpPathAcquisitionFromConfig already false from init.
-        return dumpPathAcquisitionFromConfig;
-    }// only if not exited -> continue.
-    long LastOrdinal = lastRec->ordinal; // p->getLastOrdinal();
-    long LastPrime = lastRec->prime;// p->getLastPrime();
+        LastOrdinal = 0;
+        LastPrime = 0;
+        this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out);// reset.
+        hasSequentialDumpBeenReset = true;
+    }
     //---call with appropriate params---------
     this->Start_PrimeDump_FileSys(
                                   LastPrime
-                                  , Threshold , append_Sequential_Stream );
+                                  , Threshold , append_Sequential_Stream, LastOrdinal );
     this->append_Sequential_Stream->close();
     delete this->append_Sequential_Stream;
     this->append_Sequential_Stream = nullptr;
     delete[] stringDumpTail;
     delete lastRec;
     // ready.
-    return dumpPathAcquisitionFromConfig;
+    return hasSequentialDumpBeenReset;
 }//
 
 
@@ -267,9 +264,9 @@ bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
-    this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
-    this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
-    this->desiredThreshold = maxRight;
+    unsigned long extimatedOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+    //this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
+    //this->desiredThreshold = maxRight;
     // write a stamp, about what we're doing and when.
     time_t ttime = time(0);
     char* dt = ctime(&ttime);
@@ -280,13 +277,13 @@ bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
     *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
     *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
     // ---call with params
-    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream );
+    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream, extimatedOrdinal );
     //
     this->append_Random_Stream->close();
     delete this->append_Random_Stream;
     this->append_Random_Stream = nullptr;
     return res;
-}
+}// RandomCalcInterface
 
 
 
@@ -361,25 +358,25 @@ const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 
 
 
-bool getLastCoupleInDefaultFile()
-{
-    bool res = false;// init to invalid.
-    this->feedDumpPath();
-    if( nullptr != this->sequentialDumpPath )
-    {
-        this->createOrAppend( this->sequentialDumpPath);
-    }// else : TODO not-healthly built.
-    else {return res;}// which is still "false".
-    this->dumpTailReaderByChar( this->sequentialDumpPath);
-    if( nullptr != this->theDumpTailStr)
-    {
-        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
-    }// else : no valid last record : start from zero!
-    else {return res;}// which is still "false".
-    // ready:
-    res = true;// all ok.
-    return res;
-}// getLastCoupleInDefaultFile
+//bool getLastCoupleInDefaultFile()
+//{
+//    bool res = false;// init to invalid.
+//    this->feedDumpPath();
+//    if( nullptr != this->sequentialDumpPath )
+//    {
+//        this->createOrAppend( this->sequentialDumpPath);
+//    }// else : TODO not-healthly built.
+//    else {return res;}// which is still "false".
+//    this->dumpTailReaderByChar( this->sequentialDumpPath);
+//    if( nullptr != this->theDumpTailStr)
+//    {
+//        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+//    }// else : no valid last record : start from zero!
+//    else {return res;}// which is still "false".
+//    // ready:
+//    res = true;// all ok.
+//    return res;
+//}// getLastCoupleInDefaultFile
 
 
 
@@ -497,96 +494,98 @@ const char * newDeal_dumpTailReaderByChar( const std::string & fullPath)
 }// newDeal_dumpTailReaderByChar()
 
 
-const char * dumpTailReaderByChar( const std::string & fullPath)
-{
-    if(nullptr!=this->theDumpTailStr)
-    {
-        return this->theDumpTailStr;
-    }// else build it.
-    ifstream lastrecReader(fullPath, std::fstream::in );
-    lastrecReader.seekg( 0, lastrecReader.end);
-    int streamSize = lastrecReader.tellg();
-    int lastTokenHypothesizedLength;// f(streamSize).
-    // cannot use runtime-expressions in switch-case: case-labels have to be compile-time constants.
-    if( streamSize<4)
-        {// no valid last-record in place.
-            this->lastOrdinal=0UL;
-            this->lastPrime=+1UL;//##### +2 first of the Primes p in P in N. this->lastPrime gets a ++ before start.
-            return nullptr;// NB ##### do NOT call recoverLastRecord on a null ptr !!! ####################
-        }
-    else if( streamSize>=4 && streamSize<=10)
-        {
-            lastTokenHypothesizedLength = streamSize;
-        }
-    else if( streamSize>10 && streamSize<=200)
-        {
-            lastTokenHypothesizedLength = 10;
-        }
-    else// i.e. case >200
-        {
-            lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
-        }// end of if( streamsize..)->seek( howMuch, end).
-    //
-    int multeplicity = 5;// less "multeplicity" times backwards, from EOF.
-// avoid it:lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
-    lastrecReader.seekg( streamSize-multeplicity*lastTokenHypothesizedLength, lastrecReader.beg );
-//this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
-//Substituted lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
-    Common::StringBuilder * sb = new Common::StringBuilder(multeplicity*lastTokenHypothesizedLength+1);// forecasted size.
-    for( char c=0; lastrecReader.get(c); )
-    {
-        sb->append(c);
-    }
-    this->theDumpTailStr = (char *)(sb->str().c_str());// caller has to delete!
-    lastrecReader.close();
-    // ready.
-    return this->theDumpTailStr;
-}//dumpTailReaderByChar()
+//const char * dumpTailReaderByChar( const std::string & fullPath)
+//{
+//    if(nullptr!=this->theDumpTailStr)
+//    {
+//        return this->theDumpTailStr;
+//    }// else build it.
+//    ifstream lastrecReader(fullPath, std::fstream::in );
+//    lastrecReader.seekg( 0, lastrecReader.end);
+//    int streamSize = lastrecReader.tellg();
+//    int lastTokenHypothesizedLength;// f(streamSize).
+//    // cannot use runtime-expressions in switch-case: case-labels have to be compile-time constants.
+//    if( streamSize<4)
+//        {// no valid last-record in place.
+//            this->lastOrdinal=0UL;
+//            this->lastPrime=+1UL;//##### +2 first of the Primes p in P in N. this->lastPrime gets a ++ before start.
+//            return nullptr;// NB ##### do NOT call recoverLastRecord on a null ptr !!! ####################
+//        }
+//    else if( streamSize>=4 && streamSize<=10)
+//        {
+//            lastTokenHypothesizedLength = streamSize;
+//        }
+//    else if( streamSize>10 && streamSize<=200)
+//        {
+//            lastTokenHypothesizedLength = 10;
+//        }
+//    else// i.e. case >200
+//        {
+//            lastTokenHypothesizedLength = this->tailRecordSize;// 60 is suitable for primes in magnitude-order of 10^9.
+//        }// end of if( streamsize..)->seek( howMuch, end).
+//    //
+//    int multeplicity = 5;// less "multeplicity" times backwards, from EOF.
+//// avoid it:lastrecReader.seekg( -1*multeplicity*lastTokenHypothesizedLength, lastrecReader.end);// seek(-size,end)=:goBack(size,fromEOF).
+//    lastrecReader.seekg( streamSize-multeplicity*lastTokenHypothesizedLength, lastrecReader.beg );
+////this->theDumpTailStr = new char[multeplicity*lastTokenHypothesizedLength+1];// TODO test
+////Substituted lastrecReader.read( this->theDumpTailStr, multeplicity*lastTokenHypothesizedLength);// fill this->theDumpTailStr from the stream-tail.
+//    Common::StringBuilder * sb = new Common::StringBuilder(multeplicity*lastTokenHypothesizedLength+1);// forecasted size.
+//    for( char c=0; lastrecReader.get(c); )
+//    {
+//        sb->append(c);
+//    }
+//    this->theDumpTailStr = (char *)(sb->str().c_str());// caller has to delete!
+//    lastrecReader.close();
+//    // ready.
+//    return this->theDumpTailStr;
+//}//dumpTailReaderByChar()
+
+//
+//unsigned long getLastOrdinal()
+//{
+//    this->feedDumpPath();// default section, in default file.
+//    if( nullptr == this->sequentialDumpPath)
+//    {
+//        this->isHealthlyConstructed = false;
+//        this->canOperate = false;
+//        throw;
+//    }// else :  healthly built: continue:
+//    this->dumpTailReaderByChar( this->sequentialDumpPath);
+//    if( nullptr != this->theDumpTailStr)
+//    {
+//        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+//    }// else : no valid last record : start from zero!
+//    else
+//    {
+//        this->lastOrdinal = 0;
+//        this->lastPrime = 0;
+//    }
+//    return this->lastOrdinal;
+//}//getLastOrdinal
 
 
-unsigned long getLastOrdinal()
-{
-    this->feedDumpPath();// default section, in default file.
-    if( nullptr == this->sequentialDumpPath)
-    {
-        this->isHealthlyConstructed = false;
-        this->canOperate = false;
-        throw;
-    }// else :  healthly built: continue:
-    this->dumpTailReaderByChar( this->sequentialDumpPath);
-    if( nullptr != this->theDumpTailStr)
-    {
-        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
-    }// else : no valid last record : start from zero!
-    else
-    {
-        this->lastOrdinal = 0;
-        this->lastPrime = 0;
-    }
-    return this->lastOrdinal;
-}//getLastOrdinal
 
-unsigned long getLastPrime()
-{// default section, in default file.
-    this->feedDumpPath();
-    if( nullptr == this->sequentialDumpPath)
-    {
-        this->isHealthlyConstructed = false;
-        this->canOperate = false;
-        throw;
-    }// else :  healthly built: continue:
-    this->dumpTailReaderByChar( this->sequentialDumpPath);
-    if( nullptr != this->theDumpTailStr)
-    {
-        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
-    }// else : no valid last record : start from zero!
-    else
-    {
-        this->lastOrdinal = 0;
-        this->lastPrime = 0;
-    }
-    return this->lastPrime;
-}//getLastPrime
+//unsigned long getLastPrime()
+//{// default section, in default file.
+//    this->feedDumpPath();
+//    if( nullptr == this->sequentialDumpPath)
+//    {
+//        this->isHealthlyConstructed = false;
+//        this->canOperate = false;
+//        throw;
+//    }// else :  healthly built: continue:
+//    this->dumpTailReaderByChar( this->sequentialDumpPath);
+//    if( nullptr != this->theDumpTailStr)
+//    {
+//        recoverLastRecord( this->theDumpTailStr);// members should be in place, now: lastOrdinal, lastPrime.
+//    }// else : no valid last record : start from zero!
+//    else
+//    {
+//        this->lastOrdinal = 0;
+//        this->lastPrime = 0;
+//    }
+//    return this->lastPrime;
+//}//getLastPrime
 
 
 
@@ -731,36 +730,36 @@ UnderTest::Primes::DumpElement * newDeal_recoverLastRecord( const char * dumpTai
     return lastRecord;// caller has to delete.
 }// newDeal_recoverLastRecord
 
-void  recoverLastRecord( const char * dumpTail)
-{
-    std::string parFromFile(dumpTail);
-    int inputParamLength = parFromFile.length();
-    std::string filteredLastToken("");
-    for( int c=0; c<inputParamLength;c++)
-    {
-        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
-        {
-            filteredLastToken.append( 1, parFromFile[c] );
-        }
-        else// not digit
-        {
-            filteredLastToken.append( 1, '_' );// subst. with '_'
-        }
-    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
-    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
-    int i=+1;
-    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin(); it!=tokenArray->rend(); ++it, i++)
-    {// preserve only the last two semi-records: they are lastOrdinal and LastPrime.
-        if( 1==i)
-        {// last Prime
-            this->lastPrime = Common::StrManipul::stringToUnsignedLong(*it);
-        }
-        else if( 2==i)
-        {// last ordinal
-            this->lastOrdinal = Common::StrManipul::stringToUnsignedLong(*it);
-        }// else the token is not interesting; it was included in the read portion, but is not part of the last row.
-    }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
-}//recoverLastRecord
+//void  recoverLastRecord( const char * dumpTail)
+//{
+//    std::string parFromFile(dumpTail);
+//    int inputParamLength = parFromFile.length();
+//    std::string filteredLastToken("");
+//    for( int c=0; c<inputParamLength;c++)
+//    {
+//        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
+//        {
+//            filteredLastToken.append( 1, parFromFile[c] );
+//        }
+//        else// not digit
+//        {
+//            filteredLastToken.append( 1, '_' );// subst. with '_'
+//        }
+//    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
+//    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+//    int i=+1;
+//    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin(); it!=tokenArray->rend(); ++it, i++)
+//    {// preserve only the last two semi-records: they are lastOrdinal and LastPrime.
+//        if( 1==i)
+//        {// last Prime
+//            this->lastPrime = Common::StrManipul::stringToUnsignedLong(*it);
+//        }
+//        else if( 2==i)
+//        {// last ordinal
+//            this->lastOrdinal = Common::StrManipul::stringToUnsignedLong(*it);
+//        }// else the token is not interesting; it was included in the read portion, but is not part of the last row.
+//    }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
+//}//recoverLastRecord
 
 
 // produce an array of couples {ordinal,prime} from the dumpTail.
@@ -820,13 +819,15 @@ void Start_PrimeDump_FileSys(
         unsigned long Left
         ,unsigned long Right
         ,std::ofstream * appendStream
+        ,unsigned long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
     )
 {
-    unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
+    //unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
     bool isStillPrime = true;
     double realQuotient;
     unsigned long intQuotient;
-    unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
+    //unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
+    unsigned long cursor = Left+1UL;// start stepping from the Int after the last found Prime.
     if( cursor<+2){cursor=+2;}// 1 (i.e. one) is the product-invariant; so, not a prime.
     // NB now a data-member ; ofstream appendStream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
     //
@@ -926,7 +927,7 @@ int main()
     // UnderTest:: NB.
     UnderTest::Primes *p = new UnderTest::Primes();
     bool res = p->SequentialCalcInterface( 200);
-    res = p->SequentialCalcInterface( 9200);
+    res = p->SequentialCalcInterface( 11200);
     const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
     UnderTest::Primes::DumpElement * lastRec = nullptr;
     if(nullptr!=stringDumpTail)
@@ -941,9 +942,9 @@ int main()
     // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
     // delete[] lastRecord;
     //
-//    bool res = p->RandomCalcInterface(
-//       999900
-//       ,999999 );
+    res = p->RandomCalcInterface(
+       999900
+       ,999999 );
 //    res = p->RandomCalcInterface(
 //       20
 //       ,30 );
