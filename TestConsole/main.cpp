@@ -213,6 +213,9 @@ Primes( )
     {// not-healthly built.
         this->isHealthlyConstructed = false;
         this->canOperate = false;
+        this->append_Sequential_Stream = nullptr;
+        this->append_Random_Stream = nullptr;
+        this->sharedReader = nullptr;
     }// not-healthly built.
 }// empty Ctor : reads both the sequentialFile and randomFile fullpath
 
@@ -228,8 +231,8 @@ bool SequentialCalcInterface( unsigned long Threshold )
         hasSequentialDumpBeenReset = true;
     }// else it has been initialized to false.
     UnderTest::Primes::DumpElement * lastRec = nullptr;// the very last record, deciphered from a func:newDeal_recoverLastRecord
-    long LastOrdinal = 0UL; //nullptr; // TODO dele p->getLastOrdinal();
-    long LastPrime = 0UL; //nullptr;     // TODO dele p->getLastPrime();
+    long LastOrdinal = 0UL;
+    long LastPrime = 0UL;
     if(nullptr!=stringDumpTail)
     {// i.e. if we have the string of dump-tail :
         lastRec = this->newDeal_recoverLastRecord( stringDumpTail);
@@ -243,6 +246,10 @@ bool SequentialCalcInterface( unsigned long Threshold )
             hasSequentialDumpBeenReset = true;
         }
         this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
+        this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+        this->sharedReader->close();
+        delete this->sharedReader;
+        this->sharedReader = nullptr;
     }// else sequentialFile not present.
     if (hasSequentialDumpBeenReset)
     {// start a new dump from scratch :
@@ -264,7 +271,25 @@ bool SequentialCalcInterface( unsigned long Threshold )
     return hasSequentialDumpBeenReset;
 }//
 
-
+bool ReadSequentialDumpInterface()
+{
+    bool res = false;
+    this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+    if( nullptr != this->sharedReader)
+    {
+        res = true;
+    }// else stay false.
+    //---do the job here----START
+    this->sharedReader->seekg( 50 , std::ios::beg );
+    UnderTest::Primes::AsinglePointInStream * nextRecord =
+        this->acquireNextRecord( 50);// pass file-seek-offset.
+    //---do the job here----END
+    this->sharedReader->close();
+    delete this->sharedReader;
+    this->sharedReader = nullptr;
+    // ready
+    return res;
+}// ReadSequentialDumpInterface
 
 bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
 {
@@ -821,7 +846,7 @@ UnderTest::Primes::DumpElement * newDeal_recoverLastRecord( const char * dumpTai
 
 
 // newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
-DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String)
+DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality)
 {
     DumpElement * dumpTail_Records = nullptr;// ret val
     std::string parFromFile( dumpTail_String );
@@ -850,7 +875,8 @@ DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String)
     else
     {// DISparita'
         actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
-    }
+    }// then feed "out"-param :
+    *recordArrayCardinality = actualCoupleCardinality;
     // NB: allocare per tale misura : it's the return value: caller has to delete[].
     dumpTail_Records = new DumpElement[actualCoupleCardinality];// struct-array {ordinal,prime}.
     // NB: fill-up reverse
@@ -931,46 +957,102 @@ void Start_PrimeDump_FileSys(
     // ready.
 }// newDeal IntegralFileFromStartFSproducer
 
-};// class Primes
 
+
+
+UnderTest::Primes::AsinglePointInStream * acquireNextRecord( unsigned long discriminatingElement_position)
+{
+    if( nullptr==this->sharedReader || ! this->sharedReader->is_open())
+    {
+        return nullptr;
+    }// else continue
+    AsinglePointInStream * nextRecord = new Primes::AsinglePointInStream();
+    int c=0;
+    int stepDone = 0;
+    for( ; ; stepDone++ )
+    {// for step until next-record starting point.
+        c = this->sharedReader->get();
+        if( 13==c || 10==c )
+        {
+            break;
+        }// next record begin-position is set
+        if( this->sharedReader->eof() ) {break;}
+    }// for step until next-record starting point.
+    // then write down next complete record :
+    Common::StringBuilder sb(50);// estimate
+    int terminator=0;
+    int midRecord_separator=0;
+    for( stepDone = 0;  ; stepDone++ )
+    {
+        c = this->sharedReader->get();
+        if(13==c || 10==c)
+        {
+            terminator++;
+        }
+        else if( '_'==c)
+        {
+             midRecord_separator++;
+             sb.append(c);
+        }
+        else if( c>=48 && c<=57 )// is digit
+        {
+            sb.append( c);
+        }
+        else// not digit
+        {// this should never occur, except for errors in the dump.
+            sb.append( (int)'_');
+        }
+        if(1==midRecord_separator && terminator>=1)
+        {
+            const std::string nextRecord_txt = sb.str();
+            int nextRecord_len = nextRecord_txt.length();
+            int recordCardinality=0;
+            Primes::DumpElement * nextRecPtr =
+                newDeal_recoverDumpTail( nextRecord_txt.c_str() , &recordCardinality);
+            nextRecord->startPositionOfRecord = discriminatingElement_position;
+            nextRecord->endPositionOfRecord = discriminatingElement_position + stepDone;
+            nextRecord->Ordinal = nextRecPtr->ordinal;
+            nextRecord->Prime = nextRecPtr->prime;
+            // TODO delete nextRecPtr
+            break;
+        }
+    }// for step into next complete record
+    //ready
+    return nextRecord;// caller has to delete.
+}// acquireNextRecord
+
+
+/*
+ Bisection( requiredOrdinal)
+ {
+    for ()
+    {
+        filesize = tellg
+        discriminatingElement_position = filesize/2.0;
+        DumpElement * nextRecord = acquireNextRecord( discriminatingElement_position)
+        // compare
+        if( nextRecord->ordinal < requiredOrdinal)
+        {
+            left = acquireNextRecord_end;
+            right = filesize;
+        }
+        else if( nextRecord->ordinal > requiredOrdinal)
+        {
+            left = 0;
+            right = acquireNextRecord_start;
+        }
+        else if( nextRecord->ordinal == requiredOrdinal)
+        {
+            found -> exit (i.e. break)
+        }
+    }// for
+ }
+*/
+
+};// class Primes
 
 }// namespace UnderTest
 
-
-void tryReadBackwards()// platform dependent.
-{// NB. works on Linux but not on Windows.
-    std::ifstream in;
-    in.open("nelMezzo.txt");
-    char ch;
-    int pos;
-    in.seekg(-1,ios::end);
-    pos=in.tellg();
-    for(int i=0;i<pos;i++)
-    {
-        ch=in.get();
-        cout<<ch;
-        in.seekg(-2,ios::cur);
-    }
-    in.close();
-}//tryReadBackwards
-
-void tryReadForewards()
-{
-    std::ifstream in;
-    in.open("nelMezzo.txt");
-    char ch;
-    int pos;
-    in.seekg(-1,ios::end);
-    pos=in.tellg();
-    in.seekg(0,ios::beg );// go back to the starting point.
-    for(int i=0;i<pos;i++)
-    {
-        ch=in.get();
-        cout<<ch;
-        // NB. no seek reading forewards; it's implicitly in.seekg(+1,ios::cur);
-    }
-    in.close();
-}//tryReadBackwards
 
 
 
@@ -981,41 +1063,45 @@ int main()
     const std::string customFileConfigSectionName( "primeCustomFile");
     // UnderTest:: NB.
     UnderTest::Primes *p = new UnderTest::Primes();
+    bool readRes = p->ReadSequentialDumpInterface();
     bool res = p->SequentialCalcInterface( 200);
-    res = p->SequentialCalcInterface( 11200);
-    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
-    //
-    UnderTest::Primes::DumpElement * recordArray = p->newDeal_recoverDumpTail( stringDumpTail );
-    if(nullptr != recordArray)
-    {
-        for(int c=0; c<9; c++) // TODO let cardinality parametrizable
-        {
-            std::cout<<"\n\t Record "<< recordArray[c].ordinal<<"_"<<recordArray[c].prime;
-        }// for
-    }// else NO recordArray available.
-    //
-    UnderTest::Primes::DumpElement * lastRec = nullptr;
-    long LastOrdinal = 0UL;//lastRec->ordinal; // p->getLastOrdinal();
-    long LastPrime = 0UL;//  lastRec->prime;// p->getLastPrime();
-    if(nullptr!=stringDumpTail)
-    {
-        lastRec = p->newDeal_recoverLastRecord( stringDumpTail);
-        if(nullptr!=lastRec)
-        {
-            LastOrdinal =lastRec->ordinal;
-            LastPrime =lastRec->prime;
-        }// else the string stringDumpTail is invalid -> no record has been recovered.
-    }// else sequentialFile not present.  TODO
-    // p->recoverLastRecord( p->theDumpTailStr);
-    // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
-    // delete[] lastRecord;
-    //
     res = p->RandomCalcInterface(
-       999900
-       ,999999 );
+       20
+       ,30 );
+
+//    res = p->SequentialCalcInterface( 11200);
+//    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
+//    //
+//    int recordArray_cardinality=0;
+//    UnderTest::Primes::DumpElement * recordArray = p->newDeal_recoverDumpTail( stringDumpTail , &recordArray_cardinality );
+//    if(nullptr != recordArray)
+//    {
+//        for(int c=0; c<recordArray_cardinality; c++) // array's cardinality is an out-param.
+//        {
+//            std::cout<<"\n\t Record "<< recordArray[c].ordinal<<"_"<<recordArray[c].prime;
+//        }// for
+//    }// else NO recordArray available.
+//    //
+//    UnderTest::Primes::DumpElement * lastRec = nullptr;
+//    long LastOrdinal = 0UL;//lastRec->ordinal; // p->getLastOrdinal();
+//    long LastPrime = 0UL;//  lastRec->prime;// p->getLastPrime();
+//    if(nullptr!=stringDumpTail)
+//    {
+//        lastRec = p->newDeal_recoverLastRecord( stringDumpTail);
+//        if(nullptr!=lastRec)
+//        {
+//            LastOrdinal =lastRec->ordinal;
+//            LastPrime =lastRec->prime;
+//        }// else the string stringDumpTail is invalid -> no record has been recovered.
+//    }// else sequentialFile not present.  TODO
+//    // p->recoverLastRecord( p->theDumpTailStr);
+//    // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
+//    // delete[] lastRecord;
+//    //
 //    res = p->RandomCalcInterface(
-//       20
-//       ,30 );
+//       999900
+//       ,999999 );
+
 
 
 //    res = p->SequentialCalcInterface( 200);
