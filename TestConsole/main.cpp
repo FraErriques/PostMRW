@@ -280,9 +280,10 @@ bool ReadSequentialDumpInterface()
         res = true;
     }// else stay false.
     //---do the job here----START
-    this->sharedReader->seekg( 50 , std::ios::beg );
-    UnderTest::Primes::AsinglePointInStream * nextRecord =
-        this->acquireNextRecord( 50);// pass file-seek-offset.
+    this->sharedReader->seekg( 10 , std::ios::beg );
+    //UnderTest::Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( 50);// pass file-seek-offset.
+    int cardinalityOfRecordSequence = 0;
+    UnderTest::Primes::DumpElement * recSequence = this->acquireSequenceOfRecord( 20, 50, &cardinalityOfRecordSequence );
     //---do the job here----END
     this->sharedReader->close();
     delete this->sharedReader;
@@ -1020,6 +1021,68 @@ UnderTest::Primes::AsinglePointInStream * acquireNextRecord( unsigned long discr
     //ready
     return nextRecord;// caller has to delete.
 }// acquireNextRecord
+
+
+UnderTest::Primes::DumpElement * acquireSequenceOfRecord(
+    unsigned long discriminatingElement_position
+    , unsigned long until_position
+    , int * howMany_RecordInSequence
+                                        )
+{
+    if( nullptr==this->sharedReader || ! this->sharedReader->is_open())
+    {
+        return nullptr;
+    }// else continue
+    DumpElement * sequenceRecord = new Primes::DumpElement();
+    int c=0;
+    int stepDone = 0;
+    for( ; ; stepDone++ )
+    {// for step until next-record starting point.
+        c = this->sharedReader->get();
+        if( 13==c || 10==c )
+        {
+            break;
+        }// next record begin-position is set
+        if( this->sharedReader->eof() ) {break;}
+    }// for step until next-record starting point. Steps done until here cannot be counted, since they are before next record.
+    // then write down next complete record :
+    Common::StringBuilder sb(until_position-discriminatingElement_position);// estimate
+    int terminator=0;
+    int midRecord_separator=0;
+    for( stepDone = 0;  ; stepDone++ )// start counting steps from here:
+    {
+        c = this->sharedReader->get();
+        if(13==c || 10==c)
+        {
+            terminator++;
+        }
+        else if( '_'==c)
+        {
+             midRecord_separator++;
+             sb.append(c);
+        }
+        else if( c>=48 && c<=57 )// is digit
+        {
+            sb.append( c);
+        }
+        else// not digit
+        {// this should never occur, except for errors in the dump.
+            sb.append( (int)'_');
+        }
+        if( discriminatingElement_position + stepDone == until_position )// TODO test : reached endpoint
+        {
+            const std::string nextRecord_txt = sb.str();
+            int nextRecord_len = nextRecord_txt.length();
+            // howMany_RecordInSequence is an out parameter, coming from the caller of this func
+            sequenceRecord =
+                newDeal_recoverDumpTail( nextRecord_txt.c_str() , howMany_RecordInSequence );
+            // TODO delete nextRecPtr
+            break;
+        }
+    }// for step into next complete record
+    //ready
+    return sequenceRecord;// caller has to delete.
+}// acquireSequenceOfRecord
 
 
 /*
