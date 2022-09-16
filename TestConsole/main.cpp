@@ -280,10 +280,21 @@ bool ReadSequentialDumpInterface()
         res = true;
     }// else stay false.
     //---do the job here----START
-    this->sharedReader->seekg( 10 , std::ios::beg );
-    //UnderTest::Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( 50);// pass file-seek-offset.
+    int seek_START = 199;
+    int seek_END = 311;
+    this->sharedReader->seekg( seek_START , std::ios::beg );
+    // test-sigle-record UnderTest::Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( 50);// pass file-seek-offset.
     int cardinalityOfRecordSequence = 0;
-    UnderTest::Primes::DumpElement * recSequence = this->acquireSequenceOfRecord( 20, 50, &cardinalityOfRecordSequence );
+    // next line : test-multirecord
+    UnderTest::Primes::DumpElement * recSequence = this->acquireSequenceOfRecord(
+        seek_START
+        , seek_END
+        , &cardinalityOfRecordSequence );
+    for( int c=0; c<cardinalityOfRecordSequence; c++)
+    {
+        std::cout<<"\n\t Record "<<recSequence[c].ordinal<<"_"<<recSequence[c].prime;
+    }
+    std::cout<<"\n\n";
     //---do the job here----END
     this->sharedReader->close();
     delete this->sharedReader;
@@ -1055,6 +1066,7 @@ UnderTest::Primes::DumpElement * acquireSequenceOfRecord(
         if(13==c || 10==c)
         {
             terminator++;
+            sb.append('#'); // intra-Record Separator eg. 1_2#2_3#
         }
         else if( '_'==c)
         {
@@ -1069,13 +1081,15 @@ UnderTest::Primes::DumpElement * acquireSequenceOfRecord(
         {// this should never occur, except for errors in the dump.
             sb.append( (int)'_');
         }
-        if( discriminatingElement_position + stepDone == until_position )// TODO test : reached endpoint
+        if( discriminatingElement_position + stepDone >= until_position // TODO test : reached endpoint
+            && (13==c || 10==c)// as additional condition, step until the end of current record
+           )
         {
-            const std::string nextRecord_txt = sb.str();
-            int nextRecord_len = nextRecord_txt.length();
+            const std::string sequenceOfRecord_txt = sb.str();
+            int sequenceOfRecord_len = sequenceOfRecord_txt.length();
             // howMany_RecordInSequence is an out parameter, coming from the caller of this func
             sequenceRecord =
-                newDeal_recoverDumpTail( nextRecord_txt.c_str() , howMany_RecordInSequence );
+                newDeal_recoverDumpTail( sequenceOfRecord_txt.c_str() , howMany_RecordInSequence );
             // TODO delete nextRecPtr
             break;
         }
@@ -1126,11 +1140,12 @@ int main()
     const std::string customFileConfigSectionName( "primeCustomFile");
     // UnderTest:: NB.
     UnderTest::Primes *p = new UnderTest::Primes();
+    bool res = p->SequentialCalcInterface( 5200);
     bool readRes = p->ReadSequentialDumpInterface();
-    bool res = p->SequentialCalcInterface( 200);
-    res = p->RandomCalcInterface(
-       20
-       ,30 );
+
+//    res = p->RandomCalcInterface(
+//       20
+//       ,30 );
 
 //    res = p->SequentialCalcInterface( 11200);
 //    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
