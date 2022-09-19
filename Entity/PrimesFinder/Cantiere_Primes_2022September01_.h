@@ -16,20 +16,20 @@ class Primes
     /// Type
     struct SingleFactor
     {
-        unsigned long  factorBase;//pi;
-        unsigned long  factorMultiplicity;//ai;
+        unsigned long long factorBase;//pi;
+        unsigned long long factorMultiplicity;//ai;
     };
     struct DumpElement
     {
-        unsigned long  ordinal;
-        unsigned long  prime;
+        unsigned long long ordinal;
+        unsigned long long prime;
     };
      struct AsinglePointInStream
      {
-         long Ordinal;
-         long Prime;
-         long startPositionOfRecord;
-         long endPositionOfRecord;
+         long long Ordinal;
+         long long Prime;
+         long long startPositionOfRecord;
+         long long endPositionOfRecord;
      };
     /// Data
     bool isHealthlyConstructed = false;
@@ -46,8 +46,8 @@ class Primes
     Primes();// no more hiding of empty Ctor.
     virtual ~Primes();
     /// method
-	bool SequentialCalcInterface( unsigned long Threshold );
-    bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight );
+	bool SequentialCalcInterface( unsigned long long Threshold );
+	bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight );
     bool ReadSequentialDumpInterface();
 
 	private:
@@ -69,20 +69,20 @@ class Primes
     DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality);
     // newDeal : state of the art.
     void Start_PrimeDump_FileSys(
-            unsigned long Left
-            ,unsigned long Right
+            unsigned long long Left
+            ,unsigned long long Right
             ,std::ofstream * appendStream
-            ,unsigned long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
+            ,unsigned long long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
         );
-    Primes::AsinglePointInStream * acquireNextRecord( unsigned long discriminatingElement_position);
+    Primes::AsinglePointInStream * acquireNextRecord( unsigned long long discriminatingElement_position);
     Primes::DumpElement * acquireSequenceOfRecord(
-        unsigned long discriminatingElement_position
-        , unsigned long until_position
+        unsigned long long discriminatingElement_position
+        , unsigned long long until_position
         , int * howMany_RecordInSequence
                                             );
 //Bisection( requiredOrdinal)
 //  IntegerDecomposition : the Fundamental Thm of Arithmetic.
-//SingleFactor * IntegerDecomposition( const unsigned long dividend)
+//SingleFactor * IntegerDecomposition( const unsigned long long dividend)
 
 };// class
 

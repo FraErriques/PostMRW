@@ -14,7 +14,7 @@ class Test_Unit_CantierePrimes
         /**
         * \return the outcome of the operation on the sequential dump
         */
-        bool sequentialDump( unsigned long untilThreshol);
+        bool sequentialDump( unsigned long long untilThreshol);
         /** Access m_Counter
          * \return The current value of m_Counter
          */

@@ -14,7 +14,7 @@ Test_Unit_CantierePrimes::~Test_Unit_CantierePrimes()
     }// else already deleted.
 }//dtor
 
-bool Test_Unit_CantierePrimes::sequentialDump( unsigned long untilThreshol)
+bool Test_Unit_CantierePrimes::sequentialDump( unsigned long long untilThreshol)
 {
     bool testResult = false;// init
     if(nullptr != this->tested_Class)

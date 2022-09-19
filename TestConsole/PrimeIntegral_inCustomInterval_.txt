@@ -1,29 +1,5 @@
 
 
- Custom Interval (20, 30] ,worked on: Thu Sep 15 17:11:01 2022
+ Custom Interval (6000000000, 6000000100] ,worked on: Mon Sep 19 16:37:54 2022
  Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (20, 30] ,worked on: Thu Sep 15 17:20:43 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (20, 30] ,worked on: Thu Sep 15 17:22:03 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (20, 30] ,worked on: Thu Sep 15 18:21:26 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (20, 30] ,worked on: Fri Sep 16 12:20:11 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-9_2310_29
-
- Custom Interval (1705032704, 1705032804] ,worked on: Mon Sep 19 14:26:45 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-84402157_170503275184402158_170503276184402159_1705032787
-
- Custom Interval (4000000000, 4000000100] ,worked on: Mon Sep 19 14:52:52 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-189964590_4000000007189964591_4000000009189964592_4000000019189964593_4000000063
+279548866_6000000001279548867_6000000007279548868_6000000047279548869_6000000049279548870_6000000089

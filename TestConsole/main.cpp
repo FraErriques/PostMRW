@@ -306,14 +306,14 @@ bool ReadSequentialDumpInterface()
     return res;
 }// ReadSequentialDumpInterface
 
-bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
+bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight )
 {
     bool res = false;
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
-    unsigned long extimatedOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+    unsigned long long extimatedOrdinal= (unsigned long long)LogIntegral_ofInfPar;//TODO stima !
     //this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
     //this->desiredThreshold = maxRight;
     // write a stamp, about what we're doing and when.
@@ -913,18 +913,16 @@ DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String , int *recor
 
 // newDeal : state of the art.
 void Start_PrimeDump_FileSys(
-        unsigned long Left
-        ,unsigned long Right
+        unsigned long long Left
+        ,unsigned long long Right
         ,std::ofstream * appendStream
-        ,unsigned long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
+        ,unsigned long long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
     )
 {
-    //unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
     bool isStillPrime = true;
     double realQuotient;
-    unsigned long intQuotient;
-    //unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
-    unsigned long cursor = Left+1UL;// start stepping from the Int after the last found Prime.
+    unsigned long long intQuotient;
+    unsigned long long cursor = Left+1UL;// start stepping from the Int after the last found Prime.
     if( cursor<+2){cursor=+2;}// 1 (i.e. one) is the product-invariant; so, not a prime.
     // NB now a data-member ; ofstream appendStream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
     //
@@ -933,7 +931,7 @@ void Start_PrimeDump_FileSys(
         double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
         // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
         // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
-        unsigned long divisor=+2;
+        unsigned long long divisor=+2;
         for( ; divisor<=soglia; divisor++)
         {
             realQuotient = (double)cursor/(double)divisor;
@@ -948,8 +946,8 @@ void Start_PrimeDump_FileSys(
         if( isStillPrime)
         {
             ++ordinal;//another one foud, starting from zero, so that Prime[1]=2
-            std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
-            std::string * primeStr = Common::StrManipul::uLongToString( cursor );
+            std::string * ordinalStr = Common::StrManipul::uLongLongToString(ordinal);
+            std::string * primeStr = Common::StrManipul::uLongLongToString( cursor );
             int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
             Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
             strBuild->append(ordinalStr->c_str());
@@ -1102,32 +1100,32 @@ UnderTest::Primes::DumpElement * acquireSequenceOfRecord(
 }// acquireSequenceOfRecord
 
 
-/*
- Bisection( requiredOrdinal)
+
+void Bisection( unsigned long requiredOrdinal , int sogliaDistanza )
  {
-    for ()
+    for (;;)// TODO
     {
-        filesize = tellg
-        discriminatingElement_position = filesize/2.0;
-        DumpElement * nextRecord = acquireNextRecord( discriminatingElement_position)
-        // compare
-        if( nextRecord->ordinal < requiredOrdinal)
-        {
-            left = acquireNextRecord_end;
-            right = filesize;
-        }
-        else if( nextRecord->ordinal > requiredOrdinal)
-        {
-            left = 0;
-            right = acquireNextRecord_start;
-        }
-        else if( nextRecord->ordinal == requiredOrdinal)
-        {
-            found -> exit (i.e. break)
-        }
+        std::iostream::pos_type filesize = this->sharedReader->tellg();// TODO considerare estremi correnti
+        std::iostream::pos_type discriminatingElement_position = filesize/2; // divisione intera
+        UnderTest::Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
+//        // compare
+//        if( nextRecord->ordinal < requiredOrdinal)
+//        {
+//            left = acquireNextRecord_end;
+//            right = filesize;
+//        }
+//        else if( nextRecord->ordinal > requiredOrdinal)
+//        {
+//            left = 0;
+//            right = acquireNextRecord_start;
+//        }
+//        else if( nextRecord->ordinal == requiredOrdinal)
+//        {
+//            found -> exit (i.e. break)
+//        }
     }// for
- }
-*/
+ }// Bisection
+
 
 };// class Primes
 
@@ -1141,20 +1139,22 @@ int main()
 {
     Common::LogWrappers::SectionOpen("main", 0);
     //
+    //------Unit Test-----------------------------------------------------
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
-    size_t ulong_size = sizeof( unsigned long);
-    bool seq = test->sequentialDump( 6000);
-    bool rand = test->randomDump();// params in the test body
+    size_t ulong_size = sizeof( unsigned long long);
+    bool seq = test->sequentialDump( 9000);
+//    bool rand = test->randomDump();// params in the test body
     delete test;
+    //------Unit Test-----------------------------------------------------
     //
-    // UnderTest:: NB.
+    // UnderTest:: NB. local to main::
 //    UnderTest::Primes *p = new UnderTest::Primes();
 //    bool res = p->SequentialCalcInterface( 5200);
 //    bool readRes = p->ReadSequentialDumpInterface();
 
-//    res = p->RandomCalcInterface(
-//       20
-//       ,30 );
+//    bool res = p->RandomCalcInterface(
+//       6000000000
+//       ,6000000100 );
 
 //    res = p->SequentialCalcInterface( 11200);
 //    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
