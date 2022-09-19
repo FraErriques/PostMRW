@@ -220,3 +220,39 @@ int readFileByChars()
   }
   return 0;
 }// end readFileByChars
+
+
+void tryReadForewards()
+{
+    std::ifstream in;
+    in.open("nelMezzo.txt");
+    char ch;
+    int pos;
+    in.seekg(-1,ios::end);
+    pos=in.tellg();
+    in.seekg(0,ios::beg );// go back to the starting point.
+    for(int i=0;i<pos;i++)
+    {
+        ch=in.get();
+        cout<<ch;
+        // NB. no seek reading forewards; it's implicitly in.seekg(+1,ios::cur);
+    }
+    in.close();
+}//tryReadBackwards
+
+void tryReadBackwards()// platform dependent.
+{// NB. works on Linux but not on Windows.
+    std::ifstream in;
+    in.open("nelMezzo.txt");
+    char ch;
+    int pos;
+    in.seekg(-1,ios::end);
+    pos=in.tellg();
+    for(int i=0;i<pos;i++)
+    {
+        ch=in.get();
+        cout<<ch;
+        in.seekg(-2,ios::cur);
+    }
+    in.close();
+}//tryReadBackwards

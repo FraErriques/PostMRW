@@ -17,6 +17,9 @@
 #include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
+//-----unit test---------
+#include "Test_Unit_CantierePrimes.h"
+
 
 namespace UnderTest
 {
@@ -24,7 +27,7 @@ namespace UnderTest
 
 namespace internalAlgos
 {
-  
+
 
 // an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
 double LogIntegral_coChain( double x)
@@ -108,7 +111,8 @@ class Primes
      {
          long Ordinal;
          long Prime;
-         long positionByte;
+         long startPositionOfRecord;
+         long endPositionOfRecord;
      };
 
 
@@ -136,9 +140,9 @@ class Primes
 //    unsigned long actualPrimaryFileLength;
 //    const int tailRecordSize = 60;
 
-    char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
-    int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
-    DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
+//    char * theDumpTailStr = nullptr;// NB. remember to share and delete[]. NB. cannot be CONST.
+//    int actualCoupleCardinality = 0;//NB cardinality of dumpTail[]
+//    DumpElement * dumpTail = nullptr;// NB. remember to share and delete[] // set up by Ctor
 
     bool isHealthlyConstructed = false;
     bool canOperate = false;
@@ -212,6 +216,9 @@ Primes( )
     {// not-healthly built.
         this->isHealthlyConstructed = false;
         this->canOperate = false;
+        this->append_Sequential_Stream = nullptr;
+        this->append_Random_Stream = nullptr;
+        this->sharedReader = nullptr;
     }// not-healthly built.
 }// empty Ctor : reads both the sequentialFile and randomFile fullpath
 
@@ -222,18 +229,33 @@ bool SequentialCalcInterface( unsigned long Threshold )
     bool hasSequentialDumpBeenReset = false;// it's true on filesize<1k and of course on non existing file
     // ---call with params
     const char * stringDumpTail = this->newDeal_dumpTailReaderByChar( this->sequentialDumpPath );// last few records in a string.
+    if(nullptr==stringDumpTail)
+    {// unable to read the tail of the sequential dump in a string -> reset the file.
+        hasSequentialDumpBeenReset = true;
+    }// else it has been initialized to false.
     UnderTest::Primes::DumpElement * lastRec = nullptr;// the very last record, deciphered from a func:newDeal_recoverLastRecord
-    long LastOrdinal = 0UL; //nullptr; // TODO dele p->getLastOrdinal();
-    long LastPrime = 0UL; //nullptr;     // TODO dele p->getLastPrime();
+    long LastOrdinal = 0UL;
+    long LastPrime = 0UL;
     if(nullptr!=stringDumpTail)
-    {
+    {// i.e. if we have the string of dump-tail :
         lastRec = this->newDeal_recoverLastRecord( stringDumpTail);
-        LastOrdinal = lastRec->ordinal;
-        LastPrime = lastRec->prime;
+        if(nullptr != lastRec)
+        {// the dump tail string content was valid.
+            LastOrdinal = lastRec->ordinal;
+            LastPrime = lastRec->prime;
+        }// else : stringDumpTail is not valid, i.e. sequentialDump needs a reset.
+        else
+        {// the sequential dump-tail is readable but not valid  -> reset the file.
+            hasSequentialDumpBeenReset = true;
+        }
         this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
+        this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+        this->sharedReader->close();
+        delete this->sharedReader;
+        this->sharedReader = nullptr;
     }// else sequentialFile not present.
-    else
-    {// else dumpPathAcquisitionFromConfig already false from init.
+    if (hasSequentialDumpBeenReset)
+    {// start a new dump from scratch :
         LastOrdinal = 0;
         LastPrime = 0;
         this->append_Sequential_Stream = new std::ofstream( this->sequentialDumpPath, std::fstream::out);// reset.
@@ -252,16 +274,46 @@ bool SequentialCalcInterface( unsigned long Threshold )
     return hasSequentialDumpBeenReset;
 }//
 
+bool ReadSequentialDumpInterface()
+{
+    bool res = false;
+    this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+    if( nullptr != this->sharedReader)
+    {
+        res = true;
+    }// else stay false.
+    //---do the job here----START
+    int seek_START = 199;
+    int seek_END = 311;
+    this->sharedReader->seekg( seek_START , std::ios::beg );
+    // test-sigle-record UnderTest::Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( 50);// pass file-seek-offset.
+    int cardinalityOfRecordSequence = 0;
+    // next line : test-multirecord
+    UnderTest::Primes::DumpElement * recSequence = this->acquireSequenceOfRecord(
+        seek_START
+        , seek_END
+        , &cardinalityOfRecordSequence );
+    for( int c=0; c<cardinalityOfRecordSequence; c++)
+    {
+        std::cout<<"\n\t Record "<<recSequence[c].ordinal<<"_"<<recSequence[c].prime;
+    }
+    std::cout<<"\n\n";
+    //---do the job here----END
+    this->sharedReader->close();
+    delete this->sharedReader;
+    this->sharedReader = nullptr;
+    // ready
+    return res;
+}// ReadSequentialDumpInterface
 
-
-bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight )
+bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight )
 {
     bool res = false;
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
-    unsigned long extimatedOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
+    unsigned long long extimatedOrdinal= (unsigned long long)LogIntegral_ofInfPar;//TODO stima !
     //this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
     //this->desiredThreshold = maxRight;
     // write a stamp, about what we're doing and when.
@@ -333,11 +385,11 @@ const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 //            delete[] this->theDumpTailStr;
 //            this->theDumpTailStr = nullptr;
 //        }
-        if( nullptr != this->dumpTail )
-        {
-            delete[] this->dumpTail;
-            this->dumpTail = nullptr;
-        }
+//        if( nullptr != this->dumpTail )
+//        {
+//            delete[] this->dumpTail;
+//            this->dumpTail = nullptr;
+//        }
         /*
         if( nullptr != this->appendStream)  no more a global class::variable.
         {
@@ -755,14 +807,64 @@ UnderTest::Primes::DumpElement * newDeal_recoverLastRecord( const char * dumpTai
 //}//recoverLastRecord
 
 
-// produce an array of couples {ordinal,prime} from the dumpTail.
-DumpElement * recoverDumpTail( const char * dumpTail)
+//// produce an array of couples {ordinal,prime} from the dumpTail.
+//DumpElement * recoverDumpTail( const char * dumpTail)
+//{
+//    if( nullptr != this->dumpTail)
+//    {// do not build again.
+//        return this->dumpTail;
+//    }// else build it; it will be a shared dataMember and Dtor will delete.
+//    std::string parFromFile(dumpTail);
+//    int inputParamLength = parFromFile.length();
+//    std::string filteredLastToken("");
+//    for( int c=0; c<inputParamLength;c++)
+//    {
+//        if( parFromFile[c]>=48 && parFromFile[c]<=57 )// is digit
+//        {
+//            filteredLastToken.append( 1, parFromFile[c] );
+//        }
+//        else// not digit
+//        {
+//            filteredLastToken.append( 1, '_' );// subst. with '_'
+//        }
+//    }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
+//    std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
+//    int entryCardinality = tokenArray->size();
+//// already init this->actualCoupleCardinality = 0;//NB: tagliare al massimo dei minoranti pari
+//    // NB: stabilire se pari
+//    if( (double)entryCardinality/2.0 - entryCardinality/2 <+1E-80 )
+//    {// parita'
+//        this->actualCoupleCardinality = entryCardinality/2;
+//    }
+//    else
+//    {// DISparita'
+//        this->actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
+//    }
+//    // NB: allocare per tale misura
+//    this->dumpTail = new DumpElement[actualCoupleCardinality];// member struct-array {ordinal,prime}.
+//    // NB: fill-up reverse
+//    int currentCouple=actualCoupleCardinality-1;
+//    for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();
+//     it!=tokenArray->rend() && currentCouple>=0;
+//       currentCouple--) // no more increment on the iterator
+//    {// preserve the last complete-records: they have to be {Ordinal,Prime}. Use index-parity for this task:
+//        // get a Prime from tailEnd, coming back:
+//        this->dumpTail[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
+//        // get an ordinal from tailEnd, coming back:
+//        this->dumpTail[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
+//    }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
+//    delete tokenArray;
+//    //ready.
+//    return this->dumpTail;// caller has to delete.
+//}//recoverDumpTail
+
+
+
+// newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
+DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality)
 {
-    if( nullptr != this->dumpTail)
-    {// do not build again.
-        return this->dumpTail;
-    }// else build it; it will be a shared dataMember and Dtor will delete.
-    std::string parFromFile(dumpTail);
+    DumpElement * dumpTail_Records = nullptr;// ret val
+    std::string parFromFile( dumpTail_String );
     int inputParamLength = parFromFile.length();
     std::string filteredLastToken("");
     for( int c=0; c<inputParamLength;c++)
@@ -778,18 +880,20 @@ DumpElement * recoverDumpTail( const char * dumpTail)
     }//for: preserve only digits and substitute everything else with underscore. Then split on underscore.
     std::vector<std::string> * tokenArray = Common::StrManipul::stringSplit("_", filteredLastToken.c_str(), true );// remove empty entries.
     int entryCardinality = tokenArray->size();
-// already init this->actualCoupleCardinality = 0;//NB: tagliare al massimo dei minoranti pari
+    int actualCoupleCardinality = 0;// init and then assign as follows:
+    // NB. actualCoupleCardinality : tagliare al massimo dei minoranti pari
     // NB: stabilire se pari
     if( (double)entryCardinality/2.0 - entryCardinality/2 <+1E-80 )
     {// parita'
-        this->actualCoupleCardinality = entryCardinality/2;
+        actualCoupleCardinality = entryCardinality/2;
     }
     else
     {// DISparita'
-        this->actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
-    }
-    // NB: allocare per tale misura
-    this->dumpTail = new DumpElement[actualCoupleCardinality];// member struct-array {ordinal,prime}.
+        actualCoupleCardinality = (entryCardinality-1)/2;// NB: tagliare al massimo dei minoranti pari
+    }// then feed "out"-param :
+    *recordArrayCardinality = actualCoupleCardinality;
+    // NB: allocare per tale misura : it's the return value: caller has to delete[].
+    dumpTail_Records = new DumpElement[actualCoupleCardinality];// struct-array {ordinal,prime}.
     // NB: fill-up reverse
     int currentCouple=actualCoupleCardinality-1;
     for( std::vector<std::string>::reverse_iterator it=tokenArray->rbegin();
@@ -797,30 +901,28 @@ DumpElement * recoverDumpTail( const char * dumpTail)
        currentCouple--) // no more increment on the iterator
     {// preserve the last complete-records: they have to be {Ordinal,Prime}. Use index-parity for this task:
         // get a Prime from tailEnd, coming back:
-        this->dumpTail[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
+        dumpTail_Records[currentCouple].prime =  Common::StrManipul::stringToUnsignedLong(*(it++));
         // get an ordinal from tailEnd, coming back:
-        this->dumpTail[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
+        dumpTail_Records[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
     delete tokenArray;
     //ready.
-    return this->dumpTail;// caller has to delete.
-}//recoverDumpTail
+    return dumpTail_Records;// caller has to delete.
+}// newDeal_recoverDumpTail
 
 
 // newDeal : state of the art.
 void Start_PrimeDump_FileSys(
-        unsigned long Left
-        ,unsigned long Right
+        unsigned long long Left
+        ,unsigned long long Right
         ,std::ofstream * appendStream
-        ,unsigned long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
+        ,unsigned long long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
     )
 {
-    //unsigned long ordinal = this->lastOrdinal;// next Prime to be found, will increase the ordinal.TODO: decide whether to increment the member.
     bool isStillPrime = true;
     double realQuotient;
-    unsigned long intQuotient;
-    //unsigned long cursor = this->lastPrime+1UL;// start stepping from the Int after the last found Prime.
-    unsigned long cursor = Left+1UL;// start stepping from the Int after the last found Prime.
+    unsigned long long intQuotient;
+    unsigned long long cursor = Left+1UL;// start stepping from the Int after the last found Prime.
     if( cursor<+2){cursor=+2;}// 1 (i.e. one) is the product-invariant; so, not a prime.
     // NB now a data-member ; ofstream appendStream( this->sequentialDumpPath, std::fstream::out | std::fstream::app);
     //
@@ -829,7 +931,7 @@ void Start_PrimeDump_FileSys(
         double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
         // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
         // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
-        unsigned long divisor=+2;
+        unsigned long long divisor=+2;
         for( ; divisor<=soglia; divisor++)
         {
             realQuotient = (double)cursor/(double)divisor;
@@ -844,8 +946,8 @@ void Start_PrimeDump_FileSys(
         if( isStillPrime)
         {
             ++ordinal;//another one foud, starting from zero, so that Prime[1]=2
-            std::string * ordinalStr = Common::StrManipul::uLongToString(ordinal);
-            std::string * primeStr = Common::StrManipul::uLongToString( cursor );
+            std::string * ordinalStr = Common::StrManipul::uLongLongToString(ordinal);
+            std::string * primeStr = Common::StrManipul::uLongLongToString( cursor );
             int forecastedTokenSize = ordinalStr->length()+primeStr->length()+3;//3 stands for '_'+'\n'+'\r'
             Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
             strBuild->append(ordinalStr->c_str());
@@ -868,46 +970,167 @@ void Start_PrimeDump_FileSys(
     // ready.
 }// newDeal IntegralFileFromStartFSproducer
 
-};// class Primes
 
+
+
+UnderTest::Primes::AsinglePointInStream * acquireNextRecord( unsigned long discriminatingElement_position)
+{
+    if( nullptr==this->sharedReader || ! this->sharedReader->is_open())
+    {
+        return nullptr;
+    }// else continue
+    AsinglePointInStream * nextRecord = new Primes::AsinglePointInStream();
+    int c=0;
+    int stepDone = 0;
+    for( ; ; stepDone++ )
+    {// for step until next-record starting point.
+        c = this->sharedReader->get();
+        if( 13==c || 10==c )
+        {
+            break;
+        }// next record begin-position is set
+        if( this->sharedReader->eof() ) {break;}
+    }// for step until next-record starting point.
+    // then write down next complete record :
+    Common::StringBuilder sb(50);// estimate
+    int terminator=0;
+    int midRecord_separator=0;
+    for( stepDone = 0;  ; stepDone++ )
+    {
+        c = this->sharedReader->get();
+        if(13==c || 10==c)
+        {
+            terminator++;
+        }
+        else if( '_'==c)
+        {
+             midRecord_separator++;
+             sb.append(c);
+        }
+        else if( c>=48 && c<=57 )// is digit
+        {
+            sb.append( c);
+        }
+        else// not digit
+        {// this should never occur, except for errors in the dump.
+            sb.append( (int)'_');
+        }
+        if(1==midRecord_separator && terminator>=1)
+        {
+            const std::string nextRecord_txt = sb.str();
+            int nextRecord_len = nextRecord_txt.length();
+            int recordCardinality=0;
+            Primes::DumpElement * nextRecPtr =
+                newDeal_recoverDumpTail( nextRecord_txt.c_str() , &recordCardinality);
+            nextRecord->startPositionOfRecord = discriminatingElement_position;
+            nextRecord->endPositionOfRecord = discriminatingElement_position + stepDone;
+            nextRecord->Ordinal = nextRecPtr->ordinal;
+            nextRecord->Prime = nextRecPtr->prime;
+            // TODO delete nextRecPtr
+            break;
+        }
+    }// for step into next complete record
+    //ready
+    return nextRecord;// caller has to delete.
+}// acquireNextRecord
+
+
+UnderTest::Primes::DumpElement * acquireSequenceOfRecord(
+    unsigned long discriminatingElement_position
+    , unsigned long until_position
+    , int * howMany_RecordInSequence
+                                        )
+{
+    if( nullptr==this->sharedReader || ! this->sharedReader->is_open())
+    {
+        return nullptr;
+    }// else continue
+    DumpElement * sequenceRecord = new Primes::DumpElement();
+    int c=0;
+    int stepDone = 0;
+    for( ; ; stepDone++ )
+    {// for step until next-record starting point.
+        c = this->sharedReader->get();
+        if( 13==c || 10==c )
+        {
+            break;
+        }// next record begin-position is set
+        if( this->sharedReader->eof() ) {break;}
+    }// for step until next-record starting point. Steps done until here cannot be counted, since they are before next record.
+    // then write down next complete record :
+    Common::StringBuilder sb(until_position-discriminatingElement_position);// estimate
+    int terminator=0;
+    int midRecord_separator=0;
+    for( stepDone = 0;  ; stepDone++ )// start counting steps from here:
+    {
+        c = this->sharedReader->get();
+        if(13==c || 10==c)
+        {
+            terminator++;
+            sb.append('#'); // intra-Record Separator eg. 1_2#2_3#
+        }
+        else if( '_'==c)
+        {
+             midRecord_separator++;
+             sb.append(c);
+        }
+        else if( c>=48 && c<=57 )// is digit
+        {
+            sb.append( c);
+        }
+        else// not digit
+        {// this should never occur, except for errors in the dump.
+            sb.append( (int)'_');
+        }
+        if( discriminatingElement_position + stepDone >= until_position // TODO test : reached endpoint
+            && (13==c || 10==c)// as additional condition, step until the end of current record
+           )
+        {
+            const std::string sequenceOfRecord_txt = sb.str();
+            int sequenceOfRecord_len = sequenceOfRecord_txt.length();
+            // howMany_RecordInSequence is an out parameter, coming from the caller of this func
+            sequenceRecord =
+                newDeal_recoverDumpTail( sequenceOfRecord_txt.c_str() , howMany_RecordInSequence );
+            // TODO delete nextRecPtr
+            break;
+        }
+    }// for step into next complete record
+    //ready
+    return sequenceRecord;// caller has to delete.
+}// acquireSequenceOfRecord
+
+
+
+void Bisection( unsigned long requiredOrdinal , int sogliaDistanza )
+ {
+    for (;;)// TODO
+    {
+        std::iostream::pos_type filesize = this->sharedReader->tellg();// TODO considerare estremi correnti
+        std::iostream::pos_type discriminatingElement_position = filesize/2; // divisione intera
+        UnderTest::Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
+//        // compare
+//        if( nextRecord->ordinal < requiredOrdinal)
+//        {
+//            left = acquireNextRecord_end;
+//            right = filesize;
+//        }
+//        else if( nextRecord->ordinal > requiredOrdinal)
+//        {
+//            left = 0;
+//            right = acquireNextRecord_start;
+//        }
+//        else if( nextRecord->ordinal == requiredOrdinal)
+//        {
+//            found -> exit (i.e. break)
+//        }
+    }// for
+ }// Bisection
+
+
+};// class Primes
 
 }// namespace UnderTest
 
-
-void tryReadBackwards()// platform dependent.
-{// NB. works on Linux but not on Windows.
-    std::ifstream in;
-    in.open("nelMezzo.txt");
-    char ch;
-    int pos;
-    in.seekg(-1,ios::end);
-    pos=in.tellg();
-    for(int i=0;i<pos;i++)
-    {
-        ch=in.get();
-        cout<<ch;
-        in.seekg(-2,ios::cur);
-    }
-    in.close();
-}//tryReadBackwards
-
-void tryReadForewards()
-{
-    std::ifstream in;
-    in.open("nelMezzo.txt");
-    char ch;
-    int pos;
-    in.seekg(-1,ios::end);
-    pos=in.tellg();
-    in.seekg(0,ios::beg );// go back to the starting point.
-    for(int i=0;i<pos;i++)
-    {
-        ch=in.get();
-        cout<<ch;
-        // NB. no seek reading forewards; it's implicitly in.seekg(+1,ios::cur);
-    }
-    in.close();
-}//tryReadBackwards
 
 
 
@@ -915,32 +1138,57 @@ void tryReadForewards()
 int main()
 {
     Common::LogWrappers::SectionOpen("main", 0);
-    const std::string customFileConfigSectionName( "primeCustomFile");
-    // UnderTest:: NB.
-    UnderTest::Primes *p = new UnderTest::Primes();
-    bool res = p->SequentialCalcInterface( 200);
-    res = p->SequentialCalcInterface( 11200);
-    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
-    UnderTest::Primes::DumpElement * lastRec = nullptr;
-    long LastOrdinal = 0UL;//lastRec->ordinal; // p->getLastOrdinal();
-    long LastPrime = 0UL;//  lastRec->prime;// p->getLastPrime();    
-    if(nullptr!=stringDumpTail)
-    {
-        lastRec = p->newDeal_recoverLastRecord( stringDumpTail);
-        LastOrdinal =lastRec->ordinal;         
-        LastPrime =lastRec->prime;
-    }// else sequentialFile not present.  TODO
-    // if null != lastRec TODO
-    // p->recoverLastRecord( p->theDumpTailStr);
-    // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
-    // delete[] lastRecord;
     //
-    res = p->RandomCalcInterface(
-       999900
-       ,999999 );
+    //------Unit Test-----------------------------------------------------
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
+    size_t ulong_size = sizeof( unsigned long long);
+    bool seq = test->sequentialDump( 9000);
+//    bool rand = test->randomDump();// params in the test body
+    delete test;
+    //------Unit Test-----------------------------------------------------
+    //
+    // UnderTest:: NB. local to main::
+//    UnderTest::Primes *p = new UnderTest::Primes();
+//    bool res = p->SequentialCalcInterface( 5200);
+//    bool readRes = p->ReadSequentialDumpInterface();
+
+//    bool res = p->RandomCalcInterface(
+//       6000000000
+//       ,6000000100 );
+
+//    res = p->SequentialCalcInterface( 11200);
+//    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
+//    //
+//    int recordArray_cardinality=0;
+//    UnderTest::Primes::DumpElement * recordArray = p->newDeal_recoverDumpTail( stringDumpTail , &recordArray_cardinality );
+//    if(nullptr != recordArray)
+//    {
+//        for(int c=0; c<recordArray_cardinality; c++) // array's cardinality is an out-param.
+//        {
+//            std::cout<<"\n\t Record "<< recordArray[c].ordinal<<"_"<<recordArray[c].prime;
+//        }// for
+//    }// else NO recordArray available.
+//    //
+//    UnderTest::Primes::DumpElement * lastRec = nullptr;
+//    long LastOrdinal = 0UL;//lastRec->ordinal; // p->getLastOrdinal();
+//    long LastPrime = 0UL;//  lastRec->prime;// p->getLastPrime();
+//    if(nullptr!=stringDumpTail)
+//    {
+//        lastRec = p->newDeal_recoverLastRecord( stringDumpTail);
+//        if(nullptr!=lastRec)
+//        {
+//            LastOrdinal =lastRec->ordinal;
+//            LastPrime =lastRec->prime;
+//        }// else the string stringDumpTail is invalid -> no record has been recovered.
+//    }// else sequentialFile not present.  TODO
+//    // p->recoverLastRecord( p->theDumpTailStr);
+//    // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
+//    // delete[] lastRecord;
+//    //
 //    res = p->RandomCalcInterface(
-//       20
-//       ,30 );
+//       999900
+//       ,999999 );
+
 
 
 //    res = p->SequentialCalcInterface( 200);
@@ -963,11 +1211,12 @@ int main()
 //    logMsg += *desinenza;
 //    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
 //    delete desinenza;
+//    delete p;
     //-----
-    delete p;
+
+
+
     Common::LogWrappers::SectionClose();
-
-
     //---ready---------------
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();
@@ -979,6 +1228,7 @@ int main()
 
 
 /* --------------cantina----------------------------
+//const std::string customFileConfigSectionName( "primeCustomFile");
 //    tryReadForewards();
 //    tryReadBackwards();
     // system("pwd");

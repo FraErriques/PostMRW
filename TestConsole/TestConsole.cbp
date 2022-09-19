@@ -50,6 +50,8 @@
 		</Linker>
 		<Unit filename="Cantina.txt" />
 		<Unit filename="Fantoccio.cpp" />
+		<Unit filename="Test_Unit_CantierePrimes.cpp" />
+		<Unit filename="Test_Unit_CantierePrimes.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="sqlScript.txt" />
 		<Extensions>

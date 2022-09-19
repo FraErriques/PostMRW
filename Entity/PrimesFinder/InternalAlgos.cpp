@@ -1,4 +1,6 @@
 #include <cmath>
+#include <string>
+#include "../../Common/StringBuilder/StringBuilder.h"
 
 namespace internalAlgos
 {
@@ -21,6 +23,35 @@ unsigned long factorial( unsigned int par)
     }
     return res;
 }// factorial
+
+
+ unsigned strlen_loc( char * par)
+ {
+     int res = 0;
+     if(nullptr==par) {return res;}
+     for( ; par[res]!=0; res++);
+     return res;
+ }
+
+std::string * exadecimalConverterTo( unsigned int par )
+{
+    const std::string exaFigures("0123456789ABCDEF");
+    Common::StringBuilder sb(20);
+    sb.append("0x");//start with Hex prefix.
+    int abacusLeftMostPosition = log(par)/log(16);
+    double dividendo = (double)par;
+    for( ;abacusLeftMostPosition>=0; abacusLeftMostPosition--)
+    {
+        double quotient = dividendo/ pow(+16.0,(double)abacusLeftMostPosition);
+        double resto = dividendo - ((int)quotient)*pow(+16.0,(double)abacusLeftMostPosition);
+        // update
+        sb.append( exaFigures[(int)quotient]);
+        dividendo = resto;
+    }
+    //ready.
+    std::string * res = new std::string( sb.str());
+    return res;// caller has to delete.
+}
 
 
 // TODO:

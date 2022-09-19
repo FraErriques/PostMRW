@@ -235,6 +235,16 @@ namespace StrManipul
         return res;
     }
 
+    std::string * uLongLongToString( const unsigned long long &par)
+    {//long-long i.e. 8 byte integral type(may be signed or not).
+        std::string * res = new std::string();
+        std::stringstream localSstream;
+        localSstream << par;//put the unsigned long-long into the stringStream
+        *res = localSstream.str();// get the string from the stringStream
+        // N.B. the caller has to delete the return value.
+        return res;
+    }
+
     std::string * boolToString( const bool &par)
     {
         std::string * res = new std::string();

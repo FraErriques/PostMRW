@@ -15,5 +15,7 @@ bool writeVectorFieldR2Affine( double *ApplicationPoint, double *FreeBound, int 
 bool readFileByWords();
 bool readFileByLines();
 int readFileByChars();
+void tryReadForewards();
+void tryReadBackwards();// platform dependent :  NB. works on Linux but not on Windows.
 
 #endif // RWTXTFILE_H_INCLUDED
