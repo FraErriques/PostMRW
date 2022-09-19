@@ -44,7 +44,7 @@ class Primes
 
     /// Ctor
     Primes();// no more hiding of empty Ctor.
-    ~Primes();
+    virtual ~Primes();
     /// method
 	bool SequentialCalcInterface( unsigned long Threshold );
     bool RandomCalcInterface( unsigned long Threshold );

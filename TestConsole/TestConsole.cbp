@@ -15,6 +15,7 @@
 					<Add option="-std=c++11" />
 					<Add option="-m64" />
 					<Add option="-g" />
+					<Add directory="./" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -32,6 +33,7 @@
 					<Add option="-O2" />
 					<Add option="-std=c++11" />
 					<Add option="-m64" />
+					<Add directory="./" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -53,6 +55,8 @@
 		<Unit filename="Cantina.txt" />
 		<Unit filename="Ei_parametrization_.txt" />
 		<Unit filename="Fantoccio.cpp" />
+		<Unit filename="Test_Unit_CantierePrimes.cpp" />
+		<Unit filename="Test_Unit_CantierePrimes.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="sqlScript.txt" />
 		<Extensions>

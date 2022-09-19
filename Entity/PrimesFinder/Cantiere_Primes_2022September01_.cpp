@@ -199,16 +199,16 @@ const char * Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile
     /// Dtor()
     Primes::~Primes()
     {/// Dtor() : closes the append_handle.
-        if( nullptr != this->sequentialDumpPath )
-        {
-            delete[] this->sequentialDumpPath;
-            this->sequentialDumpPath = nullptr;
-        }
-        if( nullptr != this->randomDumpPath )
-        {
-            delete[] this->randomDumpPath;
-            this->randomDumpPath = nullptr;
-        }
+//        if( nullptr != this->sequentialDumpPath )
+//        {
+//            delete[] this->sequentialDumpPath;
+//            this->sequentialDumpPath = nullptr;
+//        }
+//        if( nullptr != this->randomDumpPath )
+//        {
+//            delete[] this->randomDumpPath;
+//            this->randomDumpPath = nullptr;
+//        }
 //        if( nullptr != this->theDumpTailStr ) TODO buggy : let it local and delete after usage
 //        {
 //            delete[] this->theDumpTailStr;

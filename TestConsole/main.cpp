@@ -17,6 +17,9 @@
 #include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
+//-----unit test---------
+#include "Test_Unit_CantierePrimes.h"
+
 
 namespace UnderTest
 {
@@ -1137,7 +1140,11 @@ UnderTest::Primes::DumpElement * acquireSequenceOfRecord(
 int main()
 {
     Common::LogWrappers::SectionOpen("main", 0);
-    const std::string customFileConfigSectionName( "primeCustomFile");
+    //
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
+    test->sequentialDump( 6000);
+    delete test;
+    //
     // UnderTest:: NB.
     UnderTest::Primes *p = new UnderTest::Primes();
     bool res = p->SequentialCalcInterface( 5200);
@@ -1218,6 +1225,7 @@ int main()
 
 
 /* --------------cantina----------------------------
+//const std::string customFileConfigSectionName( "primeCustomFile");
 //    tryReadForewards();
 //    tryReadBackwards();
     // system("pwd");
