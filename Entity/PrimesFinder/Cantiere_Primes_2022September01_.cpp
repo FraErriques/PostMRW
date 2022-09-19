@@ -122,11 +122,15 @@ bool Primes::ReadSequentialDumpInterface()
         seek_START
         , seek_END
         , &cardinalityOfRecordSequence );
-    for( int c=0; c<cardinalityOfRecordSequence; c++)
+    if(nullptr != recSequence)
     {
-        std::cout<<"\n\t Record "<<recSequence[c].ordinal<<"_"<<recSequence[c].prime;
-    }
-    std::cout<<"\n\n";
+        for( int c=0; c<cardinalityOfRecordSequence; c++)
+        {
+            std::cout<<"\n\t Record "<<recSequence[c].ordinal<<"_"<<recSequence[c].prime;
+        }
+        std::cout<<"\n\n";
+        res = true;
+    }// else res stays false.
     //---do the job here----END
     this->sharedReader->close();
     delete this->sharedReader;
@@ -156,6 +160,7 @@ bool Primes::RandomCalcInterface( unsigned long infLeft, unsigned long maxRight 
     *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
     // ---call with params
     Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream, extimatedOrdinal );
+    res = true;
     //
     this->append_Random_Stream->close();
     delete this->append_Random_Stream;

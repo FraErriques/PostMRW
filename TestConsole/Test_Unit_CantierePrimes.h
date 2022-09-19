@@ -11,7 +11,17 @@ class Test_Unit_CantierePrimes
         /** Default destructor */
         virtual ~Test_Unit_CantierePrimes();
 
+        /**
+        * \return the outcome of the operation on the sequential dump
+        */
         bool sequentialDump( unsigned long untilThreshol);
+        /** Access m_Counter
+         * \return The current value of m_Counter
+         */
+        /**
+        * \return the outcome of the operation on the random dump
+        */
+        bool randomDump();
         /** Access m_Counter
          * \return The current value of m_Counter
          */

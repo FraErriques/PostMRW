@@ -47,7 +47,7 @@ class Primes
     virtual ~Primes();
     /// method
 	bool SequentialCalcInterface( unsigned long Threshold );
-    bool RandomCalcInterface( unsigned long Threshold );
+    bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight );
     bool ReadSequentialDumpInterface();
 
 	private:
@@ -58,7 +58,6 @@ class Primes
     //const char * feed_CustomDumpPath(); // non const
     // assignement : operator=
     Primes & operator=   ( const Primes & second );
-    bool RandomCalcInterface( unsigned long infLeft, unsigned long maxRight );
     const char * feedDumpPath(); // non const
     const char * feed_CustomDumpPath(); // non const
     const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;

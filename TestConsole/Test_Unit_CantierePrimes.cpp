@@ -24,3 +24,17 @@ bool Test_Unit_CantierePrimes::sequentialDump( unsigned long untilThreshol)
     // ready.
     return testResult;
 }// sequentialDump
+
+bool Test_Unit_CantierePrimes::randomDump()
+{
+    bool testResult = false;// init
+    if(nullptr != this->tested_Class)
+    {
+        testResult = this->tested_Class->RandomCalcInterface(
+            4000000000UL // quattro miliardi
+            ,4000000100UL // quattro miliardi e cento
+        );
+    }// else do nothing.
+    // ready.
+    return testResult;
+}// randomDump

@@ -1142,13 +1142,15 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
-    test->sequentialDump( 6000);
+    size_t ulong_size = sizeof( unsigned long);
+    bool seq = test->sequentialDump( 6000);
+    bool rand = test->randomDump();// params in the test body
     delete test;
     //
     // UnderTest:: NB.
-    UnderTest::Primes *p = new UnderTest::Primes();
-    bool res = p->SequentialCalcInterface( 5200);
-    bool readRes = p->ReadSequentialDumpInterface();
+//    UnderTest::Primes *p = new UnderTest::Primes();
+//    bool res = p->SequentialCalcInterface( 5200);
+//    bool readRes = p->ReadSequentialDumpInterface();
 
 //    res = p->RandomCalcInterface(
 //       20
@@ -1209,11 +1211,12 @@ int main()
 //    logMsg += *desinenza;
 //    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
 //    delete desinenza;
+//    delete p;
     //-----
-    delete p;
+
+
+
     Common::LogWrappers::SectionClose();
-
-
     //---ready---------------
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();
