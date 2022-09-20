@@ -959,7 +959,7 @@ PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition(
     unsigned long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
-    for(int c=0; c<ordinaleStimato; c++)
+    for( unsigned long c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
         factorization[c].factorBase = 0;
         factorization[c].factorMultiplicity = 0;

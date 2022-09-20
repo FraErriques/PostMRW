@@ -248,14 +248,12 @@ const char * Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile
 //            delete[] this->dumpTail;
 //            this->dumpTail = nullptr;
 //        }
-        /*
-        if( nullptr != this->appendStream)  no more a global class::variable.
-        {
-            this->appendStream->close();
-            this->appendStream = nullptr;
-        }// else already closed.
-        */
-    }// Dtor(
+//        if( nullptr != this->appendStream)  no more a global class::variable.
+//        {
+//            this->appendStream->close();
+//            this->appendStream = nullptr;
+//        }// else already closed.
+    }// Dtor
 
 
 
@@ -685,30 +683,30 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
 
 
 /*
- Primes::Bisection( requiredOrdinal)
+void Bisection( unsigned long requiredOrdinal , int sogliaDistanza )
  {
-    for ()
+    for (;;)// TODO
     {
-        filesize = tellg
-        discriminatingElement_position = filesize/2.0;
-        DumpElement * nextRecord = acquireNextRecord( discriminatingElement_position)
-        // compare
-        if( nextRecord->ordinal < requiredOrdinal)
-        {
-            left = acquireNextRecord_end;
-            right = filesize;
-        }
-        else if( nextRecord->ordinal > requiredOrdinal)
-        {
-            left = 0;
-            right = acquireNextRecord_start;
-        }
-        else if( nextRecord->ordinal == requiredOrdinal)
-        {
-            found -> exit (i.e. break)
-        }
+        std::iostream::pos_type filesize = this->sharedReader->tellg();// TODO considerare estremi correnti
+        std::iostream::pos_type discriminatingElement_position = filesize/2; // divisione intera
+        UnderTest::Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
+//        // compare
+//        if( nextRecord->ordinal < requiredOrdinal)
+//        {
+//            left = acquireNextRecord_end;
+//            right = filesize;
+//        }
+//        else if( nextRecord->ordinal > requiredOrdinal)
+//        {
+//            left = 0;
+//            right = acquireNextRecord_start;
+//        }
+//        else if( nextRecord->ordinal == requiredOrdinal)
+//        {
+//            found -> exit (i.e. break)
+//        }
     }// for
- }
+ }// Bisection
 */
 
 }// namespace Cantiere_Primes_2022September01_

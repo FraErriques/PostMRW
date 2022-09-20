@@ -2,6 +2,82 @@
 /***********************************************  cantina *****************************************************
 
 
+    //
+    // UnderTest:: NB. local to main::
+//    UnderTest::Primes *p = new UnderTest::Primes();
+//    bool res = p->SequentialCalcInterface( 5200);
+//    bool readRes = p->ReadSequentialDumpInterface();
+
+//    bool res = p->RandomCalcInterface(
+//       6000000000
+//       ,6000000100 );
+
+//    res = p->SequentialCalcInterface( 11200);
+//    const char * stringDumpTail = p->newDeal_dumpTailReaderByChar( p->sequentialDumpPath );
+//    //
+//    int recordArray_cardinality=0;
+//    UnderTest::Primes::DumpElement * recordArray = p->newDeal_recoverDumpTail( stringDumpTail , &recordArray_cardinality );
+//    if(nullptr != recordArray)
+//    {
+//        for(int c=0; c<recordArray_cardinality; c++) // array's cardinality is an out-param.
+//        {
+//            std::cout<<"\n\t Record "<< recordArray[c].ordinal<<"_"<<recordArray[c].prime;
+//        }// for
+//    }// else NO recordArray available.
+//    //
+//    UnderTest::Primes::DumpElement * lastRec = nullptr;
+//    long LastOrdinal = 0UL;//lastRec->ordinal; // p->getLastOrdinal();
+//    long LastPrime = 0UL;//  lastRec->prime;// p->getLastPrime();
+//    if(nullptr!=stringDumpTail)
+//    {
+//        lastRec = p->newDeal_recoverLastRecord( stringDumpTail);
+//        if(nullptr!=lastRec)
+//        {
+//            LastOrdinal =lastRec->ordinal;
+//            LastPrime =lastRec->prime;
+//        }// else the string stringDumpTail is invalid -> no record has been recovered.
+//    }// else sequentialFile not present.  TODO
+//    // p->recoverLastRecord( p->theDumpTailStr);
+//    // UnderTest::Primes::DumpElement * lastRecord = p->recoverDumpTail( nullptr );// ???
+//    // delete[] lastRecord;
+//    //
+//    res = p->RandomCalcInterface(
+//       999900
+//       ,999999 );
+
+
+
+//    res = p->SequentialCalcInterface( 200);
+//    LastOrdinal = p->getLastOrdinal();
+//    LastPrime = p->getLastPrime();
+
+//    res = p->SequentialCalcInterface(  50);
+//    res = p->SequentialCalcInterface( 100);
+//    //
+//    long desPrime = (*p)[25];
+//    std::string logMsg = "desPrime = (*p)[25]==";
+//    std::string * desinenza = Common::StrManipul::uLongToString( desPrime);
+//    logMsg += *desinenza;
+//    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+//    delete desinenza;
+//    //
+//    desPrime = (*p)[3];
+//    logMsg = "desPrime = (*p)[3]==";
+//    desinenza = Common::StrManipul::uLongToString( desPrime);
+//    logMsg += *desinenza;
+//    Common::LogWrappers::SectionContent( logMsg.c_str(), 0 );
+//    delete desinenza;
+//    delete p;
+    //-----
+
+
+
+//const std::string customFileConfigSectionName( "primeCustomFile");
+//    tryReadForewards();
+//    tryReadBackwards();
+    // system("pwd");
+    // system("dir"); Process_cur_dir: Directory di C:\root\projects\GitHubSandBox\PostMRW\TestConsole
+
 // empty Ctor : reads both the sequentialFile and randomFile fullpath
 Cantiere_Primes_2022September01_::Primes::Primes( )
 {
