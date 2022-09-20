@@ -11,17 +11,23 @@ class Test_Unit_CantierePrimes
         /** Default destructor */
         virtual ~Test_Unit_CantierePrimes();
 
-        /**
+        /** call the sequentialDump_Interface
         * \return the outcome of the operation on the sequential dump
         */
         bool sequentialDump( unsigned long long untilThreshol);
-        /** Access m_Counter
-         * \return The current value of m_Counter
-         */
-        /**
+
+        /** call the randomDump_Interface
         * \return the outcome of the operation on the random dump
         */
-        bool randomDump();
+        bool randomDump( unsigned long long infLeft, unsigned long long maxRight );
+
+        /** read the very last record {Ordinal,Prime} from sequentialDump */
+        bool readLastRecord();
+
+        /** read an array of record {Ordinal,Prime} from sequentialDump */
+        bool readSequencialDump( int acquireRecordNextToOffset
+                                 ,int recArray_seek_START, int recArray_seek_END);
+
         /** Access m_Counter
          * \return The current value of m_Counter
          */

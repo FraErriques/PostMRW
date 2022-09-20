@@ -48,7 +48,10 @@ class Primes
     /// method
 	bool SequentialCalcInterface( unsigned long long Threshold );
 	bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight );
-    bool ReadSequentialDumpInterface();
+    bool ReadSequentialDumpInterface(
+                 int acquireRecordNextToOffset,
+                 int recArray_seek_START, int recArray_seek_END
+              );
 
 	private:
     // copying methoda : not usable->private.

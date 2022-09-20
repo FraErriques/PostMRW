@@ -1143,9 +1143,28 @@ int main()
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
     size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 9000);
-//    bool rand = test->randomDump();// params in the test body
+    bool rand = test->randomDump( 30, 50);
+    bool reader = test->readSequencialDump(
+            99
+            ,3,17
+        );
     delete test;
     //------Unit Test-----------------------------------------------------
+
+
+    Common::LogWrappers::SectionClose();
+    //---ready---------------
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+
+
+/* --------------cantina----------------------------
+
     //
     // UnderTest:: NB. local to main::
 //    UnderTest::Primes *p = new UnderTest::Primes();
@@ -1216,18 +1235,6 @@ int main()
 
 
 
-    Common::LogWrappers::SectionClose();
-    //---ready---------------
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-
-
-
-/* --------------cantina----------------------------
 //const std::string customFileConfigSectionName( "primeCustomFile");
 //    tryReadForewards();
 //    tryReadBackwards();
