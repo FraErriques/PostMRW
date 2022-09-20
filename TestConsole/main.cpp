@@ -1144,10 +1144,18 @@ int main()
     size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 9000);
     bool rand = test->randomDump( 30, 50);
-    bool reader = test->readSequencialDump(
-            99
-            ,3,17
-        );
+    bool reader = false;
+    for( int c=0; c<10; c++)
+    {// next Rec
+        reader &= test->readSequentialDump_nextRec(c);
+    }
+    for( int c=0; c<10; c++)
+    {// array of Rec
+        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+            c
+            ,c+5 // there must be room for just one record Prime<100.
+         );
+    }// array of Rec
     delete test;
     //------Unit Test-----------------------------------------------------
 

@@ -39,13 +39,15 @@ bool Test_Unit_CantierePrimes::randomDump( unsigned long long infLeft, unsigned 
     return testResult;
 }// randomDump
 
-
-bool Test_Unit_CantierePrimes::readSequencialDump(
-                    int acquireRecordNextToOffset
-                    ,int recArray_seek_START, int recArray_seek_END
-            )
- {
-     this->tested_Class->ReadSequentialDumpInterface(
+bool Test_Unit_CantierePrimes::readSequentialDump_nextRec( int acquireRecordNextToOffset)
+{
+     this->tested_Class->ReadSequentialDumpInterface_nextRec(
          acquireRecordNextToOffset/** read the very last record {Ordinal,Prime} from sequentialDump */
-         ,recArray_seek_START, recArray_seek_END );/** read an array of record {Ordinal,Prime} from sequentialDump */
- }//readSequencialDump
+        );
+}// readSequentialDump_nextRec
+
+bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( int recArray_seek_START, int recArray_seek_END)
+{
+     this->tested_Class->ReadSequentialDumpInterface_arrayOfRec_anywhere(
+         recArray_seek_START, recArray_seek_END );/** read an array of record {Ordinal,Prime} from sequentialDump */
+}//readSequentialDump_arrayOfRec_anywhere

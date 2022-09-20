@@ -25,8 +25,8 @@ class Test_Unit_CantierePrimes
         bool readLastRecord();
 
         /** read an array of record {Ordinal,Prime} from sequentialDump */
-        bool readSequencialDump( int acquireRecordNextToOffset
-                                 ,int recArray_seek_START, int recArray_seek_END);
+        bool readSequentialDump_nextRec( int acquireRecordNextToOffset);
+        bool readSequentialDump_arrayOfRec_anywhere( int recArray_seek_START, int recArray_seek_END);
 
         /** Access m_Counter
          * \return The current value of m_Counter

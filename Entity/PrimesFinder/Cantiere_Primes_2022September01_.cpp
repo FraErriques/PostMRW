@@ -103,11 +103,9 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
     return hasSequentialDumpBeenReset;
 }//
 
-bool Primes::ReadSequentialDumpInterface(
-                                         int acquireRecordNextToOffset,
-                                         int recArray_seek_START, int recArray_seek_END
-                                         )
-{// it's a temporary; all of this will be substituted by operator[]
+
+bool Primes::ReadSequentialDumpInterface_nextRec( int acquireRecordNextToOffset)
+{
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
     if( nullptr != this->sharedReader)
@@ -124,7 +122,22 @@ bool Primes::ReadSequentialDumpInterface(
     std::cout<<"\n\n\n";
     delete nextRecord;
     //---acquireNextRecord----END
-    //
+    this->sharedReader->close();
+    delete this->sharedReader;
+    this->sharedReader = nullptr;
+    // ready
+    return res;
+}// ReadSequentialDumpInterface_lastRec
+
+
+bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( int recArray_seek_START, int recArray_seek_END)
+{
+    bool res = false;
+    this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+    if( nullptr != this->sharedReader)
+    {
+        res = true;
+    }// else stay false.
     //---------acquireSequenceOfRecord----START
     this->sharedReader->seekg( recArray_seek_START , std::ios::beg );// NB. place appropriately in production environment
     int cardinalityOfRecordSequence = 0;
@@ -148,7 +161,7 @@ bool Primes::ReadSequentialDumpInterface(
     this->sharedReader = nullptr;
     // ready
     return res;
-}// ReadSequentialDumpInterface
+}//ReadSequentialDumpInterface_arrayOfRec_anywhere
 
 
 
@@ -550,8 +563,8 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
     for( ; ; stepDone++ )
     {// for step until next-record starting point.
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
-//        this->sharedReader->seekg( discriminatingElement_position-1, ios::beg);// check if one byte before there's end-of-record;
-        // in such case it's record start.
+        // cannot check if one byte before there's end-of-record;
+        // NO  seekg( discriminatingElement_position-1, ios::beg)
         c = this->sharedReader->get();
         if( 13==c || 10==c )
         {
@@ -619,8 +632,8 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     for( ; ; stepDone++ )
     {// for step until next-record starting point.
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
-//        this->sharedReader->seekg( discriminatingElement_position-1, ios::beg);// check if one byte before there's end-of-record;
-        // in such case it's record start.
+        // cannot check if one byte before there's end-of-record;
+        // NO  seekg( discriminatingElement_position-1, ios::beg)
         c = this->sharedReader->get();
         if( 13==c || 10==c )
         {
