@@ -103,7 +103,8 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
     return hasSequentialDumpBeenReset;
 }//
 
-bool Primes::ReadSequentialDumpInterface()
+
+bool Primes::ReadSequentialDumpInterface_nextRec( int acquireRecordNextToOffset)
 {
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
@@ -111,16 +112,38 @@ bool Primes::ReadSequentialDumpInterface()
     {
         res = true;
     }// else stay false.
-    //---do the job here----START
-    int seek_START = 199;
-    int seek_END = 311;
-    this->sharedReader->seekg( seek_START , std::ios::beg );
-    // test-sigle-record Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( 50);// pass file-seek-offset.
+    //---acquireNextRecord----START
+    this->sharedReader->seekg( acquireRecordNextToOffset , std::ios::beg );// NB. place appropriately in production environment
+    Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( acquireRecordNextToOffset);// pass parameter: file-seek-offset.
+    std::cout<<"\n\t acquireNextRecord("<<acquireRecordNextToOffset<<") reads:";
+    std::cout<<"\n\t Prime["<<nextRecord->Ordinal<<"]=="<<nextRecord->Prime;
+    std::cout<<"\n\t startPositionOfRecord=="<<nextRecord->startPositionOfRecord;
+    std::cout<<"\n\t endPositionOfRecord=="<<nextRecord->endPositionOfRecord;
+    std::cout<<"\n\n\n";
+    delete nextRecord;
+    //---acquireNextRecord----END
+    this->sharedReader->close();
+    delete this->sharedReader;
+    this->sharedReader = nullptr;
+    // ready
+    return res;
+}// ReadSequentialDumpInterface_lastRec
+
+
+bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( int recArray_seek_START, int recArray_seek_END)
+{
+    bool res = false;
+    this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+    if( nullptr != this->sharedReader)
+    {
+        res = true;
+    }// else stay false.
+    //---------acquireSequenceOfRecord----START
+    this->sharedReader->seekg( recArray_seek_START , std::ios::beg );// NB. place appropriately in production environment
     int cardinalityOfRecordSequence = 0;
-    // next line : test-multirecord
     Primes::DumpElement * recSequence = this->acquireSequenceOfRecord(
-        seek_START
-        , seek_END
+        recArray_seek_START
+        , recArray_seek_END
         , &cardinalityOfRecordSequence );
     if(nullptr != recSequence)
     {
@@ -131,13 +154,14 @@ bool Primes::ReadSequentialDumpInterface()
         std::cout<<"\n\n";
         res = true;
     }// else res stays false.
-    //---do the job here----END
+    delete[] recSequence;
+    //----------------acquireSequenceOfRecord------END
     this->sharedReader->close();
     delete this->sharedReader;
     this->sharedReader = nullptr;
     // ready
     return res;
-}// ReadSequentialDumpInterface
+}//ReadSequentialDumpInterface_arrayOfRec_anywhere
 
 
 
@@ -224,14 +248,12 @@ const char * Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile
 //            delete[] this->dumpTail;
 //            this->dumpTail = nullptr;
 //        }
-        /*
-        if( nullptr != this->appendStream)  no more a global class::variable.
-        {
-            this->appendStream->close();
-            this->appendStream = nullptr;
-        }// else already closed.
-        */
-    }// Dtor(
+//        if( nullptr != this->appendStream)  no more a global class::variable.
+//        {
+//            this->appendStream->close();
+//            this->appendStream = nullptr;
+//        }// else already closed.
+    }// Dtor
 
 
 
@@ -538,6 +560,9 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
     int stepDone = 0;
     for( ; ; stepDone++ )
     {// for step until next-record starting point.
+        if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
+        // cannot check if one byte before there's end-of-record;
+        // NO  seekg( discriminatingElement_position-1, ios::beg)
         c = this->sharedReader->get();
         if( 13==c || 10==c )
         {
@@ -546,7 +571,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
         if( this->sharedReader->eof() ) {break;}
     }// for step until next-record starting point.
     // then write down next complete record :
-    Common::StringBuilder sb(50);// estimate
+    Common::StringBuilder sb(50);// estimate a single record's length (in excess).
     int terminator=0;
     int midRecord_separator=0;
     for( stepDone = 0;  ; stepDone++ )
@@ -604,6 +629,9 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     int stepDone = 0;
     for( ; ; stepDone++ )
     {// for step until next-record starting point.
+        if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
+        // cannot check if one byte before there's end-of-record;
+        // NO  seekg( discriminatingElement_position-1, ios::beg)
         c = this->sharedReader->get();
         if( 13==c || 10==c )
         {
@@ -655,30 +683,30 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
 
 
 /*
- Primes::Bisection( requiredOrdinal)
+void Bisection( unsigned long requiredOrdinal , int sogliaDistanza )
  {
-    for ()
+    for (;;)// TODO
     {
-        filesize = tellg
-        discriminatingElement_position = filesize/2.0;
-        DumpElement * nextRecord = acquireNextRecord( discriminatingElement_position)
-        // compare
-        if( nextRecord->ordinal < requiredOrdinal)
-        {
-            left = acquireNextRecord_end;
-            right = filesize;
-        }
-        else if( nextRecord->ordinal > requiredOrdinal)
-        {
-            left = 0;
-            right = acquireNextRecord_start;
-        }
-        else if( nextRecord->ordinal == requiredOrdinal)
-        {
-            found -> exit (i.e. break)
-        }
+        std::iostream::pos_type filesize = this->sharedReader->tellg();// TODO considerare estremi correnti
+        std::iostream::pos_type discriminatingElement_position = filesize/2; // divisione intera
+        UnderTest::Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
+//        // compare
+//        if( nextRecord->ordinal < requiredOrdinal)
+//        {
+//            left = acquireNextRecord_end;
+//            right = filesize;
+//        }
+//        else if( nextRecord->ordinal > requiredOrdinal)
+//        {
+//            left = 0;
+//            right = acquireNextRecord_start;
+//        }
+//        else if( nextRecord->ordinal == requiredOrdinal)
+//        {
+//            found -> exit (i.e. break)
+//        }
     }// for
- }
+ }// Bisection
 */
 
 }// namespace Cantiere_Primes_2022September01_

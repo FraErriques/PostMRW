@@ -2,4 +2,12 @@
 
  Custom Interval (999900, 999999] ,worked on: Wed Sep 14 20:17:02 2022
  Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-78620_99990778621_99991778622_99993178623_99995378624_99995978625_99996178626_99997978627_999983
+78620_99990778621_99991778622_99993178623_99995378624_99995978625_99996178626_99997978627_999983
+
+ Custom Interval (0, 50] ,worked on: Tue Sep 20 20:19:08 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+1_22_33_54_75_116_137_178_199_2310_2911_3112_3713_4114_4315_47
+
+ Custom Interval (0, 50] ,worked on: Tue Sep 20 20:20:14 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+1_22_33_54_75_116_137_178_199_2310_2911_3112_3713_4114_4315_47
