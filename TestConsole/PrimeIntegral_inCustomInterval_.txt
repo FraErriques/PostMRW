@@ -87,3 +87,15 @@
  Custom Interval (30, 50] ,worked on: Tue Sep 20 16:27:47 2022
  Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
 12_3113_3714_4115_4316_47
+
+ Custom Interval (0, 50] ,worked on: Tue Sep 20 16:49:23 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+1_22_33_54_75_116_137_178_199_2310_2911_3112_3713_4114_4315_47
+
+ Custom Interval (0, 50] ,worked on: Tue Sep 20 18:05:32 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+1_22_33_54_75_116_137_178_199_2310_2911_3112_3713_4114_4315_47
+
+ Custom Interval (0, 50] ,worked on: Tue Sep 20 18:06:10 2022
+ Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
+1_22_33_54_75_116_137_178_199_2310_2911_3112_3713_4114_4315_47

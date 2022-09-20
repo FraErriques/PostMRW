@@ -806,17 +806,17 @@ int main()
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
     size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 9000);
-    bool rand = test->randomDump( 30, 50);
+    bool rand = test->randomDump( 0, 50);
     bool reader = false;
-    for( int c=0; c<10; c++)
+    for( int c=0; c<1; c++)
     {// next Rec
         reader &= test->readSequentialDump_nextRec(c);
     }
-    for( int c=0; c<10; c++)
+    for( int c=0; c<1; c++)
     {// array of Rec
         reader &= test->readSequentialDump_arrayOfRec_anywhere(
             c
-            ,c+5 // there must be room for just one record Prime<100.
+            ,c+915 // there must be room for just one record Prime<100.
          );
     }// array of Rec
     delete test;
