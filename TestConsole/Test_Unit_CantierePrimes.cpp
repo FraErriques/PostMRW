@@ -39,15 +39,27 @@ bool Test_Unit_CantierePrimes::randomDump( unsigned long long infLeft, unsigned 
     return testResult;
 }// randomDump
 
-bool Test_Unit_CantierePrimes::readSequentialDump_nextRec( int acquireRecordNextToOffset)
+bool Test_Unit_CantierePrimes::readSequentialDump_nextRec( long long acquireRecordNextToOffset)
 {
+    bool readSequentialDump_nextRec_outcome =
      this->tested_Class->ReadSequentialDumpInterface_nextRec(
-         acquireRecordNextToOffset/** read the very last record {Ordinal,Prime} from sequentialDump */
+         acquireRecordNextToOffset/** read the record next to position acquireRecordNextToOffset */
         );
+    if( ! readSequentialDump_nextRec_outcome)
+    {
+        std::cout<<"\n\t Test_Unit_CantierePrimes::readSequentialDump_nextRec FAILED!";
+        std::cout<<"\n\t Offset parameter seems to be incompatible with the stream. \n";
+    }
 }// readSequentialDump_nextRec
 
-bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( int recArray_seek_START, int recArray_seek_END)
+bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
 {
+    bool readSequentialDump_arrayOfRec_anywhere_outcome =
      this->tested_Class->ReadSequentialDumpInterface_arrayOfRec_anywhere(
          recArray_seek_START, recArray_seek_END );/** read an array of record {Ordinal,Prime} from sequentialDump */
+    if( ! readSequentialDump_arrayOfRec_anywhere_outcome)
+    {
+        std::cout<<"\n\t Test_Unit_CantierePrimes::readSequentialDump_nextRec FAILED!";
+        std::cout<<"\n\t Offset parameter(s) seem to be incompatible with the stream. \n";
+    }
 }//readSequentialDump_arrayOfRec_anywhere

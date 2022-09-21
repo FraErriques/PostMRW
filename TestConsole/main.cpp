@@ -804,15 +804,15 @@ int main()
     //
     //------Unit Test-----------------------------------------------------
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
-    size_t ulong_size = sizeof( unsigned long long);
-    bool seq = test->sequentialDump( 9000);
-    bool rand = test->randomDump( 0, 50);
+    //size_t ulong_size = sizeof( unsigned long long);
+    //bool seq = test->sequentialDump( 9000);
+    //bool rand = test->randomDump( 0, 50);
     bool reader = false;
-    for( int c=0; c<1; c++)
+    for( int c=0; c<61; c++)
     {// next Rec
         reader &= test->readSequentialDump_nextRec(c);
     }
-    for( int c=0; c<1; c++)
+    for( int c=0; c<61; c++)
     {// array of Rec
         reader &= test->readSequentialDump_arrayOfRec_anywhere(
             c

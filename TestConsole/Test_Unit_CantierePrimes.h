@@ -25,8 +25,8 @@ class Test_Unit_CantierePrimes
         bool readLastRecord();
 
         /** read an array of record {Ordinal,Prime} from sequentialDump */
-        bool readSequentialDump_nextRec( int acquireRecordNextToOffset);
-        bool readSequentialDump_arrayOfRec_anywhere( int recArray_seek_START, int recArray_seek_END);
+        bool readSequentialDump_nextRec( long long acquireRecordNextToOffset);
+        bool readSequentialDump_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
 
         /** Access m_Counter
          * \return The current value of m_Counter
@@ -40,7 +40,7 @@ class Test_Unit_CantierePrimes
     protected:
 
     private:
-        unsigned int m_Counter; //!< Member variable "m_Counter"
+        unsigned long long m_Counter; //!< Member variable "m_Counter"
         Cantiere_Primes_2022September01_::Primes * tested_Class;
 };
 

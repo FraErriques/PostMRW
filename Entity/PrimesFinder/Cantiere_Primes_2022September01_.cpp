@@ -104,7 +104,7 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 }//
 
 
-bool Primes::ReadSequentialDumpInterface_nextRec( int acquireRecordNextToOffset)
+bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset)
 {
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
@@ -112,15 +112,37 @@ bool Primes::ReadSequentialDumpInterface_nextRec( int acquireRecordNextToOffset)
     {
         res = true;
     }// else stay false.
+    else
+    {// cannot operate.
+        res = false;
+        return res;
+    }
+    this->sharedReader->seekg( -1 , std::ios::end );
+    std::ios::pos_type sequentialDump_size = this->sharedReader->tellg();
+    if( acquireRecordNextToOffset >= sequentialDump_size
+        // ||  TODO evaluate additional error conditions
+       )
+    {// cannot operate.
+        res = false;
+        return res;
+    }
     //---acquireNextRecord----START
     this->sharedReader->seekg( acquireRecordNextToOffset , std::ios::beg );// NB. place appropriately in production environment
     Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( acquireRecordNextToOffset);// pass parameter: file-seek-offset.
-    std::cout<<"\n\t acquireNextRecord("<<acquireRecordNextToOffset<<") reads:";
-    std::cout<<"\n\t Prime["<<nextRecord->Ordinal<<"]=="<<nextRecord->Prime;
-    std::cout<<"\n\t startPositionOfRecord=="<<nextRecord->startPositionOfRecord;
-    std::cout<<"\n\t endPositionOfRecord=="<<nextRecord->endPositionOfRecord;
-    std::cout<<"\n\n\n";
-    delete nextRecord;
+    if( nullptr != nextRecord)
+    {
+        std::cout<<"\n\t acquireNextRecord("<<acquireRecordNextToOffset<<") reads:";
+        std::cout<<"\n\t Prime["<<nextRecord->Ordinal<<"]=="<<nextRecord->Prime;
+        std::cout<<"\n\t startPositionOfRecord=="<<nextRecord->startPositionOfRecord;
+        std::cout<<"\n\t endPositionOfRecord=="<<nextRecord->endPositionOfRecord;
+        std::cout<<"\n\n\n";
+        delete nextRecord;
+    }
+    else
+    {// cannot operate.
+        res = false;
+        return res;
+    }
     //---acquireNextRecord----END
     this->sharedReader->close();
     delete this->sharedReader;
@@ -130,7 +152,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( int acquireRecordNextToOffset)
 }// ReadSequentialDumpInterface_lastRec
 
 
-bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( int recArray_seek_START, int recArray_seek_END)
+bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
 {
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
@@ -138,6 +160,20 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( int recArray_seek_
     {
         res = true;
     }// else stay false.
+    else
+    {// cannot operate.
+        res = false;
+        return res;
+    }
+    this->sharedReader->seekg( -1 , std::ios::end );
+    std::ios::pos_type sequentialDump_size = this->sharedReader->tellg();
+    if( recArray_seek_START >= sequentialDump_size
+        // ||  TODO evaluate additional error conditions
+       )
+    {// cannot operate.
+        res = false;
+        return res;
+    }
     //---------acquireSequenceOfRecord----START
     this->sharedReader->seekg( recArray_seek_START , std::ios::beg );// NB. place appropriately in production environment
     int cardinalityOfRecordSequence = 0;
@@ -154,6 +190,11 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( int recArray_seek_
         std::cout<<"\n\n";
         res = true;
     }// else res stays false.
+    else
+    {// cannot operate.
+        res = false;
+        return res;
+    }
     delete[] recSequence;
     //----------------acquireSequenceOfRecord------END
     this->sharedReader->close();
@@ -555,7 +596,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
     {
         return nullptr;
     }// else continue
-    AsinglePointInStream * nextRecord = new Primes::AsinglePointInStream();
+    AsinglePointInStream * nextRecord = nullptr;
     int c=0;
     int stepDone = 0;
     for( ; ; stepDone++ )
@@ -563,6 +604,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
         // cannot check if one byte before there's end-of-record;
         // NO  seekg( discriminatingElement_position-1, ios::beg)
+        if( ! this->sharedReader->good()) {break;}
         c = this->sharedReader->get();
         if( 13==c || 10==c )
         {
@@ -576,6 +618,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
     int midRecord_separator=0;
     for( stepDone = 0;  ; stepDone++ )
     {
+        if( ! this->sharedReader->good()) {break;}
         c = this->sharedReader->get();
         if(13==c || 10==c)
         {
@@ -601,11 +644,14 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
             int recordCardinality=0;
             Primes::DumpElement * nextRecPtr =
                 newDeal_recoverDumpTail( nextRecord_txt.c_str() , &recordCardinality);
+            // only now allocate; if func does not pass here -> ret null.
+            nextRecord = new Primes::AsinglePointInStream();
             nextRecord->startPositionOfRecord = discriminatingElement_position;
             nextRecord->endPositionOfRecord = discriminatingElement_position + stepDone;
             nextRecord->Ordinal = nextRecPtr->ordinal;
             nextRecord->Prime = nextRecPtr->prime;
             // TODO delete nextRecPtr
+            this->sharedReader->clear();// reset in case EOF or badRead has been set.
             break;
         }
     }// for step into next complete record
@@ -624,7 +670,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     {
         return nullptr;
     }// else continue
-    DumpElement * sequenceRecord = new Primes::DumpElement();
+    DumpElement * sequenceRecord = nullptr;
     int c=0;
     int stepDone = 0;
     for( ; ; stepDone++ )
@@ -632,6 +678,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
         // cannot check if one byte before there's end-of-record;
         // NO  seekg( discriminatingElement_position-1, ios::beg)
+        if( ! this->sharedReader->good()) {break;}
         c = this->sharedReader->get();
         if( 13==c || 10==c )
         {
@@ -645,6 +692,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     int midRecord_separator=0;
     for( stepDone = 0;  ; stepDone++ )// start counting steps from here:
     {
+        if( ! this->sharedReader->good()) {break;}
         c = this->sharedReader->get();
         if(13==c || 10==c)
         {
@@ -664,8 +712,9 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
         {// this should never occur, except for errors in the dump.
             sb.append( (int)'_');
         }
-        if( discriminatingElement_position + stepDone >= until_position // TODO test : reached endpoint
-            && (13==c || 10==c)// as additional condition, step until the end of current record
+        if( ( discriminatingElement_position + stepDone >= until_position // TODO test : reached endpoint
+              && (13==c || 10==c) )// as additional condition, step until the end of current record
+             || this->sharedReader->eof()// this alone is a sufficient condition.
            )
         {
             const std::string sequenceOfRecord_txt = sb.str();
@@ -674,6 +723,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
             sequenceRecord =
                 newDeal_recoverDumpTail( sequenceOfRecord_txt.c_str() , howMany_RecordInSequence );
             // TODO delete nextRecPtr
+            this->sharedReader->clear();// reset in case EOF or badRead has been set.
             break;
         }
     }// for step into next complete record
