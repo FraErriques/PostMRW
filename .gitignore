@@ -20,3 +20,4 @@ log/
 .workspace
 .layout
 .save
+*.log

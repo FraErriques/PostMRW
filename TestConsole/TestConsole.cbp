@@ -57,6 +57,8 @@
 		<Unit filename="Fantoccio.cpp" />
 		<Unit filename="Test_Unit_CantierePrimes.cpp" />
 		<Unit filename="Test_Unit_CantierePrimes.h" />
+		<Unit filename="Test_Unit_PrimesFinder.cpp" />
+		<Unit filename="Test_Unit_PrimesFinder.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="sqlScript.txt" />
 		<Extensions>

@@ -301,7 +301,7 @@ const char * Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile
 
 void Primes::createOrAppend( const std::string & fullPath)
 {
-    ofstream createOrApp(fullPath, std::fstream::out | std::fstream::app);
+    std::ofstream createOrApp(fullPath, std::fstream::out | std::fstream::app);
     createOrApp.close();
 }// dumpFile createOrAppend
 
@@ -310,7 +310,7 @@ void Primes::createOrAppend( const std::string & fullPath)
 const char * Primes::lastRecordReaderByChar( const std::string & fullPath)
 {
     char * directTailDump = new char[120];// tune it.
-    ifstream lastrecReader(fullPath, std::fstream::in );
+    std::ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( 0, lastrecReader.end);
     int streamSize = lastrecReader.tellg();// filesize
     if( 1024>streamSize)
@@ -346,8 +346,8 @@ const char * Primes::lastRecordReaderByChar( const std::string & fullPath)
 const char * Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
 {
     const char * sequentialFile_tail = new char[101];// caller has to delete
-    ifstream lastrecReader(fullPath, std::fstream::in );
-    lastrecReader.seekg( -1, ios::end ); // lastrecReader.end);
+    std::ifstream lastrecReader(fullPath, std::fstream::in );
+    lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
     int streamSize = lastrecReader.tellg();
     if( 100>streamSize)// for such small data, it's better to create a new sequeltial file from scratch.
     {
