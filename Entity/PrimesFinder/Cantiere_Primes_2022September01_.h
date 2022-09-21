@@ -5,6 +5,7 @@
 #include <fstream>
 #include <math.h>
 #include <iostream>
+#include <map>
 
 namespace Cantiere_Primes_2022September01_
 {
@@ -31,7 +32,18 @@ class Primes
          long long startPositionOfRecord;
          long long endPositionOfRecord;
      };
+    /// Ctor
+    Primes();// no more hiding of empty Ctor.
+    virtual ~Primes();
+    /// method : public interfaces.
+	bool SequentialCalcInterface( unsigned long long Threshold );
+	bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight );
+    bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
+    bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
+
+	private:
     /// Data
+    std::map<unsigned long long, unsigned long long> * memoryMappedDump;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     const char * sequentialDumpPath = nullptr;// NB. remember to share and delete[].
@@ -41,17 +53,6 @@ class Primes
     std::ofstream * append_Sequential_Stream;// write
     std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
-
-    /// Ctor
-    Primes();// no more hiding of empty Ctor.
-    virtual ~Primes();
-    /// method
-	bool SequentialCalcInterface( unsigned long long Threshold );
-	bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight );
-    bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
-    bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
-
-	private:
     // copying methoda : not usable->private.
     // hide Copy Constructor
     Primes   ( const Primes & original );
@@ -81,9 +82,9 @@ class Primes
         , unsigned long long until_position
         , int * howMany_RecordInSequence
                                             );
-//Bisection( requiredOrdinal)
-//  IntegerDecomposition : the Fundamental Thm of Arithmetic.
-//SingleFactor * IntegerDecomposition( const unsigned long long dividend)
+    void Bisection( unsigned long requiredOrdinal , int sogliaDistanza );
+    //  IntegerDecomposition : the Fundamental Thm of Arithmetic.
+    //SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 
 };// class
 

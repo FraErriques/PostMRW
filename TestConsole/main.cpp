@@ -29,40 +29,15 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----PimesFinder------------------------------------------------
-    Test_Unit_PrimesFinder * test = new Test_Unit_PrimesFinder();
-    bool seq = test->sequentialDump( 9000);
-    bool rand = test->randomDump( 0, 50);
-    bool reader = false;
-    reader &= test->readSequentialDump_nextRec( 60);
-    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        23
-        ,915 // there must be room for just one record Prime<100.
-     );
-//    for( int c=0; c<61; c++)
-//    {// next Rec
-//        reader &= test->readSequentialDump_nextRec(c);
-//    }
-//    for( int c=0; c<61; c++)
-//    {// array of Rec
-//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-//            c
-//            ,c+915 // there must be room for just one record Prime<100.
-//         );
-//    }// array of Rec
-    delete test;
-    //------Unit Test-----------------------------------------------------
-    //
-    //------Unit Test-----CANTIERE------------------------------------------------
-    //    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
-    //    //size_t ulong_size = sizeof( unsigned long long);
+    //    Test_Unit_PrimesFinder * test = new Test_Unit_PrimesFinder();
     //    bool seq = test->sequentialDump( 9000);
-    //    //bool rand = test->randomDump( 0, 50);
+    //    bool rand = test->randomDump( 0, 50);
     //    bool reader = false;
     //    reader &= test->readSequentialDump_nextRec( 60);
     //    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-    //        23
-    //        ,915 // there must be room for just one record Prime<100.
-    //     );
+    //    23
+    //    ,915 // there must be room for just one record Prime<100.
+    //    );
     //    //    for( int c=0; c<61; c++)
     //    //    {// next Rec
     //    //        reader &= test->readSequentialDump_nextRec(c);
@@ -75,6 +50,31 @@ int main()
     //    //         );
     //    //    }// array of Rec
     //    delete test;
+    //------Unit Test-----------------------------------------------------
+    //
+    //------Unit Test-----CANTIERE------------------------------------------------
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
+    //size_t ulong_size = sizeof( unsigned long long);
+    bool seq = test->sequentialDump( 9000);
+    //bool rand = test->randomDump( 0, 50);
+    bool reader = false;
+    reader &= test->readSequentialDump_nextRec( 60);
+    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+        23
+        ,915 // there must be room for just one record Prime<100.
+     );
+    for( int c=0; c<61; c++)
+    {// next Rec
+        reader &= test->readSequentialDump_nextRec(c);
+    }
+    for( int c=0; c<61; c++)
+    {// array of Rec
+        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+            c
+            ,c+915 // there must be room for just one record Prime<100.
+         );
+    }// array of Rec
+    delete test;
     //------Unit Test-----------------------------------------------------
 
 
