@@ -27,10 +27,10 @@ class Primes
     };
      struct AsinglePointInStream
      {
-         long long Ordinal;
-         long long Prime;
-         long long startPositionOfRecord;
-         long long endPositionOfRecord;
+         unsigned long long Ordinal;
+         unsigned long long Prime;
+         unsigned long long startPositionOfRecord;
+         unsigned long long endPositionOfRecord;
      };
     /// Ctor
     Primes();// no more hiding of empty Ctor.
@@ -40,6 +40,7 @@ class Primes
 	bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight );
     bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
     bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
+    unsigned long long operator[]( unsigned long long desiredOrdinal);
 
 	private:
     /// Data
@@ -66,7 +67,7 @@ class Primes
     void createOrAppend( const std::string & fullPath);
     const char * lastRecordReaderByChar( const std::string & fullPath);
     const char * newDeal_dumpTailReaderByChar( const std::string & fullPath);
-    Primes::DumpElement * newDeal_recoverLastRecord( const char * dumpTail);
+    DumpElement * newDeal_recoverLastRecord( const char * dumpTail);
     // newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
     DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality);
     // newDeal : state of the art.
@@ -76,15 +77,15 @@ class Primes
             ,std::ofstream * appendStream
             ,unsigned long long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
         );
-    Primes::AsinglePointInStream * acquireNextRecord( unsigned long long discriminatingElement_position);
-    Primes::DumpElement * acquireSequenceOfRecord(
+    AsinglePointInStream * acquireNextRecord( unsigned long long discriminatingElement_position);
+    DumpElement * acquireSequenceOfRecord(
         unsigned long long discriminatingElement_position
         , unsigned long long until_position
         , int * howMany_RecordInSequence
                                             );
-    void Bisection( unsigned long requiredOrdinal , int sogliaDistanza );
-    //  IntegerDecomposition : the Fundamental Thm of Arithmetic.
-    //SingleFactor * IntegerDecomposition( const unsigned long long dividend);
+    void Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza );
+    // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
+    SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 
 };// class
 

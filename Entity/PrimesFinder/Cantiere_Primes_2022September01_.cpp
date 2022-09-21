@@ -17,6 +17,12 @@ namespace Cantiere_Primes_2022September01_
 // empty Ctor : reads both the sequentialFile and randomFile fullpath
 Primes::Primes( )
 {
+    this->memoryMappedDump = new std::map<unsigned long long, unsigned long long>();
+    if( nullptr==this->memoryMappedDump)
+    {
+        this->isHealthlyConstructed = false;
+        this->canOperate = true;// can operate even without memoty mapped data.
+    }
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     //---start sequential_file treatment
     this->feedDumpPath();// SEQUENTIAL : default section, in default file.
@@ -269,6 +275,11 @@ const char * Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile
     /// Dtor()
     Primes::~Primes()
     {/// Dtor() : closes the append_handle.
+        if( nullptr != this->memoryMappedDump)
+        {
+            delete this->memoryMappedDump;
+            this->memoryMappedDump = nullptr;// not dangling.
+        }// else already nulled.
 //        if( nullptr != this->sequentialDumpPath )
 //        {
 //            delete[] this->sequentialDumpPath;
@@ -367,8 +378,8 @@ const char * Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
 
 
 
-/*  IntegerDecomposition : the Fundamental Thm of Arithmetic.
-SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
+//  IntegerDecomposition : the Fundamental Thm of Arithmetic.
+Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
 {
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
@@ -381,7 +392,7 @@ SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
         factorization[c].factorMultiplicity = 0;
     }
     // TODO readRange( 1, ordinaleStimato);
-    unsigned long long * involvedPrimes = new unsigned long[ordinaleStimato];
+    unsigned long long * involvedPrimes = new unsigned long long[ordinaleStimato];
     for(int c=0; c<ordinaleStimato; c++)
     {
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
@@ -441,7 +452,7 @@ SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
     // ready.
     return factorization_srk_;// NB. the caller has to delete.
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
-*/
+
 
 Primes::DumpElement * Primes::newDeal_recoverLastRecord( const char * dumpTail)
 {
@@ -732,32 +743,43 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
 }// acquireSequenceOfRecord
 
 
-/*
-void Bisection( unsigned long requiredOrdinal , int sogliaDistanza )
+
+void Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza )
  {
+    std::ios::pos_type left;
+    std::ios::pos_type right;
+    left = 0;
+    this->sharedReader->seekg( -1, std::ios::end);
+    std::ios::pos_type dumpSize = this->sharedReader->tellg();
+    right = dumpSize;
     for (;;)// TODO
     {
-        std::iostream::pos_type filesize = this->sharedReader->tellg();// TODO considerare estremi correnti
-        std::iostream::pos_type discriminatingElement_position = filesize/2; // divisione intera
-        UnderTest::Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
-//        // compare
-//        if( nextRecord->ordinal < requiredOrdinal)
-//        {
-//            left = acquireNextRecord_end;
-//            right = filesize;
-//        }
-//        else if( nextRecord->ordinal > requiredOrdinal)
-//        {
-//            left = 0;
-//            right = acquireNextRecord_start;
-//        }
-//        else if( nextRecord->ordinal == requiredOrdinal)
-//        {
-//            found -> exit (i.e. break)
-//        }
+        std::iostream::pos_type discriminatingElement_position = dumpSize/2; // divisione intera
+        Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
+        // compare
+        if( nextRecord->Ordinal < requiredOrdinal)
+        {
+            left = nextRecord->endPositionOfRecord;  //acquireNextRecord_end;
+            right = dumpSize;
+        }
+        else if( nextRecord->Ordinal > requiredOrdinal)
+        {
+            left = 0;
+            right = nextRecord->startPositionOfRecord; // acquireNextRecord_start;
+        }
+        else if( nextRecord->Ordinal == requiredOrdinal)
+        {
+            std::pair<unsigned long long, unsigned long long> p(nextRecord->Ordinal,nextRecord->Prime);
+            this->memoryMappedDump->insert( p);
+            //found -> exit (i.e. break)
+        }
     }// for
  }// Bisection
-*/
+
+unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
+{
+    return 0;// TODO
+}
 
 }// namespace Cantiere_Primes_2022September01_
 
