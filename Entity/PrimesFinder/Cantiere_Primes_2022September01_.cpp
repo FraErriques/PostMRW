@@ -742,28 +742,55 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     return sequenceRecord;// caller has to delete.
 }// acquireSequenceOfRecord
 
-
+bool Primes::MoveToMap(
+    unsigned long long      discriminatingElement_position
+    , unsigned long long    until_position
+    , int *                 howMany_RecordInSequence
+               )
+{
+    Primes::DumpElement * tmpStorage = acquireSequenceOfRecord(
+         discriminatingElement_position
+         ,until_position
+         ,howMany_RecordInSequence
+        );
+    // std::move()
+    //std::pair<unsigned long long, unsigned long long> OrdinalPrime(1,2);
+    std::pair<unsigned long long, unsigned long long> OrdinalPrime(
+        std::move( tmpStorage[0].ordinal)
+        ,std::move( tmpStorage[0].prime)  // TODO
+     );// TODO
+    return false;// TODO
+}// MoveToMap
 
 void Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza )
  {
-    std::ios::pos_type left;
-    std::ios::pos_type right;
-    left = 0;
+    std::ios::pos_type left = 0;
     this->sharedReader->seekg( -1, std::ios::end);
     std::ios::pos_type dumpSize = this->sharedReader->tellg();
-    right = dumpSize;
+    std::ios::pos_type right = dumpSize;
+    std::ios::pos_type discriminatingElement_position = dumpSize/2; // divisione intera
+    long long signedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
+    unsigned long long UNsignedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
+    Primes::AsinglePointInStream * nextRecord = nullptr;
+    //
     for (;;)// TODO
-    {
-        std::iostream::pos_type discriminatingElement_position = dumpSize/2; // divisione intera
-        Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
+    {   // acquire the first record, successive to the offset "discriminatingElement_position"
+        nextRecord = acquireNextRecord( discriminatingElement_position);
         // compare
-        if( nextRecord->Ordinal < requiredOrdinal)
+        signedDelta = nextRecord->Ordinal - requiredOrdinal;
+        UNsignedDelta = abs( signedDelta);
+        if( UNsignedDelta <= sogliaDistanza)
         {
+            // linear acquisition & move&& to map<>
+        }
+        // decide wether to retain left or right half
+        if( signedDelta < 0) // nextRecord->Ordinal < requiredOrdinal)
+        {// retain right
             left = nextRecord->endPositionOfRecord;  //acquireNextRecord_end;
             right = dumpSize;
         }
-        else if( nextRecord->Ordinal > requiredOrdinal)
-        {
+        else if( signedDelta > 0) // nextRecord->Ordinal > requiredOrdinal)
+        {// retain left
             left = 0;
             right = nextRecord->startPositionOfRecord; // acquireNextRecord_start;
         }
@@ -772,7 +799,7 @@ void Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
             std::pair<unsigned long long, unsigned long long> p(nextRecord->Ordinal,nextRecord->Prime);
             this->memoryMappedDump->insert( p);
             //found -> exit (i.e. break)
-        }
+        }// no other else possible.
     }// for
  }// Bisection
 
