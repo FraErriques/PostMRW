@@ -382,7 +382,7 @@ SingleFactor * PrimesFinder::Primes::IntegerDecomposition( const unsigned long l
         factorization[c].factorMultiplicity = 0;
     }
     // TODO readRange( 1, ordinaleStimato);
-    unsigned long long * involvedPrimes = new unsigned long[ordinaleStimato];
+    unsigned long long * involvedPrimes = new unsigned long long[ordinaleStimato];
     for(int c=0; c<ordinaleStimato; c++)
     {
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.

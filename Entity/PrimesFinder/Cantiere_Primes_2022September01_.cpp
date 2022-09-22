@@ -393,7 +393,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
     }
     // TODO readRange( 1, ordinaleStimato);
     unsigned long long * involvedPrimes = new unsigned long long[ordinaleStimato];
-    for(int c=0; c<ordinaleStimato; c++)
+    for(unsigned long long c=0; c<ordinaleStimato; c++)
     {
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
     }// end filling up the candidate prime-factor array.
@@ -742,6 +742,13 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     return sequenceRecord;// caller has to delete.
 }// acquireSequenceOfRecord
 
+
+template<typename It>
+void printInsertionStatus(It it, bool success)
+{
+    std::cout << "Insertion of " << it->first << (success ? " succeeded\n" : " failed\n");
+}
+
 bool Primes::MoveToMap(
     unsigned long long      discriminatingElement_position
     , unsigned long long    until_position
@@ -766,7 +773,8 @@ bool Primes::MoveToMap(
             );// TODO
     if(0==this->memoryMappedDump->count(OrdinalPrime.first))// which means the key is NOT present
     {
-        this->memoryMappedDump->insert( OrdinalPrime);// >assign( OrdinalPrime->second);
+        const auto [it_hinata, success] = this->memoryMappedDump->insert( OrdinalPrime);// >assign( OrdinalPrime->second);
+        printInsertionStatus(it_hinata, success);
     }// else skip existing Ordinal.
     }//for
     // clean the pointer, to not let it dangling, but do not delete, since the pointee
@@ -782,21 +790,41 @@ void Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     this->sharedReader->seekg( -1, std::ios::end);
     std::ios::pos_type dumpSize = this->sharedReader->tellg();
     std::ios::pos_type right = dumpSize;
-    std::ios::pos_type discriminatingElement_position = dumpSize/2; // divisione intera
+    std::ios::pos_type discriminatingElement_position;// in "for", divisione intera.
     long long signedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
     unsigned long long UNsignedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
     Primes::AsinglePointInStream * nextRecord = nullptr;
     //
     for (;;)// TODO
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
+        discriminatingElement_position = (right-left)/2; // divisione intera
         nextRecord = acquireNextRecord( discriminatingElement_position);
         // compare
         signedDelta = nextRecord->Ordinal - requiredOrdinal;
         UNsignedDelta = abs( signedDelta);
         if( UNsignedDelta <= sogliaDistanza)
-        {
-            // linear acquisition & move&& to map<>
-        }
+        {// linear acquisition & move&& to map<>
+            //log-size-for category.
+            int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
+            // signed:(+)means landed right of obj
+            // signed:(-)means landed left of obj
+            std::ios::pos_type distance_from_Target_bytes = signedDelta * currentRecordLength;
+            // the minus sign in next statement is understandable by means of the previous two comments.
+            std::ios::pos_type extimated_target_position_bytes =
+                discriminatingElement_position - distance_from_Target_bytes;
+            // grab an interval centered in extimated_target and wide twise threshold
+            std::ios::pos_type beg_RecArray = extimated_target_position_bytes -currentRecordLength*sogliaDistanza;
+            std::ios::pos_type end_RecArray = extimated_target_position_bytes +currentRecordLength*sogliaDistanza;
+            int howManyRecordInSequence;
+            bool moveResult =
+                MoveToMap(
+                  beg_RecArray
+                  ,end_RecArray
+                  , &howManyRecordInSequence
+                 );// NB. the temporary array gets created and moved within the callee MoveToMap(). Nothing left here.
+            break;//found within threshold -> exit (i.e. break)
+        }//if( UNsignedDelta <= sogliaDistanza) i.e. if within threshold
+        // else continue Bisection:
         // decide wether to retain left or right half
         if( signedDelta < 0) // nextRecord->Ordinal < requiredOrdinal)
         {// retain right
@@ -812,13 +840,22 @@ void Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
         {
             std::pair<unsigned long long, unsigned long long> p(nextRecord->Ordinal,nextRecord->Prime);
             this->memoryMappedDump->insert( p);
-            //found -> exit (i.e. break)
+            break;//found -> exit (i.e. break)
         }// no other else possible.
     }// for
  }// Bisection
 
 unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
 {
+    if(+1==this->memoryMappedDump->count( desiredOrdinal))// which means te key is present
+    {//if(nullptr!=(*dictionary).operator[]( requiredkey)) DON'T :this inserts a new pair.
+        return this->memoryMappedDump->at( desiredOrdinal);//NB. right way to search the value of a key.
+        //(*dictionary).operator[]( requiredkey)->internalPrint(); do NOT use operator[] ,which is a writer.
+    }// else skip, since the required key is absent in the map.
+    else
+    {
+        std::cout<<"\n\n\t Key not found \n\n";
+    }
     return 0;// TODO
 }
 

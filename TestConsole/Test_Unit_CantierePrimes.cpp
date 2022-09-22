@@ -50,6 +50,7 @@ bool Test_Unit_CantierePrimes::readSequentialDump_nextRec( long long acquireReco
         std::cout<<"\n\t Test_Unit_CantierePrimes::readSequentialDump_nextRec FAILED!";
         std::cout<<"\n\t Offset parameter seems to be incompatible with the stream. \n";
     }
+    return readSequentialDump_nextRec_outcome;
 }// readSequentialDump_nextRec
 
 bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
@@ -62,4 +63,5 @@ bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( long long
         std::cout<<"\n\t Test_Unit_CantierePrimes::readSequentialDump_nextRec FAILED!";
         std::cout<<"\n\t Offset parameter(s) seem to be incompatible with the stream. \n";
     }
+    return readSequentialDump_arrayOfRec_anywhere_outcome;
 }//readSequentialDump_arrayOfRec_anywhere

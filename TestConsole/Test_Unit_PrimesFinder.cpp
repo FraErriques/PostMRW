@@ -53,6 +53,7 @@ bool Test_Unit_PrimesFinder::readSequentialDump_nextRec( long long acquireRecord
         std::cout<<"\n\t Test_Unit_PrimesFinder::readSequentialDump_nextRec FAILED!";
         std::cout<<"\n\t Offset parameter seems to be incompatible with the stream. \n";
     }
+    return readSequentialDump_nextRec_outcome;
 }// readSequentialDump_nextRec
 
 bool Test_Unit_PrimesFinder::readSequentialDump_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
@@ -65,4 +66,5 @@ bool Test_Unit_PrimesFinder::readSequentialDump_arrayOfRec_anywhere( long long r
         std::cout<<"\n\t Test_Unit_PrimesFinder::readSequentialDump_nextRec FAILED!";
         std::cout<<"\n\t Offset parameter(s) seem to be incompatible with the stream. \n";
     }
+    return readSequentialDump_arrayOfRec_anywhere_outcome;
 }//readSequentialDump_arrayOfRec_anywhere
