@@ -748,17 +748,31 @@ bool Primes::MoveToMap(
     , int *                 howMany_RecordInSequence
                )
 {
+    bool res = true;
     Primes::DumpElement * tmpStorage = acquireSequenceOfRecord(
          discriminatingElement_position
          ,until_position
          ,howMany_RecordInSequence
         );
-    // std::move()
-    //std::pair<unsigned long long, unsigned long long> OrdinalPrime(1,2);
-    std::pair<unsigned long long, unsigned long long> OrdinalPrime(
-        std::move( tmpStorage[0].ordinal)
-        ,std::move( tmpStorage[0].prime)  // TODO
-     );// TODO
+    if( nullptr==tmpStorage)
+    {
+        return false;
+    }//else continue.
+    for( int c=0; c< (*howMany_RecordInSequence); c++)
+    {// std::move() from array[] to map<>
+        std::pair<unsigned long long, unsigned long long> OrdinalPrime(
+            std::move( tmpStorage[c].ordinal)
+            ,std::move( tmpStorage[c].prime)  // TODO test!
+            );// TODO
+    if(0==this->memoryMappedDump->count(OrdinalPrime.first))// which means the key is NOT present
+    {
+        this->memoryMappedDump->insert( OrdinalPrime);// >assign( OrdinalPrime->second);
+    }// else skip existing Ordinal.
+    }//for
+    // clean the pointer, to not let it dangling, but do not delete, since the pointee
+    // hase ben moved::.
+    tmpStorage = nullptr;
+    //
     return false;// TODO
 }// MoveToMap
 
