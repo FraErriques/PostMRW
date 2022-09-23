@@ -386,7 +386,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
     unsigned long long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
-    for(int c=0; c<ordinaleStimato; c++)
+    for( unsigned long long c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
         factorization[c].factorBase = 0;
         factorization[c].factorMultiplicity = 0;
@@ -797,11 +797,11 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
         res = false;
         return res;
     }
-    std::ios::pos_type left = 0;
+    unsigned long long left = 0;
     this->sharedReader->seekg( -1, std::ios::end);
     std::ios::pos_type dumpSize = this->sharedReader->tellg();
-    std::ios::pos_type right = dumpSize;
-    std::ios::pos_type discriminatingElement_position;// in "for", divisione intera.
+    unsigned long long right = dumpSize;
+    unsigned long long discriminatingElement_position;// in "for", divisione intera.
     long long signedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
     unsigned long long UNsignedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
     Primes::AsinglePointInStream * nextRecord = nullptr;
@@ -809,6 +809,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     for (;;)// TODO
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
         discriminatingElement_position = (right-left)/2; // divisione intera
+        this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
         nextRecord = acquireNextRecord( discriminatingElement_position);
         // compare
         signedDelta = nextRecord->Ordinal - requiredOrdinal;
@@ -816,16 +817,16 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
         if( UNsignedDelta <= sogliaDistanza)
         {// linear acquisition & move&& to map<>
             //log-size-for category.
-            int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
+            unsigned long long currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
             // signed:(+)means landed right of obj
             // signed:(-)means landed left of obj
-            std::ios::pos_type distance_from_Target_bytes = signedDelta * currentRecordLength;
+            long long  distance_from_Target_bytes = signedDelta * currentRecordLength;
             // the minus sign in next statement is understandable by means of the previous two comments.
-            std::ios::pos_type extimated_target_position_bytes =
+            unsigned long long extimated_target_position_bytes =
                 discriminatingElement_position - distance_from_Target_bytes;
             // grab an interval centered in extimated_target and wide twise threshold
-            std::ios::pos_type beg_RecArray = extimated_target_position_bytes -currentRecordLength*sogliaDistanza;
-            std::ios::pos_type end_RecArray = extimated_target_position_bytes +currentRecordLength*sogliaDistanza;
+            unsigned long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*sogliaDistanza;
+            unsigned long long end_RecArray = extimated_target_position_bytes +currentRecordLength*sogliaDistanza;
             int howManyRecordInSequence;
             bool moveResult =
                 MoveToMap(

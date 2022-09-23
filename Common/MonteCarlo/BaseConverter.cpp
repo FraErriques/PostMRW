@@ -41,7 +41,8 @@ BaseConverter::BaseConverter( bool wantShowDbg)
     }// else skip.
     //
     this->base64Map = new std::map<char,int>();
-    for( int c=0; c<base64Figures->size(); c++)
+    std::size_t stringLength = base64Figures->size();
+    for( int c=0; c<(int)stringLength; c++)
     {// build the map.
         (*(this->base64Map))[(*(this->base64Figures))[c]]= c;// al carattere che occupa la posizione di indice "c" spetta il valore c.
     }// end for build map.
