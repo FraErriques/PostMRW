@@ -813,10 +813,15 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     for (;;)// TODO
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
         discriminatingElement_position = (right-left)/2; // divisione intera
-    std::string discriminatingElement_position_str( *Common::StrManipul::uLongLongToString( discriminatingElement_position) );
-    Common::LogWrappers::SectionContent( ("discriminatingElement_position == " + discriminatingElement_position_str).c_str() , 0);
+        //discriminatingElement_position += left;// TODO test adapt to actual offset.
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "discriminatingElement_position ==", discriminatingElement_position, 0);
         this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
         nextRecord = acquireNextRecord( discriminatingElement_position);
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "nextRecord->Prime ==", nextRecord->Prime, 0);
         // compare
         signedDelta = nextRecord->Ordinal - requiredOrdinal;
         UNsignedDelta = abs( signedDelta);
@@ -826,13 +831,17 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
             unsigned long long currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
             // signed:(+)means landed right of obj
             // signed:(-)means landed left of obj
-            long long  distance_from_Target_bytes = signedDelta * currentRecordLength;
+            long long  distance_from_Target_bytes = signedDelta * (currentRecordLength+2);// TODO +1 Unix
             // the minus sign in next statement is understandable by means of the previous two comments.
             unsigned long long extimated_target_position_bytes =
                 discriminatingElement_position - distance_from_Target_bytes;
             // grab an interval centered in extimated_target and wide twise threshold
             unsigned long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*sogliaDistanza;
             unsigned long long end_RecArray = extimated_target_position_bytes +currentRecordLength*sogliaDistanza;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "beg_RecArray ==", beg_RecArray, 0);
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "end_RecArray ==", end_RecArray, 0);
             int howManyRecordInSequence;
             bool moveResult =
                 MoveToMap(
@@ -840,6 +849,8 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
                   ,end_RecArray
                   , &howManyRecordInSequence
                  );// NB. the temporary array gets created and moved within the callee MoveToMap(). Nothing left here.
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "howManyRecordInSequence ==", howManyRecordInSequence, 0);
             break;//found within threshold -> exit (i.e. break)
         }//if( UNsignedDelta <= sogliaDistanza) i.e. if within threshold
         // else continue Bisection:
@@ -894,7 +905,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
     else // zero returned by queryMap means key-absent.
     {// try to feed the Map.
         this->Bisection( desiredOrdinal
-                        , 2 // soglia distanza TODO : test
+                        , 105 // soglia distanza TODO : test
                 );
     }
     // try again to ask the Map, after feeding it.

@@ -33,7 +33,7 @@ int main()
     //size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 9000);
     //bool rand = test->randomDump( 0, 50);
-    bool reader = test->readBy_OperatorSquares( 5);// ask Prime[n]
+    bool reader = test->readBy_OperatorSquares( 170);// ask Prime[n]
     //bool reader;
 //    reader = test->readSequentialDump_nextRec( 60);
 //    reader &= test->readSequentialDump_arrayOfRec_anywhere(

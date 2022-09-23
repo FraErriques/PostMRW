@@ -43,6 +43,14 @@ namespace Common
         return *this;// return a reference to the whole StringBuilder class, which contains both the main and the scratch buffers, in form of std::string.
     }// end StringBuilder::append.
 
+// overload to append an unsigned long long (i.e. 64bit unsigned).
+StringBuilder & StringBuilder::append(unsigned long long Ull)
+{
+    std::string * unsignedLongLong_str = StrManipul::uLongLongToString( Ull);
+    this->append( *unsignedLongLong_str);
+    delete unsignedLongLong_str;
+}// append(unsigned long long Ull)
+
 
     // metodo che fornisce la rattresentazione stringa dello StringBuilder:
     // tale rappresentazione consiste nel portare nel buffer primario tutto cio' che e' in attesa di accodamento (i.e. main.append(scratch)

@@ -19,6 +19,15 @@ namespace Common
         void SectionOpen_multiMessage(std::vector<std::string> &messageArray, int sectionVerbosity);
         void SectionContent_multiMessage(std::vector<std::string> &messageArray, int sectionVerbosity);
         // the Close is Always atomic, since it takes no parameters.
+        //
+        void SectionContent_variable_name_value(
+                std::string &variable_name
+                ,unsigned long long variable_value
+                ,int sectionVerbosity         );
+        void SectionContent_variable_name_value(
+                const char *variable_name
+                ,unsigned long long variable_value
+                ,int sectionVerbosity         );
 
     }// END namespace LogWrappers
 }// END namespace Common
