@@ -786,6 +786,7 @@ bool Primes::MoveToMap(
 
 bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza )
  {
+    Common::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
     if( nullptr != this->sharedReader)
@@ -795,12 +796,15 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     else
     {// cannot operate.
         res = false;
+        Common::LogWrappers::SectionContent("the SharedReader is NULL.", 0);
         return res;
     }
     unsigned long long left = 0;
     this->sharedReader->seekg( -1, std::ios::end);
     std::ios::pos_type dumpSize = this->sharedReader->tellg();
     unsigned long long right = dumpSize;
+    std::string dumpSize_str( *Common::StrManipul::uLongLongToString( dumpSize) );
+    Common::LogWrappers::SectionContent( ("dumpSize == " + dumpSize_str).c_str() , 0);
     unsigned long long discriminatingElement_position;// in "for", divisione intera.
     long long signedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
     unsigned long long UNsignedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
@@ -809,6 +813,8 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     for (;;)// TODO
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
         discriminatingElement_position = (right-left)/2; // divisione intera
+    std::string discriminatingElement_position_str( *Common::StrManipul::uLongLongToString( discriminatingElement_position) );
+    Common::LogWrappers::SectionContent( ("discriminatingElement_position == " + discriminatingElement_position_str).c_str() , 0);
         this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
         nextRecord = acquireNextRecord( discriminatingElement_position);
         // compare
@@ -859,6 +865,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     this->sharedReader->close();
     delete this->sharedReader;
     this->sharedReader = nullptr;
+    Common::LogWrappers::SectionClose();
     // ready
     return res;
  }// Bisection
@@ -887,7 +894,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
     else // zero returned by queryMap means key-absent.
     {// try to feed the Map.
         this->Bisection( desiredOrdinal
-                        , 10 // soglia distanza TODO : test
+                        , 2 // soglia distanza TODO : test
                 );
     }
     // try again to ask the Map, after feeding it.

@@ -33,24 +33,24 @@ int main()
     //size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 9000);
     //bool rand = test->randomDump( 0, 50);
-    bool reader = test->readBy_OperatorSquares( 20);// ask Prime[20]
+    bool reader = test->readBy_OperatorSquares( 5);// ask Prime[n]
     //bool reader;
-    reader = test->readSequentialDump_nextRec( 60);
-    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        23
-        ,915 // there must be room for just one record Prime<100.
-     );
-    for( int c=0; c<61; c++)
-    {// next Rec
-        reader &= test->readSequentialDump_nextRec(c);
-    }
-    for( int c=0; c<61; c++)
-    {// array of Rec
-        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-            c
-            ,c+915 // there must be room for just one record Prime<100.
-         );
-    }// array of Rec
+//    reader = test->readSequentialDump_nextRec( 60);
+//    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//        23
+//        ,915 // there must be room for just one record Prime<100.
+//     );
+//    for( int c=0; c<61; c++)
+//    {// next Rec
+//        reader &= test->readSequentialDump_nextRec(c);
+//    }
+//    for( int c=0; c<61; c++)
+//    {// array of Rec
+//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//            c
+//            ,c+915 // there must be room for just one record Prime<100.
+//         );
+//    }// array of Rec
     delete test;
     //------Unit Test-----CANTIERE---------------------------------------------------
     //
