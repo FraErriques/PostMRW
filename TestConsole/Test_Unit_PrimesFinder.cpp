@@ -42,7 +42,7 @@ bool Test_Unit_PrimesFinder::randomDump( unsigned long long infLeft, unsigned lo
     return testResult;
 }// randomDump
 
-bool Test_Unit_PrimesFinder::readSequentialDump_nextRec( long long acquireRecordNextToOffset)
+bool Test_Unit_PrimesFinder::readSequentialDump_nextRec( unsigned long long acquireRecordNextToOffset)
 {
     bool readSequentialDump_nextRec_outcome =
      this->tested_Class->ReadSequentialDumpInterface_nextRec(
@@ -56,7 +56,7 @@ bool Test_Unit_PrimesFinder::readSequentialDump_nextRec( long long acquireRecord
     return readSequentialDump_nextRec_outcome;
 }// readSequentialDump_nextRec
 
-bool Test_Unit_PrimesFinder::readSequentialDump_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
+bool Test_Unit_PrimesFinder::readSequentialDump_arrayOfRec_anywhere( unsigned long long recArray_seek_START, unsigned long long recArray_seek_END)
 {
     bool readSequentialDump_arrayOfRec_anywhere_outcome =
      this->tested_Class->ReadSequentialDumpInterface_arrayOfRec_anywhere(

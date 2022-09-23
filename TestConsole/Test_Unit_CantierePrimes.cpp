@@ -39,7 +39,7 @@ bool Test_Unit_CantierePrimes::randomDump( unsigned long long infLeft, unsigned 
     return testResult;
 }// randomDump
 
-bool Test_Unit_CantierePrimes::readSequentialDump_nextRec( long long acquireRecordNextToOffset)
+bool Test_Unit_CantierePrimes::readSequentialDump_nextRec( unsigned long long acquireRecordNextToOffset)
 {
     bool readSequentialDump_nextRec_outcome =
      this->tested_Class->ReadSequentialDumpInterface_nextRec(
@@ -53,7 +53,7 @@ bool Test_Unit_CantierePrimes::readSequentialDump_nextRec( long long acquireReco
     return readSequentialDump_nextRec_outcome;
 }// readSequentialDump_nextRec
 
-bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
+bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( unsigned long long recArray_seek_START, unsigned long long recArray_seek_END)
 {
     bool readSequentialDump_arrayOfRec_anywhere_outcome =
      this->tested_Class->ReadSequentialDumpInterface_arrayOfRec_anywhere(
@@ -65,3 +65,13 @@ bool Test_Unit_CantierePrimes::readSequentialDump_arrayOfRec_anywhere( long long
     }
     return readSequentialDump_arrayOfRec_anywhere_outcome;
 }//readSequentialDump_arrayOfRec_anywhere
+
+bool Test_Unit_CantierePrimes::readBy_OperatorSquares( unsigned long long desiredOrdinal)
+{
+    bool Test_Unit_CantierePrimes_readBy_OperatorSquares = false;
+
+    Test_Unit_CantierePrimes_readBy_OperatorSquares = (
+        0 != (*(this->tested_Class)).operator[]( desiredOrdinal)
+                                                       );
+    return Test_Unit_CantierePrimes_readBy_OperatorSquares;
+}// Test_Unit_CantierePrimes::readBy_OperatorSquares

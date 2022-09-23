@@ -88,7 +88,8 @@ class Primes
         , unsigned long long    until_position
         , int *                 howMany_RecordInSequence
                    );
-    void Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza );
+    unsigned long long queryMap( unsigned long long desiredOrdinal);
+    bool Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza );
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 

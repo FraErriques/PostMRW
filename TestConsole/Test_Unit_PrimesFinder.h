@@ -17,9 +17,9 @@ class Test_Unit_PrimesFinder
         /** call the randomDump_Interface       */
         bool randomDump( unsigned long long infLeft, unsigned long long maxRight );
         /** read the scalar LAST record {Ordinal,Prime} from sequentialDump */
-        bool readSequentialDump_nextRec( long long acquireRecordNextToOffset);
+        bool readSequentialDump_nextRec( unsigned long long acquireRecordNextToOffset);
         /** read an array of record {Ordinal,Prime} from sequentialDump */
-        bool readSequentialDump_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
+        bool readSequentialDump_arrayOfRec_anywhere( unsigned long long recArray_seek_START, unsigned long long recArray_seek_END);
 
 
         /** Access m_Counter

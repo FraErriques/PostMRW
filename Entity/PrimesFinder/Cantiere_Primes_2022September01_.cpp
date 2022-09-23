@@ -784,8 +784,19 @@ bool Primes::MoveToMap(
     return false;// TODO
 }// MoveToMap
 
-void Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza )
+bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza )
  {
+    bool res = false;
+    this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+    if( nullptr != this->sharedReader)
+    {
+        res = true;
+    }// else stay false.
+    else
+    {// cannot operate.
+        res = false;
+        return res;
+    }
     std::ios::pos_type left = 0;
     this->sharedReader->seekg( -1, std::ios::end);
     std::ios::pos_type dumpSize = this->sharedReader->tellg();
@@ -843,21 +854,50 @@ void Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
             break;//found -> exit (i.e. break)
         }// no other else possible.
     }// for
+    //---close sharedReader
+    this->sharedReader->close();
+    delete this->sharedReader;
+    this->sharedReader = nullptr;
+    // ready
+    return res;
  }// Bisection
 
-unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
-{
+unsigned long long Primes::queryMap( unsigned long long desiredOrdinal)
+{// the Map contains Pairs{Ordinal,Prime}. So the zero is available as error code.
     if(+1==this->memoryMappedDump->count( desiredOrdinal))// which means te key is present
     {//if(nullptr!=(*dictionary).operator[]( requiredkey)) DON'T :this inserts a new pair.
         return this->memoryMappedDump->at( desiredOrdinal);//NB. right way to search the value of a key.
         //(*dictionary).operator[]( requiredkey)->internalPrint(); do NOT use operator[] ,which is a writer.
-    }// else skip, since the required key is absent in the map.
+    }// else return zero, as error-code, since the required key is absent in the map.
     else
-    {
-        std::cout<<"\n\n\t Key not found \n\n";
+    {// else means count==0. In the map count has only the states{0==absent, +1==present}.
+        std::cout<<"\n\n\t Key not found \n\n"; // DBG
+        return 0;
     }
-    return 0;// TODO
-}
+}// queryMap
+
+unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
+{
+    unsigned long long  desiredPrime = this->queryMap( desiredOrdinal);// check if there's already the record in Map.
+    if( 0 != desiredPrime)
+    {
+        return desiredPrime;
+    }
+    else // zero returned by queryMap means key-absent.
+    {// try to feed the Map.
+        this->Bisection( desiredOrdinal
+                        , 10 // soglia distanza TODO : test
+                );
+    }
+    // try again to ask the Map, after feeding it.
+    desiredPrime = this->queryMap( desiredOrdinal);
+    if( 0 == desiredPrime)
+    {
+        std::cout<<"\n\n\t Key not found AGAIN, after feeding it. DEBUG needed: exceptional case. \n\n"; // DBG
+    }// DBG !
+    //
+    return desiredPrime;
+}// operator[]
 
 }// namespace Cantiere_Primes_2022September01_
 
