@@ -21,3 +21,4 @@ log/
 .layout
 .save
 *.log
+TestConsole/*.log
