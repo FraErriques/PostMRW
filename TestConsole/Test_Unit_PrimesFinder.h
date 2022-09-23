@@ -1,15 +1,16 @@
-#ifndef TEST_UNIT_CANTIEREPRIMES_H
-#define TEST_UNIT_CANTIEREPRIMES_H
+#ifndef TEST_UNIT_PRIMESFINDER_H
+#define TEST_UNIT_PRIMESFINDER_H
 
-#include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
+#include "../Entity/PrimesFinder/Primes.h"
 
-class Test_Unit_CantierePrimes
+
+class Test_Unit_PrimesFinder
 {
     public:
         /** Default constructor */
-        Test_Unit_CantierePrimes();
+        Test_Unit_PrimesFinder();
         /** Default destructor */
-        virtual ~Test_Unit_CantierePrimes();
+        virtual ~Test_Unit_PrimesFinder();
 
         /** call the sequentialDump_Interface    */
         bool sequentialDump( unsigned long long untilThreshol);
@@ -18,26 +19,23 @@ class Test_Unit_CantierePrimes
         /** read the scalar LAST record {Ordinal,Prime} from sequentialDump */
         bool readSequentialDump_nextRec( unsigned long long acquireRecordNextToOffset);
         /** read an array of record {Ordinal,Prime} from sequentialDump */
-        bool readSequentialDump_arrayOfRec_anywhere(
-            unsigned long long recArray_seek_START
-            , unsigned long long recArray_seek_END  );
-        /** read by means of operator[] */
-        bool readBy_OperatorSquares( unsigned long long desiredOrdinal );
+        bool readSequentialDump_arrayOfRec_anywhere( unsigned long long recArray_seek_START, unsigned long long recArray_seek_END);
+
 
         /** Access m_Counter
          * \return The current value of m_Counter
          */
-        unsigned int GetCounter() { return m_Counter; }
+        unsigned long long Getm_Counter() { return m_Counter; }
         /** Set m_Counter
          * \param val New value to set
          */
-        void SetCounter(unsigned int val) { m_Counter = val; }
+        void Setm_Counter(unsigned long long val) { m_Counter = val; }
 
     protected:
 
     private:
         unsigned long long m_Counter; //!< Member variable "m_Counter"
-        Cantiere_Primes_2022September01_::Primes * tested_Class;
+        PrimesFinder::Primes * tested_Class;// NB. here we test Entity::PrimesFinder::Primes
 };
 
-#endif // TEST_UNIT_CANTIEREPRIMES_H
+#endif // TEST_UNIT_PRIMESFINDER_H

@@ -23,8 +23,8 @@ public:
     // il buffer temporaneo accumula fino a raggiungimento della propria dimensione (i.e. ScratchSize) e quindi fa flush nel buffer primario. In tale circostanza
     // il buffer temporaneo viene svuotato.
     StringBuilder & append(const std::string & str);
-
     StringBuilder & append(int i); // overload to append the ASCII symbol, which has code i.
+    StringBuilder & append(unsigned long long Ull); // overload to append an unsigned long long (i.e. 64bit unsigned).
 
     // metodo che fornisce la rappresentazione stringa dello StringBuilder:
     // tale rappresentazione consiste nel portare nel buffer primario tutto cio' che e' in attesa

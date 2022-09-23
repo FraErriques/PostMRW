@@ -10,10 +10,15 @@ log/
 *.o
 *.a
 *.exe
+*.bak
 *.dll
 *.*~
 *.depend
 *.layout
+*.cbp
+*.workspace
+*.layout
 *.save
-
+*.log
+TestConsole/*.log
 
