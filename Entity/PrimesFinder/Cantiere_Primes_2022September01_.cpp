@@ -356,7 +356,6 @@ const char * Primes::lastRecordReaderByChar( const std::string & fullPath)
 
 const char * Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
 {
-    const char * sequentialFile_tail = nullptr; //new char[101];// caller has to delete
     std::ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
     int streamSize = lastrecReader.tellg();
@@ -370,7 +369,7 @@ const char * Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
     {
         sb->append(c);
     }
-    sequentialFile_tail = (char *)(sb->str().c_str());// caller has to delete!
+    const char * sequentialFile_tail = (char *)(sb->str().c_str());// caller has to delete!
     // delete sb; NB. this deletion seems to corrupt the "sequentialFile_tail" return value. TODO TODO std::move
     lastrecReader.close();
     // ready.
@@ -751,12 +750,13 @@ void printInsertionStatus(It it, bool success)
 }
 
 bool Primes::MoveToMap(
-    unsigned long long      discriminatingElement_position
-    , unsigned long long    until_position
+    long long      discriminatingElement_position
+    , long long    until_position
     , int *                 howMany_RecordInSequence
                )
 {
     bool res = true;
+    this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
     Primes::DumpElement * tmpStorage = acquireSequenceOfRecord(
          discriminatingElement_position
          ,until_position
@@ -806,15 +806,14 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     unsigned long long right = dumpSize;
     std::string dumpSize_str( *Common::StrManipul::uLongLongToString( dumpSize) );
     Common::LogWrappers::SectionContent( ("dumpSize == " + dumpSize_str).c_str() , 0);
-    unsigned long long discriminatingElement_position;// in "for", divisione intera.
+    long long discriminatingElement_position;// let it signed, to avoid overflows.
     long long signedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
-    unsigned long long UNsignedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
+    long UNsignedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
     Primes::AsinglePointInStream * nextRecord = nullptr;
     //
     for (;;)// TODO
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
         discriminatingElement_position = (right-left)/2; // divisione intera
-        //discriminatingElement_position += left;// TODO test adapt to actual offset.
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position ==", discriminatingElement_position, 0);
         this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
@@ -829,16 +828,20 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
         if( UNsignedDelta <= sogliaDistanza)
         {// linear acquisition & move&& to map<>
             //log-size-for category.
-            unsigned long long currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
+            int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
             // signed:(+)means landed right of obj
             // signed:(-)means landed left of obj
             long long  distance_from_Target_bytes = signedDelta * (currentRecordLength+2);// TODO +1 Unix
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "distance_from_Target_bytes ==", distance_from_Target_bytes, 0);
             // the minus sign in next statement is understandable by means of the previous two comments.
-            unsigned long long extimated_target_position_bytes =
+            long long extimated_target_position_bytes =
                 discriminatingElement_position - distance_from_Target_bytes;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "extimated_target_position_bytes ==", extimated_target_position_bytes, 0);
             // grab an interval centered in extimated_target and wide twise threshold
-            unsigned long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*sogliaDistanza;
-            unsigned long long end_RecArray = extimated_target_position_bytes +currentRecordLength*sogliaDistanza;
+            long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*sogliaDistanza;
+            long long end_RecArray = extimated_target_position_bytes +currentRecordLength*sogliaDistanza;
             Common::LogWrappers::SectionContent_variable_name_value(
                 "beg_RecArray ==", beg_RecArray, 0);
             Common::LogWrappers::SectionContent_variable_name_value(
@@ -847,7 +850,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
             bool moveResult =
                 MoveToMap(
                   beg_RecArray
-                  ,end_RecArray
+                  , end_RecArray
                   , &howManyRecordInSequence
                  );// NB. the temporary array gets created and moved within the callee MoveToMap(). Nothing left here.
             Common::LogWrappers::SectionContent_variable_name_value(
@@ -915,6 +918,10 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
     {
         std::cout<<"\n\n\t Key not found AGAIN, after feeding it. DEBUG needed: exceptional case. \n\n"; // DBG
     }// DBG !
+    else
+    {
+        std::cout<<"\n\n\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime <<"\n\n"; // DBG
+    }// DBG !    
     //
     return desiredPrime;
 }// operator[]

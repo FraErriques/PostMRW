@@ -48,10 +48,12 @@ int main()
     bool seq = test->sequentialDump( 99000);
     bool rand = test->randomDump( 1000, 1050);
     bool reader = test->readBy_OperatorSquares( 170);// ask Prime[n]
+    std::cout<<"\n\n\n\t Strike Enter to continue\t";
+    getchar();
     //bool reader;
     reader = test->readSequentialDump_nextRec( 60);
     reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        23
+        0
         ,915 // there must be room for just one record Prime<100.
      );
     for( int c=0; c<61; c++)
