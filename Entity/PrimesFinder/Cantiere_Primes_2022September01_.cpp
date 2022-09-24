@@ -103,7 +103,7 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
     this->append_Sequential_Stream->close();
     delete this->append_Sequential_Stream;
     this->append_Sequential_Stream = nullptr;
-    delete[] stringDumpTail;
+    delete stringDumpTail;
     delete lastRec;
     // ready.
     return hasSequentialDumpBeenReset;
@@ -264,11 +264,11 @@ const char * Primes::feed_CustomDumpPath() // non const
 const char * Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 {
     const char *  res = nullptr;
-    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for  in this file.
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All in this file.
     const std::string * desiredSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
     res = desiredSectionContent->c_str();
     delete primeNamedConfig;
-//delete desiredSectionContent;  TODO study how to delete it.
+    //delete desiredSectionContent; NB. this deletion seems to corrupt the "res" return value. TODO std::move
     return res;// caller has to delete.
 }// getPrimeDumpFullPath
 
@@ -356,7 +356,7 @@ const char * Primes::lastRecordReaderByChar( const std::string & fullPath)
 
 const char * Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
 {
-    const char * sequentialFile_tail = new char[101];// caller has to delete
+    const char * sequentialFile_tail = nullptr; //new char[101];// caller has to delete
     std::ifstream lastrecReader(fullPath, std::fstream::in );
     lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
     int streamSize = lastrecReader.tellg();
@@ -371,6 +371,7 @@ const char * Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
         sb->append(c);
     }
     sequentialFile_tail = (char *)(sb->str().c_str());// caller has to delete!
+    // delete sb; NB. this deletion seems to corrupt the "sequentialFile_tail" return value. TODO TODO std::move
     lastrecReader.close();
     // ready.
     return sequentialFile_tail;// caller has to delete
