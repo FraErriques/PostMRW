@@ -899,7 +899,7 @@ unsigned long long Primes::queryMap( unsigned long long desiredOrdinal)
     }
 }// queryMap
 
-unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
+unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
 {
     unsigned long long  desiredPrime = this->queryMap( desiredOrdinal);// check if there's already the record in Map.
     if( 0 != desiredPrime)
@@ -909,7 +909,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal)
     else // zero returned by queryMap means key-absent.
     {// try to feed the Map.
         this->Bisection( desiredOrdinal
-                        , 105 // soglia distanza TODO : test
+                        , 200 // soglia distanza TODO : test
                 );
     }
     // try again to ask the Map, after feeding it.
