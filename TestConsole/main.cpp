@@ -57,7 +57,7 @@ int main()
 //            ,c+915 // there must be room for just one record Prime<100.
 //         );
 //    }// array of Rec
-//    delete test;
+    delete test;
     //------Unit Test-----CANTIERE---------------------------------------------------
     //
     //------Unit Test-----PimesFinder------------------------------------------------
