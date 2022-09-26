@@ -47,26 +47,26 @@ int main()
     //size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 99000);
     bool rand = test->randomDump( 1000, 1050);
-    bool reader = test->readBy_OperatorSquares( 9370);// ask Prime[n]
-    std::cout<<"\n\n\n\t Strike Enter to continue\t";
-    getchar();
-    //bool reader;
-    reader = test->readSequentialDump_nextRec( 60);
-    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        0
-        ,915 // there must be room for just one record Prime<100.
-     );
-    for( int c=0; c<61; c++)
-    {// next Rec
-        reader &= test->readSequentialDump_nextRec(c);
-    }
-    for( int c=0; c<61; c++)
-    {// array of Rec
-        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-            c
-            ,c+915 // there must be room for just one record Prime<100.
-         );
-    }// array of Rec
+    bool reader = test->readBy_OperatorSquares( 370);// ask Prime[n]
+//    std::cout<<"\n\n\n\t Strike Enter to continue\t";
+//    getchar();
+//    //bool reader;
+//    reader = test->readSequentialDump_nextRec( 60);
+//    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//        0
+//        ,915 // there must be room for just one record Prime<100.
+//     );
+//    for( int c=0; c<61; c++)
+//    {// next Rec
+//        reader &= test->readSequentialDump_nextRec(c);
+//    }
+//    for( int c=0; c<61; c++)
+//    {// array of Rec
+//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//            c
+//            ,c+915 // there must be room for just one record Prime<100.
+//         );
+//    }// array of Rec
     delete test;
     //------Unit Test-----CANTIERE---------------------------------------------------
     //

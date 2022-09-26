@@ -822,7 +822,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     unsigned Bisection_step = 1;
     for (;; Bisection_step++)// breaks on Bisection_failure_
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
-        discriminatingElement_position = (right-left)/2; // divisione intera
+        discriminatingElement_position = (right-left)/2 + left;// remember the shift from left_position.
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position ==", discriminatingElement_position, 0);
         this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
@@ -871,12 +871,20 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
         if( signedDelta < 0) // nextRecord->Ordinal < requiredOrdinal)
         {// retain right
             left = nextRecord->endPositionOfRecord;  //acquireNextRecord_end;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "left ==", left, 0);
             right = previous_right;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "right ==", right, 0);
         }
         else if( signedDelta > 0) // nextRecord->Ordinal > requiredOrdinal)
         {// retain left
             left = previous_left;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "left ==", left, 0);
             right = nextRecord->startPositionOfRecord; // acquireNextRecord_start;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "right ==", right, 0);
         }
         else if( nextRecord->Ordinal == requiredOrdinal)
         {
