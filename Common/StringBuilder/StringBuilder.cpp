@@ -49,6 +49,7 @@ StringBuilder & StringBuilder::append(unsigned long long Ull)
     std::string * unsignedLongLong_str = StrManipul::uLongLongToString( Ull);
     this->append( *unsignedLongLong_str);
     delete unsignedLongLong_str;
+    return *this;// return a reference to the whole StringBuilder class.
 }// append(unsigned long long Ull)
 
 

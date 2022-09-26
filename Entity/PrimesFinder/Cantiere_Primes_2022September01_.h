@@ -84,8 +84,8 @@ class Primes
         , int * howMany_RecordInSequence
                                             );
     bool MoveToMap(
-        unsigned long long      discriminatingElement_position
-        , unsigned long long    until_position
+        long long      discriminatingElement_position
+        , long long    until_position
         , int *                 howMany_RecordInSequence
                    );
     unsigned long long queryMap( unsigned long long desiredOrdinal);

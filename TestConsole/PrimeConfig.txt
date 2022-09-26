@@ -1,5 +1,6 @@
 primeDefaultFile
 primeCustomFile
 #
-./PrimeIntegral_fromOrigin_.txt
-./PrimeIntegral_inCustomInterval_.txt
+./PrimeIntegral_fromOrigin_.log
+./PrimeIntegral_inCustomInterval_.log
+
