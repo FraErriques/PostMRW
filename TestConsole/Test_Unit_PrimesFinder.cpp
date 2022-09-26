@@ -1,9 +1,9 @@
 #include "Test_Unit_PrimesFinder.h"
 
 
-Test_Unit_PrimesFinder::Test_Unit_PrimesFinder()
+Test_Unit_PrimesFinder::Test_Unit_PrimesFinder(  unsigned semiAmplitudeOfEachMapSegment )
 {//ctor
-    this->tested_Class = new PrimesFinder::Primes();
+    this->tested_Class = new PrimesFinder::Primes( semiAmplitudeOfEachMapSegment);
 }//ctor
 
 Test_Unit_PrimesFinder::~Test_Unit_PrimesFinder()
@@ -68,3 +68,13 @@ bool Test_Unit_PrimesFinder::readSequentialDump_arrayOfRec_anywhere( unsigned lo
     }
     return readSequentialDump_arrayOfRec_anywhere_outcome;
 }//readSequentialDump_arrayOfRec_anywhere
+
+bool Test_Unit_PrimesFinder::readBy_OperatorSquares( unsigned long long desiredOrdinal)
+{
+    bool Test_Unit_CantierePrimes_readBy_OperatorSquares = false;
+
+    Test_Unit_CantierePrimes_readBy_OperatorSquares = (
+        0 != (*(this->tested_Class)).operator[]( desiredOrdinal)
+                                                       );
+    return Test_Unit_CantierePrimes_readBy_OperatorSquares;
+}// Test_Unit_CantierePrimes::readBy_OperatorSquares

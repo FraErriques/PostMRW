@@ -8,7 +8,7 @@ class Test_Unit_PrimesFinder
 {
     public:
         /** Default constructor */
-        Test_Unit_PrimesFinder();
+        Test_Unit_PrimesFinder(  unsigned semiAmplitudeOfEachMapSegment );
         /** Default destructor */
         virtual ~Test_Unit_PrimesFinder();
 
@@ -19,8 +19,11 @@ class Test_Unit_PrimesFinder
         /** read the scalar LAST record {Ordinal,Prime} from sequentialDump */
         bool readSequentialDump_nextRec( unsigned long long acquireRecordNextToOffset);
         /** read an array of record {Ordinal,Prime} from sequentialDump */
-        bool readSequentialDump_arrayOfRec_anywhere( unsigned long long recArray_seek_START, unsigned long long recArray_seek_END);
-
+        bool readSequentialDump_arrayOfRec_anywhere(
+            unsigned long long recArray_seek_START
+            , unsigned long long recArray_seek_END  );
+        /** read by means of operator[] */
+        bool readBy_OperatorSquares( unsigned long long desiredOrdinal );
 
         /** Access m_Counter
          * \return The current value of m_Counter

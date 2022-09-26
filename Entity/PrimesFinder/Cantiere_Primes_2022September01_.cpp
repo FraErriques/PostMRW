@@ -1,20 +1,22 @@
 #include "Cantiere_Primes_2022September01_.h"
-#include <iostream>
-#include <string>
-#include <math.h>
-#include <ctime>
-#include "Primes.h"
+#include "InternalAlgos.h"
 #include "../../Common/Config_wrap/Config_wrap.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../../Entity/Integration/Integration.h"
-#include "InternalAlgos.h"
+#include <iostream>
+#include <string>
+#include <math.h>
+#include <ctime>
+
+
+
 
 namespace Cantiere_Primes_2022September01_
 {
 
 
-// empty Ctor : reads both the sequentialFile and randomFile fullpath
+// Ctor : reads the strings from Config, for both the sequentialFile and randomFile fullpath.
 Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
 {
     // set the semi-amplitude of each Prime-Segment that will be stored in the Map; it can be modified at runtime.

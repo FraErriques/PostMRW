@@ -4,16 +4,19 @@
  *  \brief  a Analytic Number Theory class
  *  \author F. Erriques
  *  \since  2021#march#31 CET 2021
+ * this version contained a buggy dump-reader
+ * the correction arrives in September 2022
  */
 
 
-#ifndef __Primes_
-#define __Primes_
+#ifndef __Primes_production__H_INCLUDED
+#define __Primes_production__H_INCLUDED
 
 #include <string>
 #include <fstream>
 #include <math.h>
 #include <iostream>
+#include <map>
 
 namespace PrimesFinder
 {
@@ -34,12 +37,27 @@ class Primes
     };
      struct AsinglePointInStream
      {
-         long long Ordinal;
-         long long Prime;
-         long long startPositionOfRecord;
-         long long endPositionOfRecord;
+         unsigned long long Ordinal;
+         unsigned long long Prime;
+         unsigned long long startPositionOfRecord;
+         unsigned long long endPositionOfRecord;
      };
+    /// Ctor
+    Primes( unsigned semiAmplitudeOfEachMapSegment );
+    virtual ~Primes();
+    /// method : public interfaces.
+	bool SequentialCalcInterface( unsigned long long Threshold );
+	bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight );
+    bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
+    bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
+    unsigned long long operator[]( unsigned long long desiredOrdinal);
+    // TODO let it private, with properties
+    unsigned sogliaDistanza;
+
+
+	private:
     /// Data
+    std::map<unsigned long long, unsigned long long> * memoryMappedDump;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     const char * sequentialDumpPath = nullptr;// NB. remember to share and delete[].
@@ -49,20 +67,10 @@ class Primes
     std::ofstream * append_Sequential_Stream;// write
     std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
-
-    /// Ctor
-    Primes();// no more hiding of empty Ctor.
-    virtual ~Primes();
-    /// method
-	bool SequentialCalcInterface( unsigned long long Threshold );
-	bool RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight );
-    bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
-    bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
-
-	private:
     // copying methoda : not usable->private.
-    // hide Copy Constructor
-    Primes   ( const Primes & original );
+    // hide some Constructors
+    Primes( const Primes & original );
+    Primes();
     // construction helper:
     //const char * feed_CustomDumpPath(); // non const
     // assignement : operator=
@@ -73,7 +81,7 @@ class Primes
     void createOrAppend( const std::string & fullPath);
     const char * lastRecordReaderByChar( const std::string & fullPath);
     const char * newDeal_dumpTailReaderByChar( const std::string & fullPath);
-    Primes::DumpElement * newDeal_recoverLastRecord( const char * dumpTail);
+    DumpElement * newDeal_recoverLastRecord( const char * dumpTail);
     // newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
     DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality);
     // newDeal : state of the art.
@@ -83,18 +91,24 @@ class Primes
             ,std::ofstream * appendStream
             ,unsigned long long ordinal // passed as real xor extimated ordinal of "Left" i.e. Left==Prime[ordinal]
         );
-    Primes::AsinglePointInStream * acquireNextRecord( unsigned long long discriminatingElement_position);
-    Primes::DumpElement * acquireSequenceOfRecord(
+    AsinglePointInStream * acquireNextRecord( unsigned long long discriminatingElement_position);
+    DumpElement * acquireSequenceOfRecord(
         unsigned long long discriminatingElement_position
         , unsigned long long until_position
         , int * howMany_RecordInSequence
                                             );
-//Bisection( requiredOrdinal)
-//  IntegerDecomposition : the Fundamental Thm of Arithmetic.
-//SingleFactor * IntegerDecomposition( const unsigned long long dividend)
+    bool MoveToMap(
+        long long      discriminatingElement_position
+        , long long    until_position
+        , int *                 howMany_RecordInSequence
+                   );
+    unsigned long long queryMap( unsigned long long desiredOrdinal);
+    bool Bisection( unsigned long long requiredOrdinal );
+    // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
+    SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 
 };// class
 
 }// nmsp
 
-#endif
+#endif // __Primes_production__H_INCLUDED

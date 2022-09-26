@@ -3,7 +3,7 @@
 Test_Unit_CantierePrimes::Test_Unit_CantierePrimes(  unsigned semiAmplitudeOfEachMapSegment )
 {//ctor
     this->tested_Class = new Cantiere_Primes_2022September01_::Primes( semiAmplitudeOfEachMapSegment);
-}
+}//ctor
 
 Test_Unit_CantierePrimes::~Test_Unit_CantierePrimes()
 {//dtor

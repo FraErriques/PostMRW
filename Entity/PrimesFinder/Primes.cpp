@@ -1,23 +1,31 @@
-#include <iostream>
-#include <string>
-#include <math.h>
-#include <ctime>
 #include "Primes.h"
 #include "InternalAlgos.h"
 #include "../../Common/Config_wrap/Config_wrap.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../../Entity/Integration/Integration.h"
+#include <iostream>
+#include <string>
+#include <math.h>
+#include <ctime>
 
 
 
-// nmsp PrimesFinder::Primes
+namespace PrimesFinder {
 
 
-
-// empty Ctor : reads both the sequentialFile and randomFile fullpath
-PrimesFinder::Primes::Primes( )
+// Ctor : reads the strings from Config, for both the sequentialFile and randomFile fullpath.
+Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
 {
+    // set the semi-amplitude of each Prime-Segment that will be stored in the Map; it can be modified at runtime.
+    this->sogliaDistanza = semiAmplitudeOfEachMapSegment;
+    // build the Map.
+    this->memoryMappedDump = new std::map<unsigned long long, unsigned long long>();
+    if( nullptr==this->memoryMappedDump)
+    {
+        this->isHealthlyConstructed = false;
+        this->canOperate = true;// can operate even without memoty mapped data.
+    }
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     //---start sequential_file treatment
     this->feedDumpPath();// SEQUENTIAL : default section, in default file.
@@ -54,7 +62,7 @@ PrimesFinder::Primes::Primes( )
 
 
 
-bool PrimesFinder::Primes::SequentialCalcInterface( unsigned long long Threshold )
+bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 {
     bool hasSequentialDumpBeenReset = false;// it's true on filesize<1k and of course on non existing file
     // ---call with params
@@ -98,14 +106,14 @@ bool PrimesFinder::Primes::SequentialCalcInterface( unsigned long long Threshold
     this->append_Sequential_Stream->close();
     delete this->append_Sequential_Stream;
     this->append_Sequential_Stream = nullptr;
-    delete[] stringDumpTail;
+    delete stringDumpTail;
     delete lastRec;
     // ready.
     return hasSequentialDumpBeenReset;
 }//
 
 
-bool PrimesFinder::Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset)
+bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset)
 {
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
@@ -129,7 +137,7 @@ bool PrimesFinder::Primes::ReadSequentialDumpInterface_nextRec( long long acquir
     }
     //---acquireNextRecord----START
     this->sharedReader->seekg( acquireRecordNextToOffset , std::ios::beg );// NB. place appropriately in production environment
-    PrimesFinder::Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( acquireRecordNextToOffset);// pass parameter: file-seek-offset.
+    Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( acquireRecordNextToOffset);// pass parameter: file-seek-offset.
     if( nullptr != nextRecord)
     {
         std::cout<<"\n\t acquireNextRecord("<<acquireRecordNextToOffset<<") reads:";
@@ -153,7 +161,7 @@ bool PrimesFinder::Primes::ReadSequentialDumpInterface_nextRec( long long acquir
 }// ReadSequentialDumpInterface_lastRec
 
 
-bool PrimesFinder::Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
+bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
 {
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
@@ -178,7 +186,7 @@ bool PrimesFinder::Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long
     //---------acquireSequenceOfRecord----START
     this->sharedReader->seekg( recArray_seek_START , std::ios::beg );// NB. place appropriately in production environment
     int cardinalityOfRecordSequence = 0;
-    PrimesFinder::Primes::DumpElement * recSequence = this->acquireSequenceOfRecord(
+    Primes::DumpElement * recSequence = this->acquireSequenceOfRecord(
         recArray_seek_START
         , recArray_seek_END
         , &cardinalityOfRecordSequence );
@@ -207,7 +215,7 @@ bool PrimesFinder::Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long
 
 
 
-bool PrimesFinder::Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight )
+bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight )
 {
     bool res = false;
     //
@@ -238,7 +246,7 @@ bool PrimesFinder::Primes::RandomCalcInterface( unsigned long long infLeft, unsi
 
 
 
-const char * PrimesFinder::Primes::feedDumpPath() // non const
+const char * Primes::feedDumpPath() // non const
 {// default section, in default file.
     if( nullptr==this->sequentialDumpPath )
     {
@@ -247,7 +255,7 @@ const char * PrimesFinder::Primes::feedDumpPath() // non const
     return this->sequentialDumpPath;
 }// feedDumpPath()
 
-const char * PrimesFinder::Primes::feed_CustomDumpPath() // non const
+const char * Primes::feed_CustomDumpPath() // non const
 {// custom section, in default file.
     if( nullptr==this->randomDumpPath )
     {
@@ -256,20 +264,25 @@ const char * PrimesFinder::Primes::feed_CustomDumpPath() // non const
     return this->randomDumpPath;
 }// feed_CustomDumpPath()
 
-const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
+const char * Primes::getPrimeDumpFullPath( const std::string & sectionNameInFile) const
 {
     const char *  res = nullptr;
-    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All configurations for  in this file.
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All in this file.
     const std::string * desiredSectionContent = primeNamedConfig->getValue( sectionNameInFile);// configSectionNames can be added.
     res = desiredSectionContent->c_str();
     delete primeNamedConfig;
-//delete desiredSectionContent;  TODO study how to delete it.
+    //delete desiredSectionContent; NB. this deletion seems to corrupt the "res" return value. TODO std::move
     return res;// caller has to delete.
 }// getPrimeDumpFullPath
 
     /// Dtor()
-    PrimesFinder::Primes::~Primes()
+    Primes::~Primes()
     {/// Dtor() : closes the append_handle.
+        if( nullptr != this->memoryMappedDump)
+        {
+            delete this->memoryMappedDump;
+            this->memoryMappedDump = nullptr;// not dangling.
+        }// else already nulled.
 //        if( nullptr != this->sequentialDumpPath )
 //        {
 //            delete[] this->sequentialDumpPath;
@@ -300,7 +313,7 @@ const char * PrimesFinder::Primes::getPrimeDumpFullPath( const std::string & sec
 
 
 
-void PrimesFinder::Primes::createOrAppend( const std::string & fullPath)
+void Primes::createOrAppend( const std::string & fullPath)
 {
     std::ofstream createOrApp(fullPath, std::fstream::out | std::fstream::app);
     createOrApp.close();
@@ -308,7 +321,7 @@ void PrimesFinder::Primes::createOrAppend( const std::string & fullPath)
 
 
 
-const char * PrimesFinder::Primes::lastRecordReaderByChar( const std::string & fullPath)
+const char * Primes::lastRecordReaderByChar( const std::string & fullPath)
 {
     char * directTailDump = new char[120];// tune it.
     std::ifstream lastrecReader(fullPath, std::fstream::in );
@@ -344,23 +357,23 @@ const char * PrimesFinder::Primes::lastRecordReaderByChar( const std::string & f
     return directTailDump;// caller has to delete
 }// lastRecordReaderByChar
 
-const char * PrimesFinder::Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
+const char * Primes::newDeal_dumpTailReaderByChar( const std::string & fullPath)
 {
-    const char * sequentialFile_tail = new char[101];// caller has to delete
     std::ifstream lastrecReader(fullPath, std::fstream::in );
-    lastrecReader.seekg( -1, std::ios::end );
+    lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
     int streamSize = lastrecReader.tellg();
     if( 100>streamSize)// for such small data, it's better to create a new sequeltial file from scratch.
     {
         return nullptr;
     }// else continue.
-    lastrecReader.seekg( -100, std::ifstream::end );// by convention, read a tail of 100 char.
+    lastrecReader.seekg( -100, std::ifstream::end );
     Common::StringBuilder * sb = new Common::StringBuilder( 101);// forecasted size.
     for( char c=0; lastrecReader.get(c); )
     {
         sb->append(c);
     }
-    sequentialFile_tail = (char *)(sb->str().c_str());// caller has to delete!
+    const char * sequentialFile_tail = (char *)(sb->str().c_str());// caller has to delete!
+    // delete sb; NB. this deletion seems to corrupt the "sequentialFile_tail" return value. TODO TODO std::move
     lastrecReader.close();
     // ready.
     return sequentialFile_tail;// caller has to delete
@@ -368,22 +381,22 @@ const char * PrimesFinder::Primes::newDeal_dumpTailReaderByChar( const std::stri
 
 
 
-/*  IntegerDecomposition : the Fundamental Thm of Arithmetic.
-SingleFactor * PrimesFinder::Primes::IntegerDecomposition( const unsigned long long dividend)
+//  IntegerDecomposition : the Fundamental Thm of Arithmetic.
+Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
 {
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
     unsigned long long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
-    for(int c=0; c<ordinaleStimato; c++)
+    for( unsigned long long c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
         factorization[c].factorBase = 0;
         factorization[c].factorMultiplicity = 0;
     }
     // TODO readRange( 1, ordinaleStimato);
     unsigned long long * involvedPrimes = new unsigned long long[ordinaleStimato];
-    for(int c=0; c<ordinaleStimato; c++)
+    for(unsigned long long c=0; c<ordinaleStimato; c++)
     {
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
     }// end filling up the candidate prime-factor array.
@@ -442,11 +455,11 @@ SingleFactor * PrimesFinder::Primes::IntegerDecomposition( const unsigned long l
     // ready.
     return factorization_srk_;// NB. the caller has to delete.
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
-*/
 
-PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::newDeal_recoverLastRecord( const char * dumpTail)
+
+Primes::DumpElement * Primes::newDeal_recoverLastRecord( const char * dumpTail)
 {
-    PrimesFinder::Primes::DumpElement * lastRecord = new PrimesFinder::Primes::DumpElement();
+    Primes::DumpElement * lastRecord = new Primes::DumpElement();
     std::string parFromFile(dumpTail);
     int inputParamLength = parFromFile.length();
     std::string filteredLastToken("");
@@ -480,7 +493,7 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::newDeal_recoverLastRec
 
 
 // newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
-PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality)
+Primes::DumpElement * Primes::newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality)
 {
     DumpElement * dumpTail_Records = nullptr;// ret val
     std::string parFromFile( dumpTail_String );
@@ -531,7 +544,7 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::newDeal_recoverDumpTai
 
 
 // newDeal : state of the art.
-void PrimesFinder::Primes::Start_PrimeDump_FileSys(
+void Primes::Start_PrimeDump_FileSys(
         unsigned long long Left
         ,unsigned long long Right
         ,std::ofstream * appendStream
@@ -591,8 +604,7 @@ void PrimesFinder::Primes::Start_PrimeDump_FileSys(
 
 
 
-PrimesFinder::Primes::AsinglePointInStream * PrimesFinder::Primes::acquireNextRecord(
-    unsigned long long discriminatingElement_position )
+Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long discriminatingElement_position)
 {
     if( nullptr==this->sharedReader || ! this->sharedReader->is_open())
     {
@@ -644,7 +656,7 @@ PrimesFinder::Primes::AsinglePointInStream * PrimesFinder::Primes::acquireNextRe
             const std::string nextRecord_txt = sb.str();
             int nextRecord_len = nextRecord_txt.length();
             int recordCardinality=0;
-            PrimesFinder::Primes::DumpElement * nextRecPtr =
+            Primes::DumpElement * nextRecPtr =
                 newDeal_recoverDumpTail( nextRecord_txt.c_str() , &recordCardinality);
             // only now allocate; if func does not pass here -> ret null.
             nextRecord = new Primes::AsinglePointInStream();
@@ -662,7 +674,7 @@ PrimesFinder::Primes::AsinglePointInStream * PrimesFinder::Primes::acquireNextRe
 }// acquireNextRecord
 
 
-PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::acquireSequenceOfRecord(
+Primes::DumpElement * Primes::acquireSequenceOfRecord(
     unsigned long long discriminatingElement_position
     , unsigned long long until_position
     , int * howMany_RecordInSequence
@@ -734,29 +746,219 @@ PrimesFinder::Primes::DumpElement * PrimesFinder::Primes::acquireSequenceOfRecor
 }// acquireSequenceOfRecord
 
 
-/*
-void Bisection( unsigned long requiredOrdinal , int sogliaDistanza )
- {
-    for (;;)// TODO
+template<typename It>
+void printInsertionStatus(It it, bool success)
+{
+    std::cout << "Insertion of " << it->first << (success ? " succeeded\n" : " failed\n");
+}
+
+bool Primes::MoveToMap(
+    long long      discriminatingElement_position
+    , long long    until_position
+    , int *                 howMany_RecordInSequence
+               )
+{
+    bool res = true;
+    this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
+    Primes::DumpElement * tmpStorage = acquireSequenceOfRecord(
+         discriminatingElement_position
+         ,until_position
+         ,howMany_RecordInSequence
+        );
+    if( nullptr==tmpStorage)
     {
-        std::iostream::pos_type filesize = this->sharedReader->tellg();// TODO considerare estremi correnti
-        std::iostream::pos_type discriminatingElement_position = filesize/2; // divisione intera
-        PrimesFinder::Primes::AsinglePointInStream * nextRecord = acquireNextRecord( discriminatingElement_position);
-//        // compare
-//        if( nextRecord->ordinal < requiredOrdinal)
-//        {
-//            left = acquireNextRecord_end;
-//            right = filesize;
-//        }
-//        else if( nextRecord->ordinal > requiredOrdinal)
-//        {
-//            left = 0;
-//            right = acquireNextRecord_start;
-//        }
-//        else if( nextRecord->ordinal == requiredOrdinal)
-//        {
-//            found -> exit (i.e. break)
-//        }
+        return false;
+    }//else continue.
+    for( int c=0; c< (*howMany_RecordInSequence); c++)
+    {// std::move() from array[] to map<>
+        std::pair<unsigned long long, unsigned long long> OrdinalPrime(
+            std::move( tmpStorage[c].ordinal)
+            ,std::move( tmpStorage[c].prime)  // TODO test!
+            );// TODO
+    if(0==this->memoryMappedDump->count(OrdinalPrime.first))// which means the key is NOT present
+    {
+        const auto [it_hinata, success] = this->memoryMappedDump->insert( OrdinalPrime);// >assign( OrdinalPrime->second);
+        printInsertionStatus(it_hinata, success);
+    }// else skip existing Ordinal.
+    }//for
+    // clean the pointer, to not let it dangling, but do not delete, since the pointee
+    // hase ben moved::.
+    tmpStorage = nullptr;
+    //
+    return false;// TODO
+}// MoveToMap
+
+bool Primes::Bisection( unsigned long long requiredOrdinal )
+ {
+    Common::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
+    Common::LogWrappers::SectionContent_variable_name_value(
+        "PARAMETER requiredOrdinal ==", requiredOrdinal, 0);
+    Common::LogWrappers::SectionContent_variable_name_value(
+        "PARAMETER sogliaDistanza ==", (unsigned long long)this->sogliaDistanza, 0);
+    bool res = false;
+    this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
+    if( nullptr != this->sharedReader)
+    {
+        res = true;
+    }// else stay false.
+    else
+    {// cannot operate.
+        res = false;
+        Common::LogWrappers::SectionContent("the SharedReader is NULL.", 0);
+        return res;
+    }
+    unsigned long long left = 0;
+    unsigned long long previous_left = left;
+    this->sharedReader->seekg( -1, std::ios::end);
+    std::ios::pos_type pt_dumpSize = this->sharedReader->tellg();
+    long long dumpSize = (long long)pt_dumpSize;
+    long long previous_dumpSize = (long long)dumpSize;
+    unsigned long long right = dumpSize;
+    unsigned long long previous_right = right;
+    std::string dumpSize_str( *Common::StrManipul::uLongLongToString( dumpSize) );
+    Common::LogWrappers::SectionContent( ("____________________dumpSize == " + dumpSize_str).c_str() , 0);
+    long long discriminatingElement_position;// let it signed, to avoid overflows.
+    long signedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
+    unsigned long UNsignedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
+    Primes::AsinglePointInStream * nextRecord = nullptr;
+    //
+    unsigned Bisection_step = 1;
+    for (;; Bisection_step++)// breaks on Bisection_failure_
+    {   // acquire the first record, successive to the offset "discriminatingElement_position"
+        discriminatingElement_position = (right-left)/2 + left;// remember the shift from left_position.
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "discriminatingElement_position ==", discriminatingElement_position, 0);
+        this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
+        nextRecord = acquireNextRecord( discriminatingElement_position);
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "nextRecord->Prime ==", nextRecord->Prime, 0);
+        // compare
+        signedDelta = nextRecord->Ordinal - requiredOrdinal;
+        UNsignedDelta = abs( signedDelta);
+        if( UNsignedDelta <= this->sogliaDistanza)
+        {// linear acquisition & move&& to map<>
+            //log-size-for category.
+            int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
+            // signed:(+)means landed right of obj
+            // signed:(-)means landed left of obj
+            long long  distance_from_Target_bytes = signedDelta * (currentRecordLength+2);// TODO +1 Unix
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "distance_from_Target_bytes ==", (signed long long)distance_from_Target_bytes, 0);
+            // the minus sign in next statement is understandable by means of the previous two comments.
+            long long extimated_target_position_bytes =
+                discriminatingElement_position - distance_from_Target_bytes;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "extimated_target_position_bytes ==", extimated_target_position_bytes, 0);
+            // grab an interval centered in extimated_target and wide twise threshold
+            long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*this->sogliaDistanza;
+            long long end_RecArray = extimated_target_position_bytes +currentRecordLength*this->sogliaDistanza;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "beg_RecArray ==", beg_RecArray, 0);
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "end_RecArray ==", end_RecArray, 0);
+            int howManyRecordInSequence;
+            bool moveResult =
+                MoveToMap(
+                  beg_RecArray
+                  , end_RecArray
+                  , &howManyRecordInSequence
+                 );// NB. the temporary array gets created and moved within the callee MoveToMap(). Nothing left here.
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "howManyRecordInSequence ==", (long long)howManyRecordInSequence, 0);
+            break;//found within threshold -> exit (i.e. break)
+        }//if( UNsignedDelta <= this->sogliaDistanza) i.e. if within threshold
+        // else continue Bisection:
+        // decide wether to retain left or right half
+        if( signedDelta < 0) // nextRecord->Ordinal < requiredOrdinal)
+        {// retain right
+            left = nextRecord->endPositionOfRecord;  //acquireNextRecord_end;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "left ==", left, 0);
+            right = previous_right;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "right ==", right, 0);
+        }
+        else if( signedDelta > 0) // nextRecord->Ordinal > requiredOrdinal)
+        {// retain left
+            left = previous_left;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "left ==", left, 0);
+            right = nextRecord->startPositionOfRecord; // acquireNextRecord_start;
+            Common::LogWrappers::SectionContent_variable_name_value(
+                "right ==", right, 0);
+        }
+        else if( nextRecord->Ordinal == requiredOrdinal)
+        {
+            std::pair<unsigned long long, unsigned long long> p(nextRecord->Ordinal,nextRecord->Prime);
+            this->memoryMappedDump->insert( p);
+            break;//found -> exit (i.e. break)
+        }// no other else possible.
+        //---update loop variables-----
+        previous_left = left;
+        previous_right = right;
+        dumpSize = right - left;
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "dumpSize ==", dumpSize, 0);
+        if( dumpSize >= previous_dumpSize )// check before updating.
+        {
+            Common::LogWrappers::SectionContent(
+                "\n\n\t ############# Bisection Failure : the filesize is not decresing !! DBG needed !!!#######\n\n", 0);
+            break;
+        }// else continue.
+        previous_dumpSize = dumpSize;// then update.
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "Bisection_step ==", (unsigned long long)Bisection_step, 0);
     }// for
+    //---close sharedReader
+    this->sharedReader->close();
+    delete this->sharedReader;
+    this->sharedReader = nullptr;
+    Common::LogWrappers::SectionClose();
+    // ready
+    return res;
  }// Bisection
-*/
+
+unsigned long long Primes::queryMap( unsigned long long desiredOrdinal)
+{// the Map contains Pairs{Ordinal,Prime}. So the zero is available as error code.
+    if(+1==this->memoryMappedDump->count( desiredOrdinal))// which means te key is present
+    {//if(nullptr!=(*dictionary).operator[]( requiredkey)) DON'T :this inserts a new pair.
+        return this->memoryMappedDump->at( desiredOrdinal);//NB. right way to search the value of a key.
+        //(*dictionary).operator[]( requiredkey)->internalPrint(); do NOT use operator[] ,which is a writer.
+    }// else return zero, as error-code, since the required key is absent in the map.
+    else
+    {// else means count==0. In the map count has only the states{0==absent, +1==present}.
+        std::cout<<"\n\n\t Key not found \n\n"; // DBG
+        return 0;
+    }
+}// queryMap
+
+unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
+{
+    unsigned long long  desiredPrime = this->queryMap( desiredOrdinal);// check if there's already the record in Map.
+    if( 0 != desiredPrime)
+    {
+        return desiredPrime;
+    }
+    else // zero returned by queryMap means key-absent.
+    {// try to feed the Map.
+        this->Bisection( desiredOrdinal
+                        // NB. soglia distanza is an instance-member.
+                );
+    }
+    // try again to ask the Map, after feeding it.
+    desiredPrime = this->queryMap( desiredOrdinal);
+    if( 0 == desiredPrime)
+    {
+        std::cout<<"\n\n\t Key not found AGAIN, after feeding it. DEBUG needed: exceptional case. \n\n"; // DBG
+    }// DBG !
+    else
+    {
+        std::cout<<"\n\n\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime <<"\n\n"; // DBG
+    }// DBG !
+    //
+    return desiredPrime;
+}// operator[]
+
+} //namespacesp PrimesFinder
