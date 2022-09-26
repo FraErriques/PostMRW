@@ -9,7 +9,12 @@
 #include <math.h>
 #include <ctime>
 
-
+/*  TODO
+*   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.
+*   let the StreamReader an automatic variable end let the seekg internal to the reading-methods.
+*   std::move in Config:: dump filenames.
+*   enrich StringBuilder and Log for better tracing, overloading variable types
+*/
 
 
 namespace Cantiere_Primes_2022September01_
@@ -179,6 +184,7 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
     this->sharedReader->seekg( -1 , std::ios::end );
     std::ios::pos_type sequentialDump_size = this->sharedReader->tellg();
     if( recArray_seek_START >= sequentialDump_size
+        || recArray_seek_START < 0
         // ||  TODO evaluate additional error conditions
        )
     {// cannot operate.
@@ -761,6 +767,10 @@ bool Primes::MoveToMap(
                )
 {
     bool res = true;
+    if( discriminatingElement_position < 0)
+    {// cannot go back from origin.
+        discriminatingElement_position = 0;
+    }// else ok.
     this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
     Primes::DumpElement * tmpStorage = acquireSequenceOfRecord(
          discriminatingElement_position
@@ -828,6 +838,10 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     for (;; Bisection_step++)// breaks on Bisection_failure_
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
         discriminatingElement_position = (right-left)/2 + left;// remember the shift from left_position.
+        if( discriminatingElement_position<0)
+        {// can't go back from the origin.
+            discriminatingElement_position = 0;
+        }// else ok.
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position ==", discriminatingElement_position, 0);
         this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
@@ -855,6 +869,10 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
                 "extimated_target_position_bytes ==", extimated_target_position_bytes, 0);
             // grab an interval centered in extimated_target and wide twise threshold
             long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*this->sogliaDistanza;
+            if( beg_RecArray < 0)
+            {// cannot go back from origin.
+                beg_RecArray = 0;
+            }// else ok.
             long long end_RecArray = extimated_target_position_bytes +currentRecordLength*this->sogliaDistanza;
             Common::LogWrappers::SectionContent_variable_name_value(
                 "beg_RecArray ==", beg_RecArray, 0);
@@ -895,6 +913,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         {
             std::pair<unsigned long long, unsigned long long> p(nextRecord->Ordinal,nextRecord->Prime);
             this->memoryMappedDump->insert( p);
+            res = true;//done.
             break;//found -> exit (i.e. break)
         }// no other else possible.
         //---update loop variables-----
@@ -912,6 +931,9 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         previous_dumpSize = dumpSize;// then update.
         Common::LogWrappers::SectionContent_variable_name_value(
             "Bisection_step ==", (unsigned long long)Bisection_step, 0);
+        //---clean up memory before next loop---------------
+        delete nextRecord;
+        nextRecord = nullptr;
     }// for
     //---close sharedReader
     this->sharedReader->close();
