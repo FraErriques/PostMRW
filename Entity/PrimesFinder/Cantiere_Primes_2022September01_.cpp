@@ -10,7 +10,8 @@
 #include <ctime>
 
 /*  TODO
-*   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.
+*   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
+*   fixed a memory leak in Bisection:: a delete was necessary in the for-loop for nextRecord. ------------------------(V)
 *   let the StreamReader an automatic variable end let the seekg internal to the reading-methods.
 *   std::move in Config:: dump filenames.
 *   enrich StringBuilder and Log for better tracing, overloading variable types
