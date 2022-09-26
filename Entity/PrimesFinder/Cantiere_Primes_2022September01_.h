@@ -33,7 +33,7 @@ class Primes
          unsigned long long endPositionOfRecord;
      };
     /// Ctor
-    Primes();// no more hiding of empty Ctor.
+    Primes( unsigned semiAmplitudeOfEachMapSegment );
     virtual ~Primes();
     /// method : public interfaces.
 	bool SequentialCalcInterface( unsigned long long Threshold );
@@ -41,6 +41,9 @@ class Primes
     bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
     bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
     unsigned long long operator[]( unsigned long long desiredOrdinal);
+    // TODO let it private, with properties
+    unsigned sogliaDistanza;
+
 
 	private:
     /// Data
@@ -55,8 +58,9 @@ class Primes
     std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
     // copying methoda : not usable->private.
-    // hide Copy Constructor
-    Primes   ( const Primes & original );
+    // hide some Constructors
+    Primes( const Primes & original );
+    Primes();
     // construction helper:
     //const char * feed_CustomDumpPath(); // non const
     // assignement : operator=
@@ -89,7 +93,7 @@ class Primes
         , int *                 howMany_RecordInSequence
                    );
     unsigned long long queryMap( unsigned long long desiredOrdinal);
-    bool Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza );
+    bool Bisection( unsigned long long requiredOrdinal );
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 

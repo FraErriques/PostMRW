@@ -28,6 +28,15 @@ namespace Common
                 const char *variable_name
                 ,unsigned long long variable_value
                 ,int sectionVerbosity         );
+        // the signed versions:
+        void SectionContent_variable_name_value(
+                std::string &variable_name
+                , long long variable_value
+                ,int sectionVerbosity         );
+        void SectionContent_variable_name_value(
+                const char *variable_name
+                , long long variable_value
+                ,int sectionVerbosity         );
 
     }// END namespace LogWrappers
 }// END namespace Common

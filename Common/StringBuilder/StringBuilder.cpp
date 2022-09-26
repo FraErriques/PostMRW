@@ -52,6 +52,13 @@ StringBuilder & StringBuilder::append(unsigned long long Ull)
     return *this;// return a reference to the whole StringBuilder class.
 }// append(unsigned long long Ull)
 
+StringBuilder & StringBuilder::append( long long Signed_ll) // overload to append a SIGNED long long (i.e. 64bit SIGNED).
+{
+    std::string * Signed_LongLong_str = StrManipul::signedLongLongToString( Signed_ll);
+    this->append( *Signed_LongLong_str);
+    delete Signed_LongLong_str;
+    return *this;// return a reference to the whole StringBuilder class.
+}// append Signed_LongLong
 
     // metodo che fornisce la rattresentazione stringa dello StringBuilder:
     // tale rappresentazione consiste nel portare nel buffer primario tutto cio' che e' in attesa di accodamento (i.e. main.append(scratch)
@@ -249,6 +256,16 @@ namespace StrManipul
         std::string * res = new std::string();
         std::stringstream localSstream;
         localSstream << par;//put the unsigned long-long into the stringStream
+        *res = localSstream.str();// get the string from the stringStream
+        // N.B. the caller has to delete the return value.
+        return res;
+    }
+
+    std::string * signedLongLongToString( const long long &par)
+    {//long-long i.e. 8 byte integral type( Signed here).
+        std::string * res = new std::string();
+        std::stringstream localSstream;
+        localSstream << par;//put the Signed long-long into the stringStream
         *res = localSstream.str();// get the string from the stringStream
         // N.B. the caller has to delete the return value.
         return res;

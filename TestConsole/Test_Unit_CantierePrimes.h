@@ -6,8 +6,8 @@
 class Test_Unit_CantierePrimes
 {
     public:
-        /** Default constructor */
-        Test_Unit_CantierePrimes();
+        /** Constructor */
+        Test_Unit_CantierePrimes(  unsigned semiAmplitudeOfEachMapSegment );
         /** Default destructor */
         virtual ~Test_Unit_CantierePrimes();
 
