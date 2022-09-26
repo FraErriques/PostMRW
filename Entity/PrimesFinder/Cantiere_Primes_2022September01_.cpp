@@ -15,8 +15,11 @@ namespace Cantiere_Primes_2022September01_
 
 
 // empty Ctor : reads both the sequentialFile and randomFile fullpath
-Primes::Primes( )
+Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
 {
+    // set the semi-amplitude of each Prime-Segment that will be stored in the Map; it can be modified at runtime.
+    this->sogliaDistanza = semiAmplitudeOfEachMapSegment;
+    // build the Map.
     this->memoryMappedDump = new std::map<unsigned long long, unsigned long long>();
     if( nullptr==this->memoryMappedDump)
     {
@@ -785,13 +788,13 @@ bool Primes::MoveToMap(
     return false;// TODO
 }// MoveToMap
 
-bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDistanza )
+bool Primes::Bisection( unsigned long long requiredOrdinal )
  {
     Common::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
     Common::LogWrappers::SectionContent_variable_name_value(
         "PARAMETER requiredOrdinal ==", requiredOrdinal, 0);
     Common::LogWrappers::SectionContent_variable_name_value(
-        "PARAMETER sogliaDistanza ==", sogliaDistanza, 0);
+        "PARAMETER sogliaDistanza ==", (unsigned long long)this->sogliaDistanza, 0);
     bool res = false;
     this->sharedReader = new std::ifstream( this->sequentialDumpPath, std::fstream::in);
     if( nullptr != this->sharedReader)
@@ -815,8 +818,8 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
     std::string dumpSize_str( *Common::StrManipul::uLongLongToString( dumpSize) );
     Common::LogWrappers::SectionContent( ("____________________dumpSize == " + dumpSize_str).c_str() , 0);
     long long discriminatingElement_position;// let it signed, to avoid overflows.
-    long signedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
-    unsigned long UNsignedDelta = sogliaDistanza*3;//init to any value, but not within threshold.
+    long signedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
+    unsigned long UNsignedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
     Primes::AsinglePointInStream * nextRecord = nullptr;
     //
     unsigned Bisection_step = 1;
@@ -834,7 +837,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
         // compare
         signedDelta = nextRecord->Ordinal - requiredOrdinal;
         UNsignedDelta = abs( signedDelta);
-        if( UNsignedDelta <= sogliaDistanza)
+        if( UNsignedDelta <= this->sogliaDistanza)
         {// linear acquisition & move&& to map<>
             //log-size-for category.
             int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
@@ -842,15 +845,15 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
             // signed:(-)means landed left of obj
             long long  distance_from_Target_bytes = signedDelta * (currentRecordLength+2);// TODO +1 Unix
             Common::LogWrappers::SectionContent_variable_name_value(
-                "distance_from_Target_bytes ==", distance_from_Target_bytes, 0);
+                "distance_from_Target_bytes ==", (signed long long)distance_from_Target_bytes, 0);
             // the minus sign in next statement is understandable by means of the previous two comments.
             long long extimated_target_position_bytes =
                 discriminatingElement_position - distance_from_Target_bytes;
             Common::LogWrappers::SectionContent_variable_name_value(
                 "extimated_target_position_bytes ==", extimated_target_position_bytes, 0);
             // grab an interval centered in extimated_target and wide twise threshold
-            long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*sogliaDistanza;
-            long long end_RecArray = extimated_target_position_bytes +currentRecordLength*sogliaDistanza;
+            long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*this->sogliaDistanza;
+            long long end_RecArray = extimated_target_position_bytes +currentRecordLength*this->sogliaDistanza;
             Common::LogWrappers::SectionContent_variable_name_value(
                 "beg_RecArray ==", beg_RecArray, 0);
             Common::LogWrappers::SectionContent_variable_name_value(
@@ -863,9 +866,9 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
                   , &howManyRecordInSequence
                  );// NB. the temporary array gets created and moved within the callee MoveToMap(). Nothing left here.
             Common::LogWrappers::SectionContent_variable_name_value(
-                "howManyRecordInSequence ==", howManyRecordInSequence, 0);
+                "howManyRecordInSequence ==", (long long)howManyRecordInSequence, 0);
             break;//found within threshold -> exit (i.e. break)
-        }//if( UNsignedDelta <= sogliaDistanza) i.e. if within threshold
+        }//if( UNsignedDelta <= this->sogliaDistanza) i.e. if within threshold
         // else continue Bisection:
         // decide wether to retain left or right half
         if( signedDelta < 0) // nextRecord->Ordinal < requiredOrdinal)
@@ -906,7 +909,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal , unsigned sogliaDist
         }// else continue.
         previous_dumpSize = dumpSize;// then update.
         Common::LogWrappers::SectionContent_variable_name_value(
-            "Bisection_step ==", Bisection_step, 0);
+            "Bisection_step ==", (unsigned long long)Bisection_step, 0);
     }// for
     //---close sharedReader
     this->sharedReader->close();
@@ -941,7 +944,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     else // zero returned by queryMap means key-absent.
     {// try to feed the Map.
         this->Bisection( desiredOrdinal
-                        , 200 // soglia distanza TODO : test
+                        // NB. soglia distanza is an instance-member.
                 );
     }
     // try again to ask the Map, after feeding it.

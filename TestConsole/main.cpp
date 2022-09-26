@@ -43,11 +43,11 @@ int main()
     //----test accessori--------------------------
     //
     //------Unit Test-----CANTIERE------------------------------------------------
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes();
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 80);
     //size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 99000);
     bool rand = test->randomDump( 1000, 1050);
-    bool reader = test->readBy_OperatorSquares( 370);// ask Prime[n]
+    bool reader = test->readBy_OperatorSquares( 5);// ask Prime[n]
 //    std::cout<<"\n\n\n\t Strike Enter to continue\t";
 //    getchar();
 //    //bool reader;

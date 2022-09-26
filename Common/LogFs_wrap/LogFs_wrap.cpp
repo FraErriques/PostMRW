@@ -119,6 +119,36 @@ void SectionContent_variable_name_value(
                                        ,sectionVerbosity  );
 }// SectionContent_variable_name_value
 
+        // the signed versions:
+        void SectionContent_variable_name_value(
+                std::string &variable_name
+                , long long variable_value
+                ,int sectionVerbosity         )
+{
+    SectionContent_multiMessage_instance_mtx.lock();// START critical section.
+    {
+        // twenty is an estimate of length for a string containing a long-long.
+        StringBuilder contentTracer( variable_name.length() + 20);
+        contentTracer.append(variable_name);
+        contentTracer.append("  ");//some separation.
+        contentTracer.append( variable_value);
+        SectionContent( contentTracer.str().c_str() , sectionVerbosity);// trace the whole.
+    }
+    SectionContent_multiMessage_instance_mtx.unlock();// END critical section.
+}// END SectionContent_variable_name_value
+
+
+void SectionContent_variable_name_value(
+    const char *variable_name
+    , long long variable_value
+    ,int sectionVerbosity         )
+{
+    std::string var_name( variable_name);
+    SectionContent_variable_name_value( var_name
+    ,variable_value
+    ,sectionVerbosity  );
+}
+
 }// end namespace LogWrappers
 
 
