@@ -92,7 +92,7 @@ std::string * BaseConverter::baseOtherConverterTo( unsigned long decimalIntegerT
 unsigned long BaseConverter::base10ConverterTo( const std::string & baseOtherPar, unsigned short originBase )
 {
     unsigned long decimalQuantity = 0;// init and sum on it.
-    int inputLen = baseOtherPar.size();
+    // DBG int inputLen = baseOtherPar.size();
     int endPrefixUnderscore = Common::StrManipul::findFirstOccurenceOf("_", baseOtherPar);
     std::string * cleanVersion = nullptr;
     if( -1 != endPrefixUnderscore)
