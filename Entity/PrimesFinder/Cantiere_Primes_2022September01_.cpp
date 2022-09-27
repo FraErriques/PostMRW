@@ -867,6 +867,10 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         {// can't go back from the origin.
             discriminatingElement_position = 0;
         }// else ok.
+        if( discriminatingElement_position >= dumpSize)
+        {// can't go past the end.
+            discriminatingElement_position = dumpSize-1;// just before eof.
+        }// else ok.
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position ==", discriminatingElement_position, 0);
         this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
