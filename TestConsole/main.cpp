@@ -31,7 +31,7 @@ int main()
     //------Unit Test-----CANTIERE------------------------------------------------
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 3);
     //size_t ulong_size = sizeof( unsigned long long);
-    bool seq = test->sequentialDump( 99000);
+    bool seq = test->sequentialDump( 9500);
     bool rand = test->randomDump( 1000, 1050);
     bool reader = true; // used with &=
     for (int c=599; c<611; c++)

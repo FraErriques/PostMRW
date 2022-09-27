@@ -13,6 +13,8 @@
 *   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
 *   fixed a memory leak in Bisection:: a delete was necessary in the for-loop for nextRecord. ------------------------(V)
 *   let the StreamReader an automatic variable end let the seekg internal to the reading-methods.
+*   why complete renewal of sequentialDump only for dump<100k  ?
+*   leak in readDumpTail
 *   std::move in Config:: dump filenames.
 *   enrich StringBuilder and Log for better tracing, overloading variable types
 */
@@ -496,6 +498,7 @@ Primes::DumpElement * Primes::newDeal_recoverLastRecord( const char * dumpTail)
             lastRecord->ordinal = Common::StrManipul::stringToUnsignedLong(*it);
         }// else the token is not interesting; it was included in the read portion, but is not part of the last row.So skip when i>2
     }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
+    //delete tokenArray;// TODO test
     // ready.
     return lastRecord;// caller has to delete.
 }// newDeal_recoverLastRecord
@@ -546,7 +549,7 @@ Primes::DumpElement * Primes::newDeal_recoverDumpTail( const char * dumpTail_Str
         // get an ordinal from tailEnd, coming back:
         dumpTail_Records[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
-    delete tokenArray;
+    delete tokenArray;// TODO test
     //ready.
     return dumpTail_Records;// caller has to delete.
 }// newDeal_recoverDumpTail
