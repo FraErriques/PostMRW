@@ -862,7 +862,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     unsigned Bisection_step = 1;
     for (;; Bisection_step++)// breaks on Bisection_failure_
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
-        discriminatingElement_position = (right-left)/2 + left;// remember the shift from left_position.
+        discriminatingElement_position = (right-left)/2 + previous_left;// remember the shift from left_position.
         if( discriminatingElement_position<0)
         {// can't go back from the origin.
             discriminatingElement_position = 0;
@@ -994,7 +994,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     unsigned long long  desiredPrime = this->queryMap( desiredOrdinal);// check if there's already the record in Map.
     if( 0 != desiredPrime)
     {
-        std::cout<<"\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime <<"\n"; // DBG
+        std::cout<<"\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime; // DBG
         return desiredPrime;
     }
     else // zero returned by queryMap means key-absent.
@@ -1011,7 +1011,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     }// DBG !
     else
     {
-        std::cout<<"\n\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime <<"\n"; // DBG
+        std::cout<<"\n\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime; // DBG
     }// DBG !
     //
     return desiredPrime;

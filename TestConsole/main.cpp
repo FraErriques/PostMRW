@@ -29,34 +29,35 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----CANTIERE------------------------------------------------
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 90);
-    //size_t ulong_size = sizeof( unsigned long long);
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
+    size_t ulong_size = sizeof( unsigned long long);
     bool seq = test->sequentialDump( 9500);
     bool rand = test->randomDump( 1000, 1050);
     bool reader = true; // used with &=
-    for (int c=9000; c<9001; c++)
+    reader &= test->readBy_OperatorSquares( 90);// ask Prime[n]
+    for (int c=1; c<100; c++)
     {
         reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
     }
     std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-    getchar();
-    //bool reader;
-    reader = test->readSequentialDump_nextRec( 60);
-    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        0
-        ,915 // there must be room for just one record Prime<100.
-     );
-    for( int c=0; c<61; c++)
-    {// next Rec
-        reader &= test->readSequentialDump_nextRec(c);
-    }
-    for( int c=0; c<61; c++)
-    {// array of Rec
-        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-            c
-            ,c+915 // there must be room for just one record Prime<100.
-         );
-    }// array of Rec
+//    getchar();
+//    //bool reader;
+//    reader = test->readSequentialDump_nextRec( 60);
+//    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//        0
+//        ,915 // there must be room for just one record Prime<100.
+//     );
+//    for( int c=0; c<61; c++)
+//    {// next Rec
+//        reader &= test->readSequentialDump_nextRec(c);
+//    }
+//    for( int c=0; c<61; c++)
+//    {// array of Rec
+//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//            c
+//            ,c+915 // there must be room for just one record Prime<100.
+//         );
+//    }// array of Rec
     delete test;
     //------Unit Test-----CANTIERE---------------------------------------------------
     //
