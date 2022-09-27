@@ -697,7 +697,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
             nextRecord->endPositionOfRecord = discriminatingElement_position + stepDone;
             nextRecord->Ordinal = nextRecPtr->ordinal;
             nextRecord->Prime = nextRecPtr->prime;
-            // TODO delete nextRecPtr
+            delete[] nextRecPtr;// TODO test
             this->sharedReader->clear();// reset in case EOF or badRead has been set.
             break;
         }
