@@ -29,9 +29,9 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----CANTIERE------------------------------------------------
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 3);
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 80);
     //size_t ulong_size = sizeof( unsigned long long);
-    bool seq = test->sequentialDump( 99000);
+    bool seq = test->sequentialDump( 199000);
     bool rand = test->randomDump( 1000, 1050);
     bool reader = true; // used with &=
     for (int c=599; c<611; c++)
@@ -39,7 +39,7 @@ int main()
         reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
     }
     std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-//    getchar();
+    getchar();
 //    //bool reader;
 //    reader = test->readSequentialDump_nextRec( 60);
 //    reader &= test->readSequentialDump_arrayOfRec_anywhere(
@@ -65,6 +65,12 @@ int main()
 //        bool seq = test->sequentialDump( 9000);
 //        bool rand = test->randomDump( 0, 50);
 //        bool reader = test->readBy_OperatorSquares( 525);// ask Prime[n]
+//        for (int c=599; c<611; c++)
+//        {
+//            reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
+//        }
+//        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+//        getchar();
 //        std::cout<<"\n\n\n\t Strike Enter to continue\t";
 //        getchar();
 //        reader &= test->readSequentialDump_nextRec( 60);
