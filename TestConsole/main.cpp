@@ -30,34 +30,43 @@ int main()
     //
     //------Unit Test-----CANTIERE------------------------------------------------
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    size_t ulong_size = sizeof( unsigned long long);
-    bool seq = test->sequentialDump( 9500);
-    bool rand = test->randomDump( 1000, 1050);
+    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
+    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
+    bool outcome_newDeal_recoverLastRecord = test->newDeal_recoverLastRecord();
+    bool outcome_newDeal_recoverDumpTail = test->newDeal_recoverDumpTail();
     bool reader = true; // used with &=
-    reader &= test->readBy_OperatorSquares( 90);// ask Prime[n]
+    reader = test->readSequentialDump_nextRec( 60);
+    bool outcome_acquireNextRecord = test->acquireNextRecord();
+    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
+    //---
+    size_t ulong_size = sizeof( unsigned long long);
+    bool seq = test->sequentialDump( 541);// required prime==soglia Prime[100]=541
+    bool rand = test->randomDump( 1000, 1050);
+
+    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
     for (int c=1; c<100; c++)
     {
         reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
     }
     std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-//    getchar();
-//    //bool reader;
-//    reader = test->readSequentialDump_nextRec( 60);
-//    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-//        0
-//        ,915 // there must be room for just one record Prime<100.
-//     );
-//    for( int c=0; c<61; c++)
-//    {// next Rec
-//        reader &= test->readSequentialDump_nextRec(c);
-//    }
-//    for( int c=0; c<61; c++)
-//    {// array of Rec
-//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-//            c
-//            ,c+915 // there must be room for just one record Prime<100.
-//         );
-//    }// array of Rec
+    getchar();
+    //bool reader;
+    reader = test->readSequentialDump_nextRec( 60);
+    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+        0
+        ,915 // there must be room for just one record Prime<100.
+     );
+    for( int c=0; c<61; c++)
+    {// next Rec
+        reader &= test->readSequentialDump_nextRec(c);
+    }
+    for( int c=0; c<61; c++)
+    {// array of Rec
+        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+            c
+            ,c+915 // there must be room for just one record Prime<100.
+         );
+    }// array of Rec
     delete test;
     //------Unit Test-----CANTIERE---------------------------------------------------
     //
@@ -66,6 +75,12 @@ int main()
 //        bool seq = test->sequentialDump( 9000);
 //        bool rand = test->randomDump( 0, 50);
 //        bool reader = test->readBy_OperatorSquares( 525);// ask Prime[n]
+//        for (int c=599; c<611; c++)
+//        {
+//            reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
+//        }
+//        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+//        getchar();
 //        std::cout<<"\n\n\n\t Strike Enter to continue\t";
 //        getchar();
 //        reader &= test->readSequentialDump_nextRec( 60);

@@ -67,7 +67,7 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
         this->canOperate = false;
         this->append_Sequential_Stream = nullptr;
         this->append_Random_Stream = nullptr;
-        this->sharedReader = nullptr;
+//        this->sharedReader = nullptr;
     }// not-healthly built.
 }// empty Ctor : reads both the sequentialFile and randomFile fullpath
 
@@ -98,10 +98,10 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
             hasSequentialDumpBeenReset = true;
         }
         this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
-        this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
-        this->sharedReader->close();
-        delete this->sharedReader;
-        this->sharedReader = nullptr;
+//        this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
+//        this->sharedReader->close();
+//        delete this->sharedReader;
+//        this->sharedReader = nullptr;
     }// else sequentialFile not present.
     if (hasSequentialDumpBeenReset)
     {// start a new dump from scratch :
@@ -126,19 +126,19 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 
 bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset)
 {
-    bool res = false;
-    this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
-    if( nullptr != this->sharedReader)
+    std::ifstream localReader;
+    if(nullptr==this->sequentialDumpPath)
     {
-        res = true;
-    }// else stay false.
-    else
-    {// cannot operate.
-        res = false;
-        return res;
-    }
-    this->sharedReader->seekg( -1 , std::ios::end );
-    std::ios::pos_type sequentialDump_size = this->sharedReader->tellg();
+        this->feedDumpPath();
+    }// else ready;
+    localReader.open( *this->sequentialDumpPath, std::fstream::in);
+    if( ! localReader.is_open() )
+    {
+        return false;
+    }// else continue
+    // no more  // TODO test localReader.seekg( acquireRecordNextToOffset , std::ios::beg );
+    bool res = false;
+    long long sequentialDump_size = this->sequentialStreamSize();
     if( acquireRecordNextToOffset >= sequentialDump_size
         // ||  TODO evaluate additional error conditions
        )
@@ -147,8 +147,8 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
         return res;
     }
     //---acquireNextRecord----START
-    this->sharedReader->seekg( acquireRecordNextToOffset , std::ios::beg );// NB. place appropriately in production environment
-    Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( acquireRecordNextToOffset);// pass parameter: file-seek-offset.
+    // pass parameter: file-seek-offset.
+    Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( acquireRecordNextToOffset);
     if( nullptr != nextRecord)
     {
         std::cout<<"\n\t acquireNextRecord("<<acquireRecordNextToOffset<<") reads:";
@@ -157,16 +157,14 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
         std::cout<<"\n\t endPositionOfRecord=="<<nextRecord->endPositionOfRecord;
         std::cout<<"\n\n\n";
         delete nextRecord;
+        res = true;
     }
     else
     {// cannot operate.
         res = false;
         return res;
-    }
-    //---acquireNextRecord----END
-    this->sharedReader->close();
-    delete this->sharedReader;
-    this->sharedReader = nullptr;
+    }//---acquireNextRecord----END
+    localReader.close();
     // ready
     return res;
 }// ReadSequentialDumpInterface_lastRec
@@ -175,18 +173,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
 bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
 {
     bool res = false;
-    this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
-    if( nullptr != this->sharedReader)
-    {
-        res = true;
-    }// else stay false.
-    else
-    {// cannot operate.
-        res = false;
-        return res;
-    }
-    this->sharedReader->seekg( -1 , std::ios::end );
-    std::ios::pos_type sequentialDump_size = this->sharedReader->tellg();
+    long long sequentialDump_size = this->sequentialStreamSize();
     if( recArray_seek_START >= sequentialDump_size
         || recArray_seek_START < 0
         // ||  TODO evaluate additional error conditions
@@ -194,9 +181,8 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
     {// cannot operate.
         res = false;
         return res;
-    }
+    }// else continue.
     //---------acquireSequenceOfRecord----START
-    this->sharedReader->seekg( recArray_seek_START , std::ios::beg );// NB. place appropriately in production environment
     int cardinalityOfRecordSequence = 0;
     Primes::DumpElement * recSequence = this->acquireSequenceOfRecord(
         recArray_seek_START
@@ -218,9 +204,6 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
     }
     delete[] recSequence;
     //----------------acquireSequenceOfRecord------END
-    this->sharedReader->close();
-    delete this->sharedReader;
-    this->sharedReader = nullptr;
     // ready
     return res;
 }//ReadSequentialDumpInterface_arrayOfRec_anywhere
@@ -310,11 +293,11 @@ Primes::~Primes()
         delete this->randomDumpPath;
         this->randomDumpPath = nullptr;
     }
-    if( nullptr != this->sharedReader)
-    {
-        this->sharedReader->close();
-        this->sharedReader = nullptr;
-    }// else already closed.
+//    if( nullptr != this->sharedReader)
+//    {
+//        this->sharedReader->close();
+//        this->sharedReader = nullptr;
+//    }// else already closed.
     if( nullptr != this->append_Sequential_Stream)
     {
         this->append_Sequential_Stream->close();
@@ -340,22 +323,27 @@ void Primes::createOrAppend( const std::string * fullPath)
 
 const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath)
 {
-    std::string * directTailDump = nullptr;// new char[120];// tune it.
+    std::string * directTailDump = new std::string();// TODO test
     std::ifstream lastrecReader( *fullPath, std::fstream::in );
     lastrecReader.seekg( 0, lastrecReader.end);
     int streamSize = lastrecReader.tellg();// filesize
-    if( 1024>streamSize)
+//    if( 1024>streamSize)
+//    {// do NOT append; rewrite from scratch.
+//        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out );
+//        directTailDump->assign( "1_2");
+//        this->append_Sequential_Stream->close();
+//        delete this->append_Sequential_Stream;
+//        this->append_Sequential_Stream = nullptr;
+//        return directTailDump;
+//    }// else continue. directTailDump will be assigned later.
+    //---proposal
+    int stepBack = 100;
+    if( streamSize <stepBack)
     {
-        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out );// NO  | std::fstream::app rewrite from scratch.
-        //sprintf( directTailDump, "1_2");// means start from sratch.
-        directTailDump = new std::string("1_2");
-        this->append_Sequential_Stream->close();
-        delete this->append_Sequential_Stream;
-        this->append_Sequential_Stream = nullptr;
-        return directTailDump;
-    }// else continue.
-    Common::StringBuilder * sb = new Common::StringBuilder( 100);// forecasted size.
-    lastrecReader.seekg( -100, lastrecReader.end);// get in place to read last char[100].
+        stepBack = streamSize;
+    }// else stay as init.
+    Common::StringBuilder * sb = new Common::StringBuilder( stepBack);// forecasted size.
+    lastrecReader.seekg( -1*stepBack, lastrecReader.end);// get in place to read last char[stepBack].
     int currentPosition;
     int step = 0;
     // DBG int howManyLineEndings = 0;
@@ -370,20 +358,30 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
             Common::LogWrappers::SectionContent("----####### Exception in lastRecordReaderByChar   ___________", 0);
         }// else continue.
     }// for
-    std::string bufferedReverseTail = sb->str();
-    // DBG int bufferedReverseTail_len = bufferedReverseTail.length();
-    //const char * const_directTailDump = sb->str().c_str();
-    //directTailDump = (char *)const_directTailDump;
-    // delete sb; ?really?
+    directTailDump->assign( sb->str() );
+    delete sb;// TODO test
     // ready
     return directTailDump;// caller has to delete
 }// lastRecordReaderByChar
 
+long long Primes::sequentialStreamSize()
+{
+    if( nullptr == this->sequentialDumpPath)
+    {
+        this->feedDumpPath();
+    }// else ready.
+    std::ifstream lastrecReader( *(this->sequentialDumpPath), std::fstream::in );// auto
+    lastrecReader.seekg( -1, std::ios::end );
+    long long streamSize = lastrecReader.tellg();
+    return streamSize;
+}// sequentialStreamSize
+
 const std::string * Primes::newDeal_dumpTailReaderByChar( const std::string * fullPath)
 {
     std::ifstream lastrecReader( *fullPath, std::fstream::in );
-    lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
-    int streamSize = lastrecReader.tellg();
+//    lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
+//    int streamSize = lastrecReader.tellg();
+    long long streamSize = this->sequentialStreamSize();
     if( 100>streamSize)// for such small data, it's better to create a new sequeltial file from scratch.
     {
         return nullptr;
@@ -394,9 +392,8 @@ const std::string * Primes::newDeal_dumpTailReaderByChar( const std::string * fu
     {
         sb->append(c);
     }
-    // const char * sequentialFile_tail = (char *)(sb->str().c_str());// caller has to delete!
     std::string * sequentialFile_tail = new std::string( sb->str() ); // caller has to delete!
-    // delete sb; NB. this deletion seems to corrupt the "sequentialFile_tail" return value. TODO TODO std::move
+    delete sb; // TODO test NB. this deletion seems to corrupt the "sequentialFile_tail" return value. TODO TODO std::move
     lastrecReader.close();
     // ready.
     return sequentialFile_tail;// caller has to delete
@@ -634,10 +631,17 @@ void Primes::Start_PrimeDump_FileSys(
 
 Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long discriminatingElement_position)
 {
-    if( nullptr==this->sharedReader || ! this->sharedReader->is_open())
+    std::ifstream localReader;
+    if(nullptr==this->sequentialDumpPath)
+    {
+        this->feedDumpPath();
+    }// else ready;
+    localReader.open( *this->sequentialDumpPath, std::fstream::in);
+    if( ! localReader.is_open() )
     {
         return nullptr;
     }// else continue
+    localReader.seekg( discriminatingElement_position , std::ios::beg );// TODO test
     AsinglePointInStream * nextRecord = nullptr;
     int c=0;
     int stepDone = 0;
@@ -646,13 +650,13 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
         // cannot check if one byte before there's end-of-record;
         // NO  seekg( discriminatingElement_position-1, ios::beg)
-        if( ! this->sharedReader->good()) {break;}
-        c = this->sharedReader->get();
+        if( ! localReader.good()) {break;}
+        c = localReader.get();
         if( 13==c || 10==c )
         {
             break;
         }// next record begin-position is set
-        if( this->sharedReader->eof() ) {break;}
+        if( localReader.eof() ) {break;}
     }// for step until next-record starting point.
     // then write down next complete record :
     Common::StringBuilder sb(50);// estimate a single record's length (in excess).
@@ -660,8 +664,8 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
     int midRecord_separator=0;
     for( stepDone = 0;  ; stepDone++ )
     {
-        if( ! this->sharedReader->good()) {break;}
-        c = this->sharedReader->get();
+        if( ! localReader.good()) {break;}
+        c = localReader.get();
         if(13==c || 10==c)
         {
             terminator++;
@@ -693,11 +697,12 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
             nextRecord->endPositionOfRecord = discriminatingElement_position + stepDone;
             nextRecord->Ordinal = nextRecPtr->ordinal;
             nextRecord->Prime = nextRecPtr->prime;
-            // TODO delete nextRecPtr
-            this->sharedReader->clear();// reset in case EOF or badRead has been set.
+            delete[] nextRecPtr;// TODO test
+            localReader.clear();// reset in case EOF or badRead has been set.
             break;
         }
     }// for step into next complete record
+    localReader.close();
     //ready
     return nextRecord;// caller has to delete.
 }// acquireNextRecord
@@ -709,10 +714,17 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     , int * howMany_RecordInSequence
                                         )
 {
-    if( nullptr==this->sharedReader || ! this->sharedReader->is_open())
+    std::ifstream localReader;
+    if(nullptr==this->sequentialDumpPath)
+    {
+        this->feedDumpPath();
+    }// else ready;
+    localReader.open( *this->sequentialDumpPath, std::fstream::in);
+    if( ! localReader.is_open() )
     {
         return nullptr;
     }// else continue
+    localReader.seekg( discriminatingElement_position , std::ios::beg );// TODO test
     DumpElement * sequenceRecord = nullptr;
     int c=0;
     int stepDone = 0;
@@ -721,13 +733,13 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
         // cannot check if one byte before there's end-of-record;
         // NO  seekg( discriminatingElement_position-1, ios::beg)
-        if( ! this->sharedReader->good()) {break;}
-        c = this->sharedReader->get();
+        if( ! localReader.good()) {break;}
+        c = localReader.get();
         if( 13==c || 10==c )
         {
             break;
         }// next record begin-position is set
-        if( this->sharedReader->eof() ) {break;}
+        if( localReader.eof() ) {break;}
     }// for step until next-record starting point. Steps done until here cannot be counted, since they are before next record.
     // then write down next complete record :
     Common::StringBuilder sb(until_position-discriminatingElement_position);// estimate
@@ -735,8 +747,8 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     int midRecord_separator=0;
     for( stepDone = 0;  ; stepDone++ )// start counting steps from here:
     {
-        if( ! this->sharedReader->good()) {break;}
-        c = this->sharedReader->get();
+        if( ! localReader.good()) {break;}
+        c = localReader.get();
         if(13==c || 10==c)
         {
             terminator++;
@@ -757,7 +769,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
         }
         if( ( discriminatingElement_position + stepDone >= until_position // TODO test : reached endpoint
               && (13==c || 10==c) )// as additional condition, step until the end of current record
-             || this->sharedReader->eof()// this alone is a sufficient condition.
+             || localReader.eof()// this alone is a sufficient condition.
            )
         {
             const std::string * sequenceOfRecord_txt = new std::string( sb.str() );
@@ -766,10 +778,11 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
             sequenceRecord =
                 newDeal_recoverDumpTail( sequenceOfRecord_txt , howMany_RecordInSequence );
             // TODO delete nextRecPtr
-            this->sharedReader->clear();// reset in case EOF or badRead has been set.
+            localReader.clear();// reset in case EOF or badRead has been set.
             break;
         }
     }// for step into next complete record
+    localReader.close();
     //ready
     return sequenceRecord;// caller has to delete.
 }// acquireSequenceOfRecord
@@ -792,7 +805,6 @@ bool Primes::MoveToMap(
     {// cannot go back from origin.
         discriminatingElement_position = 0;
     }// else ok.
-    this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
     Primes::DumpElement * tmpStorage = acquireSequenceOfRecord(
          discriminatingElement_position
          ,until_position
@@ -829,27 +841,30 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
  {
     Common::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
     Common::LogWrappers::SectionContent_variable_name_value(
-        "PARAMETER requiredOrdinal ==", requiredOrdinal, 0);
+        "-----------------PARAMETER requiredOrdinal ==", requiredOrdinal, 0);
     Common::LogWrappers::SectionContent_variable_name_value(
-        "PARAMETER sogliaDistanza ==", (unsigned long long)this->sogliaDistanza, 0);
+        "-----------------PARAMETER sogliaDistanza ==", (unsigned long long)this->sogliaDistanza, 0);
     bool res = false;
-    this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
-    if( nullptr != this->sharedReader)
+    std::ifstream localReader;
+    if(nullptr==this->sequentialDumpPath)
+    {
+        this->feedDumpPath();
+    }// else ready;
+    localReader.open( *this->sequentialDumpPath, std::fstream::in);
+    if( localReader.is_open() )
     {
         res = true;
     }// else stay false.
     else
     {// cannot operate.
         res = false;
-        Common::LogWrappers::SectionContent("the SharedReader is NULL.", 0);
+        Common::LogWrappers::SectionContent("the Stream Reader is invalid.", 0);
         return res;
     }
     unsigned long long left = 0;
     unsigned long long previous_left = left;
-    this->sharedReader->seekg( -1, std::ios::end);
-    std::ios::pos_type pt_dumpSize = this->sharedReader->tellg();
-    long long dumpSize = (long long)pt_dumpSize;
-    long long previous_dumpSize = (long long)dumpSize;
+    long long dumpSize = this->sequentialStreamSize();
+    long long previous_dumpSize = dumpSize;
     unsigned long long right = dumpSize;
     unsigned long long previous_right = right;
     std::string dumpSize_str( *Common::StrManipul::uLongLongToString( dumpSize) );
@@ -862,6 +877,10 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     unsigned Bisection_step = 1;
     for (;; Bisection_step++)// breaks on Bisection_failure_
     {   // acquire the first record, successive to the offset "discriminatingElement_position"
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "left ==", left, 0);
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "previous_left ==", previous_left, 0);
         discriminatingElement_position = (right-left)/2 + previous_left;// remember the shift from left_position.
         if( discriminatingElement_position<0)
         {// can't go back from the origin.
@@ -873,7 +892,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         }// else ok.
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position ==", discriminatingElement_position, 0);
-        this->sharedReader->seekg( discriminatingElement_position, std::ios::beg);// TODO test
+        localReader.seekg( discriminatingElement_position, std::ios::beg);// TODO test
         nextRecord = acquireNextRecord( discriminatingElement_position);
         Common::LogWrappers::SectionContent_variable_name_value(
             "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
@@ -966,10 +985,8 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         delete nextRecord;
         nextRecord = nullptr;
     }// for
-    //---close sharedReader
-    this->sharedReader->close();
-    delete this->sharedReader;
-    this->sharedReader = nullptr;
+    //---close Reader
+    localReader.close();
     Common::LogWrappers::SectionClose();
     // ready
     return res;

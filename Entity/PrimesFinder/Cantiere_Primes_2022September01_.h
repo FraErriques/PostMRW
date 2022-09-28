@@ -41,11 +41,12 @@ class Primes
     bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
     bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
     unsigned long long operator[]( unsigned long long desiredOrdinal);
+    long long sequentialStreamSize();
     // TODO let it private, with properties
     unsigned sogliaDistanza;
 
 
-	private:
+	// TODO only in Cantiere, everything has to be accessible. When passing in Produciont, let private again.
     /// Data
     std::map<unsigned long long, unsigned long long> * memoryMappedDump;
     bool isHealthlyConstructed = false;
@@ -53,7 +54,7 @@ class Primes
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
     const std::string * randomDumpPath = nullptr;// NB. remember to share and delete
 	// methods:{bisection,getToNextRecord,getToPrevRecord,StepThroughNrecordsFFWD,StepThroughNrecordsBKWD} all share the stream.
-    std::ifstream * sharedReader;// read
+//    std::ifstream * sharedReader;// read
     std::ofstream * append_Sequential_Stream;// write
     std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).

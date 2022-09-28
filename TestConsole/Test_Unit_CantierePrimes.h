@@ -23,6 +23,12 @@ class Test_Unit_CantierePrimes
             , unsigned long long recArray_seek_END  );
         /** read by means of operator[] */
         bool readBy_OperatorSquares( unsigned long long desiredOrdinal );
+        bool dumpTailReaderByChar( );
+        bool lastRecordReaderByChar( );
+        bool newDeal_recoverLastRecord( ); // scalar
+        bool newDeal_recoverDumpTail( );   // array
+        bool acquireNextRecord( );
+        bool acquireSequenceOfRecord( );
 
         /** Access m_Counter
          * \return The current value of m_Counter
