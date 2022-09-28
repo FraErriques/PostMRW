@@ -1,4 +1,5 @@
 #include "Test_Unit_CantierePrimes.h"
+#include "../Common/Config_wrap/Config_wrap.h"
 
 Test_Unit_CantierePrimes::Test_Unit_CantierePrimes(  unsigned semiAmplitudeOfEachMapSegment )
 {//ctor
@@ -75,3 +76,95 @@ bool Test_Unit_CantierePrimes::readBy_OperatorSquares( unsigned long long desire
                                                        );
     return Test_Unit_CantierePrimes_readBy_OperatorSquares;
 }// Test_Unit_CantierePrimes::readBy_OperatorSquares
+
+bool Test_Unit_CantierePrimes::dumpTailReaderByChar( )
+{// calls: const std::string * newDeal_dumpTailReaderByChar( const std::string * fullPath);
+    bool is_retrivedString_valid = false;
+    // default Prime-configuration-file. All in this file.
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");
+    const std::string * desiredSectionContent = primeNamedConfig->getValue("primeDefaultFile");// ( *sectionNameInFile)
+    delete primeNamedConfig;
+    const std::string * tail = this->tested_Class->newDeal_dumpTailReaderByChar( desiredSectionContent);
+    delete desiredSectionContent;
+    delete tail;
+    is_retrivedString_valid = true;// TODO manually verify.
+    //
+    return is_retrivedString_valid;
+}// dumpTailReaderByChar
+
+bool Test_Unit_CantierePrimes::lastRecordReaderByChar( )
+{// calls: const std::string * lastRecordReaderByChar( const std::string * fullPath);
+    bool is_retrivedString_valid = false;
+    // default Prime-configuration-file. All in this file.
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");
+    const std::string * desiredSectionContent = primeNamedConfig->getValue("primeDefaultFile");// ( *sectionNameInFile)
+    delete primeNamedConfig;
+    const std::string * tail = this->tested_Class->lastRecordReaderByChar( desiredSectionContent);
+    delete desiredSectionContent;
+    delete tail;
+    is_retrivedString_valid = true;// TODO manually verify.
+    //
+    return is_retrivedString_valid;
+}// lastRecordReaderByChar
+
+bool Test_Unit_CantierePrimes::newDeal_recoverLastRecord( )
+{// calls: DumpElement * newDeal_recoverLastRecord( const std::string * dumpTail);
+    bool is_DumpElement_valid = false;
+    // default Prime-configuration-file. All in this file.
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");
+    const std::string * desiredSectionContent = primeNamedConfig->getValue("primeDefaultFile");// ( *sectionNameInFile)
+    delete primeNamedConfig;
+    const std::string * tail = this->tested_Class->lastRecordReaderByChar( desiredSectionContent);
+    delete desiredSectionContent;
+    Cantiere_Primes_2022September01_::Primes::DumpElement * lastRecord =
+        this->tested_Class->newDeal_recoverLastRecord( tail);
+    delete tail;
+    delete lastRecord;
+    is_DumpElement_valid = true;// TODO manually verify.
+    //
+    return is_DumpElement_valid;
+}// newDeal_recoverLastRecord
+
+
+bool Test_Unit_CantierePrimes::newDeal_recoverDumpTail( )
+{// calls: DumpElement * newDeal_recoverDumpTail( const std::string * dumpTail_String , int *recordArrayCardinality);
+    bool is_DumpTail_valid = false;
+    // default Prime-configuration-file. All in this file.
+    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");
+    const std::string * desiredSectionContent = primeNamedConfig->getValue("primeDefaultFile");// ( *sectionNameInFile)
+    delete primeNamedConfig;
+    const std::string * tail = this->tested_Class->lastRecordReaderByChar( desiredSectionContent);
+    delete desiredSectionContent;
+    int recordArrayCardinality;
+    Cantiere_Primes_2022September01_::Primes::DumpElement * dumpTail =
+        this->tested_Class->newDeal_recoverDumpTail( tail, &recordArrayCardinality);
+    delete tail;
+    delete[] dumpTail;
+    is_DumpTail_valid = true;// TODO manually verify.
+    //
+    return is_DumpTail_valid;
+}// newDeal_recoverDumpTail
+
+
+bool Test_Unit_CantierePrimes::acquireNextRecord( )
+{// calls: AsinglePointInStream * acquireNextRecord( unsigned long long discriminatingElement_position);
+    bool is_DumpTail_valid = false;
+    Cantiere_Primes_2022September01_::Primes::AsinglePointInStream * aSingleRecord =
+        this->tested_Class->acquireNextRecord( 125); // position in Stream
+    delete aSingleRecord;
+    is_DumpTail_valid = true;// TODO manually verify.
+    //
+    return is_DumpTail_valid;
+}// acquireNextRecord
+
+bool Test_Unit_CantierePrimes::acquireSequenceOfRecord( )
+{// calls: DumpElement * acquireSequenceOfRecord(from,to, &hmRecords)
+    bool is_DumpElementArray_valid = false;
+    int recordArrayCardinality;
+    Cantiere_Primes_2022September01_::Primes::DumpElement * anArrayOfRecord =
+        this->tested_Class->acquireSequenceOfRecord( 125, 300, &recordArrayCardinality); // position in Stream
+    delete anArrayOfRecord;
+    is_DumpElementArray_valid = true;// TODO manually verify.
+    //
+    return is_DumpElementArray_valid;
+}// acquireSequenceOfRecord
