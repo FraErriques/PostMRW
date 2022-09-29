@@ -13,11 +13,12 @@
 *   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
 *   fixed a memory leak in Bisection:: a delete was necessary in the for-loop for nextRecord. ------------------------(V)
 *   transformed the char* into sdt::string * with const clause.-------------------------------------------------------(V)
-*   let the StreamReader an automatic variable end let the seekg internal to the reading-methods.
-*   why complete renewal of sequentialDump only for dump<100k  ?
+*   let the StreamReader an automatic variable and let the seekg internal to the reading-methods.---------------------(V)
+*   why complete renewal of sequentialDump only for dump<100k  ?--------------------------------------------------(? test)
 *   leak in readDumpTail----------------------------------------------------------------------------------------------(V)
-*   std::move in Config:: dump filenames.-------------------------------------------------------------(V)
-*   enrich StringBuilder and Log for better tracing, overloading variable types
+*   std::move in Config:: dump filenames.-----------------------solved by std::string---------------------------------(V)
+*   enrich StringBuilder and Log for better tracing, overloading variable types--------------------------------------TODO
+*   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
 */
 
 
@@ -714,6 +715,8 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     , int * howMany_RecordInSequence
                                         )
 {
+    Common::LogWrappers::SectionOpen(
+        "acquireSequenceOfRecord", 0);
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
     {
@@ -724,6 +727,8 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     {
         return nullptr;
     }// else continue
+    Common::LogWrappers::SectionContent_variable_name_value(
+        "discriminatingElement_position ==", discriminatingElement_position, 0);
     localReader.seekg( discriminatingElement_position , std::ios::beg );// TODO test
     DumpElement * sequenceRecord = nullptr;
     int c=0;
@@ -783,6 +788,9 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
         }
     }// for step into next complete record
     localReader.close();
+    Common::LogWrappers::SectionContent_variable_name_value(
+        "howMany_RecordInSequence ==", (signed long long)(*howMany_RecordInSequence),0);
+    Common::LogWrappers::SectionClose();
     //ready
     return sequenceRecord;// caller has to delete.
 }// acquireSequenceOfRecord
@@ -800,7 +808,10 @@ bool Primes::MoveToMap(
     , int *                 howMany_RecordInSequence
                )
 {
+    Common::LogWrappers::SectionOpen("MoveToMap",0);
     bool res = true;
+    Common::LogWrappers::SectionContent_variable_name_value(
+        "discriminatingElement_position ==", discriminatingElement_position, 0);
     if( discriminatingElement_position < 0)
     {// cannot go back from origin.
         discriminatingElement_position = 0;
@@ -834,6 +845,7 @@ bool Primes::MoveToMap(
     tmpStorage = nullptr;
     //
     res = true;
+    Common::LogWrappers::SectionClose();//pop
     return res;
 }// MoveToMap
 
@@ -841,9 +853,9 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
  {
     Common::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
     Common::LogWrappers::SectionContent_variable_name_value(
-        "-----------------PARAMETER requiredOrdinal ==", requiredOrdinal, 0);
+        "---------------------------------------------------PARAMETER requiredOrdinal ==", requiredOrdinal, 0);
     Common::LogWrappers::SectionContent_variable_name_value(
-        "-----------------PARAMETER sogliaDistanza ==", (unsigned long long)this->sogliaDistanza, 0);
+        "----------------------------------------------PARAMETER sogliaDistanza ==", (unsigned long long)this->sogliaDistanza, 0);
     bool res = false;
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
@@ -868,7 +880,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     unsigned long long right = dumpSize;
     unsigned long long previous_right = right;
     std::string dumpSize_str( *Common::StrManipul::uLongLongToString( dumpSize) );
-    Common::LogWrappers::SectionContent( ("____________________dumpSize == " + dumpSize_str).c_str() , 0);
+    Common::LogWrappers::SectionContent( ("___________________________dumpSize == " + dumpSize_str).c_str() , 0);
     long long discriminatingElement_position;// let it signed, to avoid overflows.
     long signedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
     unsigned long UNsignedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
@@ -876,22 +888,23 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     //
     unsigned Bisection_step = 1;
     for (;; Bisection_step++)// breaks on Bisection_failure_
-    {   // acquire the first record, successive to the offset "discriminatingElement_position"
+    {
         Common::LogWrappers::SectionContent_variable_name_value(
-            "left ==", left, 0);
+            "----------------------------------Bisection_step # ", (unsigned long long)Bisection_step, 0);
+        // acquire the first record, successive to the offset "discriminatingElement_position"
+        discriminatingElement_position = (right-left)/2 + left;// ==(right+left)/2 == M1(left,right).
         Common::LogWrappers::SectionContent_variable_name_value(
-            "previous_left ==", previous_left, 0);
-        discriminatingElement_position = (right-left)/2 + previous_left;// remember the shift from left_position.
+            "discriminatingElement_position ==", discriminatingElement_position, 0);
         if( discriminatingElement_position<0)
         {// can't go back from the origin.
             discriminatingElement_position = 0;
         }// else ok.
-        if( discriminatingElement_position >= dumpSize)
+        if( discriminatingElement_position > right )
         {// can't go past the end.
-            discriminatingElement_position = dumpSize-1;// just before eof.
+            discriminatingElement_position = right;// stay in the interval.
         }// else ok.
         Common::LogWrappers::SectionContent_variable_name_value(
-            "discriminatingElement_position ==", discriminatingElement_position, 0);
+            "discriminatingElement_position AFTER CORRECTIONS ==", discriminatingElement_position, 0);
         localReader.seekg( discriminatingElement_position, std::ios::beg);// TODO test
         nextRecord = acquireNextRecord( discriminatingElement_position);
         Common::LogWrappers::SectionContent_variable_name_value(
@@ -903,6 +916,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         UNsignedDelta = abs( signedDelta);
         if( UNsignedDelta <= this->sogliaDistanza)
         {// linear acquisition & move&& to map<>
+            Common::LogWrappers::SectionContent("---Under Threshold---: linear acquisition & move&& to map<>",0);
             //log-size-for category.
             int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
             // signed:(+)means landed right of obj
@@ -943,6 +957,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         // decide wether to retain left or right half
         if( signedDelta < 0) // nextRecord->Ordinal < requiredOrdinal)
         {// retain right
+            Common::LogWrappers::SectionContent("retain right",0);
             left = nextRecord->endPositionOfRecord;  //acquireNextRecord_end;
             Common::LogWrappers::SectionContent_variable_name_value(
                 "left ==", left, 0);
@@ -952,6 +967,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         }
         else if( signedDelta > 0) // nextRecord->Ordinal > requiredOrdinal)
         {// retain left
+            Common::LogWrappers::SectionContent("retain left",0);
             left = previous_left;
             Common::LogWrappers::SectionContent_variable_name_value(
                 "left ==", left, 0);
@@ -961,6 +977,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         }
         else if( nextRecord->Ordinal == requiredOrdinal)
         {
+            Common::LogWrappers::SectionContent("punctual convergence",0);
             std::pair<unsigned long long, unsigned long long> p(nextRecord->Ordinal,nextRecord->Prime);
             this->memoryMappedDump->insert( p);
             res = true;//done.
@@ -980,10 +997,10 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         }// else continue.
         previous_dumpSize = dumpSize;// then update.
         Common::LogWrappers::SectionContent_variable_name_value(
-            "Bisection_step ==", (unsigned long long)Bisection_step, 0);
+            "---------END of Bisection_step #", (unsigned long long)Bisection_step, 0);
         //---clean up memory before next loop---------------
         delete nextRecord;
-        nextRecord = nullptr;
+        nextRecord = nullptr;// cleanup stepWise-record.
     }// for
     //---close Reader
     localReader.close();
