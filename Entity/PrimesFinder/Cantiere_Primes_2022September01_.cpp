@@ -891,21 +891,19 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         Common::LogWrappers::SectionContent_variable_name_value(
             "----------------------------------Bisection_step # ", (unsigned long long)Bisection_step, 0);
         // acquire the first record, successive to the offset "discriminatingElement_position"
-        Common::LogWrappers::SectionContent_variable_name_value(
-            "left ==", left, 0);
-        Common::LogWrappers::SectionContent_variable_name_value(
-            "previous_left ==", previous_left, 0);
         discriminatingElement_position = (right-left)/2 + left;// ==(right+left)/2 == M1(left,right).
+        Common::LogWrappers::SectionContent_variable_name_value(
+            "discriminatingElement_position ==", discriminatingElement_position, 0);
         if( discriminatingElement_position<0)
         {// can't go back from the origin.
             discriminatingElement_position = 0;
         }// else ok.
-        if( discriminatingElement_position >= dumpSize)
+        if( discriminatingElement_position > right )
         {// can't go past the end.
-            discriminatingElement_position = dumpSize-1;// just before eof.
+            discriminatingElement_position = right;// stay in the interval.
         }// else ok.
         Common::LogWrappers::SectionContent_variable_name_value(
-            "discriminatingElement_position ==", discriminatingElement_position, 0);
+            "discriminatingElement_position AFTER CORRECTIONS ==", discriminatingElement_position, 0);
         localReader.seekg( discriminatingElement_position, std::ios::beg);// TODO test
         nextRecord = acquireNextRecord( discriminatingElement_position);
         Common::LogWrappers::SectionContent_variable_name_value(

@@ -40,13 +40,13 @@ int main()
     bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
     //---
     size_t ulong_size = sizeof( unsigned long long);
-    bool seq = test->sequentialDump( 541);// required prime==soglia Prime[100]=541
+    bool seq = test->sequentialDump( 9541);// required prime==soglia Prime[100]=541
     bool rand = test->randomDump( 1000, 1050);
 
     reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
-    for (int c=1; c<100; c++)
+    for (int c=1; c<1181; c++)
     {
-        reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
+        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
     }
     std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
     getchar();
