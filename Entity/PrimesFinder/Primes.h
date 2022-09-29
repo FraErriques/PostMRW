@@ -51,6 +51,7 @@ class Primes
     bool ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset);
     bool ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END);
     unsigned long long operator[]( unsigned long long desiredOrdinal);
+    long long sequentialStreamSize();
     // TODO let it private, with properties
     unsigned sogliaDistanza;
 
@@ -60,10 +61,10 @@ class Primes
     std::map<unsigned long long, unsigned long long> * memoryMappedDump;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
-    const char * sequentialDumpPath = nullptr;// NB. remember to share and delete[].
-    const char * randomDumpPath = nullptr;// NB. remember to share and delete[].
+    const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
+    const std::string * randomDumpPath = nullptr;// NB. remember to share and delete
 	// methods:{bisection,getToNextRecord,getToPrevRecord,StepThroughNrecordsFFWD,StepThroughNrecordsBKWD} all share the stream.
-    std::ifstream * sharedReader;// read
+//    std::ifstream * sharedReader;// read
     std::ofstream * append_Sequential_Stream;// write
     std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
@@ -71,19 +72,18 @@ class Primes
     // hide some Constructors
     Primes( const Primes & original );
     Primes();
-    // construction helper:
-    //const char * feed_CustomDumpPath(); // non const
     // assignement : operator=
     Primes & operator=   ( const Primes & second );
-    const char * feedDumpPath(); // non const
-    const char * feed_CustomDumpPath(); // non const
-    const char * getPrimeDumpFullPath( const std::string & sectionNameInFile) const;
-    void createOrAppend( const std::string & fullPath);
-    const char * lastRecordReaderByChar( const std::string & fullPath);
-    const char * newDeal_dumpTailReaderByChar( const std::string & fullPath);
-    DumpElement * newDeal_recoverLastRecord( const char * dumpTail);
+    // construction helper:
+    const std::string * feedDumpPath(); // non const
+    const std::string * feed_CustomDumpPath(); // non const
+    const std::string * getPrimeDumpFullPath( const std::string * sectionNameInFile) const;
+    void createOrAppend( const std::string * fullPath);
+    const std::string * lastRecordReaderByChar( const std::string * fullPath);
+    const std::string * newDeal_dumpTailReaderByChar( const std::string * fullPath);
+    DumpElement * newDeal_recoverLastRecord( const std::string * dumpTail);
     // newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
-    DumpElement * newDeal_recoverDumpTail( const char * dumpTail_String , int *recordArrayCardinality);
+    DumpElement * newDeal_recoverDumpTail( const std::string * dumpTail_String , int *recordArrayCardinality);
     // newDeal : state of the art.
     void Start_PrimeDump_FileSys(
             unsigned long long Left

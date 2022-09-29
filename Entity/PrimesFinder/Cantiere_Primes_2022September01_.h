@@ -62,7 +62,6 @@ class Primes
     // hide some Constructors
     Primes( const Primes & original );
     Primes();
-
     // assignement : operator=
     Primes & operator=   ( const Primes & second );
     // construction helper:

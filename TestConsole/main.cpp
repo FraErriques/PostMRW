@@ -30,10 +30,10 @@ int main()
     //
     //------Unit Test-----CANTIERE------------------------------------------------
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
-    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
-    bool outcome_newDeal_recoverLastRecord = test->newDeal_recoverLastRecord();
-    bool outcome_newDeal_recoverDumpTail = test->newDeal_recoverDumpTail();
+//    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
+//    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
+//    bool outcome_newDeal_recoverLastRecord = test->newDeal_recoverLastRecord();
+//    bool outcome_newDeal_recoverDumpTail = test->newDeal_recoverDumpTail();
     bool reader = true; // used with &=
     reader = test->readSequentialDump_nextRec( 60);
     bool outcome_acquireNextRecord = test->acquireNextRecord();

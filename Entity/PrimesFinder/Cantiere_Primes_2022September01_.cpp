@@ -13,11 +13,12 @@
 *   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
 *   fixed a memory leak in Bisection:: a delete was necessary in the for-loop for nextRecord. ------------------------(V)
 *   transformed the char* into sdt::string * with const clause.-------------------------------------------------------(V)
-*   let the StreamReader an automatic variable end let the seekg internal to the reading-methods.---------------------(V)
+*   let the StreamReader an automatic variable and let the seekg internal to the reading-methods.---------------------(V)
 *   why complete renewal of sequentialDump only for dump<100k  ?--------------------------------------------------(? test)
 *   leak in readDumpTail----------------------------------------------------------------------------------------------(V)
 *   std::move in Config:: dump filenames.-----------------------solved by std::string---------------------------------(V)
-*   enrich StringBuilder and Log for better tracing, overloading variable types-----
+*   enrich StringBuilder and Log for better tracing, overloading variable types--------------------------------------TODO
+*   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
 */
 
 
