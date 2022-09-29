@@ -46,7 +46,7 @@ class Primes
     unsigned sogliaDistanza;
 
 
-	// TODO only in Cantiere, everything has to be accessible. When passing in Produciont, let private again.
+	// TODO PRIIVATE removed only in Cantiere, everything has to be accessible. When passing in Produciont, let private again.
     /// Data
     std::map<unsigned long long, unsigned long long> * memoryMappedDump;
     bool isHealthlyConstructed = false;
