@@ -33,8 +33,8 @@ int main()
     bool rand = test->randomDump( 1000, 1050);
     bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
     bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
-    bool outcome_newDeal_recoverLastRecord = test->newDeal_recoverLastRecord();
-    bool outcome_newDeal_recoverDumpTail = test->newDeal_recoverDumpTail();
+    bool outcome_recoverLastRecord = test->recoverLastRecord();
+    bool outcome_recoverDumpTail = test->recoverDumpTail();
     bool reader = true; // used with &=
     reader = test->readSequentialDump_nextRec( 60);
     bool outcome_acquireNextRecord = test->acquireNextRecord();

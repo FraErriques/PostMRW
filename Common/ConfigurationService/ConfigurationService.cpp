@@ -101,7 +101,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
             {
                 isConstructorStillAlive = false;
                 isHealtlyConstructed = false;
-                this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 84 : ConfigFile does not exist on FileSystem.";
+                this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 104 : ConfigFile does not exist on FileSystem.";
             }
             if( isConstructorStillAlive)
             {// se riesco ad aprirlo in lettura
@@ -113,7 +113,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                 else
                 {
                     isConstructorStillAlive = false;
-                    this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 96 : ConfigFile does not Open() for read.";
+                    this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 116 : ConfigFile does not Open() for read.";
                 }
                 if(isConstructorStillAlive)
                 {// se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
@@ -137,7 +137,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                     {
                         this->isHealtlyConstructed = false;
                         this->isConstructorStillAlive = false;
-                        this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 117 : ConfigFile does not have odd tokens : they have to be n + 1 + n ==2*n+1 so odd (dispari).";
+                        this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 140 : ConfigFile does not have odd tokens : they have to be n + 1 + n ==2*n+1 so odd (dispari).";
                     }// else can continue.
                     //# END se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
                     if(isConstructorStillAlive)
@@ -147,7 +147,7 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                         {
                             this->isHealtlyConstructed = false;
                             this->isConstructorStillAlive = false;
-                            this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 128 : ConfigFile does not have the separator token between keys#values (i.e. the # token).";
+                            this->whyNotHealtlyConstructed = "\n\t NOT healtly constructed: row 150 : ConfigFile does not have the separator token between keys#values (i.e. the # token).";
                         }// else can continue.
                         // END # se il separatore è al suo posto : n + 1 + n.
                         if(isConstructorStillAlive)
@@ -252,18 +252,18 @@ std::string * Common::ConfigurationService::getValue(const std::string &key)
             }// END if key presente in mappa
             else
             {// else : key non presente in mappa
-                this->whyNotAvailableKeyVal = "\n\t map points to end. getValue::row 233.";
+                this->whyNotAvailableKeyVal = "\n\t map points to end. getValue::row 255.";
                 // already initialized prudentially : res = new std::string( "key not found.");
             }// END else : key non presente in mappa
         }// end try
         catch(...)
         {// already initialized prudentially : res = new std::string( "key not found.");
-            this->whyNotAvailableKeyVal = "\n\t  map catch(...). getValue::row 239.";
+            this->whyNotAvailableKeyVal = "\n\t  map catch(...). getValue::row 261.";
         }
     }// END if( this->isHealtlyConstructed)
     else
     {// else // already initialized prudentially : res = new std::string( "key not found.");
-        this->whyNotAvailableKeyVal = "\n\t  map :  NOT healtly constructed getValue::row 244.";
+        this->whyNotAvailableKeyVal = "\n\t  map :  NOT healtly constructed getValue::row 266.";
     }// END else : NOTHealtlyConstructed
     // ready.
     return res;

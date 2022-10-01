@@ -53,8 +53,7 @@ class Primes
     bool canOperate = false;
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
     const std::string * randomDumpPath = nullptr;// NB. remember to share and delete
-	// methods:{bisection,getToNextRecord,getToPrevRecord,StepThroughNrecordsFFWD,StepThroughNrecordsBKWD} all share the stream.
-//    std::ifstream * sharedReader;// read
+    //    std::ifstream has been let an automatic variable.
     std::ofstream * append_Sequential_Stream;// write
     std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
@@ -70,11 +69,11 @@ class Primes
     const std::string * getPrimeDumpFullPath( const std::string * sectionNameInFile) const;
     void createOrAppend( const std::string * fullPath);
     const std::string * lastRecordReaderByChar( const std::string * fullPath);
-    const std::string * newDeal_dumpTailReaderByChar( const std::string * fullPath);
-    DumpElement * newDeal_recoverLastRecord( const std::string * dumpTail);
-    // newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
-    DumpElement * newDeal_recoverDumpTail( const std::string * dumpTail_String , int *recordArrayCardinality);
-    // newDeal : state of the art.
+    const std::string * dumpTailReaderByChar( const std::string * fullPath);
+    DumpElement * recoverLastRecord( const std::string * dumpTail);
+    // recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
+    DumpElement * recoverDumpTail( const std::string * dumpTail_String , int *recordArrayCardinality);
+    //  state of the art.
     void Start_PrimeDump_FileSys(
             unsigned long long Left
             ,unsigned long long Right
