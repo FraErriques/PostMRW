@@ -63,7 +63,8 @@ inline bool Common::ConfigurationService::FileExists_test( const std::string& na
 /// NB. on Unix the process has allowance to write only in its working dir (i.e. "./" ).
 Common::ConfigurationService::ConfigurationService( const std::string & configPath)
 {
-    std::vector<std::string> * local_tokenArray = nullptr;
+    std::vector<std::string> * local_beforeClean_tokenArray = nullptr;
+    std::vector<std::string> * local_tokenArray = nullptr;// this will receive the content of local_beforeClean_tokenArray.
     try
     {// first: book the memory. In case of Ctor failure, it will be anyway necessary to answer the queries.
         int configPathAnalysis = configPath.compare("default");
@@ -116,17 +117,19 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
                 }
                 if(isConstructorStillAlive)
                 {// se la sua sintassi e' valida : i token devono essere n + 1 + n == keys + separator + values.
-                    local_tokenArray = new std::vector<std::string>;
+                    local_beforeClean_tokenArray = new std::vector<std::string>;
                     //
                     int c=0;
                     for( c=0; !theInStream.eof();  )
                     {
                         std::string buf;// tmp for current token.
                         theInStream >> buf;// cosi' va per WORD separate da blank o TAB o new line
-                        local_tokenArray->push_back( buf );
+                        local_beforeClean_tokenArray->push_back( buf );
                         ++c;
                     }
-                    local_tokenArray = StrManipul::removeEmptyEntries( local_tokenArray );// NB. remove empties
+                    local_tokenArray =
+                        StrManipul::removeEmptyEntries( local_beforeClean_tokenArray );// NB. remove empties
+                    delete local_beforeClean_tokenArray;//NB. clean the original!
                     int cardToken = local_tokenArray->size();// keys + '#' + values : must be n + 1 + n ==2*n+1 so odd (dispari).
                     double ratio = (double)cardToken / 2.0;
                     double fractionalPart = ratio - (int)ratio;
@@ -187,8 +190,8 @@ Common::ConfigurationService::ConfigurationService( const std::string & configPa
         this->isConstructorStillAlive = false;
         if( nullptr != local_tokenArray )
         {
-            delete local_tokenArray;// this was a temporary, for the first scan; then the file contents have been categorized in specialized data structs.        
-            local_tokenArray = nullptr;        
+            delete local_tokenArray;// this was a temporary, for the first scan; then the file contents have been categorized in specialized data structs.
+            local_tokenArray = nullptr;
         }
     }// END catch
     // ready.

@@ -22,7 +22,6 @@
 #include "Test_Unit_PrimesFinder.h"
 
 
-
 //---entry point-------------------------
 int main()
 {
@@ -104,6 +103,7 @@ int main()
 
     //--------------------------------------------------------------
     Common::LogWrappers::SectionClose();
+    Common::LogWrappers::MakeDestruction();// destroy a global Singleton:: NECESSARY!
     //---ready---------------
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();

@@ -59,6 +59,9 @@ SinkFs::SinkFs()
     SinkFs_mtx.lock();// critical section : the lock avoids multiple file-creations.
     {// the lock avoids multiple file-creations
         Common::ConfigurationService * configFileManager = nullptr;
+        std::string * logFullPathPrefix_config = nullptr;
+        std::string * semaphore_config = nullptr;
+        std::string * verbosity_config = nullptr;
         try// this should happen due to interrupts during the execution of the current lock-block content
         {
             this->tagStack = nullptr;// init
@@ -98,9 +101,9 @@ SinkFs::SinkFs()
                 {// read configuration
                     configFileManager = new Common::ConfigurationService( ConfigurationFullPath);// NB. library ConfigurationService
                     std::vector<std::string> * allKeys = configFileManager->getAllKeys();
-                    std::string * logFullPathPrefix_config = configFileManager->getValue( "key_logFullPathPrefix");
-                    std::string * semaphore_config = configFileManager->getValue( "key_semaphore");
-                    std::string * verbosity_config = configFileManager->getValue( "key_verbosity");
+                    logFullPathPrefix_config = configFileManager->getValue( "key_logFullPathPrefix");
+                    semaphore_config = configFileManager->getValue( "key_semaphore");
+                    verbosity_config = configFileManager->getValue( "key_verbosity");
                     // check Configuration consistency
                     int rowCardinality = allKeys->size()*2;// ==n_key+n_value skipping the separator '#'. allKeys is n_key.
                     if( 6 != rowCardinality
@@ -173,7 +176,7 @@ SinkFs::SinkFs()
                                 sb.append( std::string("_LogStream_") );
                                 sb.append( *progressiveReplacement);
                                 sb.append( std::string(".log") );
-                                this->fName = sb.str();// get the whole package.
+                                this->fName.assign( sb.str()); // TEST = sb.str();// get the whole package.
                                 delete progressiveReplacement;
                                 // NB. tryOpen here: on fail the exception will be caught a few rows below here.
                                 bool has_tryOpen_succeded = tryOpen();// on success sets this->hasPermissionToWrite=true. the caller of tryOpen has to catch and to close the stream.
@@ -191,12 +194,18 @@ SinkFs::SinkFs()
                     }// END check Configuration::semaphore
                 }// END check Configuration consistency
             }// END check Configuration existence
+            delete logFullPathPrefix_config;
+            delete semaphore_config;
+            delete verbosity_config;
         }// end try
         catch (...)
         {// if catch -> hasPermissionsToWrite=false
             this->constructorException = "failed to construct LogSinkFs";
             this->hasPermissionsToWrite = false;
             delete configFileManager;
+            delete logFullPathPrefix_config;
+            delete semaphore_config;
+            delete verbosity_config;
         }// end catch.
     }// end lock
     SinkFs_mtx.unlock();// END critical section : the lock avoids multiple file-creations.

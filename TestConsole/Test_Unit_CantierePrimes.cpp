@@ -163,7 +163,7 @@ bool Test_Unit_CantierePrimes::acquireSequenceOfRecord( )
     int recordArrayCardinality;
     Cantiere_Primes_2022September01_::Primes::DumpElement * anArrayOfRecord =
         this->tested_Class->acquireSequenceOfRecord( 125, 300, &recordArrayCardinality); // position in Stream
-    delete anArrayOfRecord;
+    delete[] anArrayOfRecord;// vectorial i.e. [] deletion of recordArray[]
     is_DumpElementArray_valid = true;// TODO manually verify.
     //
     return is_DumpElementArray_valid;

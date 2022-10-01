@@ -23,7 +23,7 @@ namespace Common
             static  int reference_counter;
             static  T * handle;
             TSingleton();//  Ctor
-            static void TryMakeDestruction();// a private tool to annihilate the instance, when no more clients are active.
+            static void TryMakeDestruction();
 
         public:
             ~TSingleton();// Dtor
@@ -59,7 +59,9 @@ namespace Common
     template <typename T>
     TSingleton<T>::~TSingleton()
     {
+        std::cout<<" \n\n\t Singleton::Destructor\n\n";
         TSingleton<T>::unsubscribe_all_();
+        TSingleton<T>::TryMakeDestruction(); // try kill.
     }// end Dtor
 
 
@@ -105,7 +107,7 @@ namespace Common
 
         template <typename T>
         void TSingleton<T>::TryMakeDestruction()
-        {// NB. it's not under criticla section, since it's in the caller(s).
+        {// NB. it's not under critical section, since it's in the caller(s).
                 if (0 == TSingleton<T>::reference_counter)// try make destruction:
                 {// kill
                     if (NULL != TSingleton<T>::handle)// case of no more clients, but instance still to be destroied.
