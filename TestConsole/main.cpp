@@ -28,9 +28,11 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----CANTIERE------------------------------------------------
+//    unsigned long long sogliaCustom = -1;// reach it by underflow.
+//    sogliaCustom /= 99;
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
     bool seq = test->sequentialDump( 9541);// required prime==soglia
-    bool rand = test->randomDump( 1000, 1050);
+    bool rand = test->randomDump( 600,  700);
     bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
     bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
     bool outcome_recoverLastRecord = test->recoverLastRecord();
@@ -103,7 +105,7 @@ int main()
 
     //--------------------------------------------------------------
     Common::LogWrappers::SectionClose();
-    Common::LogWrappers::MakeDestruction();// destroy a global Singleton:: NECESSARY!
+    Common::LogWrappers::EndOfApplication_MANDATORY_();// destroy a global Singleton:: NECESSARY!
     //---ready---------------
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();

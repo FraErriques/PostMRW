@@ -23,7 +23,7 @@ namespace Common
             static  int reference_counter;
             static  T * handle;
             TSingleton();//  Ctor
-            static void TryMakeDestruction();
+            static void TryMakeDestruction();// a private tool to annihilate the instance, when no more clients are active.
 
         public:
             ~TSingleton();// Dtor

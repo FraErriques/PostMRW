@@ -24,10 +24,10 @@ void JustConstructTEST( const char * name, int sectionVerbosity)
     Common::TSingleton<Common::SinkFs>::instance();
 }// it appends if the daily stream is already in place, while creates it if it's not there.
 
-void MakeDestruction()
-{// try kill.
+void EndOfApplication_MANDATORY_()
+{// make_destruction of a static class , i.e. the Singleton<LogDinkFs>
     Common::TSingleton<Common::SinkFs>::unsubscribe_all_();
-}// try kill.
+}// make_destruction of a static class , i.e. the Singleton<LogDinkFs>
 
 void SectionOpen( const char * name, int sectionVerbosity)
 {

@@ -10,27 +10,27 @@ namespace Integration
 {
 
 
-typedef double (*FunctionalForm)(double);
+typedef long double (*FunctionalForm)(long double);
 
-double rettangoli(
-                    double inf
-                    ,double sup
-                    ,double cardPartiz
+long double rettangoli(
+                    long double inf
+                    ,long double sup
+                    ,long double cardPartiz
                     ,FunctionalForm functionalForm
                     ,bool calledFromTrapezi
                     );
 
-double correttivoAlContorno(
-                    double inf
-                    ,double sup
-                    ,double cardPartiz
+long double correttivoAlContorno(
+                    long double inf
+                    ,long double sup
+                    ,long double cardPartiz
                     ,FunctionalForm functionalForm
                     );
 
-double trapezi(
-                double inf
-                ,double sup
-                ,double cardPartiz
+long double trapezi(
+                long double inf
+                ,long double sup
+                ,long double cardPartiz
                 ,FunctionalForm functionalForm
                 );
 

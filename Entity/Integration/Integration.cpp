@@ -9,11 +9,12 @@ namespace Entity
 namespace Integration
 {
 
+// TODO pass to long double
 
-
-double rettangoli_withLog( double inf
-                   ,double sup
-                   ,double cardPartiz
+long double rettangoli_withLog(
+                   long double inf
+                   ,long double sup
+                   ,long double cardPartiz
                    ,FunctionalForm functionalForm
                    ,bool calledFromTrapezi
                   )
@@ -27,10 +28,10 @@ double rettangoli_withLog( double inf
         Common::LogWrappers::SectionOpen("Entity::Integration::trapezi:inner core==rettangoli", 0);
     }
     //
-    double dx = (sup-inf) / cardPartiz;
-    double res = 0.0;// step adding on it
+    long double dx = (sup-inf) / cardPartiz;
+    long double res = 0.0;// step adding on it
     size_t i = 0;// step ordinal
-    for( double x=inf; x<sup; x+=dx)
+    for( long double x=inf; x<sup; x+=dx)
     {
         ++i;
         if( i > cardPartiz)
@@ -75,16 +76,16 @@ What else is contained in the two formulas is zero, whenever f(x0)==f(xn)==0 (i.
 When there's no null-boundary, the term CorrettivoAlContorno consists of Dx/2*(f(x0)+f(xn))-Dx*f(x0)==Dx/2*(f(xn)-f(x0)).
 Q.D.E.
 */
-double correttivoAlContorno_withLog( double inf
-                   ,double sup
-                   ,double cardPartiz
+long double correttivoAlContorno_withLog( long double inf
+                   ,long double sup
+                   ,long double cardPartiz
                    ,FunctionalForm functionalForm
                   )
 {
     Common::LogWrappers::SectionOpen("Entity::Integration::correttivoAlContorno()", 0);
     //
-    double dx = (sup-inf) / cardPartiz;
-    double res = (+1.0/+2.0)*dx*(functionalForm(sup)-functionalForm(inf));// see demostration above, to get that trapezium==rettangolo+correttivoAlContorno.
+    long double dx = (sup-inf) / cardPartiz;
+    long double res = (+1.0/+2.0)*dx*(functionalForm(sup)-functionalForm(inf));// see demostration above, to get that trapezium==rettangolo+correttivoAlContorno.
     std::string * tmpCorrettivo = Common::StrManipul::doubleToString( res);
     Common::LogWrappers::SectionContent( (*tmpCorrettivo).c_str() , 0);
     delete tmpCorrettivo;
@@ -92,15 +93,17 @@ double correttivoAlContorno_withLog( double inf
     return res;
 }
 
-double trapezi_withLog( double inf
-                   ,double sup
-                   ,double cardPartiz
+long double trapezi_withLog(
+                   long double inf
+                   ,long double sup
+                   ,long double cardPartiz
                    ,FunctionalForm functionalForm
                   )
 {
     Common::LogWrappers::SectionOpen("Entity::Integration::trapezi()", 0);
     //
-    double res = rettangoli(  inf
+    long double res = rettangoli(
+                    inf
                    ,  sup
                    ,  cardPartiz
                    ,  functionalForm
@@ -123,20 +126,21 @@ double trapezi_withLog( double inf
 
 
 
-double rettangoli( double inf
-                   ,double sup
-                   ,double cardPartiz
+long double rettangoli(
+                   long double inf
+                   ,long double sup
+                   ,long double cardPartiz
                    ,FunctionalForm functionalForm
                    ,bool calledFromTrapezi
                   )
 {
     double dx = (sup-inf) / cardPartiz;
-    double res = 0.0;// step adding on it
-    size_t i = 0;// step ordinal
-    for( double x=inf; x<sup; x+=dx)
+    long double res = 0.0;// step adding on it
+    unsigned long long stepOrdinal = 0;// step ordinal
+    for( long double x=inf; x<sup; x+=dx)
     {
-        ++i;
-        if( i > cardPartiz)
+        ++stepOrdinal;
+        if( stepOrdinal > cardPartiz)
         {
             break;
         }// else continue.
@@ -164,31 +168,35 @@ What else is contained in the two formulas is zero, whenever f(x0)==f(xn)==0 (i.
 When there's no null-boundary, the term CorrettivoAlContorno consists of Dx/2*(f(x0)+f(xn))-Dx*f(x0)==Dx/2*(f(xn)-f(x0)).
 Q.D.E.
 */
-double correttivoAlContorno( double inf
-                   ,double sup
-                   ,double cardPartiz
+long double correttivoAlContorno(
+                    long double inf
+                   ,long double sup
+                   ,long double cardPartiz
                    ,FunctionalForm functionalForm
                   )
 {
-    double dx = (sup-inf) / cardPartiz;
-    double res = (+1.0/+2.0)*dx*(functionalForm(sup)-functionalForm(inf));// see demostration above, to get that trapezium==rettangolo+correttivoAlContorno.
+    long double dx = (sup-inf) / cardPartiz;
+    long double res = (+1.0/+2.0)*dx*(functionalForm(sup)-functionalForm(inf));// see demostration above, to get that trapezium==rettangolo+correttivoAlContorno.
     return res;
 }
 
 
-double trapezi ( double inf
-                   ,double sup
-                   ,double cardPartiz
+long double trapezi(
+                long double inf
+                   ,long double sup
+                   ,long double cardPartiz
                    ,FunctionalForm functionalForm
                   )
 {
-    double res = rettangoli(  inf
+    long double res = rettangoli(
+                   inf
                    ,  sup
                    ,  cardPartiz
                    ,  functionalForm
                    ,  true // in this call, "rettangoli()" function is the inner core of "trapezi()" function.
                   );
-    res += correttivoAlContorno(  inf // trapezi() consists of an inner core "rettangoli" + corretivoAlContorno.
+    res += correttivoAlContorno(
+                   inf // trapezi() consists of an inner core "rettangoli" + corretivoAlContorno.
                    ,  sup
                    ,  cardPartiz
                    ,  functionalForm

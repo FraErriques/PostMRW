@@ -11,7 +11,7 @@ namespace Common
     {
 
         void JustConstructTEST( const char * name, int sectionVerbosity);
-        void MakeDestruction();// try kill
+        void EndOfApplication_MANDATORY_();// make_destruction of a static class , i.e. the Singleton<LogDinkFs>
         //
         void SectionOpen( const char * name, int sectionVerbosity);
         void SectionContent( const char * content, int sectionVerbosity);

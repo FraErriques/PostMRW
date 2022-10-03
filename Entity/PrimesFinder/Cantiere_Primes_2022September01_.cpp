@@ -217,7 +217,8 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+    long double LogIntegral_ofInfPar =
+        Entity::Integration::trapezi( +2.0, (long double)infLeft, ((long double)infLeft-2.0)*4, LogIntegral );
     unsigned long long extimatedOrdinal= (unsigned long long)LogIntegral_ofInfPar;//TODO stima !
     //this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
     //this->desiredThreshold = maxRight;
@@ -578,7 +579,7 @@ void Primes::Start_PrimeDump_FileSys(
     )
 {
     bool isStillPrime = true;
-    double realQuotient;
+    long double realQuotient;
     unsigned long long intQuotient;
     unsigned long long cursor = Left+1UL;// start stepping from the Int after the last found Prime.
     if( cursor<+2){cursor=+2;}// 1 (i.e. one) is the product-invariant; so, not a prime.
@@ -586,13 +587,13 @@ void Primes::Start_PrimeDump_FileSys(
     //
     for( ; cursor<=Right; cursor++)//NB. cursor==dividend.
     {
-        double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
+        long double soglia = sqrt( cursor);// division is a two-operand operator: the bisection of dividend is Sqrt[dividend]
         // when dividend/Sqrt[dividend]==Sqrt[dividend] and when dividend/(Sqrt[dividend]+eps)<Sqrt[dividend]
         // so the stepping into divisor>Sqrt[dividend] leads to divisors<Sqrt[dividend] which have already been explored.
         unsigned long long divisor=+2;
         for( ; divisor<=soglia; divisor++)
         {
-            realQuotient = (double)cursor/(double)divisor;
+            realQuotient = (long double)cursor/(long double)divisor;
             intQuotient = cursor/divisor;
             if( realQuotient-intQuotient <+1.0E-80 )
             {// divisione diofantea
