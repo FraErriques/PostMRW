@@ -4,7 +4,7 @@
 namespace internalAlgos
 {
     // an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
-    double LogIntegral_coChain( double x);
+    long double LogIntegral_coChain( long double x);
     unsigned long factorial( unsigned int par);
     // TODO:  notes on a convergent Ramanujan' series
     void ExpIntegralEi_Ramanujan( double x); //( Complex x)

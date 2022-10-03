@@ -8,7 +8,7 @@ namespace internalAlgos
 
 
 // an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
-double LogIntegral_coChain( double x)
+long double LogIntegral_coChain( long double x)
 {// an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
     return +1.0/log(x);
 }// LogIntegral_coChain
