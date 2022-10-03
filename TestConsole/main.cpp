@@ -22,7 +22,6 @@
 #include "Test_Unit_PrimesFinder.h"
 
 
-
 //---entry point-------------------------
 int main()
 {
@@ -30,19 +29,17 @@ int main()
     //
     //------Unit Test-----CANTIERE------------------------------------------------
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-//    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
-//    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
-//    bool outcome_newDeal_recoverLastRecord = test->newDeal_recoverLastRecord();
-//    bool outcome_newDeal_recoverDumpTail = test->newDeal_recoverDumpTail();
+    bool seq = test->sequentialDump( 9541);// required prime==soglia
+    bool rand = test->randomDump( 1000, 1050);
+    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
+    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
+    bool outcome_recoverLastRecord = test->recoverLastRecord();
+    bool outcome_recoverDumpTail = test->recoverDumpTail();
     bool reader = true; // used with &=
     reader = test->readSequentialDump_nextRec( 60);
     bool outcome_acquireNextRecord = test->acquireNextRecord();
     bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
-    //---
     size_t ulong_size = sizeof( unsigned long long);
-    bool seq = test->sequentialDump( 9541);// required prime==soglia Prime[100]=541
-    bool rand = test->randomDump( 1000, 1050);
-
     reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
     for (int c=1; c<1181; c++)
     {
@@ -106,6 +103,7 @@ int main()
 
     //--------------------------------------------------------------
     Common::LogWrappers::SectionClose();
+    Common::LogWrappers::MakeDestruction();// destroy a global Singleton:: NECESSARY!
     //---ready---------------
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();

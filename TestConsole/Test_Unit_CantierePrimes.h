@@ -25,8 +25,8 @@ class Test_Unit_CantierePrimes
         bool readBy_OperatorSquares( unsigned long long desiredOrdinal );
         bool dumpTailReaderByChar( );
         bool lastRecordReaderByChar( );
-        bool newDeal_recoverLastRecord( ); // scalar
-        bool newDeal_recoverDumpTail( );   // array
+        bool recoverLastRecord( ); // scalar
+        bool recoverDumpTail( );   // array
         bool acquireNextRecord( );
         bool acquireSequenceOfRecord( );
 

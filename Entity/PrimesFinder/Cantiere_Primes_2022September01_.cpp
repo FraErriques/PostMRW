@@ -78,17 +78,17 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 {
     bool hasSequentialDumpBeenReset = false;// it's true on filesize<1k and of course on non existing file
     // ---call with params
-    const std::string * stringDumpTail = this->newDeal_dumpTailReaderByChar( this->sequentialDumpPath );// last few records in a string.
+    const std::string * stringDumpTail = this->dumpTailReaderByChar( this->sequentialDumpPath );// last few records in a string.
     if(nullptr==stringDumpTail)
     {// unable to read the tail of the sequential dump in a string -> reset the file.
         hasSequentialDumpBeenReset = true;
     }// else it has been initialized to false.
-    Primes::DumpElement * lastRec = nullptr;// the very last record, deciphered from a func:newDeal_recoverLastRecord
+    Primes::DumpElement * lastRec = nullptr;// the very last record, deciphered from a func:recoverLastRecord
     long long LastOrdinal = 0UL;
     long long LastPrime = 0UL;
     if(nullptr!=stringDumpTail)
     {// i.e. if we have the string of dump-tail :
-        lastRec = this->newDeal_recoverLastRecord( stringDumpTail);
+        lastRec = this->recoverLastRecord( stringDumpTail);
         if(nullptr != lastRec)
         {// the dump tail string content was valid.
             LastOrdinal = lastRec->ordinal;
@@ -377,7 +377,7 @@ long long Primes::sequentialStreamSize()
     return streamSize;
 }// sequentialStreamSize
 
-const std::string * Primes::newDeal_dumpTailReaderByChar( const std::string * fullPath)
+const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 {
     std::ifstream lastrecReader( *fullPath, std::fstream::in );
 //    lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
@@ -398,7 +398,7 @@ const std::string * Primes::newDeal_dumpTailReaderByChar( const std::string * fu
     lastrecReader.close();
     // ready.
     return sequentialFile_tail;// caller has to delete
-}// newDeal_dumpTailReaderByChar()
+}// dumpTailReaderByChar()
 
 
 
@@ -478,7 +478,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
 
 
-Primes::DumpElement * Primes::newDeal_recoverLastRecord( const std::string * dumpTail)
+Primes::DumpElement * Primes::recoverLastRecord( const std::string * dumpTail)
 {
     Primes::DumpElement * lastRecord = new Primes::DumpElement();
     const std::string parFromFile( *dumpTail);
@@ -515,11 +515,11 @@ Primes::DumpElement * Primes::newDeal_recoverLastRecord( const std::string * dum
     delete tokenArray;// TODO test
     // ready.
     return lastRecord;// caller has to delete.
-}// newDeal_recoverLastRecord
+}// recoverLastRecord
 
 
-// newDeal_recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
-Primes::DumpElement * Primes::newDeal_recoverDumpTail( const std::string * dumpTail_String , int *recordArrayCardinality)
+// recoverDumpTail : produce an array of couples {ordinal,prime} from a String : dumpTail_String.
+Primes::DumpElement * Primes::recoverDumpTail( const std::string * dumpTail_String , int *recordArrayCardinality)
 {
     DumpElement * dumpTail_Records = nullptr;// ret val
     const std::string parFromFile( *dumpTail_String );
@@ -563,13 +563,13 @@ Primes::DumpElement * Primes::newDeal_recoverDumpTail( const std::string * dumpT
         // get an ordinal from tailEnd, coming back:
         dumpTail_Records[currentCouple].ordinal =  Common::StrManipul::stringToUnsignedLong(*(it++));// goto next record backwards.
     }// the interesting semi-tokens are the ones of complete records; so the reading is in reverse order, excluding a partial record, if present.
-    delete tokenArray;// TODO test
+    delete tokenArray;// clean.
     //ready.
     return dumpTail_Records;// caller has to delete.
-}// newDeal_recoverDumpTail
+}// recoverDumpTail
 
 
-// newDeal : state of the art.
+// state of the art.
 void Primes::Start_PrimeDump_FileSys(
         unsigned long long Left
         ,unsigned long long Right
@@ -626,7 +626,7 @@ void Primes::Start_PrimeDump_FileSys(
     }// external for : the one where cursor cicles from inf to sup, on dividends.
     // NO MORE file-closure : interface does it : appendStream.close();
     // ready.
-}// newDeal IntegralFileFromStartFSproducer
+}//  IntegralFileFromStartFSproducer
 
 
 
@@ -643,7 +643,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
         return nullptr;
     }// else continue
     localReader.seekg( discriminatingElement_position , std::ios::beg );// TODO test
-    AsinglePointInStream * nextRecord = nullptr;
+    AsinglePointInStream * nextRecord = nullptr;// retval; caller has to delete.
     int c=0;
     int stepDone = 0;
     for( ; ; stepDone++ )
@@ -690,7 +690,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
             // DBG int nextRecord_len = nextRecord_txt->length();
             int recordCardinality=0;
             Primes::DumpElement * nextRecPtr =
-                newDeal_recoverDumpTail( nextRecord_txt , &recordCardinality);
+                recoverDumpTail( nextRecord_txt , &recordCardinality);
             delete nextRecord_txt;
             // only now allocate; if func does not pass here -> ret null.
             nextRecord = new Primes::AsinglePointInStream();
@@ -698,7 +698,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
             nextRecord->endPositionOfRecord = discriminatingElement_position + stepDone;
             nextRecord->Ordinal = nextRecPtr->ordinal;
             nextRecord->Prime = nextRecPtr->prime;
-            delete[] nextRecPtr;// TODO test
+            delete[] nextRecPtr;// clean.
             localReader.clear();// reset in case EOF or badRead has been set.
             break;
         }
@@ -781,9 +781,9 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
             // DBG int sequenceOfRecord_len = sequenceOfRecord_txt.length();
             // howMany_RecordInSequence is an out parameter, coming from the caller of this func
             sequenceRecord =
-                newDeal_recoverDumpTail( sequenceOfRecord_txt , howMany_RecordInSequence );
-            // TODO delete nextRecPtr
+                recoverDumpTail( sequenceOfRecord_txt , howMany_RecordInSequence );
             localReader.clear();// reset in case EOF or badRead has been set.
+            delete sequenceOfRecord_txt;// clean the temporary.
             break;
         }
     }// for step into next complete record
@@ -816,7 +816,7 @@ bool Primes::MoveToMap(
     {// cannot go back from origin.
         discriminatingElement_position = 0;
     }// else ok.
-    Primes::DumpElement * tmpStorage = acquireSequenceOfRecord(
+    Primes::DumpElement * tmpStorage = acquireSequenceOfRecord( // to be delete[]
          discriminatingElement_position
          ,until_position
          ,howMany_RecordInSequence
@@ -842,6 +842,10 @@ bool Primes::MoveToMap(
     }//for
     // clean the pointer, to not let it dangling, but do not delete, since the pointee
     // hase ben moved::.
+    if( nullptr != tmpStorage)
+    {
+        delete[] tmpStorage;
+    }// TEST
     tmpStorage = nullptr;
     //
     res = true;
@@ -879,8 +883,9 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     long long previous_dumpSize = dumpSize;
     unsigned long long right = dumpSize;
     unsigned long long previous_right = right;
-    std::string dumpSize_str( *Common::StrManipul::uLongLongToString( dumpSize) );
-    Common::LogWrappers::SectionContent( ("___________________________dumpSize == " + dumpSize_str).c_str() , 0);
+    std::string * dumpSize_str = Common::StrManipul::uLongLongToString( dumpSize);
+    Common::LogWrappers::SectionContent( ("___________________________dumpSize == " + *dumpSize_str).c_str() , 0);
+    delete dumpSize_str;
     long long discriminatingElement_position;// let it signed, to avoid overflows.
     long signedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
     unsigned long UNsignedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
@@ -899,14 +904,14 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         {// can't go back from the origin.
             discriminatingElement_position = 0;
         }// else ok.
-        if( discriminatingElement_position > right )
+        if( discriminatingElement_position > (long long)right )
         {// can't go past the end.
             discriminatingElement_position = right;// stay in the interval.
         }// else ok.
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position AFTER CORRECTIONS ==", discriminatingElement_position, 0);
-        localReader.seekg( discriminatingElement_position, std::ios::beg);// TODO test
-        nextRecord = acquireNextRecord( discriminatingElement_position);
+        localReader.seekg( discriminatingElement_position, std::ios::beg);// seek
+        nextRecord = acquireNextRecord( discriminatingElement_position);// memory allocated by callee
         Common::LogWrappers::SectionContent_variable_name_value(
             "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
         Common::LogWrappers::SectionContent_variable_name_value(
@@ -1002,6 +1007,10 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         delete nextRecord;
         nextRecord = nullptr;// cleanup stepWise-record.
     }// for
+    if( nullptr != nextRecord)
+    {// when a break is hit, the cleanup has to be guaranteed, if not yet happened.
+        delete nextRecord;
+    }// else the delete already took place.
     //---close Reader
     localReader.close();
     Common::LogWrappers::SectionClose();

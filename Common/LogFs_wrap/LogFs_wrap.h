@@ -11,6 +11,7 @@ namespace Common
     {
 
         void JustConstructTEST( const char * name, int sectionVerbosity);
+        void MakeDestruction();// try kill
         //
         void SectionOpen( const char * name, int sectionVerbosity);
         void SectionContent( const char * content, int sectionVerbosity);
