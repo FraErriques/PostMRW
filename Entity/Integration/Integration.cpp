@@ -76,7 +76,7 @@ What else is contained in the two formulas is zero, whenever f(x0)==f(xn)==0 (i.
 When there's no null-boundary, the term CorrettivoAlContorno consists of Dx/2*(f(x0)+f(xn))-Dx*f(x0)==Dx/2*(f(xn)-f(x0)).
 Q.D.E.
 */
-long doublecorrettivoAlContorno_withLog( long double inf
+long double correttivoAlContorno_withLog( long double inf
                    ,long double sup
                    ,long double cardPartiz
                    ,FunctionalForm functionalForm
