@@ -31,7 +31,7 @@ int main()
 //    unsigned long long sogliaCustom = -1;// reach it by underflow.
 //    sogliaCustom /= 99;
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    bool seq = test->sequentialDump( 11541);// required prime==soglia
+    bool seq = test->sequentialDump( 500);// required prime==soglia
 //    bool rand = test->randomDump( 600,  700);
 //    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
 //    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();

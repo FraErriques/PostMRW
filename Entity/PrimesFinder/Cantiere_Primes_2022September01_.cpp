@@ -1,5 +1,4 @@
 #include "Cantiere_Primes_2022September01_.h"
-#include "Cantiere_Primes_2022September01_.h"
 #include "InternalAlgos.h"
 #include "../../Common/Config_wrap/Config_wrap.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
@@ -92,33 +91,41 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
     long long LastPrime = 0UL;
     if(nullptr!=stringDumpTail)
     {// i.e. if we have the string of dump-tail :
-        lastRec = this->recoverLastRecord( stringDumpTail);
-        if(nullptr != lastRec)
+        lastRec = this->recoverLastRecord( stringDumpTail);// to be deleted.
+        if(nullptr != lastRec)// if NOT null the lastRec
         {// the dump tail string content was valid.
             LastOrdinal = lastRec->ordinal;
             LastPrime = lastRec->prime;
+            hasSequentialDumpBeenReset = false;
         }// else : stringDumpTail is not valid, i.e. sequentialDump needs a reset.
         else
         {// the sequential dump-tail is readable but not valid  -> reset the file.
+         // start a new dump from scratch :
+            LastOrdinal = 0;
+            LastPrime = 0;
+            this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// overWrite.
             hasSequentialDumpBeenReset = true;
         }
+        // append:
         this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
 //        this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
 //        this->sharedReader->close();
 //        delete this->sharedReader;
 //        this->sharedReader = nullptr;
     }// else sequentialFile not present.
-    if (hasSequentialDumpBeenReset)
-    {// start a new dump from scratch :
-        LastOrdinal = 0;
-        LastPrime = 0;
-        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// reset.
-        hasSequentialDumpBeenReset = true;
-    }
+//    if (hasSequentialDumpBeenReset)
+//    {// start a new dump from scratch :
+//        LastOrdinal = 0;
+//        LastPrime = 0;
+//        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// reset.
+//        hasSequentialDumpBeenReset = true;
+//    }
     //---call with appropriate params---------
     this->Start_PrimeDump_FileSys(
                                   LastPrime
-                                  , Threshold , append_Sequential_Stream, LastOrdinal );
+                                  , Threshold
+                                  , append_Sequential_Stream
+                                  , LastOrdinal );
     this->append_Sequential_Stream->close();
     delete this->append_Sequential_Stream;
     this->append_Sequential_Stream = nullptr;
@@ -328,6 +335,7 @@ void Primes::createOrAppend( const std::string * fullPath)
 // SEEKER
 const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath)
 {
+    Common::LogWrappers::SectionOpen("Primes::lastRecordReaderByChar", 0);
     std::string * directTailDump = new std::string();// retval
     std::ifstream lastrecReader( *fullPath, std::fstream::in );// one day we will parse the tail of CustomDump too.
     long long streamSize =  this->sequentialStreamSize();
@@ -367,7 +375,8 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
         }// else continue.
     }// for
     directTailDump->assign( sb->str() );
-    delete sb;//
+    delete sb;// clean up the temporary StringBuilder.
+    Common::LogWrappers::SectionClose();
     // ready
     return directTailDump;// caller has to delete
 }// lastRecordReaderByChar
@@ -390,21 +399,51 @@ long long Primes::sequentialStreamSize()
 // SEEKER
 const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 {
+    Common::LogWrappers::SectionOpen("Primes::dumpTailReaderByChar", 0);
     std::ifstream lastrecReader( *fullPath, std::fstream::in );
     long long streamSize = this->sequentialStreamSize();
-    if( 100>streamSize)// for such small data, it's better to create a new sequeltial file from scratch.
+    //---proposal
+    int stepBack = 100;
+    if( streamSize <stepBack)
     {
-        return nullptr;
-    }// else continue.
-    lastrecReader.seekg( -100, std::ifstream::end );
-    Common::StringBuilder * sb = new Common::StringBuilder( 101);// forecasted size.
-    for( char c=0; lastrecReader.get(c); )
+        stepBack = streamSize;
+    }// else stay as init.
+    lastrecReader.seekg( -1*stepBack, lastrecReader.end);// get in place to read last char[stepBack].
+    Common::StringBuilder * sb = new Common::StringBuilder( stepBack);// forecasted size.
+    int currentPosition;
+    int step = 0;
+    // DBG int howManyLineEndings = 0;
+    for( char c=0; ; ) //  test !
     {
+        lastrecReader.get( c);
         sb->append(c);
-    }
+        step++;
+        currentPosition = lastrecReader.tellg();
+        if( currentPosition > streamSize
+           || lastrecReader.eof()
+           )
+        {
+            Common::LogWrappers::SectionContent("reached EOF in dumpTailReaderByChar", 0);
+            break;
+        }// else continue.
+    }// for
+
+//    //----old Deal
+//    if( 100>streamSize)// for such small data, it's better to create a new sequential file from scratch.
+//    {
+//        return nullptr;
+//    }// else continue.
+//    lastrecReader.seekg( -100, std::ifstream::end );
+//    Common::StringBuilder * sb = new Common::StringBuilder( 101);// forecasted size.
+//    for( char c=0; lastrecReader.get(c); )
+//    {
+//        sb->append(c);
+//    }  //----old Deal
+
     std::string * sequentialFile_tail = new std::string( sb->str() ); // caller has to delete!
-    delete sb; // TODO test NB. this deletion seems to corrupt the "sequentialFile_tail" return value. TODO TODO std::move
+    delete sb;// clean up the temporary StringBuilder.
     lastrecReader.close();
+    Common::LogWrappers::SectionClose();
     // ready.
     return sequentialFile_tail;// caller has to delete
 }// dumpTailReaderByChar()
@@ -489,9 +528,25 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
 
 Primes::DumpElement * Primes::recoverLastRecord( const std::string * dumpTail)
 {
-    Primes::DumpElement * lastRecord = new Primes::DumpElement();
-    const std::string parFromFile( *dumpTail);
+    Primes::DumpElement * lastRecord = new Primes::DumpElement();// retval
+
+     std::string parFromFile( *dumpTail);
     int inputParamLength = parFromFile.length();
+    char lastCharOfTail = parFromFile[inputParamLength-1];
+    if(
+       lastCharOfTail != (char)10
+       && lastCharOfTail != (char)13
+       )
+    {
+        parFromFile.append("\n");// add in RAM in the string
+        std::ofstream addNewLineAtEOF( *(this->sequentialDumpPath), std::fstream::app );
+//addNewLineAtEOF.open( *(this->sequentialDumpPath), std::fstream::app );
+//( *(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
+//this->append_Sequential_Stream = new std::ofstream
+        addNewLineAtEOF.put('\n');// add on disk
+        addNewLineAtEOF.flush();
+        addNewLineAtEOF.close();
+    }// else the sequentialDump already ends with a "newline" (either Unix or Win)
     std::string filteredLastToken("");
     for( int c=0; c<inputParamLength;c++)
     {
