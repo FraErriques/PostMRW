@@ -18,7 +18,7 @@
 *   leak in readDumpTail----------------------------------------------------------------------------------------------(V)
 *   std::move in Config:: dump filenames.-----------------------solved by std::string---------------------------------(V)
 *   enrich StringBuilder and Log for better tracing, overloading variable types--------------------------------------TODO
-*   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
+*   let the StreamWriter an automatic variable ----------------------------------------------------------------------TODO
 */
 
 
@@ -70,6 +70,9 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
         this->append_Random_Stream = nullptr;
 //        this->sharedReader = nullptr;
     }// not-healthly built.
+    // to avoid dangling pointers in Destructor's body.
+        this->append_Sequential_Stream = nullptr;
+        this->append_Random_Stream = nullptr;
 }// empty Ctor : reads both the sequentialFile and randomFile fullpath
 
 
@@ -137,7 +140,6 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
     {
         return false;
     }// else continue
-    // no more  // TODO test localReader.seekg( acquireRecordNextToOffset , std::ios::beg );
     bool res = false;
     long long sequentialDump_size = this->sequentialStreamSize();
     if( acquireRecordNextToOffset >= sequentialDump_size
@@ -148,7 +150,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
         return res;
     }
     //---acquireNextRecord----START
-    // pass parameter: file-seek-offset.
+    // pass parameter: file-offset.
     Primes::AsinglePointInStream * nextRecord = this->acquireNextRecord( acquireRecordNextToOffset);
     if( nullptr != nextRecord)
     {
@@ -171,12 +173,12 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
 }// ReadSequentialDumpInterface_lastRec
 
 
-bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_seek_START, long long recArray_seek_END)
+bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_START, long long recArray_END)
 {
     bool res = false;
     long long sequentialDump_size = this->sequentialStreamSize();
-    if( recArray_seek_START >= sequentialDump_size
-        || recArray_seek_START < 0
+    if( recArray_START >= sequentialDump_size
+        || recArray_START < 0
         // ||  TODO evaluate additional error conditions
        )
     {// cannot operate.
@@ -186,8 +188,8 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
     //---------acquireSequenceOfRecord----START
     int cardinalityOfRecordSequence = 0;
     Primes::DumpElement * recSequence = this->acquireSequenceOfRecord(
-        recArray_seek_START
-        , recArray_seek_END
+        recArray_START
+        , recArray_END
         , &cardinalityOfRecordSequence );
     if(nullptr != recSequence)
     {
@@ -243,36 +245,35 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
 
 
 
-const std::string * Primes::feedDumpPath() // non const
-{// default section, in default file.
+const std::string * Primes::feedDumpPath() // non const : feeds a member.
+{// retrieve sequential-file fullpath.
     if( nullptr==this->sequentialDumpPath )
     {
-        std::string * tmp = new std::string("primeDefaultFile");
+        std::string * tmp = new std::string("primeDefaultFile");// sequential file section-name.
         this->sequentialDumpPath = this->getPrimeDumpFullPath( tmp);// Default Section Name.
         delete tmp;
     }//else ready.
     return this->sequentialDumpPath;
-}// feedDumpPath()
+}// retrieve sequential-file fullpath.
 
-const std::string * Primes::feed_CustomDumpPath() // non const
-{// custom section, in default file.
+const std::string * Primes::feed_CustomDumpPath() // non const : feeds a member.
+{// retrieve custom-file fullpath (i.e. the random-interval file).
     if( nullptr==this->randomDumpPath )
     {
-        std::string * tmp = new std::string("primeCustomFile");
+        std::string * tmp = new std::string("primeCustomFile");// random-custom file section-name.
         this->randomDumpPath = this->getPrimeDumpFullPath( tmp);// CUSTOM Section Name, for non complete dumping.
         delete tmp;
     }//else ready.
     return this->randomDumpPath;
-}// feed_CustomDumpPath()
+}// retrieve custom-file fullpath (i.e. the random-interval file).
 
 const std::string * Primes::getPrimeDumpFullPath( const std::string * sectionNameInFile) const
-{
-//    const char *  res = nullptr;
-    Common::ConfigurationService * primeNamedConfig = new Common::ConfigurationService( "./PrimeConfig.txt");// default Prime-configuration-file. All in this file.
-    const std::string * desiredSectionContent = primeNamedConfig->getValue( *sectionNameInFile);// configSectionNames can be added.
-//    res = desiredSectionContent->c_str();
-    delete primeNamedConfig;
-    //delete desiredSectionContent; NB. this deletion seems to corrupt the "res" return value. TODO std::move
+{// the param is the desired section-name; the retval is the section-content.
+    Common::ConfigurationService * primeNamedConfig =// config name is hard-coded.
+        new Common::ConfigurationService( "./PrimeConfig.txt");// Prime-configuration-file. All in this file.
+    const std::string * desiredSectionContent = // feed the return value.
+        primeNamedConfig->getValue( *sectionNameInFile);// configSectionNames can be added.
+    delete primeNamedConfig;// the Config instance is no more useful.
     return desiredSectionContent;// caller has to delete.
 }// getPrimeDumpFullPath
 
@@ -282,6 +283,7 @@ Primes::~Primes()
 {/// Dtor()
     if( nullptr != this->memoryMappedDump)
     {
+        this->memoryMappedDump->clear();
         delete this->memoryMappedDump;
         this->memoryMappedDump = nullptr;// not dangling.
     }// else already nulled.
@@ -322,13 +324,15 @@ void Primes::createOrAppend( const std::string * fullPath)
 }// dumpFile createOrAppend
 
 
-
+// SEEKER
 const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath)
 {
-    std::string * directTailDump = new std::string();// TODO test
-    std::ifstream lastrecReader( *fullPath, std::fstream::in );
-    lastrecReader.seekg( 0, lastrecReader.end);
-    int streamSize = lastrecReader.tellg();// filesize
+    std::string * directTailDump = new std::string();// retval
+    std::ifstream lastrecReader( *fullPath, std::fstream::in );// one day we will parse the tail of CustomDump too.
+    long long streamSize =  this->sequentialStreamSize();
+
+//    lastrecReader.seekg( 0, lastrecReader.end);
+//    int streamSize = lastrecReader.tellg();// filesize
 //    if( 1024>streamSize)
 //    {// do NOT append; rewrite from scratch.
 //        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out );
@@ -338,6 +342,7 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
 //        this->append_Sequential_Stream = nullptr;
 //        return directTailDump;
 //    }// else continue. directTailDump will be assigned later.
+
     //---proposal
     int stepBack = 100;
     if( streamSize <stepBack)
@@ -361,11 +366,12 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
         }// else continue.
     }// for
     directTailDump->assign( sb->str() );
-    delete sb;// TODO test
+    delete sb;//
     // ready
     return directTailDump;// caller has to delete
 }// lastRecordReaderByChar
 
+// SEEKER
 long long Primes::sequentialStreamSize()
 {
     if( nullptr == this->sequentialDumpPath)
@@ -375,14 +381,15 @@ long long Primes::sequentialStreamSize()
     std::ifstream lastrecReader( *(this->sequentialDumpPath), std::fstream::in );// auto
     lastrecReader.seekg( -1, std::ios::end );
     long long streamSize = lastrecReader.tellg();
+    lastrecReader.close();
     return streamSize;
 }// sequentialStreamSize
 
+
+// SEEKER
 const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 {
     std::ifstream lastrecReader( *fullPath, std::fstream::in );
-//    lastrecReader.seekg( -1, std::ios::end ); // lastrecReader.end);
-//    int streamSize = lastrecReader.tellg();
     long long streamSize = this->sequentialStreamSize();
     if( 100>streamSize)// for such small data, it's better to create a new sequeltial file from scratch.
     {
@@ -630,7 +637,7 @@ void Primes::Start_PrimeDump_FileSys(
 }//  IntegralFileFromStartFSproducer
 
 
-
+// SEEKER
 Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long discriminatingElement_position)
 {
     std::ifstream localReader;
@@ -651,7 +658,6 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
     {// for step until next-record starting point.
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
         // cannot check if one byte before there's end-of-record;
-        // NO  seekg( discriminatingElement_position-1, ios::beg)
         if( ! localReader.good()) {break;}
         c = localReader.get();
         if( 13==c || 10==c )
@@ -710,6 +716,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
 }// acquireNextRecord
 
 
+// SEEKER
 Primes::DumpElement * Primes::acquireSequenceOfRecord(
     unsigned long long discriminatingElement_position
     , unsigned long long until_position
@@ -738,7 +745,6 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     {// for step until next-record starting point.
         if(0==discriminatingElement_position){break;}// cannot go backwards and it's surely the beginning of a record( the first one).
         // cannot check if one byte before there's end-of-record;
-        // NO  seekg( discriminatingElement_position-1, ios::beg)
         if( ! localReader.good()) {break;}
         c = localReader.get();
         if( 13==c || 10==c )
@@ -854,6 +860,7 @@ bool Primes::MoveToMap(
     return res;
 }// MoveToMap
 
+
 bool Primes::Bisection( unsigned long long requiredOrdinal )
  {
     Common::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
@@ -911,7 +918,6 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         }// else ok.
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position AFTER CORRECTIONS ==", discriminatingElement_position, 0);
-        localReader.seekg( discriminatingElement_position, std::ios::beg);// seek
         nextRecord = acquireNextRecord( discriminatingElement_position);// memory allocated by callee
         Common::LogWrappers::SectionContent_variable_name_value(
             "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
@@ -927,7 +933,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
             int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
             // signed:(+)means landed right of obj
             // signed:(-)means landed left of obj
-            long long  distance_from_Target_bytes = signedDelta * (currentRecordLength+2);// TODO +1 Unix
+            long long  distance_from_Target_bytes = signedDelta * (currentRecordLength+2);// {Win=+2,Unix=+1}
             Common::LogWrappers::SectionContent_variable_name_value(
                 "distance_from_Target_bytes ==", (signed long long)distance_from_Target_bytes, 0);
             // the minus sign in next statement is understandable by means of the previous two comments.
