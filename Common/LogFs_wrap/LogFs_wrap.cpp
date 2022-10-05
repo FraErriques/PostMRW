@@ -25,7 +25,7 @@ void JustConstructTEST( const char * name, int sectionVerbosity)
 }// it appends if the daily stream is already in place, while creates it if it's not there.
 
 void EndOfApplication_MANDATORY_()
-{// make_destruction of a static class , i.e. the Singleton<LogDinkFs>
+{// make_destruction of a static class , i.e. the Singleton<LogSinkFs>
     Common::TSingleton<Common::SinkFs>::unsubscribe_all_();
 }// make_destruction of a static class , i.e. the Singleton<LogDinkFs>
 
