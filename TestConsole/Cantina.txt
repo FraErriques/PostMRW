@@ -1,5 +1,6 @@
 
 /***********************************************  cantina *****************************************************
+marker for git diff --stat  FETCH_HEAD
 
 /// ex Entity::PrimesFinder::Primes:: 2022.09.21
 
