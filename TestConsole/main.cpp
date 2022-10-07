@@ -30,6 +30,7 @@ int main()
     //------Unit Test-----CANTIERE------------------------------------------------
 //    unsigned long long sogliaCustom = -1;// reach it by underflow.
 //    sogliaCustom /= 99;
+    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
     bool seq = test->sequentialDump( 19541);// required prime==soglia
     bool rand = test->randomDump( 600,  700);

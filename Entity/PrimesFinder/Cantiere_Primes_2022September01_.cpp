@@ -29,6 +29,7 @@ namespace Cantiere_Primes_2022September01_
 // Ctor : reads the strings from Config, for both the sequentialFile and randomFile fullpath.
 Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
 {
+    Common::LogWrappers::SectionOpen("Ctor Primes::Primes", 0);
     // set the semi-amplitude of each Prime-Segment that will be stored in the Map; it can be modified at runtime.
     this->sogliaDistanza = semiAmplitudeOfEachMapSegment;
     // build the Map.
@@ -68,17 +69,18 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
         this->canOperate = false;
         this->append_Sequential_Stream = nullptr;
         this->append_Random_Stream = nullptr;
-//        this->sharedReader = nullptr;
     }// not-healthly built.
-    // to avoid dangling pointers in Destructor's body.
-        this->append_Sequential_Stream = nullptr;
-        this->append_Random_Stream = nullptr;
-}// empty Ctor : reads both the sequentialFile and randomFile fullpath
+    // anyway( healtly or not) :avoid dangling pointers in Destructor's body.
+    this->append_Sequential_Stream = nullptr;
+    this->append_Random_Stream = nullptr;
+    Common::LogWrappers::SectionClose();
+}// empty Ctor(semiAmplitudeOfEachMapSegment)
 
 
 
 bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 {
+    Common::LogWrappers::SectionOpen("Primes::SequentialCalcInterface", 0);
     bool hasSequentialDumpBeenReset = false;// it's true on filesize<1k and of course on non existing file
     // ---call with params
     const std::string * stringDumpTail = this->dumpTailReaderByChar( this->sequentialDumpPath );// last few records in a string.
@@ -131,13 +133,15 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
     this->append_Sequential_Stream = nullptr;
     delete stringDumpTail;
     delete lastRec;
+    Common::LogWrappers::SectionClose();
     // ready.
     return hasSequentialDumpBeenReset;
-}//
+}// SequentialCalcInterface
 
 
 bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset)
 {
+    Common::LogWrappers::SectionOpen("Primes::ReadSequentialDumpInterface_nextRec", 0);
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
     {
@@ -176,6 +180,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
         return res;
     }//---acquireNextRecord----END
     localReader.close();
+    Common::LogWrappers::SectionClose();
     // ready
     return res;
 }// ReadSequentialDumpInterface_lastRec
@@ -183,6 +188,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
 
 bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_START, long long recArray_END)
 {
+    Common::LogWrappers::SectionOpen("Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere", 0);
     bool res = false;
     long long sequentialDump_size = this->sequentialStreamSize();
     if( recArray_START >= sequentialDump_size
@@ -214,6 +220,7 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
         return res;
     }
     delete[] recSequence;
+    Common::LogWrappers::SectionClose();
     //----------------acquireSequenceOfRecord------END
     // ready
     return res;
@@ -289,6 +296,7 @@ const std::string * Primes::getPrimeDumpFullPath( const std::string * sectionNam
 /// Dtor()
 Primes::~Primes()
 {/// Dtor()
+    Common::LogWrappers::SectionOpen("Dtor Primes::~Primes", 0);
     if( nullptr != this->memoryMappedDump)
     {
         this->memoryMappedDump->clear();
@@ -320,6 +328,7 @@ Primes::~Primes()
         this->append_Random_Stream->close();
         this->append_Random_Stream = nullptr;
     }// else already closed.
+    Common::LogWrappers::SectionClose();
 }// Dtor
 
 
@@ -339,25 +348,12 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
     std::string * directTailDump = new std::string();// retval
     std::ifstream lastrecReader( *fullPath, std::fstream::in );// one day we will parse the tail of CustomDump too.
     long long streamSize =  this->sequentialStreamSize();
-
-//    lastrecReader.seekg( 0, lastrecReader.end);
-//    int streamSize = lastrecReader.tellg();// filesize
-//    if( 1024>streamSize)
-//    {// do NOT append; rewrite from scratch.
-//        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out );
-//        directTailDump->assign( "1_2");
-//        this->append_Sequential_Stream->close();
-//        delete this->append_Sequential_Stream;
-//        this->append_Sequential_Stream = nullptr;
-//        return directTailDump;
-//    }// else continue. directTailDump will be assigned later.
-
-    //---proposal
-    int stepBack = 100;
+    //--step back in the Stream, of Max(100, fileSize).
+    int stepBack = 100;// init
     if( streamSize <stepBack)
     {
         stepBack = streamSize;
-    }// else stay as init.
+    }// else stay as init==100.
     Common::StringBuilder * sb = new Common::StringBuilder( stepBack);// forecasted size.
     lastrecReader.seekg( -1*stepBack, lastrecReader.end);// get in place to read last char[stepBack].
     int currentPosition;
@@ -371,7 +367,7 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
         currentPosition = lastrecReader.tellg();
         if( currentPosition > streamSize)
         {
-            Common::LogWrappers::SectionContent("----####### Exception in lastRecordReaderByChar   ___________", 0);
+            Common::LogWrappers::SectionContent("Reached EOF in lastRecordReaderByChar", 0);
         }// else continue.
     }// for
     directTailDump->assign( sb->str() );
@@ -398,11 +394,11 @@ long long Primes::sequentialStreamSize()
 
 // SEEKER
 const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
-{
+{// reads multiple records from EOF back to Max(filesize,100).
     Common::LogWrappers::SectionOpen("Primes::dumpTailReaderByChar", 0);
     std::ifstream lastrecReader( *fullPath, std::fstream::in );
     long long streamSize = this->sequentialStreamSize();
-    //---proposal
+    // reads multiple records from EOF back to Max(filesize,100).
     int stepBack = 100;
     if( streamSize <stepBack)
     {
@@ -413,7 +409,7 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
     int currentPosition;
     int step = 0;
     // DBG int howManyLineEndings = 0;
-    for( char c=0; ; ) //  test !
+    for( char c=0; ; ) //  read_file from -stepBack to EOF.
     {
         lastrecReader.get( c);
         sb->append(c);
@@ -427,23 +423,10 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
             break;
         }// else continue.
     }// for
-
-//    //----old Deal
-//    if( 100>streamSize)// for such small data, it's better to create a new sequential file from scratch.
-//    {
-//        return nullptr;
-//    }// else continue.
-//    lastrecReader.seekg( -100, std::ifstream::end );
-//    Common::StringBuilder * sb = new Common::StringBuilder( 101);// forecasted size.
-//    for( char c=0; lastrecReader.get(c); )
-//    {
-//        sb->append(c);
-//    }  //----old Deal
-
     std::string * sequentialFile_tail = new std::string( sb->str() ); // caller has to delete!
     delete sb;// clean up the temporary StringBuilder.
-    lastrecReader.close();
-    Common::LogWrappers::SectionClose();
+    lastrecReader.close();// auto Stream close.
+    Common::LogWrappers::SectionClose();// Log
     // ready.
     return sequentialFile_tail;// caller has to delete
 }// dumpTailReaderByChar()
@@ -528,6 +511,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
 
 Primes::DumpElement * Primes::recoverLastRecord( const std::string * dumpTail)
 {
+    Common::LogWrappers::SectionOpen("Primes::recoverLastRecord",0);
     Primes::DumpElement * lastRecord = new Primes::DumpElement();// retval
 
      std::string parFromFile( *dumpTail);
@@ -577,6 +561,7 @@ Primes::DumpElement * Primes::recoverLastRecord( const std::string * dumpTail)
         }
     }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
     delete tokenArray;// TODO test
+    Common::LogWrappers::SectionClose();
     // ready.
     return lastRecord;// caller has to delete.
 }// recoverLastRecord
