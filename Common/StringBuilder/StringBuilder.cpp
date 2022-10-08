@@ -229,7 +229,21 @@ namespace StrManipul
         *res = localSstream.str();// get the string from the stringStream
         // N.B. the caller has to delete the return value.
         return res;
-    }
+    }//doubleToString
+
+std::string * longDoubleToString( const long double &par)
+    {
+        std::string * res = new std::string();
+        std::stringstream localSstream;
+        localSstream.width( 30);// 2 for sign and decimal point
+        localSstream.precision(30);
+        localSstream.setf( std::ios_base::scientific);
+        localSstream << par;//put the long double into the stringStream
+        *res = localSstream.str();// get the string from the stringStream
+        // N.B. the caller has to delete the return value.
+        return res;
+    }//longDoubleToString
+
 
     std::string * intToString( const int &par)
     {

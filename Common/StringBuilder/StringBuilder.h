@@ -52,6 +52,7 @@ bool isInvisibleString( const std::string &analyzed);
 std::vector<std::string> * removeEmptyEntries( std::vector<std::string> * original);
 // follow the xToString() and stringToX() functions:
 std::string * doubleToString( const double &par);
+std::string * longDoubleToString( const long double &par);
 std::string * intToString( const int &par);
 std::string * uLongToString( const unsigned long &par);
 std::string * uLongLongToString( const unsigned long long &par);//long-long i.e. 8 byte integral type(may be signed or not).

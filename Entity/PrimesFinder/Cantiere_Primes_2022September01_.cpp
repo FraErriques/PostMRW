@@ -1075,7 +1075,7 @@ unsigned long long Primes::queryMap( unsigned long long desiredOrdinal)
     }// else return zero, as error-code, since the required key is absent in the map.
     else
     {// else means count==0. In the map count has only the states{0==absent, +1==present}.
-        std::cout<<"\n\n\t Key not found \n\n"; // DBG
+        std::cout<<"----\n\t Key "<<desiredOrdinal<<" not found."; // DBG
         return 0;
     }
 }// queryMap
@@ -1085,7 +1085,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     unsigned long long  desiredPrime = this->queryMap( desiredOrdinal);// check if there's already the record in Map.
     if( 0 != desiredPrime)
     {
-        std::cout<<"\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime; // DBG
+        std::cout<<"-------\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
         return desiredPrime;
     }
     else // zero returned by queryMap means key-absent.
@@ -1098,11 +1098,11 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     desiredPrime = this->queryMap( desiredOrdinal);
     if( 0 == desiredPrime)
     {
-        std::cout<<"\n\t Key not found AGAIN, after feeding it. DEBUG needed: exceptional case. \n"; // DBG
+        std::cout<<"\n\t Key not found AGAIN, after feeding it. DEBUG needed: exceptional case. \n----------"; // DBG
     }// DBG !
     else
     {
-        std::cout<<"\n\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime; // DBG
+        std::cout<<"\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
     }// DBG !
     //
     return desiredPrime;

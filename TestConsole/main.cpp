@@ -15,6 +15,7 @@
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
 #include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
+#include "../Entity/PrimesFinder/InternalAlgos.h"
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
@@ -28,46 +29,82 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----CANTIERE------------------------------------------------
-//    unsigned long long sogliaCustom = -1;// reach it by underflow.
-//    sogliaCustom /= 99;
-    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    bool seq = test->sequentialDump( 19541);// required prime==soglia
-    bool rand = test->randomDump( 600,  700);
-    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
-    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
-    bool outcome_recoverLastRecord = test->recoverLastRecord();
-    bool outcome_recoverDumpTail = test->recoverDumpTail();
-    bool reader = true; // used with &=
-    reader = test->readSequentialDump_nextRec( 60);
-    bool outcome_acquireNextRecord = test->acquireNextRecord();
-    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
-    size_t ulong_size = sizeof( unsigned long long);
-    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
-    for (int c=1; c<1181; c++)
+    unsigned long long sogliaCustom = -1;// reach it by underflow.
+    unsigned long long inf = 1881574000000;
+    unsigned long long deltaAbscissa = pow(10,15);
+    unsigned long long sup = inf + deltaAbscissa;
+    std::ofstream logIntegral("./LogIntegral_highZone.txt", std::fstream::out);// reset.
+    std::string colonneStr("inf \t sup \t LogIntegral(inf,sup) \n");
+    logIntegral.write( colonneStr.c_str(), colonneStr.length() );
+    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    for( ; sup<sogliaCustom; inf+=deltaAbscissa, sup+=deltaAbscissa )
     {
-        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
-    }
-    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-    getchar();
-    //bool reader;
-    reader = test->readSequentialDump_nextRec( 60);
-    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        0
-        ,915 // there must be room for just one record Prime<100.
-     );
-    for( int c=0; c<61; c++)
-    {// next Rec
-        reader &= test->readSequentialDump_nextRec(c);
-    }
-    for( int c=0; c<61; c++)
-    {// array of Rec
-        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-            c
-            ,c+915 // there must be room for just one record Prime<100.
-         );
-    }// array of Rec
-    delete test;
+        long double quantileLogIntegral =
+            Entity::Integration::trapezi(
+                                         (long double)inf
+                                         , (long double)sup
+                                         , ((long double)(pow(10,2)))  // how many steps
+                                         , LogIntegral );// function-pointer
+        std::string * infStr = Common::StrManipul::uLongLongToString( inf);
+        std::string * supStr = Common::StrManipul::uLongLongToString( sup);
+        std::string * LogIntegralStr = Common::StrManipul::uLongLongToString( (unsigned long long)quantileLogIntegral);
+        int forecastedTokenSize = infStr->length()+supStr->length()+4;//3 stands for '_'+'_'+'\n'+'\r'
+        Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
+        strBuild->append(infStr->c_str());
+        strBuild->append("_");
+        strBuild->append(supStr->c_str());
+        strBuild->append("_");
+        strBuild->append(LogIntegralStr->c_str());
+        strBuild->append("\r");// choose one btw '\r' or '\n'
+        delete infStr;
+        delete supStr;
+        delete LogIntegralStr;
+        // instead of returning it, dump it on the file.
+        logIntegral.write( strBuild->str().c_str(), strBuild->str().length() );
+        delete strBuild;// clean up the token-buffer.
+        strBuild = nullptr;
+    }// for
+    logIntegral.flush();
+    logIntegral.close();
+
+//    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
+//    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
+//    bool seq = test->sequentialDump( 19541);// required prime==soglia
+//    bool rand = test->randomDump( 600,  700);
+//    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
+//    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
+//    bool outcome_recoverLastRecord = test->recoverLastRecord();
+//    bool outcome_recoverDumpTail = test->recoverDumpTail();
+//    bool reader = true; // used with &=
+//    reader = test->readSequentialDump_nextRec( 60);
+//    bool outcome_acquireNextRecord = test->acquireNextRecord();
+//    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
+//    size_t ulong_size = sizeof( unsigned long long);
+//    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
+//    for (int c=1; c<1181; c++)
+//    {
+//        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
+//    }
+//    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+//    getchar();
+//    //bool reader;
+//    reader = test->readSequentialDump_nextRec( 60);
+//    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//        0
+//        ,915 // there must be room for just one record Prime<100.
+//     );
+//    for( int c=0; c<61; c++)
+//    {// next Rec
+//        reader &= test->readSequentialDump_nextRec(c);
+//    }
+//    for( int c=0; c<61; c++)
+//    {// array of Rec
+//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//            c
+//            ,c+915 // there must be room for just one record Prime<100.
+//         );
+//    }// array of Rec
+//    delete test;
     //------Unit Test-----CANTIERE---------------------------------------------------
     //
     //------Unit Test-----PimesFinder------------------------------------------------
