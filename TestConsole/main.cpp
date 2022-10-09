@@ -29,24 +29,61 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----CANTIERE------------------------------------------------
-    unsigned long long sogliaCustom = -1;// reach it by underflow.
+    unsigned long long sogliaCustom = -1;// reach it by underflow. 1.8447*10^19-1
     unsigned long long inf = 1881574000000;
+    struct LogIntegralStep
+    {
+        long double inf;
+        long double sup;
+        long double card_partiz;
+    };
+
+    LogIntegralStep * LogIntegralStep_Array = new LogIntegralStep[7];
+    //----
+    LogIntegralStep_Array[0].inf = +2.0;
+    LogIntegralStep_Array[0].sup = +100.0;
+    LogIntegralStep_Array[0].card_partiz = +400.0;
+    //-
+    LogIntegralStep_Array[1].inf =  +100.0;
+    LogIntegralStep_Array[1].sup = +1000.0;
+    LogIntegralStep_Array[1].card_partiz = +2000.0;
+    //-
+    LogIntegralStep_Array[2].inf = +1000.0;
+    LogIntegralStep_Array[2].sup = pow(10,6);
+    LogIntegralStep_Array[2].card_partiz = +2000.0;
+    //-
+    LogIntegralStep_Array[3].inf = pow(10,6);
+    LogIntegralStep_Array[3].sup = pow(10,9);
+    LogIntegralStep_Array[3].card_partiz = +1000.0;
+    //-
+    LogIntegralStep_Array[4].inf = pow(10,9);
+    LogIntegralStep_Array[4].sup = pow(10,12);
+    LogIntegralStep_Array[4].card_partiz = +9000.0;
+    //-
+    LogIntegralStep_Array[5].inf = pow(10,12);
+    LogIntegralStep_Array[5].sup = pow(10,15);
+    LogIntegralStep_Array[5].card_partiz = +9000.0;
+    //-
+    LogIntegralStep_Array[6].inf = pow(10,15);
+    LogIntegralStep_Array[6].sup = sogliaCustom; // 1.8447*10^19-1
+    LogIntegralStep_Array[6].card_partiz = +9000.0;
+    //-
     unsigned long long deltaAbscissa = pow(10,15);
     unsigned long long sup = inf + deltaAbscissa;
     std::ofstream logIntegral("./LogIntegral_highZone.txt", std::fstream::out);// reset.
     std::string colonneStr("inf \t sup \t LogIntegral(inf,sup) \n");
     logIntegral.write( colonneStr.c_str(), colonneStr.length() );
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    for( ; sup<sogliaCustom; inf+=deltaAbscissa, sup+=deltaAbscissa )
+    for( int c=0; c<=6; c++ )
     {
         long double quantileLogIntegral =
             Entity::Integration::trapezi(
-                                         (long double)inf
-                                         , (long double)sup
-                                         , ((long double)(pow(10,2)))  // how many steps
+                                         LogIntegralStep_Array[c].inf
+                                         ,LogIntegralStep_Array[c].sup
+                                         ,LogIntegralStep_Array[c].card_partiz // how many steps
                                          , LogIntegral );// function-pointer
-        std::string * infStr = Common::StrManipul::uLongLongToString( inf);
-        std::string * supStr = Common::StrManipul::uLongLongToString( sup);
+        std::string * infStr = Common::StrManipul::uLongLongToString( LogIntegralStep_Array[c].inf);
+        std::string * supStr = Common::StrManipul::uLongLongToString( LogIntegralStep_Array[c].sup);
         std::string * LogIntegralStr = Common::StrManipul::uLongLongToString( (unsigned long long)quantileLogIntegral);
         int forecastedTokenSize = infStr->length()+supStr->length()+4;//3 stands for '_'+'_'+'\n'+'\r'
         Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
@@ -66,6 +103,7 @@ int main()
     }// for
     logIntegral.flush();
     logIntegral.close();
+    delete[] LogIntegralStep_Array;
 
 //    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
 //    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
