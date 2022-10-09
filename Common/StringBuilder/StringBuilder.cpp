@@ -314,19 +314,33 @@ std::string * longDoubleToString( const long double &par)
         return res;
     }
 
-    int stringToUnsignedLong( const std::string &par)
+    unsigned long stringToUnsignedLong( const std::string &par)
     {// recover an unsigned long from a string.
         unsigned long res;
         std::stringstream( par) >> res;
         return res;
     }// recover an unsigned long from a string.
 
+    unsigned long long stringToUnsignedLongLong( const std::string &par)
+    {// recover an unsigned long long from a string.
+        unsigned long long res;
+        std::stringstream( par) >> res;
+        return res;
+    }// recover an unsigned long long from a string.
+
     double stringToDouble( const std::string &par)
     {
         double res;
         std::stringstream( par) >> res;
         return res;
-    }
+    }// stringToDouble
+
+    long double stringToLongDouble( const std::string &par)
+    {
+        long double res;
+        std::stringstream( par) >> res;
+        return res;
+    }// stringToLongDouble
 
 
 }// end nmsp StrManipul

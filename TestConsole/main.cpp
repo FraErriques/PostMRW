@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 //--------------------#include <boost/lambda/lambda.hpp>
 //#include "../Common/DbConnectionService/dbCall.h"
 //#include "../Common/DbConnectionService/mysql_connection.h"
@@ -21,6 +22,60 @@
 //-----unit test---------
 #include "Test_Unit_CantierePrimes.h"
 #include "Test_Unit_PrimesFinder.h"
+
+
+
+bool readFileByLines(const char * fullPath)
+{
+    std::fstream testFile;
+    bool result = false;// init to invalid.
+    std::vector <std::string> data;
+    std::vector<std::string>::iterator iter;
+    std::string curr_data;
+    // Open for read : Input
+	testFile.open( fullPath, std::ios::in);
+	int step = 1;
+    if (testFile.is_open())
+    {
+        while (!testFile.eof())
+        {
+            if( testFile.eof() ) {break;}
+            std::getline ( testFile, curr_data);// legge con separatore EOL : TODO test if '\n' or '\r\n'
+            if( curr_data.length() > 0)
+            {
+                data.push_back(curr_data);// push the read line in a list.
+            }// else skip empty entry.
+        }
+        testFile.close();
+        result = true;
+    }// else result remains false; end File-read loop.
+    //
+    unsigned long long cumulate = 0;
+    step = 1;
+    for (iter = data.begin(); iter != data.end(); iter++)
+    {
+       if( data.end() == iter){break;}
+       if( step >+1)
+       {
+           std::string tmp( *iter);
+           std::vector<std::string> * tokenizedLine = Common::StrManipul::stringSplit(
+            "_"
+            , tmp  // NB. original passed by value, to be preserved.
+            , true );
+           if( (*tokenizedLine).size() >= 2)
+           {
+               const std::string LogIntegral_inf_sup_( (*tokenizedLine)[2] );
+               cumulate += Common::StrManipul::stringToUnsignedLongLong( LogIntegral_inf_sup_);// check if exists
+           }// else skip
+           delete tokenizedLine;
+       }
+       std::cout<<"Elemento di posizione "<<step<<" nella lista == "<<*iter<<"   cumulate="<< cumulate<<"\n";
+       step++;
+    }
+    // ready.
+    return result;
+}// readFileByLines
+
 
 
 //---entry point-------------------------
@@ -85,14 +140,14 @@ int main()
         std::string * infStr = Common::StrManipul::uLongLongToString( LogIntegralStep_Array[c].inf);
         std::string * supStr = Common::StrManipul::uLongLongToString( LogIntegralStep_Array[c].sup);
         std::string * LogIntegralStr = Common::StrManipul::uLongLongToString( (unsigned long long)quantileLogIntegral);
-        int forecastedTokenSize = infStr->length()+supStr->length()+4;//3 stands for '_'+'_'+'\n'+'\r'
+        int forecastedTokenSize = 100;
         Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
         strBuild->append(infStr->c_str());
         strBuild->append("_");
         strBuild->append(supStr->c_str());
         strBuild->append("_");
         strBuild->append(LogIntegralStr->c_str());
-        strBuild->append("\r");// choose one btw '\r' or '\n'
+        strBuild->append("\n");// choose '\n'
         delete infStr;
         delete supStr;
         delete LogIntegralStr;
@@ -104,6 +159,8 @@ int main()
     logIntegral.flush();
     logIntegral.close();
     delete[] LogIntegralStep_Array;
+
+    readFileByLines("./LogIntegral_highZone.txt");
 
 //    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
 //    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);

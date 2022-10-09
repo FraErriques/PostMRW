@@ -60,8 +60,10 @@ std::string * signedLongLongToString( const long long &par);//long-long i.e. 8 b
 std::string * boolToString( const bool &par);
 std::string * charToString( const char par);// no byRef, but byVal, since it's one byte.
 int stringToInt( const std::string &par);
-int stringToUnsignedLong( const std::string &par);
+unsigned long stringToUnsignedLong( const std::string &par);
+unsigned long long stringToUnsignedLongLong( const std::string &par);
 double stringToDouble( const std::string &par);
+long double stringToLongDouble( const std::string &par);
 
 
 } // END namespacesp StrManipul
