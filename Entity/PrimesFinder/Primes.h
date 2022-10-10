@@ -108,6 +108,6 @@ class Primes
 
 };// class
 
-}// nmsp
+} //namespacesp PrimesFinder
 
 #endif // __Primes_production__H_INCLUDED

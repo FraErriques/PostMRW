@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 //--------------------#include <boost/lambda/lambda.hpp>
 //#include "../Common/DbConnectionService/dbCall.h"
 //#include "../Common/DbConnectionService/mysql_connection.h"
@@ -15,11 +16,66 @@
 #include "../Entity/Integration/Integrate.h"
 #include "../Entity/PrimesFinder/Primes.h"
 #include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
+#include "../Entity/PrimesFinder/InternalAlgos.h"
 #include "../Entity/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
 #include "Test_Unit_CantierePrimes.h"
 #include "Test_Unit_PrimesFinder.h"
+
+
+
+bool readFileByLines(const char * fullPath)
+{
+    std::fstream testFile;
+    bool result = false;// init to invalid.
+    std::vector <std::string> data;
+    std::vector<std::string>::iterator iter;
+    std::string curr_data;
+    // Open for read : Input
+	testFile.open( fullPath, std::ios::in);
+	int step = 1;
+    if (testFile.is_open())
+    {
+        while (!testFile.eof())
+        {
+            if( testFile.eof() ) {break;}
+            std::getline ( testFile, curr_data);// legge con separatore EOL : TODO test if '\n' or '\r\n'
+            if( curr_data.length() > 0)
+            {
+                data.push_back(curr_data);// push the read line in a list.
+            }// else skip empty entry.
+        }
+        testFile.close();
+        result = true;
+    }// else result remains false; end File-read loop.
+    //
+    unsigned long long cumulate = 0;
+    step = 1;
+    for (iter = data.begin(); iter != data.end(); iter++)
+    {
+       if( data.end() == iter){break;}
+       if( step >+1)
+       {
+           std::string tmp( *iter);
+           std::vector<std::string> * tokenizedLine = Common::StrManipul::stringSplit(
+            "_"
+            , tmp  // NB. original passed by value, to be preserved.
+            , true );
+           if( (*tokenizedLine).size() >= 2)
+           {
+               const std::string LogIntegral_inf_sup_( (*tokenizedLine)[2] );
+               cumulate += Common::StrManipul::stringToUnsignedLongLong( LogIntegral_inf_sup_);// check if exists
+           }// else skip
+           delete tokenizedLine;
+       }
+       std::cout<<"Elemento di posizione "<<step<<" nella lista == "<<*iter<<"   cumulate="<< cumulate<<"\n";
+       step++;
+    }
+    // ready.
+    return result;
+}// readFileByLines
+
 
 
 //---entry point-------------------------
@@ -28,11 +84,87 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----CANTIERE------------------------------------------------
-//    unsigned long long sogliaCustom = -1;// reach it by underflow.
-//    sogliaCustom /= 99;
-    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    bool seq = test->sequentialDump( 500);// required prime==soglia
+//    unsigned long long sogliaCustom = -1;// reach it by underflow. 1.8447*10^19-1
+//    unsigned long long inf = 1881574000000;
+//    struct LogIntegralStep
+//    {
+//        long double inf;
+//        long double sup;
+//        long double card_partiz;
+//    };
+//
+//    LogIntegralStep * LogIntegralStep_Array = new LogIntegralStep[7];
+//    //----
+//    LogIntegralStep_Array[0].inf = +2.0;
+//    LogIntegralStep_Array[0].sup = +100.0;
+//    LogIntegralStep_Array[0].card_partiz = +400.0;
+//    //-
+//    LogIntegralStep_Array[1].inf =  +100.0;
+//    LogIntegralStep_Array[1].sup = +1000.0;
+//    LogIntegralStep_Array[1].card_partiz = +2000.0;
+//    //-
+//    LogIntegralStep_Array[2].inf = +1000.0;
+//    LogIntegralStep_Array[2].sup = pow(10,6);
+//    LogIntegralStep_Array[2].card_partiz = +2000.0;
+//    //-
+//    LogIntegralStep_Array[3].inf = pow(10,6);
+//    LogIntegralStep_Array[3].sup = pow(10,9);
+//    LogIntegralStep_Array[3].card_partiz = +1000.0;
+//    //-
+//    LogIntegralStep_Array[4].inf = pow(10,9);
+//    LogIntegralStep_Array[4].sup = pow(10,12);
+//    LogIntegralStep_Array[4].card_partiz = +9000.0;
+//    //-
+//    LogIntegralStep_Array[5].inf = pow(10,12);
+//    LogIntegralStep_Array[5].sup = pow(10,15);
+//    LogIntegralStep_Array[5].card_partiz = +9000.0;
+//    //-
+//    LogIntegralStep_Array[6].inf = pow(10,15);
+//    LogIntegralStep_Array[6].sup = sogliaCustom; // 1.8447*10^19-1
+//    LogIntegralStep_Array[6].card_partiz = +9000.0;
+//    //-
+//    unsigned long long deltaAbscissa = pow(10,15);
+//    unsigned long long sup = inf + deltaAbscissa;
+//    std::ofstream logIntegral("./LogIntegral_highZone.txt", std::fstream::out);// reset.
+//    std::string colonneStr("inf \t sup \t LogIntegral(inf,sup) \n");
+//    logIntegral.write( colonneStr.c_str(), colonneStr.length() );
+//    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+//    for( int c=0; c<=6; c++ )
+//    {
+//        long double quantileLogIntegral =
+//            Entity::Integration::trapezi(
+//                                         LogIntegralStep_Array[c].inf
+//                                         ,LogIntegralStep_Array[c].sup
+//                                         ,LogIntegralStep_Array[c].card_partiz // how many steps
+//                                         , LogIntegral );// function-pointer
+//        std::string * infStr = Common::StrManipul::uLongLongToString( LogIntegralStep_Array[c].inf);
+//        std::string * supStr = Common::StrManipul::uLongLongToString( LogIntegralStep_Array[c].sup);
+//        std::string * LogIntegralStr = Common::StrManipul::uLongLongToString( (unsigned long long)quantileLogIntegral);
+//        int forecastedTokenSize = 100;
+//        Common::StringBuilder * strBuild = new Common::StringBuilder( forecastedTokenSize);
+//        strBuild->append(infStr->c_str());
+//        strBuild->append("_");
+//        strBuild->append(supStr->c_str());
+//        strBuild->append("_");
+//        strBuild->append(LogIntegralStr->c_str());
+//        strBuild->append("\n");// choose '\n'
+//        delete infStr;
+//        delete supStr;
+//        delete LogIntegralStr;
+//        // instead of returning it, dump it on the file.
+//        logIntegral.write( strBuild->str().c_str(), strBuild->str().length() );
+//        delete strBuild;// clean up the token-buffer.
+//        strBuild = nullptr;
+//    }// for
+//    logIntegral.flush();
+//    logIntegral.close();
+//    delete[] LogIntegralStep_Array;
+//
+//    readFileByLines("./LogIntegral_highZone.txt");
+
+//    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
+//    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
+//    bool seq = test->sequentialDump( 19541);// required prime==soglia
 //    bool rand = test->randomDump( 600,  700);
 //    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
 //    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
@@ -67,7 +199,7 @@ int main()
 //            ,c+915 // there must be room for just one record Prime<100.
 //         );
 //    }// array of Rec
-    delete test;
+//    delete test;
     //------Unit Test-----CANTIERE---------------------------------------------------
     //
     //------Unit Test-----PimesFinder------------------------------------------------

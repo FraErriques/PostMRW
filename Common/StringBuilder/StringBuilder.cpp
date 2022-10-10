@@ -229,7 +229,21 @@ namespace StrManipul
         *res = localSstream.str();// get the string from the stringStream
         // N.B. the caller has to delete the return value.
         return res;
-    }
+    }//doubleToString
+
+std::string * longDoubleToString( const long double &par)
+    {
+        std::string * res = new std::string();
+        std::stringstream localSstream;
+        localSstream.width( 30);// 2 for sign and decimal point
+        localSstream.precision(30);
+        localSstream.setf( std::ios_base::scientific);
+        localSstream << par;//put the long double into the stringStream
+        *res = localSstream.str();// get the string from the stringStream
+        // N.B. the caller has to delete the return value.
+        return res;
+    }//longDoubleToString
+
 
     std::string * intToString( const int &par)
     {
@@ -300,19 +314,33 @@ namespace StrManipul
         return res;
     }
 
-    int stringToUnsignedLong( const std::string &par)
+    unsigned long stringToUnsignedLong( const std::string &par)
     {// recover an unsigned long from a string.
         unsigned long res;
         std::stringstream( par) >> res;
         return res;
     }// recover an unsigned long from a string.
 
+    unsigned long long stringToUnsignedLongLong( const std::string &par)
+    {// recover an unsigned long long from a string.
+        unsigned long long res;
+        std::stringstream( par) >> res;
+        return res;
+    }// recover an unsigned long long from a string.
+
     double stringToDouble( const std::string &par)
     {
         double res;
         std::stringstream( par) >> res;
         return res;
-    }
+    }// stringToDouble
+
+    long double stringToLongDouble( const std::string &par)
+    {
+        long double res;
+        std::stringstream( par) >> res;
+        return res;
+    }// stringToLongDouble
 
 
 }// end nmsp StrManipul
