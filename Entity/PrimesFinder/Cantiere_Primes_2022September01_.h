@@ -93,6 +93,9 @@ class Primes
                    );
     unsigned long long queryMap( unsigned long long desiredOrdinal);
     bool Bisection( unsigned long long requiredOrdinal );
+    void coveringIntegral();
+    bool distributionFunction(const char * path);
+    unsigned long long interpolateOrdinal( unsigned long long candidatePrime);
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 
