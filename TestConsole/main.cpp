@@ -84,6 +84,11 @@ int main()
     Common::LogWrappers::SectionOpen("main", 0);
     //
     //------Unit Test-----CANTIERE------------------------------------------------
+    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
+    cantiere.coveringIntegral();
+    bool dumped = cantiere.distributionFunction( "./LogIntegral_firstPhase_.txt");
+    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( 46);// estimate the ordinal of a candidate prime or of a threshold.
+
 //    unsigned long long sogliaCustom = -1;// reach it by underflow. 1.8447*10^19-1
 //    unsigned long long inf = 1881574000000;
 //    struct LogIntegralStep
