@@ -1111,7 +1111,6 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
 void Primes::coveringIntegral()
 {
     unsigned long long sogliaCustom = -1;// reach it by underflow. 1.8447*10^19-1
-//unsigned long long inf = 1881574000000;
     struct LogIntegralStep
     {
         long double inf;
@@ -1148,8 +1147,6 @@ void Primes::coveringIntegral()
     LogIntegralStep_Array[6].sup = sogliaCustom; // 1.8447*10^19-1
     LogIntegralStep_Array[6].card_partiz = +9000.0;
     //-
-//unsigned long long deltaAbscissa = pow(10,15);
-//unsigned long long sup = inf + deltaAbscissa;
     std::ofstream logIntegral("./LogIntegral_firstPhase_.txt", std::fstream::out);// reset.
     std::string colonneStr("inf \t sup \t LogIntegral(inf,sup) \n");
     logIntegral.write( colonneStr.c_str(), colonneStr.length() );
@@ -1259,6 +1256,59 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     //      : which are the parameters of the line, that interpolates the interval boundary ?
     // : given the line y=y(x) return the interpolatedOrdinal(candidatePrime)
     //
+    //2                       0
+    //100                     29
+    //1000                    176
+    //1000000                 78626
+    //1000000000              50849654
+    //1000000000000           37607953088
+    //1000000000000000        29844572821462
+    //18446744073709551615    425656551648260822
+    //
+    struct PillarPoint
+    {
+        unsigned long long abscissa;
+        unsigned long long ordinate;
+    };
+    PillarPoint * thePillarPoints = new PillarPoint[8];
+    //
+    thePillarPoints[0].abscissa = +2;
+    thePillarPoints[0].ordinate =  0;
+    //
+    thePillarPoints[1].abscissa = +100;
+    thePillarPoints[1].ordinate =  +29;
+    //
+    thePillarPoints[2].abscissa = +100000;
+    thePillarPoints[2].ordinate =    +176;
+    //
+    thePillarPoints[3].abscissa = +100000000;
+    thePillarPoints[3].ordinate =     +78626;
+    //
+    thePillarPoints[4].abscissa = +100000000000;
+    thePillarPoints[4].ordinate =     +50849654;
+    //
+    thePillarPoints[5].abscissa = +100000000000000;
+    thePillarPoints[5].ordinate =     +37607953088;
+    //
+    thePillarPoints[6].abscissa = +100000000000000;
+    thePillarPoints[6].ordinate =  +29844572821462;
+    //
+    thePillarPoints[7].abscissa = +18446744073709551615;
+    thePillarPoints[7].ordinate =   +425656551648260822;
+    //
+    int selectedInterval = 0;
+    for(int c=0; c<7; c++)
+    {
+        if( thePillarPoints[c].ordinate < candidatePrime
+            && thePillarPoints[c+1].ordinate >= candidatePrime
+           )
+        {
+            selectedInterval = c;
+        }
+    }// for
+
+    delete[] thePillarPoints;//clean
+    // ready.
     return 0;
 }// interpolateOrdinal
 
