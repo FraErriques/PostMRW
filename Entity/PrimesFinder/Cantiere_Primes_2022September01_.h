@@ -95,7 +95,7 @@ class Primes
     bool Bisection( unsigned long long requiredOrdinal );
     void coveringIntegral();
     bool distributionFunction(const char * path);
-    unsigned long long interpolateOrdinal( unsigned long long candidatePrime);
+    unsigned long long interpolateOrdinal( unsigned long long candidatePrimeThreshold);
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 
