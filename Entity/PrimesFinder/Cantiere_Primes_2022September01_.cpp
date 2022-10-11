@@ -296,7 +296,7 @@ const std::string * Primes::getPrimeDumpFullPath( const std::string * sectionNam
 /// Dtor()
 Primes::~Primes()
 {/// Dtor()
-    Common::LogWrappers::SectionOpen("Dtor Primes::~Primes", 0);
+    // don't log from Dtor: for auto-instances it leaks  Common::LogWrappers::SectionOpen("Dtor Primes::~Primes", 0);
     if( nullptr != this->memoryMappedDump)
     {
         this->memoryMappedDump->clear();
@@ -328,7 +328,7 @@ Primes::~Primes()
         this->append_Random_Stream->close();
         this->append_Random_Stream = nullptr;
     }// else already closed.
-    Common::LogWrappers::SectionClose();
+    // don't log from Dtor: for auto-instances it leaks Common::LogWrappers::SectionClose();
 }// Dtor
 
 
@@ -1249,12 +1249,8 @@ bool Primes::distributionFunction(const char * fullPath)
 
 
 
-unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime)
+unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrimeThreshold)
 {
-    // TODO : which interval does candidatePrime belong to ?
-    //      : which are the two boundary points of the selected interval ?
-    //      : which are the parameters of the line, that interpolates the interval boundary ?
-    // : given the line y=y(x) return the interpolatedOrdinal(candidatePrime)
     //
     //2                       0
     //100                     29
@@ -1299,13 +1295,18 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     int selectedInterval = 0;
     for(int c=0; c<7; c++)
     {
-        if( thePillarPoints[c].ordinate < candidatePrime
-            && thePillarPoints[c+1].ordinate >= candidatePrime
+        if( thePillarPoints[c].abscissa < candidatePrimeThreshold
+            && thePillarPoints[c+1].abscissa >= candidatePrimeThreshold
            )
         {
             selectedInterval = c;
+            break;
         }
     }// for
+    // TODO : which interval does candidatePrimeThreshold belong to ?
+    //      : which are the two boundary points of the selected interval ?
+    //      : which are the parameters of the line, that interpolates the interval boundary ?
+    // : given the line y=y(x) return the interpolatedOrdinal(candidatePrimeThreshold)
 
     delete[] thePillarPoints;//clean
     // ready.
