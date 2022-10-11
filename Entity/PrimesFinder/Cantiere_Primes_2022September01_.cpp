@@ -1293,16 +1293,28 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     thePillarPoints[7].ordinate =   +425656551648260822;
     //
     int selectedInterval = 0;
-    for(int c=0; c<7; c++)
+    unsigned long long x0,x1,y0,y1;
+    unsigned long long x = candidatePrimeThreshold;
+    unsigned long long y;// to be interpolated
+    for(int c=0; c<7; c++)// TODO test on last interval
     {
         if( thePillarPoints[c].abscissa < candidatePrimeThreshold
             && thePillarPoints[c+1].abscissa >= candidatePrimeThreshold
            )
         {
             selectedInterval = c;
+            x0 = thePillarPoints[c].abscissa;
+            x1 = thePillarPoints[c+1].abscissa;
+            y0 = thePillarPoints[c].ordinate;
+            y1 = thePillarPoints[c+1].ordinate;
             break;
         }
     }// for
+    unsigned long long DeltaX = x1 - x0;
+    unsigned long long DeltaY = y1 - y0;
+    long double DyOnDx = (long double)DeltaY/(long double)DeltaX;
+    y = DyOnDx*(x-x0) + y0;
+
     // TODO : which interval does candidatePrimeThreshold belong to ?
     //      : which are the two boundary points of the selected interval ?
     //      : which are the parameters of the line, that interpolates the interval boundary ?
@@ -1310,7 +1322,7 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
 
     delete[] thePillarPoints;//clean
     // ready.
-    return 0;
+    return y;
 }// interpolateOrdinal
 
 }// namespace Cantiere_Primes_2022September01_
