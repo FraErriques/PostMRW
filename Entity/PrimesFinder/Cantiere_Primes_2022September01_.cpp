@@ -1274,22 +1274,22 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     thePillarPoints[1].abscissa = +100;
     thePillarPoints[1].ordinate =  +29;
     //
-    thePillarPoints[2].abscissa = +100000;
-    thePillarPoints[2].ordinate =    +176;
+    thePillarPoints[2].abscissa = +1000;
+    thePillarPoints[2].ordinate =  +176;
     //
-    thePillarPoints[3].abscissa = +100000000;
-    thePillarPoints[3].ordinate =     +78626;
+    thePillarPoints[3].abscissa = +1000000;// 10^6
+    thePillarPoints[3].ordinate =   +78626;
     //
-    thePillarPoints[4].abscissa = +100000000000;
-    thePillarPoints[4].ordinate =     +50849654;
+    thePillarPoints[4].abscissa = +1000000000;// 10^9
+    thePillarPoints[4].ordinate =   +50849654;
     //
-    thePillarPoints[5].abscissa = +100000000000000;
-    thePillarPoints[5].ordinate =     +37607953088;
+    thePillarPoints[5].abscissa = +1000000000000;// 10^12
+    thePillarPoints[5].ordinate =   +37607953088;
     //
-    thePillarPoints[6].abscissa = +100000000000000;
-    thePillarPoints[6].ordinate =  +29844572821462;
+    thePillarPoints[6].abscissa = +1000000000000000;// 10^15
+    thePillarPoints[6].ordinate =   +29844572821462;
     //
-    thePillarPoints[7].abscissa = +18446744073709551615;
+    thePillarPoints[7].abscissa = +18446744073709551615;// 10^19
     thePillarPoints[7].ordinate =   +425656551648260822;
     //
     int selectedInterval = 0;

@@ -45,8 +45,10 @@ int main()
 
 //    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
     Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
-//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( 1460000);// candidate threshold
-Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
+    unsigned long long candidateThreshold = 9654321;
+    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( candidateThreshold);
+    std::cout<< "interpolatedOrdinal("<<candidateThreshold<<")=="<<interpolatedOrdinal<<std::endl;
+//Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
 
 //    bool seq = test->sequentialDump( 19541);// required prime==soglia
 //    bool rand = test->randomDump( 600,  700);
