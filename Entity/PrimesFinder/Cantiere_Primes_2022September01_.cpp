@@ -258,24 +258,30 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    Primes::LogIntegralPillarPoint * nearestIntegral = this->getNearestIntegral( infLeft);
+    unsigned long long threshold_lastIntegral = nearestIntegral->threshold;
+    unsigned long long measure_lastIntegral = nearestIntegral->logIntegral;
+    delete nearestIntegral;// clean
     long double LogIntegral_ofInfPar =
-        Entity::Integration::trapezi( +2.0, (long double)infLeft, (long double)1000, LogIntegral );// test 1000 steps
-    unsigned long long extimatedOrdinal= (unsigned long long)LogIntegral_ofInfPar;//TODO stima !
+        Entity::Integration::trapezi(
+                 (long double)threshold_lastIntegral// start from last integral saved.
+                 , (long double)infLeft   // get to infleft
+                 , (long double)1000  // test 1000 steps
+                 , LogIntegral ); // func-pointer
+    unsigned long long extimatedOrdinal= (unsigned long long)( measure_lastIntegral + LogIntegral_ofInfPar);//TODO test
     // the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.
     // write a stamp, about what we're doing and when.
     time_t ttime = time(0);
     char* dt = ctime(&ttime);
     //   NB. for UTC Greenwich tm *gmt_time = gmtime(&ttime);
     //   NB. for UTC Greenwich dt = asctime(gmt_time);
-    //
-    std::ofstream localStreamWriter( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);// use the member randomDumpPath which represents the customDump.
-//    this->append_Random_Stream = new std::ofstream( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);
-//    *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
-//    *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+    // use the member randomDumpPath which represents the customDump.
+    std::ofstream localStreamWriter( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);
     if( localStreamWriter.is_open() )
     {
         localStreamWriter << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
         localStreamWriter << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+        // ---call with params
         Start_PrimeDump_FileSys( infLeft, maxRight, &localStreamWriter, extimatedOrdinal );
         localStreamWriter.flush();
         localStreamWriter.close();
@@ -283,14 +289,10 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
     else
     {
         res = false;
+        std::cout<<"\n\t Unable to open Random Dump. \n";
     }
-    // ---call with params
-//    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream, extimatedOrdinal );
-    //
-//    this->append_Random_Stream->close();
-//    delete this->append_Random_Stream;
-//    this->append_Random_Stream = nullptr;
     Common::LogWrappers::SectionClose();
+    // ready.
     return res;
 }// RandomCalcInterface
 
@@ -1378,6 +1380,69 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     // ready.
     return y;
 }// interpolateOrdinal
+
+void Primes::mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals )
+{
+    if( nullptr!=mapOfNaturals)
+    {
+        std::cout<<"\n\n\t The map size is \t"<<mapOfNaturals->size()<<"\n\n";
+        for( std::map<unsigned long long, unsigned long long>::iterator fwd=mapOfNaturals->begin();
+             fwd != mapOfNaturals->end();
+             fwd++
+        )
+        {// Traverse loop
+            std::cout<<"\t"<< fwd->first << "\t";
+            std::cout<<"\t "<<fwd->second << std::endl;
+        }// Traverse loop
+        std::cout<<"\n\n\t The map size is \t"<<mapOfNaturals->size()<<"\n";
+    }// if( nullptr!=dictionary)
+    else
+    {// map empty
+        std::cout<<"\n\n\t The map is empty \n\n";
+    }// map empty
+}//mapTraverseForward
+
+
+Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long candidatePrimeThreshold)
+{
+    size_t map_size = logIntegralPillars->size();
+    LogIntegralPillarPoint * thePillarPoints = new LogIntegralPillarPoint[map_size];
+    int array_index = 0;
+    for( std::map<unsigned long long, unsigned long long>::iterator fwd=this->logIntegralPillars->begin();
+         fwd != this->logIntegralPillars->end();
+         fwd++
+    )
+    {// Traverse loop
+        thePillarPoints[array_index].threshold = fwd->first;
+        thePillarPoints[array_index].logIntegral = fwd->second;
+        array_index++;
+    }// Traverse loop
+    if( map_size != array_index-1)
+    {
+        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
+    }
+    //
+    int selectedInterval = 0;
+    LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
+    for(int c=0; c<7; c++)// TODO test on last interval
+    {
+        if( thePillarPoints[c].threshold < candidatePrimeThreshold
+            && thePillarPoints[c+1].threshold >= candidatePrimeThreshold
+           )
+        {
+            selectedInterval = c;
+            nearestIntegral->threshold = thePillarPoints[c].threshold;
+            nearestIntegral->logIntegral = thePillarPoints[c].logIntegral;
+            break;
+        }
+    }// for
+    // sequence : which interval does candidatePrimeThreshold belong to ?
+    //          : which are the two coordinates of the left boundary point of the selected interval ?
+    //          : return such coordinates.
+    delete[] thePillarPoints;//clean
+    // ready.
+    return nearestIntegral;
+}// getNearestIntegral
 
 }// namespace Cantiere_Primes_2022September01_
 

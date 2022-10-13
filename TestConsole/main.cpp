@@ -62,6 +62,7 @@ int main()
 //    cantiere.coveringIntegral();
     bool dumped = cantiere.distributionFunction( "./LogIntegral_firstPhase_.txt");
     mapTraverseForward( cantiere.logIntegralPillars);
+    cantiere.RandomCalcInterface( 300, 350);
 //    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( 46);// estimate the ordinal of a candidate prime or of a threshold.
 //    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
 
