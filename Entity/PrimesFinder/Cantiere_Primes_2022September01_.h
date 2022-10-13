@@ -54,8 +54,8 @@ class Primes
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
     const std::string * randomDumpPath = nullptr;// NB. remember to share and delete
     //    std::ifstream has been let an automatic variable.
-    std::ofstream * append_Sequential_Stream;// write
-    std::ofstream * append_Random_Stream;// write
+//    std::ofstream * append_Sequential_Stream;// write
+//    std::ofstream * append_Random_Stream;// write
     // Riemann exponent s in C; s=:(sigma + i*t).
     // copying methoda : not usable->private.
     // hide some Constructors

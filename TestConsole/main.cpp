@@ -43,15 +43,16 @@ int main()
 //    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
 
 
-//    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
-    unsigned long long candidateThreshold = 9654321;
-    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( candidateThreshold);
-    std::cout<< "interpolatedOrdinal("<<candidateThreshold<<")=="<<interpolatedOrdinal<<std::endl;
+
+//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
+//    unsigned long long candidateThreshold = 100;
+//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( candidateThreshold);
+//    std::cout<< "interpolatedOrdinal("<<candidateThreshold<<")=="<<interpolatedOrdinal<<std::endl;
 //Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
 
-//    bool seq = test->sequentialDump( 19541);// required prime==soglia
-//    bool rand = test->randomDump( 600,  700);
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
+    bool seq = test->sequentialDump( 390);// required prime==soglia
+    bool rand = test->randomDump( 900, 920);
 //    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
 //    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
 //    bool outcome_recoverLastRecord = test->recoverLastRecord();
@@ -85,10 +86,10 @@ int main()
 //            ,c+915 // there must be room for just one record Prime<100.
 //         );
 //    }// array of Rec
-//    delete test;
-    //------Unit Test-----CANTIERE---------------------------------------------------
-    //
-    //------Unit Test-----PimesFinder------------------------------------------------
+    delete test;
+//    ------Unit Test-----CANTIERE---------------------------------------------------
+//
+//    ------Unit Test-----PimesFinder------------------------------------------------
 //        Test_Unit_PrimesFinder * test = new Test_Unit_PrimesFinder( 80);
 //        bool seq = test->sequentialDump( 9000);
 //        bool rand = test->randomDump( 0, 50);
@@ -118,7 +119,7 @@ int main()
 //             );
 //        }// array of Rec
 //        delete test;
-    //------Unit Test-----------------------------------------------------
+//    //------Unit Test-----------------------------------------------------
 
 
 

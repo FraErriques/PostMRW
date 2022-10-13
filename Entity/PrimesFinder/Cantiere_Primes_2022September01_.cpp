@@ -67,12 +67,12 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     {// not-healthly built.
         this->isHealthlyConstructed = false;
         this->canOperate = false;
-        this->append_Sequential_Stream = nullptr;
-        this->append_Random_Stream = nullptr;
+//        this->append_Sequential_Stream = nullptr;
+//        this->append_Random_Stream = nullptr;
     }// not-healthly built.
     // anyway( healtly or not) :avoid dangling pointers in Destructor's body.
-    this->append_Sequential_Stream = nullptr;
-    this->append_Random_Stream = nullptr;
+//    this->append_Sequential_Stream = nullptr;
+//    this->append_Random_Stream = nullptr;
     Common::LogWrappers::SectionClose();
 }// empty Ctor(semiAmplitudeOfEachMapSegment)
 
@@ -91,6 +91,7 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
     Primes::DumpElement * lastRec = nullptr;// the very last record, deciphered from a func:recoverLastRecord
     long long LastOrdinal = 0UL;
     long long LastPrime = 0UL;
+    std::ofstream localStreamWriter;
     if(nullptr!=stringDumpTail)
     {// i.e. if we have the string of dump-tail :
         lastRec = this->recoverLastRecord( stringDumpTail);// to be deleted.
@@ -105,16 +106,22 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
          // start a new dump from scratch :
             LastOrdinal = 0;
             LastPrime = 0;
-            this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// overWrite.
+            localStreamWriter.open(*(this->sequentialDumpPath), std::fstream::out);// overWrite a previous invalid sequentialDump.
+            //this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// overWrite.
             hasSequentialDumpBeenReset = true;
         }
-        // append:
-        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
+        // append to a valid previous sequentialDump:
+        localStreamWriter.open(*(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
+        //this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
 //        this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
 //        this->sharedReader->close();
 //        delete this->sharedReader;
 //        this->sharedReader = nullptr;
     }// else sequentialFile not present.
+    else
+    {
+        hasSequentialDumpBeenReset = true;
+    }
 //    if (hasSequentialDumpBeenReset)
 //    {// start a new dump from scratch :
 //        LastOrdinal = 0;
@@ -122,15 +129,23 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 //        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// reset.
 //        hasSequentialDumpBeenReset = true;
 //    }
+    if( localStreamWriter.is_open())
+    {
+
+
     //---call with appropriate params---------
     this->Start_PrimeDump_FileSys(
                                   LastPrime
                                   , Threshold
-                                  , append_Sequential_Stream
+                                  , &localStreamWriter
                                   , LastOrdinal );
-    this->append_Sequential_Stream->close();
-    delete this->append_Sequential_Stream;
-    this->append_Sequential_Stream = nullptr;
+    localStreamWriter.flush();
+    localStreamWriter.close();
+//    this->append_Sequential_Stream->close();
+//    delete this->append_Sequential_Stream;
+//    this->append_Sequential_Stream = nullptr;
+    }
+    // clean
     delete stringDumpTail;
     delete lastRec;
     Common::LogWrappers::SectionClose();
@@ -230,30 +245,44 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
 
 bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight )
 {
+    Common::LogWrappers::SectionOpen("Primes::RandomCalcInterface", 0);
     bool res = false;
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     long double LogIntegral_ofInfPar =
-        Entity::Integration::trapezi( +2.0, (long double)infLeft, ((long double)infLeft-2.0)*4, LogIntegral );
+        Entity::Integration::trapezi( +2.0, (long double)infLeft, (long double)1000, LogIntegral );// test 1000 steps
     unsigned long long extimatedOrdinal= (unsigned long long)LogIntegral_ofInfPar;//TODO stima !
-    //this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
-    //this->desiredThreshold = maxRight;
+    // the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.
     // write a stamp, about what we're doing and when.
     time_t ttime = time(0);
     char* dt = ctime(&ttime);
     //   NB. for UTC Greenwich tm *gmt_time = gmtime(&ttime);
     //   NB. for UTC Greenwich dt = asctime(gmt_time);
     //
-    this->append_Random_Stream = new std::ofstream( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);
-    *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
-    *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+    std::ofstream localStreamWriter( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);// use the member randomDumpPath which represents the customDump.
+//    this->append_Random_Stream = new std::ofstream( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);
+//    *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
+//    *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+    if( localStreamWriter.is_open() )
+    {
+        localStreamWriter << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
+        localStreamWriter << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+        Start_PrimeDump_FileSys( infLeft, maxRight, &localStreamWriter, extimatedOrdinal );
+        localStreamWriter.flush();
+        localStreamWriter.close();
+    }
+    else
+    {
+        res = false;
+    }
     // ---call with params
-    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream, extimatedOrdinal );
+//    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream, extimatedOrdinal );
     //
-    this->append_Random_Stream->close();
-    delete this->append_Random_Stream;
-    this->append_Random_Stream = nullptr;
+//    this->append_Random_Stream->close();
+//    delete this->append_Random_Stream;
+//    this->append_Random_Stream = nullptr;
+    Common::LogWrappers::SectionClose();
     return res;
 }// RandomCalcInterface
 
@@ -318,16 +347,16 @@ Primes::~Primes()
 //        this->sharedReader->close();
 //        this->sharedReader = nullptr;
 //    }// else already closed.
-    if( nullptr != this->append_Sequential_Stream)
-    {
-        this->append_Sequential_Stream->close();
-        this->append_Sequential_Stream = nullptr;
-    }// else already closed.
-    if( nullptr != this->append_Random_Stream)
-    {
-        this->append_Random_Stream->close();
-        this->append_Random_Stream = nullptr;
-    }// else already closed.
+//    if( nullptr != this->append_Sequential_Stream)
+//    {
+//        this->append_Sequential_Stream->close();
+//        this->append_Sequential_Stream = nullptr;
+//    }// else already closed.
+//    if( nullptr != this->append_Random_Stream)
+//    {
+//        this->append_Random_Stream->close();
+//        this->append_Random_Stream = nullptr;
+//    }// else already closed.
     // don't log from Dtor: for auto-instances it leaks Common::LogWrappers::SectionClose();
 }// Dtor
 
