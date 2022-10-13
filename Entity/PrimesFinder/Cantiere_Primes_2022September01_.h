@@ -32,6 +32,11 @@ class Primes
          unsigned long long startPositionOfRecord;
          unsigned long long endPositionOfRecord;
      };
+    struct LogIntegralPillarPoint
+    {
+        unsigned long long threshold;
+        unsigned long long logIntegral;
+    };
     /// Ctor
     Primes( unsigned semiAmplitudeOfEachMapSegment );
     virtual ~Primes();
@@ -49,6 +54,7 @@ class Primes
 	// TODO PRIIVATE removed only in Cantiere, everything has to be accessible. When passing in Produciont, let private again.
     /// Data
     std::map<unsigned long long, unsigned long long> * memoryMappedDump;
+    std::map<unsigned long long, unsigned long long> * logIntegralPillars;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
@@ -96,6 +102,8 @@ class Primes
     void coveringIntegral();
     bool distributionFunction(const char * path);
     unsigned long long interpolateOrdinal( unsigned long long candidatePrimeThreshold);
+    void mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals );
+    LogIntegralPillarPoint * getNearestIntegral( unsigned long long candidatePrimeThreshold);
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
 

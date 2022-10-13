@@ -32,13 +32,21 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     Common::LogWrappers::SectionOpen("Ctor Primes::Primes", 0);
     // set the semi-amplitude of each Prime-Segment that will be stored in the Map; it can be modified at runtime.
     this->sogliaDistanza = semiAmplitudeOfEachMapSegment;
-    // build the Map.
+    // build the Map of couples {Ordinal,Prime}
     this->memoryMappedDump = new std::map<unsigned long long, unsigned long long>();
     if( nullptr==this->memoryMappedDump)
     {
         this->isHealthlyConstructed = false;
-        this->canOperate = true;// can operate even without memoty mapped data.
+        this->canOperate = true;// can operate even without memory mapped data.
     }
+    // build the Map of couples {Threshold,LogIntegral[Threshold]}
+    this->logIntegralPillars = new std::map<unsigned long long, unsigned long long>();
+    if( nullptr==this->logIntegralPillars)
+    {
+        this->isHealthlyConstructed = false;
+        this->canOperate = true;// can operate even without memory mapped data.
+    }
+    //
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     //---start sequential_file treatment
     this->feedDumpPath();// SEQUENTIAL : default section, in default file.
@@ -112,38 +120,25 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
         }
         // append to a valid previous sequentialDump:
         localStreamWriter.open(*(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
-        //this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
-//        this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
-//        this->sharedReader->close();
-//        delete this->sharedReader;
-//        this->sharedReader = nullptr;
     }// else sequentialFile not present.
     else
-    {
+    {//  hasSequentialDumpBeenReset
         hasSequentialDumpBeenReset = true;
+        // start a new dump from scratch :
+        LastOrdinal = 0;
+        LastPrime = 0;
+        localStreamWriter.open( *(this->sequentialDumpPath), std::fstream::out);// reset.
     }
-//    if (hasSequentialDumpBeenReset)
-//    {// start a new dump from scratch :
-//        LastOrdinal = 0;
-//        LastPrime = 0;
-//        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// reset.
-//        hasSequentialDumpBeenReset = true;
-//    }
     if( localStreamWriter.is_open())
     {
-
-
-    //---call with appropriate params---------
-    this->Start_PrimeDump_FileSys(
-                                  LastPrime
-                                  , Threshold
-                                  , &localStreamWriter
-                                  , LastOrdinal );
-    localStreamWriter.flush();
-    localStreamWriter.close();
-//    this->append_Sequential_Stream->close();
-//    delete this->append_Sequential_Stream;
-//    this->append_Sequential_Stream = nullptr;
+        //---call with appropriate params---------
+        this->Start_PrimeDump_FileSys(
+                                      LastPrime
+                                      , Threshold
+                                      , &localStreamWriter
+                                      , LastOrdinal );
+        localStreamWriter.flush();
+        localStreamWriter.close();
     }
     // clean
     delete stringDumpTail;
@@ -250,24 +245,31 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
     Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    long double LogIntegral_ofInfPar =
-        Entity::Integration::trapezi( +2.0, (long double)infLeft, (long double)1000, LogIntegral );// test 1000 steps
-    unsigned long long extimatedOrdinal= (unsigned long long)LogIntegral_ofInfPar;//TODO stima !
+    Primes::LogIntegralPillarPoint * nearestIntegral = this->getNearestIntegral( infLeft);
+    unsigned long long threshold_lastIntegral = nearestIntegral->threshold;
+    unsigned long long measure_lastIntegral = nearestIntegral->logIntegral;
+    delete nearestIntegral;// clean
+    long double LogIntegral_lastMile =
+        Entity::Integration::trapezi(
+                 (long double)threshold_lastIntegral// start from last integral saved.
+                 , (long double)infLeft   // get to infleft
+                 , (long double)1000  // test 1000 steps
+                 , LogIntegral ); // func-pointer
+unsigned long long extimatedOrdinal= (unsigned long long)( measure_lastIntegral + LogIntegral_lastMile);//TODO test
+//unsigned long long extimatedOrdinal= 0;//TODO test
     // the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.
     // write a stamp, about what we're doing and when.
     time_t ttime = time(0);
     char* dt = ctime(&ttime);
     //   NB. for UTC Greenwich tm *gmt_time = gmtime(&ttime);
     //   NB. for UTC Greenwich dt = asctime(gmt_time);
-    //
-    std::ofstream localStreamWriter( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);// use the member randomDumpPath which represents the customDump.
-//    this->append_Random_Stream = new std::ofstream( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);
-//    *(this->append_Random_Stream) << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
-//    *(this->append_Random_Stream) << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+    // use the member randomDumpPath which represents the customDump.
+    std::ofstream localStreamWriter( *(this->randomDumpPath) , std::fstream::out | std::fstream::app);
     if( localStreamWriter.is_open() )
     {
         localStreamWriter << "\n\n Custom Interval ("<<infLeft<<", "<<maxRight<<"] ,worked on: "<<dt; //test<<"\n";
         localStreamWriter << " Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.\n";
+        // ---call with params
         Start_PrimeDump_FileSys( infLeft, maxRight, &localStreamWriter, extimatedOrdinal );
         localStreamWriter.flush();
         localStreamWriter.close();
@@ -275,14 +277,10 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
     else
     {
         res = false;
+        std::cout<<"\n\t Unable to open Random Dump. \n";
     }
-    // ---call with params
-//    Start_PrimeDump_FileSys( infLeft, maxRight, this->append_Random_Stream, extimatedOrdinal );
-    //
-//    this->append_Random_Stream->close();
-//    delete this->append_Random_Stream;
-//    this->append_Random_Stream = nullptr;
     Common::LogWrappers::SectionClose();
+    // ready.
     return res;
 }// RandomCalcInterface
 
@@ -327,10 +325,16 @@ Primes::~Primes()
 {/// Dtor()
     // don't log from Dtor: for auto-instances it leaks  Common::LogWrappers::SectionOpen("Dtor Primes::~Primes", 0);
     if( nullptr != this->memoryMappedDump)
-    {
+    {// map of couples {Ordinal,Prime}
         this->memoryMappedDump->clear();
         delete this->memoryMappedDump;
         this->memoryMappedDump = nullptr;// not dangling.
+    }// else already nulled.
+    if( nullptr != this->logIntegralPillars)
+    {// map of couples {Threshold, LogIntegral[Threshold]}
+        this->logIntegralPillars->clear();
+        delete this->logIntegralPillars;
+        this->logIntegralPillars = nullptr;// not dangling.
     }// else already nulled.
     if( nullptr != this->sequentialDumpPath )
     {
@@ -429,6 +433,10 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
     long long streamSize = this->sequentialStreamSize();
     // reads multiple records from EOF back to Max(filesize,100).
     int stepBack = 100;
+    if( streamSize < 0)
+    {
+        return nullptr;
+    }// else stay as init.
     if( streamSize <stepBack)
     {
         stepBack = streamSize;
@@ -989,6 +997,12 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position AFTER CORRECTIONS ==", discriminatingElement_position, 0);
         nextRecord = acquireNextRecord( discriminatingElement_position);// memory allocated by callee
+        if( nullptr == nextRecord)
+        {// cannot operate.
+            res = false;
+            Common::LogWrappers::SectionContent("cannot acquire Next Record", 0);
+            return res;
+        }
         Common::LogWrappers::SectionContent_variable_name_value(
             "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
         Common::LogWrappers::SectionContent_variable_name_value(
@@ -1240,22 +1254,26 @@ bool Primes::distributionFunction(const char * fullPath)
     //
     unsigned long long cumulate = 0;
     step = 1;
-    std::ofstream secondPhase("./LogIntegral_secondPhase_.txt");
+    std::ofstream secondPhase("./20221013_LogIntegral_secondPhase_.txt");
     if( secondPhase.is_open())
     {
         result = true;
+        secondPhase<<"Offset LogIntegral == Integrate[1/Log[t], {t,+2,x}] \n";
+        secondPhase<<"x		\t	LogIntegral \n";
+        secondPhase<<"----------------------------------------------------------------------\n";
     }
     else
-    {
+    {// file not open.
         result = false;
     }
+    std::vector<std::string> * tokenizedLine = nullptr;
     for (iter = data.begin(); iter != data.end(); iter++)
     {
        if( data.end() == iter){break;}
        if( step >+1)
        {
            std::string tmp( *iter);
-           std::vector<std::string> * tokenizedLine = Common::StrManipul::stringSplit(
+           tokenizedLine = Common::StrManipul::stringSplit(
             "_"
             , tmp  // NB. original passed by value, to be preserved.
             , true );
@@ -1263,10 +1281,17 @@ bool Primes::distributionFunction(const char * fullPath)
            {
                const std::string LogIntegral_inf_sup_( (*tokenizedLine)[2] );
                cumulate += Common::StrManipul::stringToUnsignedLongLong( LogIntegral_inf_sup_);// check if exists
+               secondPhase<<(*tokenizedLine)[1]<<"\t"<< cumulate<<"\n";// dump Distribution[+2,x] on file.
+               // dump in RAM::Map : this->logIntegralPillars
+               std::pair<unsigned long long, unsigned long long> LogIntegralSinglePillar(
+                    Common::StrManipul::stringToUnsignedLongLong( (*tokenizedLine)[1] )
+                    ,cumulate
+               );
+//                const std::pair<std::_Rb_tree_iterator<std::pair<const long long unsigned int, long long unsigned int> >,bool> tmpNodeToBeInserted =  unnecessary here
+               this->logIntegralPillars->insert( LogIntegralSinglePillar);
            }// else skip
            delete tokenizedLine;
        }
-       secondPhase<<"Elemento di posizione "<<step<<" nella lista == "<<*iter<<"   cumulate="<< cumulate<<"\n";
        step++;
     }
     secondPhase.flush();
@@ -1353,6 +1378,69 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     // ready.
     return y;
 }// interpolateOrdinal
+
+void Primes::mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals )
+{
+    if( nullptr!=mapOfNaturals)
+    {
+        std::cout<<"\n\n\t The map size is \t"<<mapOfNaturals->size()<<"\n\n";
+        for( std::map<unsigned long long, unsigned long long>::iterator fwd=mapOfNaturals->begin();
+             fwd != mapOfNaturals->end();
+             fwd++
+        )
+        {// Traverse loop
+            std::cout<<"\t"<< fwd->first << "\t";
+            std::cout<<"\t "<<fwd->second << std::endl;
+        }// Traverse loop
+        std::cout<<"\n\n\t The map size is \t"<<mapOfNaturals->size()<<"\n";
+    }// if( nullptr!=dictionary)
+    else
+    {// map empty
+        std::cout<<"\n\n\t The map is empty \n\n";
+    }// map empty
+}//mapTraverseForward
+
+
+Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long candidatePrimeThreshold)
+{
+    size_t map_size = logIntegralPillars->size();
+    LogIntegralPillarPoint * thePillarPoints = new LogIntegralPillarPoint[map_size];
+    int array_index = 0;
+    for( std::map<unsigned long long, unsigned long long>::iterator fwd=this->logIntegralPillars->begin();
+         fwd != this->logIntegralPillars->end();
+         fwd++
+    )
+    {// Traverse loop
+        thePillarPoints[array_index].threshold = fwd->first;
+        thePillarPoints[array_index].logIntegral = fwd->second;
+        array_index++;
+    }// Traverse loop
+    if( map_size != array_index )
+    {// NB. last valid array_index is map_size-1 but at loop::exit it gets increased.
+        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
+    }
+    //
+    int selectedInterval = 0;
+    LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
+    for(int c=0; c<map_size-1; c++)// TODO test on last interval
+    {
+        if( thePillarPoints[c].threshold < candidatePrimeThreshold
+            && thePillarPoints[c+1].threshold >= candidatePrimeThreshold
+           )
+        {
+            selectedInterval = c;
+            nearestIntegral->threshold = thePillarPoints[c].threshold;
+            nearestIntegral->logIntegral = thePillarPoints[c].logIntegral;
+            break;
+        }// else continue.
+    }// for
+    // sequence : which interval does candidatePrimeThreshold belong to ?
+    //          : which are the two coordinates of the left boundary point of the selected interval ?
+    //          : return such coordinates.
+    delete[] thePillarPoints;//clean
+    // ready.
+    return nearestIntegral;
+}// getNearestIntegral
 
 }// namespace Cantiere_Primes_2022September01_
 
