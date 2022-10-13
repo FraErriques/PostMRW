@@ -32,13 +32,21 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     Common::LogWrappers::SectionOpen("Ctor Primes::Primes", 0);
     // set the semi-amplitude of each Prime-Segment that will be stored in the Map; it can be modified at runtime.
     this->sogliaDistanza = semiAmplitudeOfEachMapSegment;
-    // build the Map.
+    // build the Map of couples {Ordinal,Prime}
     this->memoryMappedDump = new std::map<unsigned long long, unsigned long long>();
     if( nullptr==this->memoryMappedDump)
     {
         this->isHealthlyConstructed = false;
-        this->canOperate = true;// can operate even without memoty mapped data.
+        this->canOperate = true;// can operate even without memory mapped data.
     }
+    // build the Map of couples {Threshold,LogIntegral[Threshold]}
+    this->logIntegralPillars = new std::map<unsigned long long, unsigned long long>();
+    if( nullptr==this->logIntegralPillars)
+    {
+        this->isHealthlyConstructed = false;
+        this->canOperate = true;// can operate even without memory mapped data.
+    }
+    //
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     //---start sequential_file treatment
     this->feedDumpPath();// SEQUENTIAL : default section, in default file.
@@ -327,10 +335,16 @@ Primes::~Primes()
 {/// Dtor()
     // don't log from Dtor: for auto-instances it leaks  Common::LogWrappers::SectionOpen("Dtor Primes::~Primes", 0);
     if( nullptr != this->memoryMappedDump)
-    {
+    {// map of couples {Ordinal,Prime}
         this->memoryMappedDump->clear();
         delete this->memoryMappedDump;
         this->memoryMappedDump = nullptr;// not dangling.
+    }// else already nulled.
+    if( nullptr != this->logIntegralPillars)
+    {// map of couples {Threshold, LogIntegral[Threshold]}
+        this->logIntegralPillars->clear();
+        delete this->logIntegralPillars;
+        this->logIntegralPillars = nullptr;// not dangling.
     }// else already nulled.
     if( nullptr != this->sequentialDumpPath )
     {
@@ -1240,22 +1254,26 @@ bool Primes::distributionFunction(const char * fullPath)
     //
     unsigned long long cumulate = 0;
     step = 1;
-    std::ofstream secondPhase("./LogIntegral_secondPhase_.txt");
+    std::ofstream secondPhase("./20221013_LogIntegral_secondPhase_.txt");
     if( secondPhase.is_open())
     {
         result = true;
+        secondPhase<<"Offset LogIntegral == Integrate[1/Log[t], {t,+2,x}] \n";
+        secondPhase<<"x		\t	LogIntegral \n";
+        secondPhase<<"----------------------------------------------------------------------\n";
     }
     else
-    {
+    {// file not open.
         result = false;
     }
+    std::vector<std::string> * tokenizedLine = nullptr;
     for (iter = data.begin(); iter != data.end(); iter++)
     {
        if( data.end() == iter){break;}
        if( step >+1)
        {
            std::string tmp( *iter);
-           std::vector<std::string> * tokenizedLine = Common::StrManipul::stringSplit(
+           tokenizedLine = Common::StrManipul::stringSplit(
             "_"
             , tmp  // NB. original passed by value, to be preserved.
             , true );
@@ -1263,10 +1281,17 @@ bool Primes::distributionFunction(const char * fullPath)
            {
                const std::string LogIntegral_inf_sup_( (*tokenizedLine)[2] );
                cumulate += Common::StrManipul::stringToUnsignedLongLong( LogIntegral_inf_sup_);// check if exists
+               secondPhase<<(*tokenizedLine)[1]<<"\t"<< cumulate<<"\n";// dump Distribution[+2,x] on file.
+               // dump in RAM::Map : this->logIntegralPillars
+               std::pair<unsigned long long, unsigned long long> LogIntegralSinglePillar(
+                    Common::StrManipul::stringToUnsignedLongLong( (*tokenizedLine)[1] )
+                    ,cumulate
+               );
+//                const std::pair<std::_Rb_tree_iterator<std::pair<const long long unsigned int, long long unsigned int> >,bool> tmpNodeToBeInserted =  unnecessary here
+               this->logIntegralPillars->insert( LogIntegralSinglePillar);
            }// else skip
            delete tokenizedLine;
        }
-       secondPhase<<"Elemento di posizione "<<step<<" nella lista == "<<*iter<<"   cumulate="<< cumulate<<"\n";
        step++;
     }
     secondPhase.flush();

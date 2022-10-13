@@ -49,6 +49,7 @@ class Primes
 	// TODO PRIIVATE removed only in Cantiere, everything has to be accessible. When passing in Produciont, let private again.
     /// Data
     std::map<unsigned long long, unsigned long long> * memoryMappedDump;
+    std::map<unsigned long long, unsigned long long> * logIntegralPillars;
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete

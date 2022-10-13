@@ -24,6 +24,28 @@
 #include "Test_Unit_PrimesFinder.h"
 
 
+void mapTraverseForward(
+ std::map<unsigned long long, unsigned long long> * logIntegralPillars
+                                                          )
+{
+    if( nullptr!=logIntegralPillars)
+    {
+        std::cout<<"\n\n\t The map size is \t"<<logIntegralPillars->size()<<"\n\n";
+        for( std::map<unsigned long long, unsigned long long>::iterator fwd=logIntegralPillars->begin();
+             fwd != logIntegralPillars->end();
+             fwd++
+        )
+        {// Traverse loop
+            std::cout<<"\t"<< fwd->first << "\t";
+            std::cout<<"\t "<<fwd->second << std::endl;
+        }// Traverse loop
+        std::cout<<"\n\n\t The map size is \t"<<logIntegralPillars->size()<<"\n";
+    }// if( nullptr!=dictionary)
+    else
+    {// map empty
+        std::cout<<"\n\n\t The map is empty \n\n";
+    }// map empty
+}//mapTraverseForward
 
 
 //---entry point-------------------------
@@ -36,9 +58,10 @@ int main()
     // NB. cannot do an auto-instance, since the Dtor gets called after the Singleton<Log>_destruction and that's a leak.
     // do a dynamical (pointer) instance instead and delete before the last call to the log; or, otherwise, do not call
     // the log from inside Primes::Destructor.
-//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
+    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
 //    cantiere.coveringIntegral();
-//    bool dumped = cantiere.distributionFunction( "./LogIntegral_firstPhase_.txt");
+    bool dumped = cantiere.distributionFunction( "./LogIntegral_firstPhase_.txt");
+    mapTraverseForward( cantiere.logIntegralPillars);
 //    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( 46);// estimate the ordinal of a candidate prime or of a threshold.
 //    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
 
@@ -50,9 +73,9 @@ int main()
 //    std::cout<< "interpolatedOrdinal("<<candidateThreshold<<")=="<<interpolatedOrdinal<<std::endl;
 //Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
 
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    bool seq = test->sequentialDump( 390);// required prime==soglia
-    bool rand = test->randomDump( 900, 920);
+//    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
+//    bool seq = test->sequentialDump( 390);// required prime==soglia
+//    bool rand = test->randomDump( 900, 920);
 //    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
 //    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
 //    bool outcome_recoverLastRecord = test->recoverLastRecord();
@@ -86,7 +109,7 @@ int main()
 //            ,c+915 // there must be room for just one record Prime<100.
 //         );
 //    }// array of Rec
-    delete test;
+//    delete test;
 //    ------Unit Test-----CANTIERE---------------------------------------------------
 //
 //    ------Unit Test-----PimesFinder------------------------------------------------
