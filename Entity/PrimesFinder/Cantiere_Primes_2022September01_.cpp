@@ -46,6 +46,10 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
         this->isHealthlyConstructed = false;
         this->canOperate = true;// can operate even without memory mapped data.
     }
+    else
+    {
+        this->distributionFunction( "./LogIntegral_firstPhase_.txt");
+    }
     //
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     //---start sequential_file treatment
@@ -1414,15 +1418,19 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
         thePillarPoints[array_index].threshold = fwd->first;
         thePillarPoints[array_index].logIntegral = fwd->second;
         array_index++;
+        if( map_size-1 == array_index )
+        {
+            break;
+        }
     }// Traverse loop
-    if( map_size != array_index )
-    {// NB. last valid array_index is map_size-1 but at loop::exit it gets increased.
-        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
-    }
+//    if( map_size != array_index )
+//    {// NB. last valid array_index is map_size-1 but at loop::exit it gets increased.
+//        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
+//    }
     //
     int selectedInterval = 0;
     LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
-    for(int c=0; c<map_size-1; c++)// TODO test on last interval
+    for(int c=0; c<map_size-2; c++)// TODO test on last interval
     {
         if( thePillarPoints[c].threshold < candidatePrimeThreshold
             && thePillarPoints[c+1].threshold >= candidatePrimeThreshold
