@@ -10,15 +10,29 @@
 #include <ctime>
 
 /*  TODO
+*   there must be a specification file for the Mesh of real-LogIntegral
+*   such specification file has to be read only on demand; the construction of an instance doesn't have to parse the mesh specification
+*   ordinary Ctor has to read a second-phase dump, which is a file containing the Distribution measures, at pillar points
+*   for an ordinary Ctor, the mesh is specified in the glonalIntegrals_dump, and has to be copied in RAM in a std::vector<Pillar>
+*   the dump-files involved in the process have to be specified in the Config; they will be:
+*   meshSpecification.txt
+*   localIntegrals.txt
+*   globalIntegrals.txt
+*   the methods will be:
+*   bool acquireExistingMesh() : gets the path of globalIntegrals.txt in Config and fills up a vector
+*   MassimoDeiMinoranti * placeRequiredPoint( unsigned long long requiredPoint); finds the measure of LogIntegral_upTo_massimoMinoranti; returns null on error.
+*   in case of mesh renewal:
+*   call the parser of * meshSpecification.txt. It is bool meshParser(); finds in Config meshSpecification.txt and produces localIntegrals.txt.
+*   call distributionProducer; finds in Config localIntegrals.txt. Sums the local results and writes globalIntegrals.txt.
+*   at this point the new mesh is ready and the bool acquireExistingMesh() can be called, to put the mesh in RAM, in the vector.
+*
+*   old things:
 *   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
-*   fixed a memory leak in Bisection:: a delete was necessary in the for-loop for nextRecord. ------------------------(V)
 *   transformed the char* into sdt::string * with const clause.-------------------------------------------------------(V)
 *   let the StreamReader an automatic variable and let the seekg internal to the reading-methods.---------------------(V)
 *   why complete renewal of sequentialDump only for dump<100k  ?------------------------------------------------------(V)
-*   leak in readDumpTail----------------------------------------------------------------------------------------------(V)
-*   std::move in Config:: dump filenames.-----------------------solved by std::string---------------------------------(V)
 *   enrich StringBuilder and Log for better tracing, overloading variable types-------------------------TODO
-*   let the StreamWriter an automatic variable ---------------------------------------------------------TODO
+*   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
 */
 
 
