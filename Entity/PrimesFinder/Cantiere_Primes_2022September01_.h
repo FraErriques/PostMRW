@@ -59,6 +59,9 @@ class Primes
     bool canOperate = false;
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
     const std::string * randomDumpPath = nullptr;// NB. remember to share and delete
+    const std::string * meshRenewalPath = nullptr;// NB. remember to share and delete
+    const std::string * localIntegralPath = nullptr;// NB. remember to share and delete
+    const std::string * globalIntegralPath = nullptr;// NB. remember to share and delete
     //    std::ifstream has been let an automatic variable.
 //    std::ofstream * append_Sequential_Stream;// write
 //    std::ofstream * append_Random_Stream;// write
@@ -70,9 +73,12 @@ class Primes
     // assignement : operator=
     Primes & operator=   ( const Primes & second );
     // construction helper:
-    const std::string * feedDumpPath(); // non const
-    const std::string * feed_CustomDumpPath(); // non const
-    const std::string * getPrimeDumpFullPath( const std::string * sectionNameInFile) const;
+    const std::string * feed_sequentialDumpPath(); // non const : feeds a member.
+    const std::string * feed_customDumpPath(); // non const : feeds a member.
+    const std::string * feed_meshSpecificationPath(); // non const : feeds a member.
+    const std::string * feed_localIntegralPath(); // non const : feeds a member.
+    const std::string * feed_globalIntegralPath(); // non const : feeds a member.
+    const std::string * getConfigSectionContent( const std::string * sectionNameInFile) const;
     void createOrAppend( const std::string * fullPath);
     const std::string * lastRecordReaderByChar( const std::string * fullPath);
     const std::string * dumpTailReaderByChar( const std::string * fullPath);
@@ -101,6 +107,7 @@ class Primes
     bool Bisection( unsigned long long requiredOrdinal );
     void coveringIntegral();
     bool distributionFunction(const char * path);
+    bool distributionFunction_fromExistingMesh();
     unsigned long long interpolateOrdinal( unsigned long long candidatePrimeThreshold);
     void mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals );
     LogIntegralPillarPoint * getNearestIntegral( unsigned long long candidatePrimeThreshold);
