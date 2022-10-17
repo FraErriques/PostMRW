@@ -10,15 +10,29 @@
 #include <ctime>
 
 /*  TODO
+*   there must be a specification file for the Mesh of real-LogIntegral
+*   such specification file has to be read only on demand; the construction of an instance doesn't have to parse the mesh specification
+*   ordinary Ctor has to read a second-phase dump, which is a file containing the Distribution measures, at pillar points
+*   for an ordinary Ctor, the mesh is specified in the glonalIntegrals_dump, and has to be copied in RAM in a std::vector<Pillar>
+*   the dump-files involved in the process have to be specified in the Config; they will be:
+*   meshSpecification.txt
+*   localIntegrals.txt
+*   globalIntegrals.txt
+*   the methods will be:
+*   bool acquireExistingMesh() : gets the path of globalIntegrals.txt in Config and fills up a vector
+*   MassimoDeiMinoranti * placeRequiredPoint( unsigned long long requiredPoint); finds the measure of LogIntegral_upTo_massimoMinoranti; returns null on error.
+*   in case of mesh renewal:
+*   call the parser of * meshSpecification.txt. It is bool meshParser(); finds in Config meshSpecification.txt and produces localIntegrals.txt.
+*   call distributionProducer; finds in Config localIntegrals.txt. Sums the local results and writes globalIntegrals.txt.
+*   at this point the new mesh is ready and the bool acquireExistingMesh() can be called, to put the mesh in RAM, in the vector.
+*
+*   old things:
 *   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
-*   fixed a memory leak in Bisection:: a delete was necessary in the for-loop for nextRecord. ------------------------(V)
 *   transformed the char* into sdt::string * with const clause.-------------------------------------------------------(V)
 *   let the StreamReader an automatic variable and let the seekg internal to the reading-methods.---------------------(V)
 *   why complete renewal of sequentialDump only for dump<100k  ?------------------------------------------------------(V)
-*   leak in readDumpTail----------------------------------------------------------------------------------------------(V)
-*   std::move in Config:: dump filenames.-----------------------solved by std::string---------------------------------(V)
 *   enrich StringBuilder and Log for better tracing, overloading variable types-------------------------TODO
-*   let the StreamWriter an automatic variable ---------------------------------------------------------TODO
+*   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
 */
 
 
@@ -45,6 +59,10 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     {
         this->isHealthlyConstructed = false;
         this->canOperate = true;// can operate even without memory mapped data.
+    }
+    else
+    {
+        this->distributionFunction( "./LogIntegral_firstPhase_.txt");
     }
     //
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
@@ -120,38 +138,25 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
         }
         // append to a valid previous sequentialDump:
         localStreamWriter.open(*(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
-        //this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out | std::fstream::app);
-//        this->sharedReader = new std::ifstream( *(this->sequentialDumpPath), std::fstream::in);
-//        this->sharedReader->close();
-//        delete this->sharedReader;
-//        this->sharedReader = nullptr;
     }// else sequentialFile not present.
     else
-    {
+    {//  hasSequentialDumpBeenReset
         hasSequentialDumpBeenReset = true;
+        // start a new dump from scratch :
+        LastOrdinal = 0;
+        LastPrime = 0;
+        localStreamWriter.open( *(this->sequentialDumpPath), std::fstream::out);// reset.
     }
-//    if (hasSequentialDumpBeenReset)
-//    {// start a new dump from scratch :
-//        LastOrdinal = 0;
-//        LastPrime = 0;
-//        this->append_Sequential_Stream = new std::ofstream( *(this->sequentialDumpPath), std::fstream::out);// reset.
-//        hasSequentialDumpBeenReset = true;
-//    }
     if( localStreamWriter.is_open())
     {
-
-
-    //---call with appropriate params---------
-    this->Start_PrimeDump_FileSys(
-                                  LastPrime
-                                  , Threshold
-                                  , &localStreamWriter
-                                  , LastOrdinal );
-    localStreamWriter.flush();
-    localStreamWriter.close();
-//    this->append_Sequential_Stream->close();
-//    delete this->append_Sequential_Stream;
-//    this->append_Sequential_Stream = nullptr;
+        //---call with appropriate params---------
+        this->Start_PrimeDump_FileSys(
+                                      LastPrime
+                                      , Threshold
+                                      , &localStreamWriter
+                                      , LastOrdinal );
+        localStreamWriter.flush();
+        localStreamWriter.close();
     }
     // clean
     delete stringDumpTail;
@@ -262,13 +267,14 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
     unsigned long long threshold_lastIntegral = nearestIntegral->threshold;
     unsigned long long measure_lastIntegral = nearestIntegral->logIntegral;
     delete nearestIntegral;// clean
-    long double LogIntegral_ofInfPar =
+    long double LogIntegral_lastMile =
         Entity::Integration::trapezi(
                  (long double)threshold_lastIntegral// start from last integral saved.
                  , (long double)infLeft   // get to infleft
                  , (long double)1000  // test 1000 steps
                  , LogIntegral ); // func-pointer
-    unsigned long long extimatedOrdinal= (unsigned long long)( measure_lastIntegral + LogIntegral_ofInfPar);//TODO test
+unsigned long long extimatedOrdinal= (unsigned long long)( measure_lastIntegral + LogIntegral_lastMile);//TODO test
+//unsigned long long extimatedOrdinal= 0;//TODO test
     // the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.
     // write a stamp, about what we're doing and when.
     time_t ttime = time(0);
@@ -445,6 +451,10 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
     long long streamSize = this->sequentialStreamSize();
     // reads multiple records from EOF back to Max(filesize,100).
     int stepBack = 100;
+    if( streamSize < 0)
+    {
+        return nullptr;
+    }// else stay as init.
     if( streamSize <stepBack)
     {
         stepBack = streamSize;
@@ -1005,6 +1015,12 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         Common::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position AFTER CORRECTIONS ==", discriminatingElement_position, 0);
         nextRecord = acquireNextRecord( discriminatingElement_position);// memory allocated by callee
+        if( nullptr == nextRecord)
+        {// cannot operate.
+            res = false;
+            Common::LogWrappers::SectionContent("cannot acquire Next Record", 0);
+            return res;
+        }
         Common::LogWrappers::SectionContent_variable_name_value(
             "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
         Common::LogWrappers::SectionContent_variable_name_value(
@@ -1416,15 +1432,19 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
         thePillarPoints[array_index].threshold = fwd->first;
         thePillarPoints[array_index].logIntegral = fwd->second;
         array_index++;
+        if( map_size-1 == array_index )
+        {
+            break;
+        }
     }// Traverse loop
-    if( map_size != array_index-1)
-    {
-        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
-    }
+//    if( map_size != array_index )
+//    {// NB. last valid array_index is map_size-1 but at loop::exit it gets increased.
+//        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
+//    }
     //
     int selectedInterval = 0;
     LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
-    for(int c=0; c<7; c++)// TODO test on last interval
+    for(int c=0; c<map_size-2; c++)// TODO test on last interval
     {
         if( thePillarPoints[c].threshold < candidatePrimeThreshold
             && thePillarPoints[c+1].threshold >= candidatePrimeThreshold
@@ -1434,7 +1454,7 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
             nearestIntegral->threshold = thePillarPoints[c].threshold;
             nearestIntegral->logIntegral = thePillarPoints[c].logIntegral;
             break;
-        }
+        }// else continue.
     }// for
     // sequence : which interval does candidatePrimeThreshold belong to ?
     //          : which are the two coordinates of the left boundary point of the selected interval ?
