@@ -67,7 +67,7 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     //
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
     //---start sequential_file treatment
-    this->feedDumpPath();// SEQUENTIAL : default section, in default file.
+    this->feed_sequentialDumpPath();// SEQUENTIAL : default section, in default file.
     if( nullptr != this->sequentialDumpPath )
     {
         dumpPathAcquisitionFromConfig = true;// from the init=false this is the first reset. Subsequent ones will be &=
@@ -78,7 +78,7 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     }
     //
     //----end of SequentialPath --- start of RandomPath -------
-    this->feed_CustomDumpPath();// CUSTOM section, in default file.
+    this->feed_customDumpPath();// CUSTOM section, in default file.
     if( nullptr != this->randomDumpPath )
     {
         this->createOrAppend( this->randomDumpPath);
@@ -88,6 +88,10 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     {
         dumpPathAcquisitionFromConfig = false;
     }
+    this->feed_meshSpecificationPath();
+    this->feed_localIntegralPath();
+    this->feed_globalIntegralPath();
+    //
     //---check operations' result and document the error for the user.
     if( false==dumpPathAcquisitionFromConfig)// something wrong reading from config files.
     {// not-healthly built.
@@ -173,7 +177,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
     {
-        this->feedDumpPath();
+        this->feed_sequentialDumpPath();
     }// else ready;
     localReader.open( *this->sequentialDumpPath, std::fstream::in);
     if( ! localReader.is_open() )
@@ -305,29 +309,63 @@ unsigned long long extimatedOrdinal= (unsigned long long)( measure_lastIntegral 
 
 
 
-const std::string * Primes::feedDumpPath() // non const : feeds a member.
+const std::string * Primes::feed_sequentialDumpPath() // non const : feeds a member.
 {// retrieve sequential-file fullpath.
     if( nullptr==this->sequentialDumpPath )
     {
         std::string * tmp = new std::string("primeDefaultFile");// sequential file section-name.
-        this->sequentialDumpPath = this->getPrimeDumpFullPath( tmp);// Default Section Name.
+        this->sequentialDumpPath = this->getConfigSectionContent( tmp);// Default Section Name.
         delete tmp;
     }//else ready.
     return this->sequentialDumpPath;
 }// retrieve sequential-file fullpath.
 
-const std::string * Primes::feed_CustomDumpPath() // non const : feeds a member.
+const std::string * Primes::feed_customDumpPath() // non const : feeds a member.
 {// retrieve custom-file fullpath (i.e. the random-interval file).
     if( nullptr==this->randomDumpPath )
     {
         std::string * tmp = new std::string("primeCustomFile");// random-custom file section-name.
-        this->randomDumpPath = this->getPrimeDumpFullPath( tmp);// CUSTOM Section Name, for non complete dumping.
+        this->randomDumpPath = this->getConfigSectionContent( tmp);// CUSTOM Section Name, for non complete dumping.
         delete tmp;
     }//else ready.
     return this->randomDumpPath;
 }// retrieve custom-file fullpath (i.e. the random-interval file).
 
-const std::string * Primes::getPrimeDumpFullPath( const std::string * sectionNameInFile) const
+const std::string * Primes::feed_meshSpecificationPath() // non const : feeds a member.
+{// retrieve the mesh-specification-fullpath (i.e. the file for mesh-renewal).
+    if( nullptr==this->meshRenewalPath )
+    {
+        std::string tmp("meshRenewalFile");// mesh-renewal file section-name.
+        this->meshRenewalPath = this->getConfigSectionContent( &tmp );// mesh-renewal file section-name.
+        // in this auto-variable case -> no del delete tmp;
+    }//else ready.
+    return this->meshRenewalPath;
+}// retrieve  mesh-renewal file.
+
+const std::string * Primes::feed_localIntegralPath() // non const : feeds a member.
+{// retrieve the local-integral-fullpath (i.e. the LogIntegral between real pillars).
+    if( nullptr==this->localIntegralPath )
+    {
+        std::string * tmp = new std::string("localIntegralFile");//LogIntegral btw real pillars section-name.
+        this->localIntegralPath = this->getConfigSectionContent( tmp);//LogIntegral btw real pillars section-name.
+        delete tmp;
+    }//else ready.
+    return this->localIntegralPath;
+}// retrieve the local-integral-fullpath
+
+const std::string * Primes::feed_globalIntegralPath() // non const : feeds a member.
+{// retrieve the global-integral-fullpath (i.e. the LogIntegral from +2 to real pillars).
+    if( nullptr==this->globalIntegralPath )
+    {
+        std::string * tmp = new std::string("globalIntegralFile");//the LogIntegral from +2 to real pillars
+        this->globalIntegralPath = this->getConfigSectionContent( tmp);//the LogIntegral from +2 to real pillars
+        delete tmp;
+    }//else ready.
+    return this->globalIntegralPath;
+}// retrieve the global-integral-fullpath
+
+
+const std::string * Primes::getConfigSectionContent( const std::string * sectionNameInFile) const
 {// the param is the desired section-name; the retval is the section-content.
     Common::ConfigurationService * primeNamedConfig =// config name is hard-coded.
         new Common::ConfigurationService( "./PrimeConfig.txt");// Prime-configuration-file. All in this file.
@@ -364,22 +402,22 @@ Primes::~Primes()
         delete this->randomDumpPath;
         this->randomDumpPath = nullptr;
     }
-//    if( nullptr != this->sharedReader)
-//    {
-//        this->sharedReader->close();
-//        this->sharedReader = nullptr;
-//    }// else already closed.
-//    if( nullptr != this->append_Sequential_Stream)
-//    {
-//        this->append_Sequential_Stream->close();
-//        this->append_Sequential_Stream = nullptr;
-//    }// else already closed.
-//    if( nullptr != this->append_Random_Stream)
-//    {
-//        this->append_Random_Stream->close();
-//        this->append_Random_Stream = nullptr;
-//    }// else already closed.
-    // don't log from Dtor: for auto-instances it leaks Common::LogWrappers::SectionClose();
+    if( nullptr != this->meshRenewalPath )
+    {
+        delete this->meshRenewalPath;
+        this->meshRenewalPath = nullptr;
+    }
+    if( nullptr != this->localIntegralPath )
+    {
+        delete this->localIntegralPath;
+        this->localIntegralPath = nullptr;
+    }
+    if( nullptr != this->globalIntegralPath )
+    {
+        delete this->globalIntegralPath;
+        this->globalIntegralPath = nullptr;
+    }
+    // NB don't log from Dtor: for auto-instances it leaks Common::LogWrappers::SectionClose();
 }// Dtor
 
 
@@ -401,6 +439,10 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
     long long streamSize =  this->sequentialStreamSize();
     //--step back in the Stream, of Max(100, fileSize).
     int stepBack = 100;// init
+    if( streamSize < 0)
+    {
+        return nullptr;
+    }
     if( streamSize <stepBack)
     {
         stepBack = streamSize;
@@ -433,7 +475,7 @@ long long Primes::sequentialStreamSize()
 {
     if( nullptr == this->sequentialDumpPath)
     {
-        this->feedDumpPath();
+        this->feed_sequentialDumpPath();
     }// else ready.
     std::ifstream lastrecReader( *(this->sequentialDumpPath), std::fstream::in );// auto
     lastrecReader.seekg( -1, std::ios::end );
@@ -454,7 +496,7 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
     if( streamSize < 0)
     {
         return nullptr;
-    }// else stay as init.
+    }
     if( streamSize <stepBack)
     {
         stepBack = streamSize;
@@ -739,7 +781,7 @@ Primes::AsinglePointInStream * Primes::acquireNextRecord( unsigned long long dis
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
     {
-        this->feedDumpPath();
+        this->feed_sequentialDumpPath();
     }// else ready;
     localReader.open( *this->sequentialDumpPath, std::fstream::in);
     if( ! localReader.is_open() )
@@ -824,7 +866,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
     {
-        this->feedDumpPath();
+        this->feed_sequentialDumpPath();
     }// else ready;
     localReader.open( *this->sequentialDumpPath, std::fstream::in);
     if( ! localReader.is_open() )
@@ -968,7 +1010,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
     {
-        this->feedDumpPath();
+        this->feed_sequentialDumpPath();
     }// else ready;
     localReader.open( *this->sequentialDumpPath, std::fstream::in);
     if( localReader.is_open() )
@@ -1317,6 +1359,47 @@ bool Primes::distributionFunction(const char * fullPath)
     // ready.
     return result;
 }// distributionFunction
+
+bool Primes::distributionFunction_fromExistingMesh()
+{
+    bool result = false;
+    this->feed_globalIntegralPath();
+    std::fstream globalIntegralFile( *this->globalIntegralPath, std::ios::in);
+    std::string curr_line;
+    int lineOrdinal = 0;
+
+    if (globalIntegralFile.is_open())
+    {
+        while (!globalIntegralFile.eof())
+        {
+            if( globalIntegralFile.eof() ) {break;}
+            std::getline ( globalIntegralFile, curr_line);// legge con separatore EOL : TODO test if '\n' or '\r\n'
+            lineOrdinal++;
+            if( lineOrdinal >+3)// skip the headers (they ar 3 and we count lines here from 0)
+            {
+                if( curr_line.length() > 0)
+                {
+                    std::vector<std::string>  * aLine = Common::StrManipul::stringSplit("\t",curr_line,true);
+                    int tokenInCurLine = aLine->size();
+                    if( tokenInCurLine >= +2)// two token required
+                    {
+                        unsigned long long integrationSup = Common::StrManipul::stringToUnsignedLongLong((*aLine)[0]);
+                        unsigned long long integrationMeasure = Common::StrManipul::stringToUnsignedLongLong((*aLine)[1]);
+                        delete aLine;
+                    }// else : invalid line: not enough tokens.
+                }// else skip empty entry.
+            }// skip the headers
+        }// while !EOF
+        globalIntegralFile.close();
+        result = true;
+    }// else not opened.
+    else
+    {
+        result = false;
+    }
+    // ready.
+    return result;
+}// distributionFunction_fromExistingMesh
 
 
 
