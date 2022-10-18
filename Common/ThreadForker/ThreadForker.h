@@ -23,7 +23,7 @@ namespace Common
         {
         }
 
-        int theForkeingPoint( );
+        int theForkingPoint( );
 
     };// end class ThreadForker
 

@@ -16,6 +16,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-pthread" />
 					<Add library="../Process/bin/Debug/libProcess.a" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
 					<Add library="../Entity/bin/Debug/libEntity.a" />
@@ -32,6 +33,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-pthread" />
 					<Add library="../Process/bin/Release/libProcess.a" />
 					<Add library="../Common/bin/Release/libCommon.a" />
 					<Add library="../Entity/bin/Release/libEntity.a" />

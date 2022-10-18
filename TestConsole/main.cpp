@@ -22,8 +22,67 @@
 //-----unit test---------
 #include "Test_Unit_CantierePrimes.h"
 #include "Test_Unit_PrimesFinder.h"
+#include "../Common/LogSinkFs/SinkFs.h"
+#include "../Common/ThreadForker/ThreadForker.h"
 
 
+// distributionFunction_fromExistingMesh :must fill up th global::vector<BoundaryCumulateMeas>
+int selectInterval(int candidate)
+{// TODO move into getNearestIntegral : it's the vector reader and interval selector
+    std::vector<int> intervalBoundaries;
+    intervalBoundaries.push_back(  0);
+    intervalBoundaries.push_back( 10);
+    intervalBoundaries.push_back( 20);
+    size_t boundaryCardinality = intervalBoundaries.size();
+    //
+    int c=0;
+    size_t selectedInterval=-1;// init to invalid
+    for( ; c<boundaryCardinality-1; c++)// NB. if c+1<n then c<n-1
+    {
+        if(
+            candidate > intervalBoundaries[c]
+            && candidate <= intervalBoundaries[c+1]
+           )
+        {
+            selectedInterval = c;
+            break;
+        }// else continue : to select Interval
+    }// for
+    //ready.
+    return selectedInterval;
+}// selectInterval
+
+
+void logger(int threadNum)
+{// a negative threadNum param means the call has been spawn from the main thread.
+    Common::SinkFs log;
+    //
+    log.SectionOpen("autonomous logger", 0);
+    for(int c=0; c<10; c++)
+    {
+        std::string threadLabel("from inside autonomous logger:: thread number ");
+        std::string * converter = Common::StrManipul::intToString( threadNum);
+        threadLabel += *converter;
+        delete converter;
+        log.SectionTrace( threadLabel, 0);
+    }
+    log.SectionClose();
+}// logger
+
+void singleton_logger(int threadNum)
+{// a negative threadNum param means the call has been spawn from the main thread.
+    // no log instance -> Singleton
+    Common::LogWrappers::SectionOpen("Singleton<> logger", 0);
+    for(int c=0; c<10; c++)
+    {
+        std::string threadLabel("from inside Singleton<> logger:: thread number ");
+        std::string * converter = Common::StrManipul::intToString( threadNum);
+        threadLabel += *converter;
+        delete converter;
+        Common::LogWrappers::SectionContent( threadLabel.c_str() , 0);
+    }
+    Common::LogWrappers::SectionClose();
+}// singleton_logger
 
 
 //---entry point-------------------------
@@ -33,28 +92,42 @@ int main()
     //
     //------Unit Test-----CANTIERE------------------------------------------------
     //
-    // NB. cannot do an auto-instance, since the Dtor gets called after the Singleton<Log>_destruction and that's a leak.
-    // do a dynamical (pointer) instance instead and delete before the last call to the log; or, otherwise, do not call
-    // the log from inside Primes::Destructor.
-//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
-////    cantiere.coveringIntegral();
-//    bool dumped = cantiere.distributionFunction( "./LogIntegral_firstPhase_.txt");
-//    cantiere.mapTraverseForward( cantiere.logIntegralPillars);
-//    cantiere.RandomCalcInterface( 300, 350);
-//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( 46);// estimate the ordinal of a candidate prime or of a threshold.
-//    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
+    logger( -1);// from main thread
+
+    Common::FuncPtr funcPtr;
+    funcPtr = logger;
+    Common::ThreadForker threadForker( funcPtr, 8);
+    threadForker.theForkingPoint();
+
+    Common::FuncPtr  fromSingleton_funcPtr;
+    fromSingleton_funcPtr = singleton_logger;
+    Common::ThreadForker singleton_threadForker( fromSingleton_funcPtr, 8);
+    singleton_threadForker.theForkingPoint();
 
 
+        int interval_one = selectInterval( 5);
+        int interval_two = selectInterval( 17);
+        int interval_invalidLeft = selectInterval( -1);
+        int interval_invalidRight = selectInterval( +33);
 
-//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
-//    unsigned long long candidateThreshold = 100;
-//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( candidateThreshold);
-//    std::cout<< "interpolatedOrdinal("<<candidateThreshold<<")=="<<interpolatedOrdinal<<std::endl;
-//Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
+    Cantiere_Primes_2022September01_::Primes cantiere(0);// semi-amplitude of each map segment
+    cantiere.distributionFunction_fromExistingMesh();
+    //Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 97*19);
+    const std::string * sequentialPath = cantiere.feed_sequentialDumpPath();
+    const std::string * randomPath = cantiere.feed_customDumpPath();
+    const std::string * meshRenewalPath = cantiere.feed_meshSpecificationPath();
+    const std::string * localIntegralPath = cantiere.feed_localIntegralPath();
+    const std::string * globalIntegralPath = cantiere.feed_globalIntegralPath();
+//  DON'T  delete sequentialPath; NB DON'T  they are pointers to members deleted by the Dtor
+// //  DON'T   delete randomPath;
+//  //  DON'T  delete meshRenewalPath;
+//  //  DON'T  delete localIntegralPath;
+// //  DON'T   delete globalIntegralPath;
 
+    //
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-bool seq = test->sequentialDump( 99390);// required prime==soglia
-bool rand = test->randomDump( 900, 920);
+    bool seq = test->sequentialDump( 99390);// required prime==soglia
+    bool rand = test->randomDump( 900, 920);
     bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
     bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
     bool outcome_recoverLastRecord = test->recoverLastRecord();
@@ -89,6 +162,7 @@ bool rand = test->randomDump( 900, 920);
          );
     }// array of Rec
     delete test;
+
 //    ------Unit Test-----CANTIERE---------------------------------------------------
 //
 //    ------Unit Test-----PimesFinder------------------------------------------------
@@ -139,6 +213,25 @@ bool rand = test->randomDump( 900, 920);
 
 
 /* --------------cantina----------------------------
+    // NB. cannot do an auto-instance, since the Dtor gets called after the Singleton<Log>_destruction and that's a leak.
+    // do a dynamical (pointer) instance instead and delete before the last call to the log; or, otherwise, do not call
+    // the log from inside Primes::Destructor.
+//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
+////    cantiere.coveringIntegral();
+//    bool dumped = cantiere.distributionFunction( "./LogIntegral_firstPhase_.txt");
+//    cantiere.mapTraverseForward( cantiere.logIntegralPillars);
+//    cantiere.RandomCalcInterface( 300, 350);
+//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( 46);// estimate the ordinal of a candidate prime or of a threshold.
+//    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
+
+
+
+//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
+//Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
+//    unsigned long long candidateThreshold = 100;
+//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( candidateThreshold);
+//    std::cout<< "interpolatedOrdinal("<<candidateThreshold<<")=="<<interpolatedOrdinal<<std::endl;
+//Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
     //----test accessori--------------------------
 //    unsigned long long ull_r = 6000000400;
 //    unsigned long long ull_l = 6000000100;
