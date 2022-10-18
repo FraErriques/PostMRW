@@ -6,7 +6,7 @@
 //        {
 //        }
 
-int Common::ThreadForker::theForkeingPoint( )
+int Common::ThreadForker::theForkingPoint( )
 {
     std::thread threads[howManyForkingThreads];
     // spawn nThreads threads:
@@ -21,4 +21,4 @@ int Common::ThreadForker::theForkeingPoint( )
     }
     // ready.
     return (int)(this->howManyForkingThreads);
-}// end int Common::ThreadForker::theForkeingPoint( )
+}// end int Common::ThreadForker::theForkingPoint( )

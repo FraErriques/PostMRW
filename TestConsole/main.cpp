@@ -22,8 +22,67 @@
 //-----unit test---------
 #include "Test_Unit_CantierePrimes.h"
 #include "Test_Unit_PrimesFinder.h"
+#include "../Common/LogSinkFs/SinkFs.h"
+#include "../Common/ThreadForker/ThreadForker.h"
 
 
+// distributionFunction_fromExistingMesh :must fill up th global::vector<BoundaryCumulateMeas>
+int selectInterval(int candidate)
+{// TODO move into getNearestIntegral : it's the vector reader and interval selector
+    std::vector<int> intervalBoundaries;
+    intervalBoundaries.push_back(  0);
+    intervalBoundaries.push_back( 10);
+    intervalBoundaries.push_back( 20);
+    size_t boundaryCardinality = intervalBoundaries.size();
+    //
+    int c=0;
+    size_t selectedInterval=-1;// init to invalid
+    for( ; c<boundaryCardinality-1; c++)// NB. if c+1<n then c<n-1
+    {
+        if(
+            candidate > intervalBoundaries[c]
+            && candidate <= intervalBoundaries[c+1]
+           )
+        {
+            selectedInterval = c;
+            break;
+        }// else continue : to select Interval
+    }// for
+    //ready.
+    return selectedInterval;
+}// selectInterval
+
+
+void logger(int threadNum)
+{// a negative threadNum param means the call has been spawn from the main thread.
+    Common::SinkFs log;
+    //
+    log.SectionOpen("autonomous logger", 0);
+    for(int c=0; c<10; c++)
+    {
+        std::string threadLabel("from inside autonomous logger:: thread number ");
+        std::string * converter = Common::StrManipul::intToString( threadNum);
+        threadLabel += *converter;
+        delete converter;
+        log.SectionTrace( threadLabel, 0);
+    }
+    log.SectionClose();
+}// logger
+
+void singleton_logger(int threadNum)
+{// a negative threadNum param means the call has been spawn from the main thread.
+    // no log instance -> Singleton
+    Common::LogWrappers::SectionOpen("Singleton<> logger", 0);
+    for(int c=0; c<10; c++)
+    {
+        std::string threadLabel("from inside Singleton<> logger:: thread number ");
+        std::string * converter = Common::StrManipul::intToString( threadNum);
+        threadLabel += *converter;
+        delete converter;
+        Common::LogWrappers::SectionContent( threadLabel.c_str() , 0);
+    }
+    Common::LogWrappers::SectionClose();
+}// singleton_logger
 
 
 //---entry point-------------------------
@@ -33,8 +92,26 @@ int main()
     //
     //------Unit Test-----CANTIERE------------------------------------------------
     //
-    Cantiere_Primes_2022September01_::Primes cantiere(0);// semi-amplitude of each map segment
-    cantiere.distributionFunction_fromExistingMesh();
+    logger( -1);// from main thread
+
+    Common::FuncPtr funcPtr;
+    funcPtr = logger;
+    Common::ThreadForker threadForker( funcPtr, 8);
+    threadForker.theForkingPoint();
+
+    Common::FuncPtr  fromSingleton_funcPtr;
+    fromSingleton_funcPtr = singleton_logger;
+    Common::ThreadForker singleton_threadForker( fromSingleton_funcPtr, 8);
+    singleton_threadForker.theForkingPoint();
+
+
+        int interval_one = selectInterval( 5);
+        int interval_two = selectInterval( 17);
+        int interval_invalidLeft = selectInterval( -1);
+        int interval_invalidRight = selectInterval( +33);
+
+//    Cantiere_Primes_2022September01_::Primes cantiere(0);// semi-amplitude of each map segment
+//    cantiere.distributionFunction_fromExistingMesh();
 //    //Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 97*19);
 //    const std::string * sequentialPath = cantiere.feed_sequentialDumpPath();
 //    const std::string * randomPath = cantiere.feed_customDumpPath();
