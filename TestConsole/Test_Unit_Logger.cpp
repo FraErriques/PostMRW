@@ -44,6 +44,7 @@ void Test_Unit_Logger::singleton_logger(int threadNum)
 }// singleton_logger
 
 
+
 void Test_Unit_Logger::managementMethod()
 {
     // the following test logs from ...
