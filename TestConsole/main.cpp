@@ -22,67 +22,26 @@
 //-----unit test---------
 #include "Test_Unit_CantierePrimes.h"
 #include "Test_Unit_PrimesFinder.h"
-#include "../Common/LogSinkFs/SinkFs.h"
-#include "../Common/ThreadForker/ThreadForker.h"
+#include "Test_Unit_Logger.h"
+#include "Test_Unit_selectInterval.h"
+//
+#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
+int FindMax (int n, ...)
+{
+  int i,val,largest;
+  va_list vl;
+  va_start(vl,n);
+  largest=va_arg(vl,int);
+  for (i=1;i<n;i++)
+  {
+    val=va_arg(vl,int);
+    largest=(largest>val)?largest:val;
+  }
+  va_end(vl);
+  return largest;
+}
 
-// distributionFunction_fromExistingMesh :must fill up th global::vector<BoundaryCumulateMeas>
-int selectInterval(int candidate)
-{// TODO move into getNearestIntegral : it's the vector reader and interval selector
-    std::vector<int> intervalBoundaries;
-    intervalBoundaries.push_back(  0);
-    intervalBoundaries.push_back( 10);
-    intervalBoundaries.push_back( 20);
-    size_t boundaryCardinality = intervalBoundaries.size();
-    //
-    int c=0;
-    size_t selectedInterval=-1;// init to invalid
-    for( ; c<boundaryCardinality-1; c++)// NB. if c+1<n then c<n-1
-    {
-        if(
-            candidate > intervalBoundaries[c]
-            && candidate <= intervalBoundaries[c+1]
-           )
-        {
-            selectedInterval = c;
-            break;
-        }// else continue : to select Interval
-    }// for
-    //ready.
-    return selectedInterval;
-}// selectInterval
-
-
-void logger(int threadNum)
-{// a negative threadNum param means the call has been spawn from the main thread.
-    Common::SinkFs log;
-    //
-    log.SectionOpen("autonomous logger", 0);
-    for(int c=0; c<10; c++)
-    {
-        std::string threadLabel("from inside autonomous logger:: thread number ");
-        std::string * converter = Common::StrManipul::intToString( threadNum);
-        threadLabel += *converter;
-        delete converter;
-        log.SectionTrace( threadLabel, 0);
-    }
-    log.SectionClose();
-}// logger
-
-void singleton_logger(int threadNum)
-{// a negative threadNum param means the call has been spawn from the main thread.
-    // no log instance -> Singleton
-    Common::LogWrappers::SectionOpen("Singleton<> logger", 0);
-    for(int c=0; c<10; c++)
-    {
-        std::string threadLabel("from inside Singleton<> logger:: thread number ");
-        std::string * converter = Common::StrManipul::intToString( threadNum);
-        threadLabel += *converter;
-        delete converter;
-        Common::LogWrappers::SectionContent( threadLabel.c_str() , 0);
-    }
-    Common::LogWrappers::SectionClose();
-}// singleton_logger
 
 
 //---entry point-------------------------
@@ -92,23 +51,16 @@ int main()
     //
     //------Unit Test-----CANTIERE------------------------------------------------
     //
-    logger( -1);// from main thread
+      int m;
+      m= FindMax (7,702,422,631,834,892,104,772);
+      printf ("The largest value is: %d\n",m);
 
-    Common::FuncPtr funcPtr;
-    funcPtr = logger;
-    Common::ThreadForker threadForker( funcPtr, 8);
-    threadForker.theForkingPoint();
+    Test_Unit_Logger test_unit_logger;
+    test_unit_logger.managementMethod();
 
-    Common::FuncPtr  fromSingleton_funcPtr;
-    fromSingleton_funcPtr = singleton_logger;
-    Common::ThreadForker singleton_threadForker( fromSingleton_funcPtr, 8);
-    singleton_threadForker.theForkingPoint();
+    Test_Unit_selectInterval test_Unit_selectInterval; //ctor performs the test-calls, in this case.
+    test_Unit_selectInterval.managementMethod();
 
-
-        int interval_one = selectInterval( 5);
-        int interval_two = selectInterval( 17);
-        int interval_invalidLeft = selectInterval( -1);
-        int interval_invalidRight = selectInterval( +33);
 
 //    Cantiere_Primes_2022September01_::Primes cantiere(0);// semi-amplitude of each map segment
 //    cantiere.distributionFunction_fromExistingMesh();
@@ -118,13 +70,13 @@ int main()
 //    const std::string * meshRenewalPath = cantiere.feed_meshSpecificationPath();
 //    const std::string * localIntegralPath = cantiere.feed_localIntegralPath();
 //    const std::string * globalIntegralPath = cantiere.feed_globalIntegralPath();
-//    delete sequentialPath; NB DON'T  they are pointers to members deleted by the Dtor
-//    delete randomPath;
-//    delete meshRenewalPath;
-//    delete localIntegralPath;
-//    delete globalIntegralPath;
-
-    //
+////  DON'T  delete sequentialPath; NB DON'T  they are pointers to members deleted by the Dtor
+//// //  DON'T   delete randomPath;
+////  //  DON'T  delete meshRenewalPath;
+////  //  DON'T  delete localIntegralPath;
+//// //  DON'T   delete globalIntegralPath;
+//
+//    //
 //    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
 //    bool seq = test->sequentialDump( 99390);// required prime==soglia
 //    bool rand = test->randomDump( 900, 920);
@@ -162,7 +114,7 @@ int main()
 //         );
 //    }// array of Rec
 //    delete test;
-    //
+
 //    ------Unit Test-----CANTIERE---------------------------------------------------
 //
 //    ------Unit Test-----PimesFinder------------------------------------------------
