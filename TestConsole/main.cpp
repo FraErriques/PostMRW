@@ -106,7 +106,13 @@ int main()
     //
     Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
     bool seq = test->sequentialDump( 99390);// required prime==soglia
-    bool rand = test->randomDump( 900, 920);
+
+    bool rand = test->randomDump(  15,  20);
+//    rand = test->randomDump( 900, 920);
+//    rand = test->randomDump( 1500, 1520);
+//    rand = test->randomDump( 18446744073709550510, 18446744073709551610);
+
+
     bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
     bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
     bool outcome_recoverLastRecord = test->recoverLastRecord();

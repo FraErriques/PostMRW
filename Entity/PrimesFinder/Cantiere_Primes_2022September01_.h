@@ -6,6 +6,7 @@
 #include <math.h>
 #include <iostream>
 #include <map>
+#include <vector>
 
 namespace Cantiere_Primes_2022September01_
 {
@@ -54,7 +55,8 @@ class Primes
 	// TODO PRIIVATE removed only in Cantiere, everything has to be accessible. When passing in Produciont, let private again.
     /// Data
     std::map<unsigned long long, unsigned long long> * memoryMappedDump;
-    std::map<unsigned long long, unsigned long long> * logIntegralPillars;
+    std::vector<LogIntegralPillarPoint> * logIntegralPillars;
+//std::map<unsigned long long, unsigned long long>
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
@@ -106,7 +108,7 @@ class Primes
     unsigned long long queryMap( unsigned long long desiredOrdinal);
     bool Bisection( unsigned long long requiredOrdinal );
     void coveringIntegral();
-    bool distributionFunction(const char * path);
+// bool distributionFunction(const char * path);  NO MORE
     bool distributionFunction_fromExistingMesh();
     unsigned long long interpolateOrdinal( unsigned long long candidatePrimeThreshold);
     void mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals );
