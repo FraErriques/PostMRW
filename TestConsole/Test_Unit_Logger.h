@@ -19,8 +19,10 @@ class Test_Unit_Logger
     protected:
 
     private:
-        void autonomous_logger(int threadNum);
-        void singleton_logger(int threadNum);
+        static void autonomous_logger(int threadNum);// have to be static, to be taken the address of.
+        static void singleton_logger(int threadNum);
+        static void interface_logFromMultipleStrings(int threadNum);
+        static int logFromMultipleStrings(int howMany_params, ...);
 };
 
 #endif // TEST_UNIT_LOGGER_H
