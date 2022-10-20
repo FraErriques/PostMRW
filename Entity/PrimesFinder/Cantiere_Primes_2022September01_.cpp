@@ -54,7 +54,7 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
         this->canOperate = true;// can operate even without memory mapped data.
     }
     // build the Map of couples {Threshold,LogIntegral[Threshold]}
-    this->logIntegralPillars = new std::map<unsigned long long, unsigned long long>();
+    this->logIntegralPillars = new std::vector<LogIntegralPillarPoint>();
     if( nullptr==this->logIntegralPillars)
     {
         this->isHealthlyConstructed = false;
@@ -62,7 +62,7 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     }
     else
     {
-        this->distributionFunction( "./LogIntegral_firstPhase_.txt");
+        this->distributionFunction_fromExistingMesh();// locates via ini-file.
     }
     //
     bool dumpPathAcquisitionFromConfig = false;// init to invalid
@@ -1286,79 +1286,79 @@ void Primes::coveringIntegral()
     delete[] LogIntegralStep_Array;
 }// coveringIntegral
 
-
-bool Primes::distributionFunction(const char * fullPath)
-{
-    std::fstream testFile;
-    bool result = false;// init to invalid.
-    std::vector <std::string> data;
-    std::vector<std::string>::iterator iter;
-    std::string curr_data;
-    // Open for read : Input
-	testFile.open( fullPath, std::ios::in);
-	int step = 1;
-    if (testFile.is_open())
-    {
-        while (!testFile.eof())
-        {
-            if( testFile.eof() ) {break;}
-            std::getline ( testFile, curr_data);// legge con separatore EOL : TODO test if '\n' or '\r\n'
-            if( curr_data.length() > 0)
-            {
-                data.push_back(curr_data);// push the read line in a list.
-            }// else skip empty entry.
-        }
-        testFile.close();
-        result = true;
-    }// else result remains false; end File-read loop.
-    //
-    unsigned long long cumulate = 0;
-    step = 1;
-    std::ofstream secondPhase("./20221013_LogIntegral_secondPhase_.txt");
-    if( secondPhase.is_open())
-    {
-        result = true;
-        secondPhase<<"Offset LogIntegral == Integrate[1/Log[t], {t,+2,x}] \n";
-        secondPhase<<"x		\t	LogIntegral \n";
-        secondPhase<<"----------------------------------------------------------------------\n";
-    }
-    else
-    {// file not open.
-        result = false;
-    }
-    std::vector<std::string> * tokenizedLine = nullptr;
-    for (iter = data.begin(); iter != data.end(); iter++)
-    {
-       if( data.end() == iter){break;}
-       if( step >+1)
-       {
-           std::string tmp( *iter);
-           tokenizedLine = Common::StrManipul::stringSplit(
-            "_"
-            , tmp  // NB. original passed by value, to be preserved.
-            , true );
-           if( (*tokenizedLine).size() >= 2)
-           {
-               const std::string LogIntegral_inf_sup_( (*tokenizedLine)[2] );
-               cumulate += Common::StrManipul::stringToUnsignedLongLong( LogIntegral_inf_sup_);// check if exists
-               secondPhase<<(*tokenizedLine)[1]<<"\t"<< cumulate<<"\n";// dump Distribution[+2,x] on file.
-               // dump in RAM::Map : this->logIntegralPillars
-               std::pair<unsigned long long, unsigned long long> LogIntegralSinglePillar(
-                    Common::StrManipul::stringToUnsignedLongLong( (*tokenizedLine)[1] )
-                    ,cumulate
-               );
-//                const std::pair<std::_Rb_tree_iterator<std::pair<const long long unsigned int, long long unsigned int> >,bool> tmpNodeToBeInserted =  unnecessary here
-               this->logIntegralPillars->insert( LogIntegralSinglePillar);
-           }// else skip
-           delete tokenizedLine;
-       }
-       step++;
-    }
-    secondPhase.flush();
-    secondPhase.close();
-    // ready.
-    return result;
-}// distributionFunction
+//
+//bool Primes::distributionFunction(const char * fullPath)
+//{
+//    std::fstream testFile;
+//    bool result = false;// init to invalid.
+//    std::vector <std::string> data;
+//    std::vector<std::string>::iterator iter;
+//    std::string curr_data;
+//    // Open for read : Input
+//	testFile.open( fullPath, std::ios::in);
+//	int step = 1;
+//    if (testFile.is_open())
+//    {
+//        while (!testFile.eof())
+//        {
+//            if( testFile.eof() ) {break;}
+//            std::getline ( testFile, curr_data);// legge con separatore EOL : TODO test if '\n' or '\r\n'
+//            if( curr_data.length() > 0)
+//            {
+//                data.push_back(curr_data);// push the read line in a list.
+//            }// else skip empty entry.
+//        }
+//        testFile.close();
+//        result = true;
+//    }// else result remains false; end File-read loop.
+//    //
+//    unsigned long long cumulate = 0;
+//    step = 1;
+//    std::ofstream secondPhase("./20221013_LogIntegral_secondPhase_.txt");
+//    if( secondPhase.is_open())
+//    {
+//        result = true;
+//        secondPhase<<"Offset LogIntegral == Integrate[1/Log[t], {t,+2,x}] \n";
+//        secondPhase<<"x		\t	LogIntegral \n";
+//        secondPhase<<"----------------------------------------------------------------------\n";
+//    }
+//    else
+//    {// file not open.
+//        result = false;
+//    }
+//    std::vector<std::string> * tokenizedLine = nullptr;
+//    for (iter = data.begin(); iter != data.end(); iter++)
+//    {
+//       if( data.end() == iter){break;}
+//       if( step >+1)
+//       {
+//           std::string tmp( *iter);
+//           tokenizedLine = Common::StrManipul::stringSplit(
+//            "_"
+//            , tmp  // NB. original passed by value, to be preserved.
+//            , true );
+//           if( (*tokenizedLine).size() >= 2)
+//           {
+//               const std::string LogIntegral_inf_sup_( (*tokenizedLine)[2] );
+//               cumulate += Common::StrManipul::stringToUnsignedLongLong( LogIntegral_inf_sup_);// check if exists
+//               secondPhase<<(*tokenizedLine)[1]<<"\t"<< cumulate<<"\n";// dump Distribution[+2,x] on file.
+//               // dump in RAM::Map : this->logIntegralPillars
+//               std::pair<unsigned long long, unsigned long long> LogIntegralSinglePillar(
+//                    Common::StrManipul::stringToUnsignedLongLong( (*tokenizedLine)[1] )
+//                    ,cumulate
+//               );
+////                const std::pair<std::_Rb_tree_iterator<std::pair<const long long unsigned int, long long unsigned int> >,bool> tmpNodeToBeInserted =  unnecessary here
+//               this->logIntegralPillars->insert( LogIntegralSinglePillar);
+//           }// else skip
+//           delete tokenizedLine;
+//       }
+//       step++;
+//    }
+//    secondPhase.flush();
+//    secondPhase.close();
+//    // ready.
+//    return result;
+//}// distributionFunction
 
 bool Primes::distributionFunction_fromExistingMesh()
 {
@@ -1383,9 +1383,11 @@ bool Primes::distributionFunction_fromExistingMesh()
                     int tokenInCurLine = aLine->size();
                     if( tokenInCurLine >= +2)// two token required
                     {
-                        unsigned long long integrationSup = Common::StrManipul::stringToUnsignedLongLong((*aLine)[0]);
-                        unsigned long long integrationMeasure = Common::StrManipul::stringToUnsignedLongLong((*aLine)[1]);
+                        LogIntegralPillarPoint currentPillar;
+                        currentPillar.threshold = Common::StrManipul::stringToUnsignedLongLong((*aLine)[0]);
+                        currentPillar.logIntegral = Common::StrManipul::stringToUnsignedLongLong((*aLine)[1]);
                         delete aLine;
+                        this->logIntegralPillars->push_back( currentPillar);
                     }// else : invalid line: not enough tokens.
                 }// else skip empty entry.
             }// skip the headers
@@ -1505,44 +1507,45 @@ void Primes::mapTraverseForward( std::map<unsigned long long, unsigned long long
 Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long candidatePrimeThreshold)
 {
     size_t map_size = logIntegralPillars->size();
-    LogIntegralPillarPoint * thePillarPoints = new LogIntegralPillarPoint[map_size];
-    int array_index = 0;
-    for( std::map<unsigned long long, unsigned long long>::iterator fwd=this->logIntegralPillars->begin();
-         fwd != this->logIntegralPillars->end();
-         fwd++
-    )
-    {// Traverse loop
-        thePillarPoints[array_index].threshold = fwd->first;
-        thePillarPoints[array_index].logIntegral = fwd->second;
-        array_index++;
-        if( map_size-1 == array_index )
-        {
-            break;
-        }
-    }// Traverse loop
-//    if( map_size != array_index )
-//    {// NB. last valid array_index is map_size-1 but at loop::exit it gets increased.
-//        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
-//    }
-    //
+//    LogIntegralPillarPoint * thePillarPoints = new LogIntegralPillarPoint[map_size];
+//    int array_index = 0;
+//    for( std::map<unsigned long long, unsigned long long>::iterator fwd=this->logIntegralPillars->begin();
+//         fwd != this->logIntegralPillars->end();
+//         fwd++
+//    )
+//    {// Traverse loop
+//        thePillarPoints[array_index].threshold = fwd->first;
+//        thePillarPoints[array_index].logIntegral = fwd->second;
+//        array_index++;
+//        if( map_size-1 == array_index )
+//        {
+//            break;
+//        }
+//    }// Traverse loop
+////    if( map_size != array_index )
+////    {// NB. last valid array_index is map_size-1 but at loop::exit it gets increased.
+////        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
+////    }
+//    //
     int selectedInterval = 0;
     LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
-    for(int c=0; c<map_size-2; c++)// TODO test on last interval
+    for(int c=0; c<map_size-1; c++)// c+1<n -> c<n-1
     {
-        if( thePillarPoints[c].threshold < candidatePrimeThreshold
-            && thePillarPoints[c+1].threshold >= candidatePrimeThreshold
+
+        if( this->logIntegralPillars->operator[](c).threshold < candidatePrimeThreshold
+            && this->logIntegralPillars->operator[](c+1).threshold >= candidatePrimeThreshold
            )
         {
             selectedInterval = c;
-            nearestIntegral->threshold = thePillarPoints[c].threshold;
-            nearestIntegral->logIntegral = thePillarPoints[c].logIntegral;
+            nearestIntegral->threshold = this->logIntegralPillars->operator[](c).threshold;
+            nearestIntegral->logIntegral = this->logIntegralPillars->operator[](c).logIntegral;
             break;
         }// else continue.
     }// for
     // sequence : which interval does candidatePrimeThreshold belong to ?
     //          : which are the two coordinates of the left boundary point of the selected interval ?
     //          : return such coordinates.
-    delete[] thePillarPoints;//clean
+//delete[] thePillarPoints;//clean
     // ready.
     return nearestIntegral;
 }// getNearestIntegral

@@ -19,7 +19,7 @@ void Test_Unit_selectInterval::managementMethod()
 }// managementMethod
 
 
-// distributionFunction_fromExistingMesh :must fill up th global::vector<BoundaryCumulateMeas>
+// distributionFunction_fromExistingMesh :must fill up th global::vector<BoundaryCumulateMesh>
 int Test_Unit_selectInterval::selectInterval(int candidate)
 {// TODO move into getNearestIntegral : it's the vector reader and interval selector
     std::vector<int> intervalBoundaries;
