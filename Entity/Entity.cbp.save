@@ -16,6 +16,7 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-std=c++11" />
+					<Add option="-m64" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
@@ -46,32 +47,17 @@
 		</Compiler>
 		<Linker>
 			<Add option="-m64" />
-			<Add option="-lmysqlcppconn" />
 		</Linker>
-		<Unit filename="Complex/Complex.cpp" />
-		<Unit filename="Complex/Complex.h" />
-		<Unit filename="ComplexMatrix/ComplexMatrix.cpp" />
-		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
-		<Unit filename="Integration/Integrate.cpp" />
-		<Unit filename="Integration/Integrate.h" />
-		<Unit filename="Integration/Integration.cpp" />
-		<Unit filename="Integration/Integration.h" />
-		<Unit filename="PrimesFinder/ElementFullCalculation.cs" />
-		<Unit filename="PrimesFinder/Primes.cpp" />
-		<Unit filename="PrimesFinder/Primes.cs" />
-		<Unit filename="PrimesFinder/Primes.h" />
-		<Unit filename="PrimesFinder/TestsOnNumberTheory.cs" />
-		<Unit filename="PrimesFinder/dbPrimes.cs" />
+		<Unit filename="BulkEntity/BulkEntity.cpp" />
+		<Unit filename="BulkEntity/BulkEntity.h" />
 		<Unit filename="RealAnalysis/Real.cpp" />
 		<Unit filename="RealAnalysis/Real.h" />
 		<Unit filename="RealMatrix/RealMatrix.cpp" />
 		<Unit filename="RealMatrix/RealMatrix.h" />
 		<Unit filename="StringMatrix/StringMatrix.cpp" />
 		<Unit filename="StringMatrix/StringMatrix.h" />
-		<Unit filename="common_data/common_data.h" />
 		<Extensions>
-			<code_completion />
-			<debugger />
+			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

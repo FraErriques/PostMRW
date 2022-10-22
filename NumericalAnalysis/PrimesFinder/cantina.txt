@@ -1513,8 +1513,8 @@ void PrimesFinder::Primes::IntegralFileFromAnywhereFSproducer( unsigned long inf
             // tale valore integrale va ricercato nell'ordinale corrispondente al piu' grande dei primi non maggiori di arg.
             // Ovvero presso il sup dei primi minoranti arg. Non vi sono altri primi fra quello individuato ed arg.
             // Pertanto PiGreco() vale :
-            // l'ordinale del piu' grande dei primi non maggiori di arg, meno 1/2, se arg è primo.
-            // l'ordinale del piu' grande dei primi non maggiori di arg,           se arg NON è primo.
+            // l'ordinale del piu' grande dei primi non maggiori di arg, meno 1/2, se arg \E8 primo.
+            // l'ordinale del piu' grande dei primi non maggiori di arg,           se arg NON \E8 primo.
             //
             if (threshold < +2.0)
             { return CumulatedOrdinalNotOverThreshold; }// zero, by now.
@@ -2639,8 +2639,8 @@ namespace PrimesFinder
             // tale valore integrale va ricercato nell'ordinale corrispondente al piu' grande dei primi non maggiori di arg.
             // Ovvero presso il sup dei primi minoranti arg. Non vi sono altri primi fra quello individuato ed arg.
             // Pertanto PiGreco() vale :
-            // l'ordinale del piu' grande dei primi non maggiori di arg, meno 1/2, se arg è primo.
-            // l'ordinale del piu' grande dei primi non maggiori di arg,           se arg NON è primo.
+            // l'ordinale del piu' grande dei primi non maggiori di arg, meno 1/2, se arg \E8 primo.
+            // l'ordinale del piu' grande dei primi non maggiori di arg,           se arg NON \E8 primo.
             //
             if (threshold < +2.0)
             { return CumulatedOrdinalNotOverThreshold; }// zero, by now.

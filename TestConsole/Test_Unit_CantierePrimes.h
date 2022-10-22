@@ -1,7 +1,7 @@
 #ifndef TEST_UNIT_CANTIEREPRIMES_H
 #define TEST_UNIT_CANTIEREPRIMES_H
 
-#include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
+#include "../NumericalAnalysis/PrimesFinder/Cantiere_Primes_2022September01_.h"
 
 class Test_Unit_CantierePrimes
 {

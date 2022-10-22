@@ -13,13 +13,16 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-std=c++11" />
+					<Add option="-m64" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-m64" />
 					<Add option="-pthread" />
 					<Add library="../Process/bin/Debug/libProcess.a" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
 					<Add library="../Entity/bin/Debug/libEntity.a" />
+					<Add library="../NumericalAnalysis/bin/Debug/libNumericalAnalysis.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
