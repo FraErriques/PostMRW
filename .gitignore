@@ -16,9 +16,8 @@ log/
 *.depend
 *.layout
 *.cbp
-.gitignore
-.workspace
-.layout
-.save
+*.workspace
+*.layout
+*.save
 *.log
 TestConsole/*.log
