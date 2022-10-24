@@ -1507,7 +1507,7 @@ void Primes::mapTraverseForward( std::map<unsigned long long, unsigned long long
 
 Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long candidatePrimeThreshold)
 {
-    size_t map_size = logIntegralPillars->size();
+    size_t vector_size = logIntegralPillars->size();
 //    LogIntegralPillarPoint * thePillarPoints = new LogIntegralPillarPoint[map_size];
 //    int array_index = 0;
 //    for( std::map<unsigned long long, unsigned long long>::iterator fwd=this->logIntegralPillars->begin();
@@ -1530,7 +1530,7 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
 //    //
     int selectedInterval = 0;
     LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
-    for(int c=0; c<map_size-1; c++)// c+1<n -> c<n-1
+    for(size_t c=0; c<vector_size-1; c++)// c+1<n -> c<n-1
     {
 
         if( this->logIntegralPillars->operator[](c).threshold < candidatePrimeThreshold

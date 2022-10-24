@@ -1,5 +1,5 @@
 #include "Test_Unit_CantierePrimes.h"
-#include "../Common/Config_wrap/Config_wrap.h"
+#include "../../Common/Config_wrap/Config_wrap.h"
 
 Test_Unit_CantierePrimes::Test_Unit_CantierePrimes(  unsigned semiAmplitudeOfEachMapSegment )
 {//ctor

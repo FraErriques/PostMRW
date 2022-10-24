@@ -7,7 +7,6 @@
 		</Project>
 		<Project filename="NumericalAnalysis/NumericalAnalysis.cbp">
 			<Depends filename="Common/Common.cbp" />
-			<Depends filename="Entity/Entity.cbp" />
 		</Project>
 		<Project filename="Process/Process.cbp">
 			<Depends filename="Entity/Entity.cbp" />

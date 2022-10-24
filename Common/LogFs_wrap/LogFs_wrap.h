@@ -39,6 +39,8 @@ namespace Common
                 , long long variable_value
                 ,int sectionVerbosity         );
 
+        void SectionContent_fromMultipleStrings(int howMany_params, int sectionVerbosity, ...);
+
     }// END namespace LogWrappers
 }// END namespace Common
 

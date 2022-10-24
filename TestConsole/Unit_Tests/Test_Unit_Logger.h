@@ -1,10 +1,10 @@
 #ifndef TEST_UNIT_LOGGER_H
 #define TEST_UNIT_LOGGER_H
 
-#include "../Common/StringBuilder/StringBuilder.h"
-#include "../Common/LogSinkFs/SinkFs.h"
-#include "../Common/ThreadForker/ThreadForker.h"
-#include "../Common/LogFs_wrap/LogFs_wrap.h"
+#include "../../Common/StringBuilder/StringBuilder.h"
+#include "../../Common/LogSinkFs/SinkFs.h"
+#include "../../Common/ThreadForker/ThreadForker.h"
+#include "../../Common/LogFs_wrap/LogFs_wrap.h"
 
 class Test_Unit_Logger
 {
@@ -23,6 +23,8 @@ class Test_Unit_Logger
         static void singleton_logger(int threadNum);
         static void interface_logFromMultipleStrings(int threadNum);
         static int logFromMultipleStrings(int howMany_params, ...);
+        int FindMax (int n, ...);// not static, since I don't need to point at it, by a function pointer.
+
 };
 
 #endif // TEST_UNIT_LOGGER_H
