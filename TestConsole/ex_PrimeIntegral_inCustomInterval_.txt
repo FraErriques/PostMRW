@@ -1,69 +1,0 @@
-
-
- Custom Interval (9888777, 9888999] ,worked on: Mon Apr 26 17:21:13 2021
-
-658015_9888779658016_9888787658017_9888803658018_9888817658019_9888841658020_9888863658021_9888871658022_9888881658023_9888887658024_9888889658025_9888929658026_9888943658027_9888947658028_9888961658029_9888973658030_9888979658031_9888997
-
- Custom Interval (7, 25] ,worked on: Thu Sep 01 16:03:54 2022
-
-
-
- Custom Interval (7, 25] ,worked on: Thu Sep 01 16:14:09 2022
-
-
-
- Custom Interval (7, 25] ,worked on: Thu Sep 01 16:26:55 2022
-
-
-
- Custom Interval (7, 25] ,worked on: Thu Sep 01 16:32:39 2022
-
-
-
- Custom Interval (7, 25] ,worked on: Fri Sep 02 12:03:45 2022
-
-
-
- Custom Interval (20000000, 20000100] ,worked on: Fri Sep 02 12:05:21 2022
-
-
-
- Custom Interval (20000000, 20000100] ,worked on: Fri Sep 02 12:51:57 2022
-
-
-
- Custom Interval (20000000, 20000100] ,worked on: Fri Sep 02 12:57:10 2022
-
-
-
- Custom Interval (20000000, 20000100] ,worked on: Wed Sep 07 16:11:42 2022
-
-
-
- Custom Interval (20000000, 20000100] ,worked on: Wed Sep 07 16:20:20 2022
-
-
-
- Custom Interval (20000000, 20000100] ,worked on: Wed Sep 07 16:25:56 2022
-
-
-
- Custom Interval (20000000, 20000100] ,worked on: Thu Sep 08 17:45:53 2022
-
-1270904_200000031270905_200000231270906_200000331270907_200000471270908_200000591270909_200000631270910_200000691270911_200000771270912_200000811270913_20000093
-
- Custom Interval (30000000, 30000100] ,worked on: Thu Sep 08 17:55:04 2022
-
-Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.1858213_300000011858214_300000231858215_300000371858216_300000411858217_300000491858218_300000591858219_300000711858220_300000791858221_30000083
-
- Custom Interval (30000000, 30000100] ,worked on: Thu Sep 08 18:13:05 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-1858213_300000011858214_300000231858215_300000371858216_300000411858217_300000491858218_300000591858219_300000711858220_300000791858221_30000083
-
- Custom Interval (2, 100] ,worked on: Thu Sep 08 18:29:01 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-1_32_53_74_115_136_177_198_239_2910_3111_3712_4113_4314_4715_5316_5917_6118_6719_7120_7321_7922_8323_8924_97
-
- Custom Interval (1, 100] ,worked on: Thu Sep 08 18:35:08 2022
- Ordinals are extimated by LogIntegral; so the ordinal appears usually bigger than the correct one.
-1_22_33_54_75_116_137_178_199_2310_2911_3112_3713_4114_4315_4716_5317_5918_6119_6720_7121_7322_7923_8324_8925_97

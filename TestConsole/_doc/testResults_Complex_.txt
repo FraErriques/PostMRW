@@ -1,0 +1,202 @@
+In[5]:= z = +3.1 + I*5.2
+
+Out[5]= 3.1+ 5.2 \[ImaginaryI]
+
+In[6]:= For[ 
+ n = 1, 
+ n < 6,
+ Print["z^n==" , z, "^", n, " == ", z^n  ];
+ n++;
+ ]
+
+During evaluation of In[6]:= z^n==3.1+5.2 \[ImaginaryI]^1 == 3.1+5.2 \
+\[ImaginaryI]
+
+During evaluation of In[6]:= z^n==3.1+5.2 \[ImaginaryI]^2 == \
+-17.43+32.24 \[ImaginaryI]
+
+During evaluation of In[6]:= z^n==3.1+5.2 \[ImaginaryI]^3 == \
+-221.681+9.308 \[ImaginaryI]
+
+During evaluation of In[6]:= z^n==3.1+5.2 \[ImaginaryI]^4 == \
+-735.613-1123.89 \[ImaginaryI]
+
+During evaluation of In[6]:= z^n==3.1+5.2 \[ImaginaryI]^5 == \
+3563.81-7309.23 \[ImaginaryI]
+
+In[14]:= base = +2.1*t + I*3.1*t
+
+
+Out[14]= 13.02+ 19.22 \[ImaginaryI]
+
+In[15]:= espon = +2.3*t + I*1.6*t
+
+Out[15]= 14.26+ 9.92 \[ImaginaryI]
+
+In[18]:= For[ 
+ t = 1, 
+ t < 6,
+ Print["t==", t, " base^espon==" , base, "^", espon, " == ", 
+  base^espon  ];
+ t += +0.4;
+ base = +2.1*t + I*3.1*t;
+ espon = +2.3*t + I*1.6*t;
+ ]
+
+During evaluation of In[18]:= t==1 base^espon==13.02+19.22 \
+\[ImaginaryI]^14.26+9.92 \[ImaginaryI] == 8.12985*10^14+1.69273*10^15 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==1.4 base^espon==2.94+4.34 \
+\[ImaginaryI]^3.22+2.24 \[ImaginaryI] == 19.6595+12.5623 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==1.8 base^espon==3.78+5.58 \
+\[ImaginaryI]^4.14+2.88 \[ImaginaryI] == -161.456-17.5782 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==2.2 base^espon==4.62+6.82 \
+\[ImaginaryI]^5.06+3.52 \[ImaginaryI] == 1359.41-287.322 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==2.6 base^espon==5.46+8.06 \
+\[ImaginaryI]^5.98+4.16 \[ImaginaryI] == -12909.8+5580.59 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==3. base^espon==6.3+9.3 \
+\[ImaginaryI]^6.9+4.8 \[ImaginaryI] == 143308.-79951.3 \[ImaginaryI]
+
+During evaluation of In[18]:= t==3.4 base^espon==7.14+10.54 \
+\[ImaginaryI]^7.82+5.44 \[ImaginaryI] == -1.87468*10^6+1.08377*10^6 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==3.8 base^espon==7.98+11.78 \
+\[ImaginaryI]^8.74+6.08 \[ImaginaryI] == 2.84808*10^7-1.42523*10^7 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==4.2 base^espon==8.82+13.02 \
+\[ImaginaryI]^9.66+6.72 \[ImaginaryI] == -4.87213*10^8+1.70322*10^8 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==4.6 base^espon==9.66+14.26 \
+\[ImaginaryI]^10.58+7.36 \[ImaginaryI] == 9.03225*10^9-1.34273*10^9 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==5. base^espon==10.5+15.5 \
+\[ImaginaryI]^11.5+8. \[ImaginaryI] == -1.74211*10^11-1.69284*10^10 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==5.4 base^espon==11.34+16.74 \
+\[ImaginaryI]^12.42+8.64 \[ImaginaryI] == 3.33678*10^12+1.38163*10^12 \
+\[ImaginaryI]
+
+During evaluation of In[18]:= t==5.8 base^espon==12.18+17.98 \
+\[ImaginaryI]^13.34+9.28 \[ImaginaryI] == -5.91433*10^13-5.3541*10^13 \
+\[ImaginaryI]
+
+In[19]:= For[ 
+ t = 1; base = +2.1*t + I*3.1*t; espon = +2.3*t + I*1.6*t;,
+ t < 6,
+ Print["t==", t, " base^espon==" , base, "^", espon, " == ", 
+  base^espon  ];
+ t += +0.4;
+ base = +2.1*t + I*3.1*t;
+ espon = +2.3*t + I*1.6*t;
+ ]
+
+During evaluation of In[19]:= t==1 base^espon==2.1+3.1 \
+\[ImaginaryI]^2.3+1.6 \[ImaginaryI] == -1.52737-4.09988 \[ImaginaryI]
+
+During evaluation of In[19]:= t==1.4 base^espon==2.94+4.34 \
+\[ImaginaryI]^3.22+2.24 \[ImaginaryI] == 19.6595+12.5623 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==1.8 base^espon==3.78+5.58 \
+\[ImaginaryI]^4.14+2.88 \[ImaginaryI] == -161.456-17.5782 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==2.2 base^espon==4.62+6.82 \
+\[ImaginaryI]^5.06+3.52 \[ImaginaryI] == 1359.41-287.322 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==2.6 base^espon==5.46+8.06 \
+\[ImaginaryI]^5.98+4.16 \[ImaginaryI] == -12909.8+5580.59 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==3. base^espon==6.3+9.3 \
+\[ImaginaryI]^6.9+4.8 \[ImaginaryI] == 143308.-79951.3 \[ImaginaryI]
+
+During evaluation of In[19]:= t==3.4 base^espon==7.14+10.54 \
+\[ImaginaryI]^7.82+5.44 \[ImaginaryI] == -1.87468*10^6+1.08377*10^6 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==3.8 base^espon==7.98+11.78 \
+\[ImaginaryI]^8.74+6.08 \[ImaginaryI] == 2.84808*10^7-1.42523*10^7 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==4.2 base^espon==8.82+13.02 \
+\[ImaginaryI]^9.66+6.72 \[ImaginaryI] == -4.87213*10^8+1.70322*10^8 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==4.6 base^espon==9.66+14.26 \
+\[ImaginaryI]^10.58+7.36 \[ImaginaryI] == 9.03225*10^9-1.34273*10^9 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==5. base^espon==10.5+15.5 \
+\[ImaginaryI]^11.5+8. \[ImaginaryI] == -1.74211*10^11-1.69284*10^10 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==5.4 base^espon==11.34+16.74 \
+\[ImaginaryI]^12.42+8.64 \[ImaginaryI] == 3.33678*10^12+1.38163*10^12 \
+\[ImaginaryI]
+
+During evaluation of In[19]:= t==5.8 base^espon==12.18+17.98 \
+\[ImaginaryI]^13.34+9.28 \[ImaginaryI] == -5.91433*10^13-5.3541*10^13 \
+\[ImaginaryI]
+
+In[20]:= For[ 
+ t = 1; espon = +2.3*t + I*1.6*t;,
+ t < 6,
+ Print["t==", t, " Exp[", espon, "] == ", Exp[espon]  ];
+ t += +0.4;
+ espon = +2.3*t + I*1.6*t;
+ ]
+
+During evaluation of In[20]:= t==1 Exp[2.3+1.6 \[ImaginaryI]] == \
+-0.291241+9.96993 \[ImaginaryI]
+
+During evaluation of In[20]:= t==1.4 Exp[3.22+2.24 \[ImaginaryI]] == \
+-15.5265+19.63 \[ImaginaryI]
+
+During evaluation of In[20]:= t==1.8 Exp[4.14+2.88 \[ImaginaryI]] == \
+-60.6662+16.242 \[ImaginaryI]
+
+During evaluation of In[20]:= t==2.2 Exp[5.06+3.52 \[ImaginaryI]] == \
+-146.442-58.2204 \[ImaginaryI]
+
+During evaluation of In[20]:= t==2.6 Exp[5.98+4.16 \[ImaginaryI]] == \
+-207.496-336.628 \[ImaginaryI]
+
+During evaluation of In[20]:= t==3. Exp[6.9+4.8 \[ImaginaryI]] == \
+86.823-988.469 \[ImaginaryI]
+
+During evaluation of In[20]:= t==3.4 Exp[7.82+5.44 \[ImaginaryI]] == \
+1656.01-1859.38 \[ImaginaryI]
+
+During evaluation of In[20]:= t==3.8 Exp[8.74+6.08 \[ImaginaryI]] == \
+6119.37-1260.76 \[ImaginaryI]
+
+During evaluation of In[20]:= t==4.2 Exp[9.66+6.72 \[ImaginaryI]] == \
+14205.7+6632.57 \[ImaginaryI]
+
+During evaluation of In[20]:= t==4.6 Exp[10.58+7.36 \[ImaginaryI]] == \
+18652.5+34637.1 \[ImaginaryI]
+
+During evaluation of In[20]:= t==5. Exp[11.5+8. \[ImaginaryI]] == \
+-14363.1+97665.3 \[ImaginaryI]
+
+During evaluation of In[20]:= t==5.4 Exp[12.42+8.64 \[ImaginaryI]] == \
+-175264.+175046. \[ImaginaryI]
+
+During evaluation of In[20]:= t==5.8 Exp[13.34+9.28 \[ImaginaryI]] == \
+-615065.+89675.3 \[ImaginaryI]

@@ -1,0 +1,30 @@
+inf 	 sup 	 LogIntegral(inf,sup) 
+2_100_29
+100_1000_147
+1000_1000000_78450
+1000000_1000000000_50771028
+1000000000_1000000000000_37557103434
+1000000000000_1000000000000000_29806964868374
+1000000000000000_18446744073709551615_425626707075439360
+
+Elemento di posizione 1 nella lista == inf 	 sup 	 LogIntegral(inf,sup)    cumulate=0
+Elemento di posizione 2 nella lista == 2_100_29                                                    cumulate=			29
+Elemento di posizione 3 nella lista == 100_1000_147                                               cumulate=				176
+Elemento di posizione 4 nella lista == 1000_1000000_78450                                       cumulate=				78626
+Elemento di posizione 5 nella lista == 1000000_1000000000_50771028                           cumulate=				    50849654
+Elemento di posizione 6 nella lista == 1000000000_1000000000000_37557103434               cumulate=					    37607953088
+Elemento di posizione 7 nella lista == 1000000000000_1000000000000000_29806964868374   cumulate=					    29844572821462
+Elemento di posizione 8 nella lista == 1000000000000000_18446744073709551615_425626707075439360       cumulate=			425656551648260822
+
+
+Offset LogIntegral == Integrate[1/Log[t], {t,+2,x}]
+x			LogIntegral
+----------------------------------------------------------------------
+2                       0
+100                     29
+1000                    176
+1000000                 78626
+1000000000              50849654
+1000000000000           37607953088
+1000000000000000        29844572821462
+18446744073709551615    425656551648260822

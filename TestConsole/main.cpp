@@ -20,10 +20,10 @@
 #include "../NumericalAnalysis/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
-#include "Test_Unit_CantierePrimes.h"
-#include "Test_Unit_PrimesFinder.h"
-#include "Test_Unit_Logger.h"
-#include "Test_Unit_selectInterval.h"
+#include "Unit_Tests/Test_Unit_CantierePrimes.h"
+#include "Unit_Tests/Test_Unit_PrimesFinder.h"
+#include "Unit_Tests/Test_Unit_Logger.h"
+#include "Unit_Tests/Test_Unit_selectInterval.h"
 //
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
@@ -89,7 +89,7 @@ int main()
     test_Unit_selectInterval.managementMethod();
 
 
-    Cantiere_Primes_2022September01_::Primes cantiere(0);// semi-amplitude of each map segment
+    Cantiere_Primes_2022September01_::Primes cantiere(200);// semi-amplitude of each map segment
     cantiere.distributionFunction_fromExistingMesh();
     //Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 97*19);
     const std::string * sequentialPath = cantiere.feed_sequentialDumpPath();
@@ -104,7 +104,7 @@ int main()
 // //  DON'T   delete globalIntegralPath;
 
     //
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 200);
     bool seq = test->sequentialDump( 99390);// required prime==soglia
 
     bool rand = test->randomDump(  15,  20);
