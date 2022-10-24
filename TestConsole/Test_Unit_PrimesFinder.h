@@ -1,7 +1,7 @@
 #ifndef TEST_UNIT_PRIMESFINDER_H
 #define TEST_UNIT_PRIMESFINDER_H
 
-#include "../Entity/PrimesFinder/Primes.h"
+#include "../NumericalAnalysis/PrimesFinder/Primes.h"
 
 
 class Test_Unit_PrimesFinder

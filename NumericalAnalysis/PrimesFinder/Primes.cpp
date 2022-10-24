@@ -1,43 +1,27 @@
-#include "Cantiere_Primes_2022September01_.h"
+#include "Primes.h"
 #include "InternalAlgos.h"
 #include "../../Common/Config_wrap/Config_wrap.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
-#include "../../Entity/Integration/Integration.h"
+#include "../Integration/Integration.h"
 #include <iostream>
 #include <string>
 #include <math.h>
 #include <ctime>
 
 /*  TODO
-*   there must be a specification file for the Mesh of real-LogIntegral
-*   such specification file has to be read only on demand; the construction of an instance doesn't have to parse the mesh specification
-*   ordinary Ctor has to read a second-phase dump, which is a file containing the Distribution measures, at pillar points
-*   for an ordinary Ctor, the mesh is specified in the glonalIntegrals_dump, and has to be copied in RAM in a std::vector<Pillar>
-*   the dump-files involved in the process have to be specified in the Config; they will be:
-*   meshSpecification.txt
-*   localIntegrals.txt
-*   globalIntegrals.txt
-*   the methods will be:
-*   bool acquireExistingMesh() : gets the path of globalIntegrals.txt in Config and fills up a vector
-*   MassimoDeiMinoranti * placeRequiredPoint( unsigned long long requiredPoint); finds the measure of LogIntegral_upTo_massimoMinoranti; returns null on error.
-*   in case of mesh renewal:
-*   call the parser of * meshSpecification.txt. It is bool meshParser(); finds in Config meshSpecification.txt and produces localIntegrals.txt.
-*   call distributionProducer; finds in Config localIntegrals.txt. Sums the local results and writes globalIntegrals.txt.
-*   at this point the new mesh is ready and the bool acquireExistingMesh() can be called, to put the mesh in RAM, in the vector.
-*
-*   old things:
-*   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
-*   transformed the char* into sdt::string * with const clause.-------------------------------------------------------(V)
-*   let the StreamReader an automatic variable and let the seekg internal to the reading-methods.---------------------(V)
-*   why complete renewal of sequentialDump only for dump<100k  ?------------------------------------------------------(V)
+*   Bisection---------------------------------------------------------------------------(V)
+*   transformed the char* into sdt::string *   -----------------------------------------(V)
+*   StreamReader automatic and seekg internal to the reading-methods -------------------(V)
+*   let the StreamWriter an automatic variable -----------------------------------------(V)
+*   comment-records can be present in the sequntialDump---------------------------------(V)
 *   enrich StringBuilder and Log for better tracing, overloading variable types-------------------------TODO
-*   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
 */
 
 
-namespace Cantiere_Primes_2022September01_
-{
+
+namespace PrimesFinder {
+
 
 
 // Ctor : reads the strings from Config, for both the sequentialFile and randomFile fullpath.
@@ -1550,11 +1534,5 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
     return nearestIntegral;
 }// getNearestIntegral
 
-}// namespace Cantiere_Primes_2022September01_
+} //namespacesp PrimesFinder
 
-
-
-/* cantina
-
-
-**** cantina ******/

@@ -7,8 +7,6 @@
 
 typedef short Domain; // type for throwing exceptions
 
-const double M_PI = atan(+1.0) * +4.0;//  needed only on Windows ,while on Linux it's a symbolic constant.
-
 #define PI M_PI // once I called it that, and now I don't want to alter the whole source.
 //const double PI = 3.1415926535897932384626433832795; // double PI = 6.0 * arctan ( pow (3.0, -0.5) );
 //const double E  = 2.7182818284590452353602874713527;

@@ -22,6 +22,7 @@
 					<Add library="../Process/bin/Debug/libProcess.a" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
 					<Add library="../Entity/bin/Debug/libEntity.a" />
+					<Add library="../NumericalAnalysis/bin/Debug/libNumericalAnalysis.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -41,6 +42,7 @@
 					<Add library="../Process/bin/Release/libProcess.a" />
 					<Add library="../Common/bin/Release/libCommon.a" />
 					<Add library="../Entity/bin/Release/libEntity.a" />
+					<Add library="../NumericalAnalysis/bin/Release/libNumericalAnalysis.a" />
 				</Linker>
 			</Target>
 		</Build>

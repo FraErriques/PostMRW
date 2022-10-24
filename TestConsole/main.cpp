@@ -12,12 +12,12 @@
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
 #include "../Common/Config_wrap/Config_wrap.h"
 #include "../Common/Stream/stream_io_.h"
-#include "../Entity/Integration/Integration.h"
-#include "../Entity/Integration/Integrate.h"
-#include "../Entity/PrimesFinder/Primes.h"
-#include "../Entity/PrimesFinder/Cantiere_Primes_2022September01_.h"
-#include "../Entity/PrimesFinder/InternalAlgos.h"
-#include "../Entity/Complex/Complex.h"
+#include "../NumericalAnalysis/Integration/Integration.h"
+#include "../NumericalAnalysis/Integration/Integrate.h"
+#include "../NumericalAnalysis/PrimesFinder/Primes.h"
+#include "../NumericalAnalysis/PrimesFinder/Cantiere_Primes_2022September01_.h"
+#include "../NumericalAnalysis/PrimesFinder/InternalAlgos.h"
+#include "../NumericalAnalysis/Complex/Complex.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
 #include "Test_Unit_CantierePrimes.h"
@@ -150,17 +150,18 @@ int main()
 
 //    ------Unit Test-----CANTIERE---------------------------------------------------
 //
+//############################################################################################################
+//
 //    ------Unit Test-----PimesFinder------------------------------------------------
 //        Test_Unit_PrimesFinder * test = new Test_Unit_PrimesFinder( 80);
 //        bool seq = test->sequentialDump( 9000);
 //        bool rand = test->randomDump( 0, 50);
-//        bool reader = test->readBy_OperatorSquares( 525);// ask Prime[n]
+//        bool reader = test->readBy_OperatorSquares( +2);// ask Prime[n]
 //        for (int c=599; c<611; c++)
 //        {
 //            reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
 //        }
 //        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-//        getchar();
 //        std::cout<<"\n\n\n\t Strike Enter to continue\t";
 //        getchar();
 //        reader &= test->readSequentialDump_nextRec( 60);
