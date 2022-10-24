@@ -23,6 +23,8 @@ class Test_Unit_Logger
         static void singleton_logger(int threadNum);
         static void interface_logFromMultipleStrings(int threadNum);
         static int logFromMultipleStrings(int howMany_params, ...);
+        int FindMax (int n, ...);// not static, since I don't need to point at it, by a function pointer.
+
 };
 
 #endif // TEST_UNIT_LOGGER_H

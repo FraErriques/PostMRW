@@ -307,6 +307,15 @@ std::string * longDoubleToString( const long double &par)
     }
 
 
+// parameter not byRef, but byVal, since it's a temporary to be converted in a string-pointer, for logging purposes.
+std::string * stringByValueToStringPtr( const std::string par)
+{
+    std::string * res = new std::string( par);// put the parameter in the heap.
+    // N.B. the caller has to delete the return value.
+    return res;// the logging method will delete, after usage.
+}// stringByValueToStringPtr
+
+
     int stringToInt( const std::string &par)
     {
         int res;

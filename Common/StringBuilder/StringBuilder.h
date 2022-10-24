@@ -59,6 +59,8 @@ std::string * uLongLongToString( const unsigned long long &par);//long-long i.e.
 std::string * signedLongLongToString( const long long &par);//long-long i.e. 8 byte integral type(Signed here).
 std::string * boolToString( const bool &par);
 std::string * charToString( const char par);// no byRef, but byVal, since it's one byte.
+// no byRef, but byVal, since it's a temporary to be converted in a string-pointer, for logging purposes.
+std::string * stringByValueToStringPtr( const std::string par);
 int stringToInt( const std::string &par);
 unsigned long stringToUnsignedLong( const std::string &par);
 unsigned long long stringToUnsignedLongLong( const std::string &par);

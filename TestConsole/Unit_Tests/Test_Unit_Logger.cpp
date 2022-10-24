@@ -110,3 +110,20 @@ void Test_Unit_Logger::managementMethod()
     Common::ThreadForker logFromMultipleStrings_threadForker( logFromMultipleStrings_funcPtr, 98);
     logFromMultipleStrings_threadForker.theForkingPoint();// forking new threads
 }// managementMethod
+
+
+// this method does not log; it's just an example about va_arg
+int FindMax (int n, ...)
+{
+    int i,val,largest;
+    va_list vl;
+    va_start(vl,n);
+    largest=va_arg(vl,int);// the zeroth param is taken here as comparison term.
+    for (i=1;i<n;i++)// in this case the comparison needs to be started from one.
+    {
+        val=va_arg(vl,int);
+        largest=(largest>val)?largest:val;
+    }
+    va_end(vl);
+    return largest;
+}// this method does not log; it's just an example about va_arg
