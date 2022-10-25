@@ -43,8 +43,6 @@
 		</Linker>
 		<Unit filename="BinaryTree/BinaryTree.cpp" />
 		<Unit filename="BinaryTree/BinaryTree.h" />
-		<Unit filename="Config_wrap/Config_wrap.cpp" />
-		<Unit filename="Config_wrap/Config_wrap.h" />
 		<Unit filename="ConfigurationService/ConfigurationService.cpp" />
 		<Unit filename="ConfigurationService/ConfigurationService.h" />
 		<Unit filename="DbConnectionService/DbConnectionService.cpp" />
@@ -69,8 +67,6 @@
 		<Unit filename="Dictionary/MapOperation.h" />
 		<Unit filename="Dictionary/TheNode.cpp" />
 		<Unit filename="Dictionary/TheNode.h" />
-		<Unit filename="LogFs_wrap/LogFs_wrap.cpp" />
-		<Unit filename="LogFs_wrap/LogFs_wrap.h" />
 		<Unit filename="LogSinkFs/SinkFs.cpp" />
 		<Unit filename="LogSinkFs/SinkFs.h" />
 		<Unit filename="MonteCarlo/BaseConverter.cpp" />

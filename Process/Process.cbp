@@ -52,6 +52,10 @@
 		</Linker>
 		<Unit filename="BinTree_wrap/BinTree_wrapper_.cpp" />
 		<Unit filename="BinTree_wrap/BinTree_wrapper_.h" />
+		<Unit filename="Config_wrap/Config_wrap.cpp" />
+		<Unit filename="Config_wrap/Config_wrap.h" />
+		<Unit filename="LogFs_wrap/LogFs_wrap.cpp" />
+		<Unit filename="LogFs_wrap/LogFs_wrap.h" />
 		<Unit filename="MonteCarlo_wrap/MonteCarlo_wrap.cpp" />
 		<Unit filename="MonteCarlo_wrap/MonteCarlo_wrap.h" />
 		<Extensions>

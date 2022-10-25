@@ -1,11 +1,10 @@
 #ifndef DELTAOMEGA_H_INCLUDED
 #define DELTAOMEGA_H_INCLUDED
 
-namespace Common
-{
+ #include <cmath>
 
-namespace MonteCarlo
-{
+namespace Common{
+namespace MonteCarlo{
 
 //
 //   class ClassicalDiscreteGenerator;
@@ -43,7 +42,6 @@ public:
 
 
 } // namespace Common
-
 } // namespace MonteCarlo
 
 #endif // DELTAOMEGA_H_INCLUDED

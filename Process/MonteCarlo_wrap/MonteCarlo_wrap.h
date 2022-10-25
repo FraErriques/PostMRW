@@ -2,7 +2,6 @@
 #define MONTECARLO_WRAP_H_INCLUDED
 
 
-#include "../../Common/MonteCarlo/modernRand.h"
 
 namespace Process
 {

@@ -1,8 +1,8 @@
 #include "Cantiere_Primes_2022September01_.h"
 #include "InternalAlgos.h"
-#include "../../Common/Config_wrap/Config_wrap.h"
+#include "../../Common/ConfigurationService/ConfigurationService.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
-#include "../../Common/LogFs_wrap/LogFs_wrap.h"
+#include "../../Process/LogFs_wrap/LogFs_wrap.h"
 #include "../Integration/Integration.h"
 #include <iostream>
 #include <string>
@@ -44,7 +44,7 @@ namespace Cantiere_Primes_2022September01_
 // Ctor : reads the strings from Config, for both the sequentialFile and randomFile fullpath.
 Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
 {
-    Common::LogWrappers::SectionOpen("Ctor Primes::Primes", 0);
+    Process::LogWrappers::SectionOpen("Ctor Primes::Primes", 0);
     // set the semi-amplitude of each Prime-Segment that will be stored in the Map; it can be modified at runtime.
     this->sogliaDistanza = semiAmplitudeOfEachMapSegment;
     // build the Map of couples {Ordinal,Prime}
@@ -104,14 +104,14 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
     // anyway( healtly or not) :avoid dangling pointers in Destructor's body.
 //    this->append_Sequential_Stream = nullptr;
 //    this->append_Random_Stream = nullptr;
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
 }// empty Ctor(semiAmplitudeOfEachMapSegment)
 
 
 
 bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 {
-    Common::LogWrappers::SectionOpen("Primes::SequentialCalcInterface", 0);
+    Process::LogWrappers::SectionOpen("Primes::SequentialCalcInterface", 0);
     bool hasSequentialDumpBeenReset = false;// it's true on filesize<1k and of course on non existing file
     // ---call with params
     const std::string * stringDumpTail = this->dumpTailReaderByChar( this->sequentialDumpPath );// last few records in a string.
@@ -166,7 +166,7 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
     // clean
     delete stringDumpTail;
     delete lastRec;
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     // ready.
     return hasSequentialDumpBeenReset;
 }// SequentialCalcInterface
@@ -174,7 +174,7 @@ bool Primes::SequentialCalcInterface( unsigned long long Threshold )
 
 bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToOffset)
 {
-    Common::LogWrappers::SectionOpen("Primes::ReadSequentialDumpInterface_nextRec", 0);
+    Process::LogWrappers::SectionOpen("Primes::ReadSequentialDumpInterface_nextRec", 0);
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
     {
@@ -213,7 +213,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
         return res;
     }//---acquireNextRecord----END
     localReader.close();
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     // ready
     return res;
 }// ReadSequentialDumpInterface_lastRec
@@ -221,7 +221,7 @@ bool Primes::ReadSequentialDumpInterface_nextRec( long long acquireRecordNextToO
 
 bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray_START, long long recArray_END)
 {
-    Common::LogWrappers::SectionOpen("Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere", 0);
+    Process::LogWrappers::SectionOpen("Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere", 0);
     bool res = false;
     long long sequentialDump_size = this->sequentialStreamSize();
     if( recArray_START >= sequentialDump_size
@@ -253,7 +253,7 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
         return res;
     }
     delete[] recSequence;
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     //----------------acquireSequenceOfRecord------END
     // ready
     return res;
@@ -263,7 +263,7 @@ bool Primes::ReadSequentialDumpInterface_arrayOfRec_anywhere( long long recArray
 
 bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long maxRight )
 {
-    Common::LogWrappers::SectionOpen("Primes::RandomCalcInterface", 0);
+    Process::LogWrappers::SectionOpen("Primes::RandomCalcInterface", 0);
     bool res = false;
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
@@ -302,7 +302,7 @@ unsigned long long extimatedOrdinal= (unsigned long long)( measure_lastIntegral 
         res = false;
         std::cout<<"\n\t Unable to open Random Dump. \n";
     }
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     // ready.
     return res;
 }// RandomCalcInterface
@@ -380,7 +380,7 @@ const std::string * Primes::getConfigSectionContent( const std::string * section
 /// Dtor()
 Primes::~Primes()
 {/// Dtor()
-    // don't log from Dtor: for auto-instances it leaks  Common::LogWrappers::SectionOpen("Dtor Primes::~Primes", 0);
+    // don't log from Dtor: for auto-instances it leaks  Process::LogWrappers::SectionOpen("Dtor Primes::~Primes", 0);
     if( nullptr != this->memoryMappedDump)
     {// map of couples {Ordinal,Prime}
         this->memoryMappedDump->clear();
@@ -418,7 +418,7 @@ Primes::~Primes()
         delete this->globalIntegralPath;
         this->globalIntegralPath = nullptr;
     }
-    // NB don't log from Dtor: for auto-instances it leaks Common::LogWrappers::SectionClose();
+    // NB don't log from Dtor: for auto-instances it leaks Process::LogWrappers::SectionClose();
 }// Dtor
 
 
@@ -434,7 +434,7 @@ void Primes::createOrAppend( const std::string * fullPath)
 // SEEKER
 const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath)
 {
-    Common::LogWrappers::SectionOpen("Primes::lastRecordReaderByChar", 0);
+    Process::LogWrappers::SectionOpen("Primes::lastRecordReaderByChar", 0);
     std::string * directTailDump = new std::string();// retval
     std::ifstream lastrecReader( *fullPath, std::fstream::in );// one day we will parse the tail of CustomDump too.
     long long streamSize =  this->sequentialStreamSize();
@@ -461,12 +461,12 @@ const std::string * Primes::lastRecordReaderByChar( const std::string * fullPath
         currentPosition = lastrecReader.tellg();
         if( currentPosition > streamSize)
         {
-            Common::LogWrappers::SectionContent("Reached EOF in lastRecordReaderByChar", 0);
+            Process::LogWrappers::SectionContent("Reached EOF in lastRecordReaderByChar", 0);
         }// else continue.
     }// for
     directTailDump->assign( sb->str() );
     delete sb;// clean up the temporary StringBuilder.
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     // ready
     return directTailDump;// caller has to delete
 }// lastRecordReaderByChar
@@ -489,7 +489,7 @@ long long Primes::sequentialStreamSize()
 // SEEKER
 const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 {// reads multiple records from EOF back to Max(filesize,100).
-    Common::LogWrappers::SectionOpen("Primes::dumpTailReaderByChar", 0);
+    Process::LogWrappers::SectionOpen("Primes::dumpTailReaderByChar", 0);
     std::ifstream lastrecReader( *fullPath, std::fstream::in );
     long long streamSize = this->sequentialStreamSize();
     // reads multiple records from EOF back to Max(filesize,100).
@@ -517,14 +517,14 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
            || lastrecReader.eof()
            )
         {
-            Common::LogWrappers::SectionContent("reached EOF in dumpTailReaderByChar", 0);
+            Process::LogWrappers::SectionContent("reached EOF in dumpTailReaderByChar", 0);
             break;
         }// else continue.
     }// for
     std::string * sequentialFile_tail = new std::string( sb->str() ); // caller has to delete!
     delete sb;// clean up the temporary StringBuilder.
     lastrecReader.close();// auto Stream close.
-    Common::LogWrappers::SectionClose();// Log
+    Process::LogWrappers::SectionClose();// Log
     // ready.
     return sequentialFile_tail;// caller has to delete
 }// dumpTailReaderByChar()
@@ -609,7 +609,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
 
 Primes::DumpElement * Primes::recoverLastRecord( const std::string * dumpTail)
 {
-    Common::LogWrappers::SectionOpen("Primes::recoverLastRecord",0);
+    Process::LogWrappers::SectionOpen("Primes::recoverLastRecord",0);
     Primes::DumpElement * lastRecord = new Primes::DumpElement();// retval
 
      std::string parFromFile( *dumpTail);
@@ -659,7 +659,7 @@ Primes::DumpElement * Primes::recoverLastRecord( const std::string * dumpTail)
         }
     }// the two interesting semi-tokens are the last two; so the reading is in reverse order.
     delete tokenArray;// TODO test
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     // ready.
     return lastRecord;// caller has to delete.
 }// recoverLastRecord
@@ -862,7 +862,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     , int * howMany_RecordInSequence
                                         )
 {
-    Common::LogWrappers::SectionOpen(
+    Process::LogWrappers::SectionOpen(
         "acquireSequenceOfRecord", 0);
     std::ifstream localReader;
     if(nullptr==this->sequentialDumpPath)
@@ -874,7 +874,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
     {
         return nullptr;
     }// else continue
-    Common::LogWrappers::SectionContent_variable_name_value(
+    Process::LogWrappers::SectionContent_variable_name_value(
         "discriminatingElement_position ==", discriminatingElement_position, 0);
     localReader.seekg( discriminatingElement_position , std::ios::beg );// TODO test
     DumpElement * sequenceRecord = nullptr;
@@ -934,9 +934,9 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
         }
     }// for step into next complete record
     localReader.close();
-    Common::LogWrappers::SectionContent_variable_name_value(
+    Process::LogWrappers::SectionContent_variable_name_value(
         "howMany_RecordInSequence ==", (signed long long)(*howMany_RecordInSequence),0);
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     //ready
     return sequenceRecord;// caller has to delete.
 }// acquireSequenceOfRecord
@@ -954,9 +954,9 @@ bool Primes::MoveToMap(
     , int *                 howMany_RecordInSequence
                )
 {
-    Common::LogWrappers::SectionOpen("MoveToMap",0);
+    Process::LogWrappers::SectionOpen("MoveToMap",0);
     bool res = true;
-    Common::LogWrappers::SectionContent_variable_name_value(
+    Process::LogWrappers::SectionContent_variable_name_value(
         "discriminatingElement_position ==", discriminatingElement_position, 0);
     if( discriminatingElement_position < 0)
     {// cannot go back from origin.
@@ -995,17 +995,17 @@ bool Primes::MoveToMap(
     tmpStorage = nullptr;
     //
     res = true;
-    Common::LogWrappers::SectionClose();//pop
+    Process::LogWrappers::SectionClose();//pop
     return res;
 }// MoveToMap
 
 
 bool Primes::Bisection( unsigned long long requiredOrdinal )
  {
-    Common::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
-    Common::LogWrappers::SectionContent_variable_name_value(
+    Process::LogWrappers::SectionOpen("Cantiere::Bisection", 0);
+    Process::LogWrappers::SectionContent_variable_name_value(
         "---------------------------------------------------PARAMETER requiredOrdinal ==", requiredOrdinal, 0);
-    Common::LogWrappers::SectionContent_variable_name_value(
+    Process::LogWrappers::SectionContent_variable_name_value(
         "----------------------------------------------PARAMETER sogliaDistanza ==", (unsigned long long)this->sogliaDistanza, 0);
     bool res = false;
     std::ifstream localReader;
@@ -1021,7 +1021,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     else
     {// cannot operate.
         res = false;
-        Common::LogWrappers::SectionContent("the Stream Reader is invalid.", 0);
+        Process::LogWrappers::SectionContent("the Stream Reader is invalid.", 0);
         return res;
     }
     unsigned long long left = 0;
@@ -1031,7 +1031,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     unsigned long long right = dumpSize;
     unsigned long long previous_right = right;
     std::string * dumpSize_str = Common::StrManipul::uLongLongToString( dumpSize);
-    Common::LogWrappers::SectionContent( ("___________________________dumpSize == " + *dumpSize_str).c_str() , 0);
+    Process::LogWrappers::SectionContent( ("___________________________dumpSize == " + *dumpSize_str).c_str() , 0);
     delete dumpSize_str;
     long long discriminatingElement_position;// let it signed, to avoid overflows.
     long signedDelta = this->sogliaDistanza*3;//init to any value, but not within threshold.
@@ -1041,11 +1041,11 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     unsigned Bisection_step = 1;
     for (;; Bisection_step++)// breaks on Bisection_failure_
     {
-        Common::LogWrappers::SectionContent_variable_name_value(
+        Process::LogWrappers::SectionContent_variable_name_value(
             "----------------------------------Bisection_step # ", (unsigned long long)Bisection_step, 0);
         // acquire the first record, successive to the offset "discriminatingElement_position"
         discriminatingElement_position = (right-left)/2 + left;// ==(right+left)/2 == M1(left,right).
-        Common::LogWrappers::SectionContent_variable_name_value(
+        Process::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position ==", discriminatingElement_position, 0);
         if( discriminatingElement_position<0)
         {// can't go back from the origin.
@@ -1055,36 +1055,36 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         {// can't go past the end.
             discriminatingElement_position = right;// stay in the interval.
         }// else ok.
-        Common::LogWrappers::SectionContent_variable_name_value(
+        Process::LogWrappers::SectionContent_variable_name_value(
             "discriminatingElement_position AFTER CORRECTIONS ==", discriminatingElement_position, 0);
         nextRecord = acquireNextRecord( discriminatingElement_position);// memory allocated by callee
         if( nullptr == nextRecord)
         {// cannot operate.
             res = false;
-            Common::LogWrappers::SectionContent("cannot acquire Next Record", 0);
+            Process::LogWrappers::SectionContent("cannot acquire Next Record", 0);
             return res;
         }
-        Common::LogWrappers::SectionContent_variable_name_value(
+        Process::LogWrappers::SectionContent_variable_name_value(
             "nextRecord->Ordinal ==", nextRecord->Ordinal, 0);
-        Common::LogWrappers::SectionContent_variable_name_value(
+        Process::LogWrappers::SectionContent_variable_name_value(
             "nextRecord->Prime ==", nextRecord->Prime, 0);
         // compare
         signedDelta = nextRecord->Ordinal - requiredOrdinal;
         UNsignedDelta = abs( signedDelta);
         if( UNsignedDelta <= this->sogliaDistanza)
         {// linear acquisition & move&& to map<>
-            Common::LogWrappers::SectionContent("---Under Threshold---: linear acquisition & move&& to map<>",0);
+            Process::LogWrappers::SectionContent("---Under Threshold---: linear acquisition & move&& to map<>",0);
             //log-size-for category.
             int currentRecordLength = nextRecord->endPositionOfRecord - nextRecord->startPositionOfRecord;
             // signed:(+)means landed right of obj
             // signed:(-)means landed left of obj
             long long  distance_from_Target_bytes = signedDelta * (currentRecordLength+2);// {Win=+2,Unix=+1}
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "distance_from_Target_bytes ==", (signed long long)distance_from_Target_bytes, 0);
             // the minus sign in next statement is understandable by means of the previous two comments.
             long long extimated_target_position_bytes =
                 discriminatingElement_position - distance_from_Target_bytes;
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "extimated_target_position_bytes ==", extimated_target_position_bytes, 0);
             // grab an interval centered in extimated_target and wide twise threshold
             long long beg_RecArray = extimated_target_position_bytes -currentRecordLength*this->sogliaDistanza;
@@ -1093,9 +1093,9 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
                 beg_RecArray = 0;
             }// else ok.
             long long end_RecArray = extimated_target_position_bytes +currentRecordLength*this->sogliaDistanza;
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "beg_RecArray ==", beg_RecArray, 0);
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "end_RecArray ==", end_RecArray, 0);
             int howManyRecordInSequence;
             bool moveResult =
@@ -1104,9 +1104,9 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
                   , end_RecArray
                   , &howManyRecordInSequence
                  );// NB. the temporary array gets created and moved within the callee MoveToMap(). Nothing left here.
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "moveResult ==", (long long)moveResult, 0);
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "howManyRecordInSequence ==", (long long)howManyRecordInSequence, 0);
             break;//found within threshold -> exit (i.e. break)
         }//if( UNsignedDelta <= this->sogliaDistanza) i.e. if within threshold
@@ -1114,27 +1114,27 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         // decide wether to retain left or right half
         if( signedDelta < 0) // nextRecord->Ordinal < requiredOrdinal)
         {// retain right
-            Common::LogWrappers::SectionContent("retain right",0);
+            Process::LogWrappers::SectionContent("retain right",0);
             left = nextRecord->endPositionOfRecord;  //acquireNextRecord_end;
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "left ==", left, 0);
             right = previous_right;
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "right ==", right, 0);
         }
         else if( signedDelta > 0) // nextRecord->Ordinal > requiredOrdinal)
         {// retain left
-            Common::LogWrappers::SectionContent("retain left",0);
+            Process::LogWrappers::SectionContent("retain left",0);
             left = previous_left;
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "left ==", left, 0);
             right = nextRecord->startPositionOfRecord; // acquireNextRecord_start;
-            Common::LogWrappers::SectionContent_variable_name_value(
+            Process::LogWrappers::SectionContent_variable_name_value(
                 "right ==", right, 0);
         }
         else if( nextRecord->Ordinal == requiredOrdinal)
         {
-            Common::LogWrappers::SectionContent("punctual convergence",0);
+            Process::LogWrappers::SectionContent("punctual convergence",0);
             std::pair<unsigned long long, unsigned long long> p(nextRecord->Ordinal,nextRecord->Prime);
             this->memoryMappedDump->insert( p);
             res = true;//done.
@@ -1144,16 +1144,16 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
         previous_left = left;
         previous_right = right;
         dumpSize = right - left;
-        Common::LogWrappers::SectionContent_variable_name_value(
+        Process::LogWrappers::SectionContent_variable_name_value(
             "dumpSize ==", dumpSize, 0);
         if( dumpSize >= previous_dumpSize )// check before updating.
         {
-            Common::LogWrappers::SectionContent(
+            Process::LogWrappers::SectionContent(
                 "\n\n\t ############# Bisection Failure : the filesize is not decresing !! DBG needed !!!#######\n\n", 0);
             break;
         }// else continue.
         previous_dumpSize = dumpSize;// then update.
-        Common::LogWrappers::SectionContent_variable_name_value(
+        Process::LogWrappers::SectionContent_variable_name_value(
             "---------END of Bisection_step #", (unsigned long long)Bisection_step, 0);
         //---clean up memory before next loop---------------
         delete nextRecord;
@@ -1165,7 +1165,7 @@ bool Primes::Bisection( unsigned long long requiredOrdinal )
     }// else the delete already took place.
     //---close Reader
     localReader.close();
-    Common::LogWrappers::SectionClose();
+    Process::LogWrappers::SectionClose();
     // ready
     return res;
  }// Bisection
@@ -1450,7 +1450,7 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     thePillarPoints[7].abscissa = +18446744073709551615;// 10^19
     thePillarPoints[7].ordinate =   +425656551648260822;
     //
-    int selectedInterval = 0;
+    // DBG int selectedInterval = 0;
     unsigned long long x0,x1,y0,y1;
     unsigned long long x = candidatePrimeThreshold;
     unsigned long long y;// to be interpolated
@@ -1460,7 +1460,7 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
             && thePillarPoints[c+1].abscissa >= candidatePrimeThreshold
            )
         {
-            selectedInterval = c;
+            // DBG selectedInterval = c;
             x0 = thePillarPoints[c].abscissa;
             x1 = thePillarPoints[c+1].abscissa;
             y0 = thePillarPoints[c].ordinate;
@@ -1528,7 +1528,7 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
 ////        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
 ////    }
 //    //
-    int selectedInterval = 0;
+    // DBG int selectedInterval = 0;
     LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
     for(size_t c=0; c<vector_size-1; c++)// c+1<n -> c<n-1
     {
@@ -1537,7 +1537,7 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
             && this->logIntegralPillars->operator[](c+1).threshold >= candidatePrimeThreshold
            )
         {
-            selectedInterval = c;
+            // DBG selectedInterval = c;
             nearestIntegral->threshold = this->logIntegralPillars->operator[](c).threshold;
             nearestIntegral->logIntegral = this->logIntegralPillars->operator[](c).logIntegral;
             break;

@@ -4,7 +4,7 @@
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogSinkFs/SinkFs.h"
 #include "../../Common/ThreadForker/ThreadForker.h"
-#include "../../Common/LogFs_wrap/LogFs_wrap.h"
+#include "../../Process/LogFs_wrap/LogFs_wrap.h"
 
 class Test_Unit_Logger
 {
