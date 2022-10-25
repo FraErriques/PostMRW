@@ -48,10 +48,7 @@
 			<Add option="-std=c++11" />
 		</Compiler>
 		<Unit filename="BulkEntity/BulkEntity.cpp" />
-		<Unit filename="BulkEntity/BulkEntity.h">
-			<Option compile="1" />
-			<Option link="1" />
-		</Unit>
+		<Unit filename="BulkEntity/BulkEntity.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
