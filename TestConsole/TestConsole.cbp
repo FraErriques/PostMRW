@@ -19,10 +19,10 @@
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
-					<Add library="../Process/bin/Debug/libProcess.a" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
 					<Add library="../Entity/bin/Debug/libEntity.a" />
 					<Add library="../NumericalAnalysis/bin/Debug/libNumericalAnalysis.a" />
+					<Add library="../Process/bin/Debug/libProcess.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -39,10 +39,10 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-m64" />
-					<Add library="../Process/bin/Release/libProcess.a" />
 					<Add library="../Common/bin/Release/libCommon.a" />
 					<Add library="../Entity/bin/Release/libEntity.a" />
 					<Add library="../NumericalAnalysis/bin/Release/libNumericalAnalysis.a" />
+					<Add library="../Process/bin/Release/libProcess.a" />
 				</Linker>
 			</Target>
 		</Build>

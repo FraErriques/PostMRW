@@ -1,9 +1,12 @@
 
 #include "Config_wrap.h"
 
+namespace Process{
+namespace Configuration{
+
 
 // get "LogSinkFsConfig.txt"
-Common::ConfigurationService * Process::getConfigurationOfLogSinkFs()
+Common::ConfigurationService * getConfigurationOfLogSinkFs()
 {
     Common::ConfigurationService * cs = new Common::ConfigurationService( "./LogSinkFsConfig.txt");
     if( cs->readIsHealtlyConstructed() == false)
@@ -16,7 +19,7 @@ Common::ConfigurationService * Process::getConfigurationOfLogSinkFs()
 
 
 // get "./AppConfig.txt"
-Common::ConfigurationService * Process::getDefaultConfiguration()// i.e. "./AppConfig.txt"
+Common::ConfigurationService * getDefaultConfiguration()// i.e. "./AppConfig.txt"
 {
     Common::ConfigurationService * cs = new Common::ConfigurationService( "./AppConfig.txt");
     if( cs->readIsHealtlyConstructed() == false)
@@ -27,9 +30,9 @@ Common::ConfigurationService * Process::getDefaultConfiguration()// i.e. "./AppC
     return cs;
 }// END // get "./AppConfig.txt"
 
-// get // a custom config file.
-Common::ConfigurationService * Process::getNamedConfiguration( const std::string &NamedConfigFullPath )// a custom config file.
-{
+// get a custom config file
+Common::ConfigurationService * getNamedConfiguration( const std::string &NamedConfigFullPath )
+{// get a custom config file
     Common::ConfigurationService * cs = new Common::ConfigurationService( NamedConfigFullPath);
     if( cs->readIsHealtlyConstructed() == false)
     {
@@ -37,4 +40,8 @@ Common::ConfigurationService * Process::getNamedConfiguration( const std::string
         cs = NULL;
     }// else cs is valid.
     return cs;
-}// // get // a custom config file.
+}// get a custom config file
+
+}// nmsp Configuration
+}// nmsp Process
+

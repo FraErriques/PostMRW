@@ -13,7 +13,7 @@
 #include <iostream>
 #include "../StringBuilder/StringBuilder.h"
 #include "ClassicalContinuousGenerator.h"
-#include "../LogFs_wrap/LogFs_wrap.h"
+// TODO by now cannot log from the Common #include "../LogFs_wrap/LogFs_wrap.h"
 
 namespace Common
 {
@@ -66,7 +66,7 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
 
     void ClassicalContinuousGenerator::nextDoubleInInterval() const
     {
-        //Common::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()", 0);
+        //Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()", 0);
         double originalExtracted = rand();
         double temp =  originalExtracted*this->omothetia + this->translation;
         if( this->Min<= temp
@@ -83,11 +83,11 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
             sb.append( strOriginalExtracted->c_str() );
             sb.append(" while after affinity it was ");
             sb.append( strAfterAffinity->c_str() );
-            Common::LogWrappers::SectionContent( sb.str().c_str(), 0 );
+//Process::LogWrappers::SectionContent( sb.str().c_str(), 0 );
             delete strOriginalExtracted;
             delete strAfterAffinity;
         }
-        //Common::LogWrappers::SectionClose();
+        //Process::LogWrappers::SectionClose();
     }// END nextDoubleInInterval
 
 
@@ -142,7 +142,7 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
 
         void ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()
         {
-            //Common::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()", 0);
+            //Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()", 0);
             int populationCardinality = this->continuousPopulation->size();
             double elementPresenceWeight = +1.0/populationCardinality;
             for( std::vector<double>::const_iterator populationReader=this->continuousPopulation->begin();
@@ -172,11 +172,11 @@ ClassicalContinuousGenerator::ClassicalContinuousGenerator() : currentSeed( time
                           std::string * strRepresentationOfPopulationReader = Common::StrManipul::doubleToString( *populationReader);
                           sb.append( *strRepresentationOfPopulationReader );
                           sb.append(" has found no DeltaOmega which it belongs to.");
-                          Common::LogWrappers::SectionContent( sb.str().c_str(), 0);
+//Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
                           delete strRepresentationOfPopulationReader;
                       }// end log.
                }// for populationReader
-               //Common::LogWrappers::SectionClose();
+               //Process::LogWrappers::SectionClose();
         }// buildContinuousFrequencyDistribution()
 
 

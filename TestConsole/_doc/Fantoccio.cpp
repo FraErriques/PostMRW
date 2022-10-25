@@ -18,7 +18,7 @@
 //
 //double rettangoli()
 //{
-//    Common::LogWrappers::SectionOpen("Entity::Integration::rettangoli()", 0);
+//    Process::LogWrappers::SectionOpen("Entity::Integration::rettangoli()", 0);
 //    // NB. ci vuole !!! altimenti undefined_reference in Common:: !!
 //    Common::ConfigurationService * PrimeConfig = Process::getNamedConfiguration("./PrimeConfig.txt");// name for Prime-configuration.
 //
@@ -29,13 +29,13 @@
 //        sb.append("cumulated integral value = ");
 //        std::string * numStr = Common::StrManipul::doubleToString(res);
 //        sb.append( *numStr);
-//        Common::LogWrappers::SectionContent( sb.str().c_str(), 0);
+//        Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
 //        delete numStr;
 //        //Common::dbCall::cantiere_intg_Sin_0_Pi_INSERT_SINGLE( res);
 //        //bool isThereInsertionError = Common::dbCall::cantiere_numericTable_INSERT_SINGLE( res);
 //    }
 //    //
-//    Common::LogWrappers::SectionClose();
+//    Process::LogWrappers::SectionClose();
 //    return 0.0;
 //}
 //
@@ -180,7 +180,7 @@
 //
 //void LoggerSinkFS_example( unsigned long inf, unsigned long sup)
 //{
-//    Common::LogWrappers::SectionOpen("TestConsole::LoggerSinkFS_example()", 0);
+//    Process::LogWrappers::SectionOpen("TestConsole::LoggerSinkFS_example()", 0);
 //    bool isStillPrime = true;
 //    double realQuotient;
 //    unsigned long intQuotient;
@@ -207,7 +207,7 @@
 //                strBuild.append( *Common::StrManipul::uLongToString( divisor) );
 //                std::string logBuf = strBuild.str();
 //                const char* buf = logBuf.c_str();
-//                Common::LogWrappers::SectionContent( buf, 0);
+//                Process::LogWrappers::SectionContent( buf, 0);
 //                isStillPrime = false;// NB. #################
 //                break;// NB. #################
 //            }
@@ -223,7 +223,7 @@
 //                strBuild.append( *realQuotientStr );
 //                std::string logBuf = strBuild.str();
 //                const char* buf = logBuf.c_str();
-//                Common::LogWrappers::SectionContent( buf, 0);
+//                Process::LogWrappers::SectionContent( buf, 0);
 //            }// else : // continue searching for primality
 //            Common::StringBuilder strBuild( 200);// on the stack
 //            strBuild.append("fine interno-divisori:");
@@ -232,7 +232,7 @@
 //            strBuild.append( *Common::StrManipul::uLongToString( divisor) );
 //            std::string logBuf = strBuild.str();
 //            const char* buf = logBuf.c_str();
-//            Common::LogWrappers::SectionContent( buf, 0);
+//            Process::LogWrappers::SectionContent( buf, 0);
 //            delete realQuotientStr;// a new step allocates new memory, for each of those pointers.
 //            delete intQuotientStr;// a new step allocates new memory, for each of those pointers.
 //        }// the internal for : the one from [+2, cursor]
@@ -253,10 +253,10 @@
 //        }// ripristino della primalita', dopo un composto(i.e. non primo).
 //        std::string logBuf = strBuild.str();
 //        const char* buf = logBuf.c_str();
-//        Common::LogWrappers::SectionContent( buf, 0);
+//        Process::LogWrappers::SectionContent( buf, 0);
 //    }// external for : the one where cursor cicles from inf to sup, on dividends.
 //    // ready.
-//    Common::LogWrappers::SectionClose();
+//    Process::LogWrappers::SectionClose();
 //}// LoggerSinkFS_example()
 //
 //
@@ -978,9 +978,9 @@
 ////    std::cout << std::endl;
 ////    delete randCpp11;
 ////
-////    Common::LogWrappers::SectionOpen("Entity::Integration::rettangoli()", 0);
-////    Common::LogWrappers::SectionContent("what I am doing...", 0);
-////    Common::LogWrappers::SectionClose();
+////    Process::LogWrappers::SectionOpen("Entity::Integration::rettangoli()", 0);
+////    Process::LogWrappers::SectionContent("what I am doing...", 0);
+////    Process::LogWrappers::SectionClose();
 ////    Common::dbCall::cantiere_intg_Sin_0_Pi_INSERT_SINGLE( 5);
 ////    return 0.0;
 ////}

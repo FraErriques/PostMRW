@@ -10,7 +10,7 @@
 #include "../Common/MonteCarlo/BaseConverter.h"
 #include "../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
-#include "../Common/Config_wrap/Config_wrap.h"
+#include "../Process/Config_wrap/Config_wrap.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../NumericalAnalysis/Integration/Integration.h"
 #include "../NumericalAnalysis/Integration/Integrate.h"
@@ -33,14 +33,24 @@
 //---entry point-------------------------
 int main()
 {
-    Common::LogWrappers::SectionOpen("main", 0);
+    Process::LogWrappers::SectionOpen("main", 0);
     //
+//    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
+//    std::vector<std::string> *theKeys = configPtr->getAllKeys();
+//    std::cout << "\n";
+//    for( size_t c=0; c<theKeys->size(); c++)
+//    {
+//        std::cout<< (*theKeys)[c] << "\n";
+//    }
+
+
+
     //------Unit Test-----CANTIERE------------------------------------------------
     //
     std::string prefix("this string describes the following contents: int, double : ");
     int i_log = 22;
     double d_log = 2.7182818;
-    Common::LogWrappers::SectionContent_fromMultipleStrings(
+    Process::LogWrappers::SectionContent_fromMultipleStrings(
         0 // section_vebosity
         ,3 // how many params
         ,Common::StrManipul::stringByValueToStringPtr(prefix)
@@ -146,8 +156,8 @@ int main()
 
 
     //--------------------------------------------------------------
-    Common::LogWrappers::SectionClose();
-    Common::LogWrappers::EndOfApplication_MANDATORY_();// destroy a global Singleton:: NECESSARY!
+    Process::LogWrappers::SectionClose();
+    Process::LogWrappers::EndOfApplication_MANDATORY_();// destroy a global Singleton:: NECESSARY!
     //---ready---------------
     std::cout<<"\n\n\n\t Strike Enter to leave\t";
     getchar();

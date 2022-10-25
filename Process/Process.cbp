@@ -23,6 +23,7 @@
 					<Add option="-m64" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
 					<Add library="../Entity/bin/Debug/libEntity.a" />
+					<Add library="../NumericalAnalysis/bin/Debug/libNumericalAnalysis.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -41,8 +42,8 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-m64" />
-					<Add library="../Entity/bin/Release/libEntity.a" />
 					<Add library="../Common/bin/Release/libCommon.a" />
+					<Add library="../Entity/bin/Release/libEntity.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -52,6 +53,10 @@
 		</Compiler>
 		<Unit filename="BinTree_wrap/BinTree_wrapper_.cpp" />
 		<Unit filename="BinTree_wrap/BinTree_wrapper_.h" />
+		<Unit filename="Config_wrap/Config_wrap.cpp" />
+		<Unit filename="Config_wrap/Config_wrap.h" />
+		<Unit filename="LogFs_wrap/LogFs_wrap.cpp" />
+		<Unit filename="LogFs_wrap/LogFs_wrap.h" />
 		<Unit filename="MonteCarlo_wrap/MonteCarlo_wrap.cpp" />
 		<Unit filename="MonteCarlo_wrap/MonteCarlo_wrap.h" />
 		<Extensions>

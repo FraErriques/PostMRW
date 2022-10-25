@@ -1,7 +1,8 @@
 #ifndef INTEGRATION_H_INCLUDED
 #define INTEGRATION_H_INCLUDED
 
-#include "../../Common/LogFs_wrap/LogFs_wrap.h"
+//  #include "../../Process/LogFs_wrap/LogFs_wrap.h"
+
 
 namespace Entity
 {
