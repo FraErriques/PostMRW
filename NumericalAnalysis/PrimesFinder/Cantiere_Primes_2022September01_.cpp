@@ -1450,7 +1450,7 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
     thePillarPoints[7].abscissa = +18446744073709551615;// 10^19
     thePillarPoints[7].ordinate =   +425656551648260822;
     //
-    int selectedInterval = 0;
+    // DBG int selectedInterval = 0;
     unsigned long long x0,x1,y0,y1;
     unsigned long long x = candidatePrimeThreshold;
     unsigned long long y;// to be interpolated
@@ -1460,7 +1460,7 @@ unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrime
             && thePillarPoints[c+1].abscissa >= candidatePrimeThreshold
            )
         {
-            selectedInterval = c;
+            // DBG selectedInterval = c;
             x0 = thePillarPoints[c].abscissa;
             x1 = thePillarPoints[c+1].abscissa;
             y0 = thePillarPoints[c].ordinate;
@@ -1528,7 +1528,7 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
 ////        std::cout<<" Alarm Primes::getNearestIntegral ! \n";
 ////    }
 //    //
-    int selectedInterval = 0;
+    // DBG int selectedInterval = 0;
     LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
     for(size_t c=0; c<vector_size-1; c++)// c+1<n -> c<n-1
     {
@@ -1537,7 +1537,7 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
             && this->logIntegralPillars->operator[](c+1).threshold >= candidatePrimeThreshold
            )
         {
-            selectedInterval = c;
+            // DBG selectedInterval = c;
             nearestIntegral->threshold = this->logIntegralPillars->operator[](c).threshold;
             nearestIntegral->logIntegral = this->logIntegralPillars->operator[](c).logIntegral;
             break;

@@ -41,8 +41,8 @@ int main()
     int i_log = 22;
     double d_log = 2.7182818;
     Common::LogWrappers::SectionContent_fromMultipleStrings(
-        3 // how many params
-        ,0 // section_vebosity
+        0 // section_vebosity
+        ,3 // how many params
         ,Common::StrManipul::stringByValueToStringPtr(prefix)
         ,Common::StrManipul::intToString( i_log)
         ,Common::StrManipul::doubleToString(d_log)
@@ -56,10 +56,12 @@ int main()
 
 
     //
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 200);
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
     bool seq = test->sequentialDump( 99390);// required prime==soglia
+    seq &= true;
 
     bool rand = test->randomDump(  15,  20);
+    rand &= true;
 //    rand = test->randomDump( 900, 920);
 //    rand = test->randomDump( 1500, 1520);
 //    rand = test->randomDump( 18446744073709550510, 18446744073709551610);
@@ -69,11 +71,17 @@ int main()
     bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
     bool outcome_recoverLastRecord = test->recoverLastRecord();
     bool outcome_recoverDumpTail = test->recoverDumpTail();
+    outcome_dumpTailReaderByChar &= true;
+    outcome_lastRecordReaderByChar &= true;
+    outcome_recoverLastRecord &= true;
+    outcome_recoverDumpTail &= true;
     bool reader = true; // used with &=
     reader = test->readSequentialDump_nextRec( 60);
     bool outcome_acquireNextRecord = test->acquireNextRecord();
     bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
-    size_t ulong_size = sizeof( unsigned long long);
+    outcome_acquireNextRecord &= true;// avoid warnings
+    outcome_acquireSequenceOfRecord &= true;
+    // DBG size_t ulong_size = sizeof( unsigned long long);
     reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
     for (int c=1; c<1181; c++)
     {

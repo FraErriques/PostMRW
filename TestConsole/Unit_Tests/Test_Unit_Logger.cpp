@@ -85,6 +85,7 @@ void Test_Unit_Logger::interface_logFromMultipleStrings( int par)
     int hm_strings_toLog = logFromMultipleStrings(
                          5 // hm_params
                          , s1,s2,s3,s4,s5 ); // the actual params
+    hm_strings_toLog++;// avoid warn.
 }// interface_logFromMultipleStrings
 
 

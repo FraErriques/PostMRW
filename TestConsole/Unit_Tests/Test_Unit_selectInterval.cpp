@@ -16,6 +16,11 @@ void Test_Unit_selectInterval::managementMethod()
     int interval_two = selectInterval( 17);
     int interval_invalidLeft = selectInterval( -1);
     int interval_invalidRight = selectInterval( +33);
+    //---act on variables after test, to avoid misleading warnings. Only setting the value is not enough.
+    interval_one++;
+    interval_two++;
+    interval_invalidLeft++;
+    interval_invalidRight++;
 }// managementMethod
 
 
@@ -28,7 +33,7 @@ int Test_Unit_selectInterval::selectInterval(int candidate)
     intervalBoundaries.push_back( 20);
     size_t boundaryCardinality = intervalBoundaries.size();
     //
-    int c=0;
+    size_t c=0;
     size_t selectedInterval=-1;// init to invalid
     for( ; c<boundaryCardinality-1; c++)// NB. if c+1<n then c<n-1
     {
