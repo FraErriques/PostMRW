@@ -19,6 +19,8 @@
         discrete_monteCarlo.showDiscretePopulation();
         // continuous
         continuous_monteCarlo.nextDoubleInInterval();
+        continuous_monteCarlo.showContinuousPopulation();
+        continuous_monteCarlo.buildContinuousFrequencyDistribution();
         continuous_monteCarlo.showFrequencyDistribution();
         continuous_monteCarlo.showSup();
         continuous_monteCarlo.showCurrentSeed();
