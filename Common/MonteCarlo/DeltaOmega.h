@@ -6,9 +6,9 @@
 namespace Common{
 namespace MonteCarlo{
 
-//
-//   class ClassicalDiscreteGenerator;
-//   class ClassicalContinuousGenerator;
+
+   class ClassicalDiscreteGenerator; // FFWD
+   class ClassicalContinuousGenerator;
 
 // DeltaOmega is the DeltaAscissa in a Riemann partition of the Omega Event-space.
 class DeltaOmega

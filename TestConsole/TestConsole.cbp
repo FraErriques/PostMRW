@@ -58,6 +58,8 @@
 		<Unit filename="Unit_Tests/Test_Unit_CantierePrimes.h" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.h" />
+		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.cpp" />
+		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.h" />
 		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.h" />
 		<Unit filename="Unit_Tests/Test_Unit_selectInterval.cpp" />

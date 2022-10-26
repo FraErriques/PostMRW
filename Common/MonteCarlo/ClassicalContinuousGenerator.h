@@ -58,7 +58,8 @@ public:
     void showFrequencyDistribution() const;
     void showCumulatedFrequency() const;
     void buildContinuousFrequencyDistribution();
-    void buildOmega( double partizioneLeft ,double partizioneRight);
+    void buildOmega( int partizioneLeft ,int partizioneRight);
+    void buildOmega( double partizioneLeft, double partizioneRight);
     unsigned int showCurrentSeed() const;
     double showSup() const;
 

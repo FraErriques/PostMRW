@@ -44,6 +44,7 @@
 					<Add option="-m64" />
 					<Add library="../Common/bin/Release/libCommon.a" />
 					<Add library="../Entity/bin/Release/libEntity.a" />
+					<Add library="../NumericalAnalysis/bin/Release/libNumericalAnalysis.a" />
 				</Linker>
 			</Target>
 		</Build>
