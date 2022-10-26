@@ -42,16 +42,14 @@ int main()
     {
         std::cout<< (*theKeys)[c] << "\n";
     }
-    theKeys->clear();
-    delete theKeys;
-    theKeys = nullptr;
+    // do not delete theKeys, since they are a member and will be destroyed from the Dtor
     delete configPtr;
-    configPtr = null;
+    configPtr = nullptr;
 
-//Process::testMonteCarlo();  undefined reference
+    Process::testMonteCarlo(); //  undefined reference
 
-    //------Unit Test-----CANTIERE------------------------------------------------
-    //
+//    //------Unit Test-----CANTIERE------------------------------------------------
+//    //
     std::string prefix("this string describes the following contents: int, double : ");
     int i_log = 22;
     double d_log = 2.7182818;
@@ -122,41 +120,41 @@ int main()
          );
     }// array of Rec
     delete test;
-
-//    ------Unit Test-----CANTIERE---------------------------------------------------
 //
-//############################################################################################################
+////    ------Unit Test-----CANTIERE---------------------------------------------------
 //
-//    ------Unit Test-----PimesFinder------------------------------------------------
-//        Test_Unit_PrimesFinder * test = new Test_Unit_PrimesFinder( 80);
-//        bool seq = test->sequentialDump( 9000);
-//        bool rand = test->randomDump( 0, 50);
-//        bool reader = test->readBy_OperatorSquares( +2);// ask Prime[n]
-//        for (int c=599; c<611; c++)
-//        {
-//            reader &= test->readBy_OperatorSquares( c);// ask Prime[n]
-//        }
-//        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-//        std::cout<<"\n\n\n\t Strike Enter to continue\t";
-//        getchar();
-//        reader &= test->readSequentialDump_nextRec( 60);
-//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-//        23
-//        ,915 // there must be room for just one record Prime<100.
-//        );
-//        for( int c=0; c<61; c++)
-//        {// next Rec
-//            reader &= test->readSequentialDump_nextRec(c);
-//        }
-//        for( int c=0; c<61; c++)
-//        {// array of Rec
-//            reader &= test->readSequentialDump_arrayOfRec_anywhere(
-//                c
-//                ,c+915 // there must be room for just one record Prime<100.
-//             );
-//        }// array of Rec
-//        delete test;
-//    //------Unit Test-----------------------------------------------------
+////############################################################################################################
+//
+////    ------Unit Test-----PimesFinder--------test_PRODUCTION_----------------------------------------
+        Test_Unit_PrimesFinder * test_PRODUCTION_ = new Test_Unit_PrimesFinder( 80);
+        bool p_seq = test_PRODUCTION_->sequentialDump( 9000);
+        bool p_rand = test_PRODUCTION_->randomDump( 0, 50);
+        bool p_reader = test_PRODUCTION_->readBy_OperatorSquares( +2);// ask Prime[n]
+        for (int c=599; c<611; c++)
+        {
+            reader &= test_PRODUCTION_->readBy_OperatorSquares( c);// ask Prime[n]
+        }
+        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+        std::cout<<"\n\n\n\t Strike Enter to continue\t";
+        getchar();
+        reader &= test_PRODUCTION_->readSequentialDump_nextRec( 60);
+        reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
+        23
+        ,915 // there must be room for just one record Prime<100.
+        );
+        for( int c=0; c<61; c++)
+        {// next Rec
+            reader &= test_PRODUCTION_->readSequentialDump_nextRec(c);
+        }
+        for( int c=0; c<61; c++)
+        {// array of Rec
+            reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
+                c
+                ,c+915 // there must be room for just one record Prime<100.
+             );
+        }// array of Rec
+        delete test_PRODUCTION_;
+//    //------Unit Test--------test_PRODUCTION_---------------------------------------------
 
 
 
