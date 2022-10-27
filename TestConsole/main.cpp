@@ -47,6 +47,7 @@ int main()
     configPtr = nullptr;
 
 //    Process::testMonteCarlo(); //  undefined reference
+    Process::testCpp11_MonteCarlo();
 
 //    //------Unit Test-----CANTIERE------------------------------------------------
 //    //
