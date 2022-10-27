@@ -44,7 +44,7 @@ void Process::testCpp11_MonteCarlo()
     //
     for(int c=0; c<100; c++)
     {
-//        std::cout<<"\n\t random Common::RandCpp11 extraction at step "<<c<<" : "<< randCpp11->rand();
+        std::cout<<"\n\t random Common::RandCpp11 extraction at step "<<c<<" : "<< randCpp11->rand();
     }
     std::cout << std::endl;
     delete randCpp11;
