@@ -5,18 +5,18 @@
 
  void Process::testMonteCarlo()
  {
-     Common::MonteCarlo::ClassicalDiscreteGenerator discrete_monteCarlo;
-     discrete_monteCarlo.resetExtractionInterval( 0, 100);
-     Common::MonteCarlo::ClassicalContinuousGenerator continuous_monteCarlo;
-     continuous_monteCarlo.resetExtractionInterval( 20.0 , 80.0 );
+//     Common::MonteCarlo::ClassicalDiscreteGenerator discrete_monteCarlo;
+//     discrete_monteCarlo.resetExtractionInterval( 0, 100);
+     Common::MonteCarlo::ClassicalContinuousGenerator continuous_monteCarlo( 20.0 , 80.0 );
+     //continuous_monteCarlo.resetExtractionInterval
 //    Common::MonteCarlo::ClassicalDiscreteGenerator * discrete_monteCarlo = new Common::MonteCarlo::ClassicalDiscreteGenerator();
 //    Common::MonteCarlo::ClassicalContinuousGenerator * continuous_monteCarlo = new Common::MonteCarlo::ClassicalContinuousGenerator();
     //
     for(int c=0; c<10; c++)
     {
         // discrete
-        discrete_monteCarlo.nextIntegerInInterval();
-        discrete_monteCarlo.showDiscretePopulation();
+//        discrete_monteCarlo.nextIntegerInInterval();
+//        discrete_monteCarlo.showDiscretePopulation();
         // continuous
         continuous_monteCarlo.nextDoubleInInterval();
         continuous_monteCarlo.showContinuousPopulation();

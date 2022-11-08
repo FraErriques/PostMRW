@@ -35,6 +35,8 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
+    Process::testMonteCarlo();
+    //
     Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
     std::vector<std::string> *theKeys = configPtr->getAllKeys();
     std::cout << "\n";

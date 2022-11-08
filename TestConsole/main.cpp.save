@@ -35,6 +35,8 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
+    
+    //
     Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
     std::vector<std::string> *theKeys = configPtr->getAllKeys();
     std::cout << "\n";
@@ -46,7 +48,8 @@ int main()
     delete configPtr;
     configPtr = nullptr;
 
-    Process::testMonteCarlo(); //  undefined reference
+//    Process::testMonteCarlo(); //  undefined reference
+    Process::testCpp11_MonteCarlo();
 
 //    //------Unit Test-----CANTIERE------------------------------------------------
 //    //
@@ -130,6 +133,9 @@ int main()
         bool p_seq = test_PRODUCTION_->sequentialDump( 9000);
         bool p_rand = test_PRODUCTION_->randomDump( 0, 50);
         bool p_reader = test_PRODUCTION_->readBy_OperatorSquares( +2);// ask Prime[n]
+        p_seq &= true;
+        p_rand &= true;
+        p_reader &= true;
         for (int c=599; c<611; c++)
         {
             reader &= test_PRODUCTION_->readBy_OperatorSquares( c);// ask Prime[n]

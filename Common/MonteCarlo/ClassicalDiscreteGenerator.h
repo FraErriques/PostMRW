@@ -16,10 +16,11 @@
 #include <stdlib.h>     /* RAND_MAX , srand , rand */
 #include <time.h>       /* time */
 //#include "MonteCarlo.h"
-#include "../StringBuilder/StringBuilder.h"
+//   #include "../StringBuilder/StringBuilder.h"
 #include "./DeltaOmega.h"
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 
 namespace Common
@@ -55,8 +56,8 @@ public:
     void showFrequencyDistribution() const;
     void showCumulatedFrequency() const;
     void buildDiscreteFrequencyDistribution();
-    void buildOmega( int partizioneLeft ,int partizioneRight);
-    void buildOmega( double partizioneLeft, double partizioneRight);
+    void buildOmega( int partizioneLeft ,int partizioneRight);// TODO verify
+//void buildOmega( double partizioneLeft, double partizioneRight);// TODO verify : unused here
     unsigned int showCurrentSeed() const;
     int showSup() const;
 }; // class ClassicalGenerator
