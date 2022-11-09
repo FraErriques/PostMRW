@@ -16,73 +16,85 @@ Test_Unit_MonteCarlo::~Test_Unit_MonteCarlo()
 void Test_Unit_MonteCarlo::monolite()
 {
  // MonteCarlo
-    double left  = -92.809;
-    double right = +12.209;
-
+    std::cout<<"\n\n\t -------- START discrete model;"<<std::endl;
+    int left_d = 70;
+    int right_d = 90;
     int populationCardinality = 9000;
     //
-    Common::MonteCarlo::ClassicalDiscreteGenerator * monteCGen =
-    new Common::MonteCarlo::ClassicalDiscreteGenerator();// Ctor
-    monteCGen->resetExtractionInterval( left, right);// NB. compulsory
+    Common::MonteCarlo::ClassicalDiscreteGenerator * monteCGen_d =
+        new Common::MonteCarlo::ClassicalDiscreteGenerator( 70, 80);// Ctor
+    monteCGen_d->resetExtractionInterval( left_d, right_d);// NB. compulsory
     for( int c=0; c<populationCardinality;c++)
     {
-        monteCGen->nextIntegerInInterval();
+        monteCGen_d->nextIntegerInInterval();
     }
-    //monteCGen->showDiscretePopulation();
-    monteCGen->buildOmega( left, right );
-    monteCGen->buildDiscreteFrequencyDistribution();
-    std::cout<<"\n\n\t -------- START discrete model;"<<std::endl;
-    monteCGen->showFrequencyDistribution();
-    monteCGen->showCumulatedFrequency();
-    delete monteCGen;
-
+    monteCGen_d->showDiscretePopulation();
+    monteCGen_d->buildOmega( left_d, right_d );
+    monteCGen_d->buildDiscreteFrequencyDistribution();
+    monteCGen_d->showFrequencyDistribution();
+    monteCGen_d->showCumulatedFrequency();
+    delete monteCGen_d;
+    //
     std::cout<<"\n\t -------- END discrete model; START continuous model \n"<<std::endl;
-
-    Common::MonteCarlo::ClassicalContinuousGenerator * monteCGen_D =
+    double left  = -92.809;
+    double right = +12.209;
+    Common::MonteCarlo::ClassicalContinuousGenerator * monteCGen_c =
         new Common::MonteCarlo::ClassicalContinuousGenerator( left, right);
-    //monteCGen_D->resetExtractionInterval( left, right);// NB. compulsory
+    //monteCGen_c->resetExtractionInterval( left, right);// NB. compulsory
     for( int c=0; c<populationCardinality;c++)
     {
-        monteCGen_D->nextDoubleInInterval();
+        monteCGen_c->nextDoubleInInterval();
     }
-    //monteCGen_D->showContinuousPopulation();
-    monteCGen_D->buildOmega( left, right );
-    monteCGen_D->buildContinuousFrequencyDistribution();
-    monteCGen_D->showFrequencyDistribution();
-    monteCGen_D->showCumulatedFrequency();
-
-    delete monteCGen_D;
+    //monteCGen_c->showContinuousPopulation();
+    monteCGen_c->buildOmega( left, right );
+    monteCGen_c->buildContinuousFrequencyDistribution();
+    monteCGen_c->showFrequencyDistribution();
+    monteCGen_c->showCumulatedFrequency();
+    delete monteCGen_c;
  // MonteCarlo
+ }// monolite
 
 
-//  std::string s("Nel mezzo#@# del cammin#@# di nostra vita,#@# mi ritrovai#@#  #@# #@# #@# per una selva oscura#@#.");
-//  std::vector<std::string> * tokens = Common::StrManipul::stringSplit("#@#", s, false);
-//  std::vector<std::string> * cleanTokens = Common::StrManipul::removeEmptyEntries( tokens);
-//
-//  if( NULL != tokens)
-//  {
-//  for( std::vector<std::string>::const_iterator readerTk = tokens->begin();
-//        readerTk != tokens->end();
-//        readerTk++
-//     )
-//    {
-//        std::cout<< *readerTk<<std::endl;
-//    }
-//  }// else skip on NULL.
-//  //
-//  if( NULL != cleanTokens)
-//  {
-//  for( std::vector<std::string>::const_iterator readerCleanTk = cleanTokens->begin();
-//        readerCleanTk != cleanTokens->end();
-//        readerCleanTk++
-//     )
-//    {
-//        std::cout<< *readerCleanTk<<std::endl;
-//    }
-//  }// else skip on NULL.
-//  //
-//  delete tokens;
-//  delete cleanTokens;
+void Test_Unit_MonteCarlo::test_discrete()
+{
+    int LEFT_ = -50;
+    int RIGHT_ = +50;
+    int populationCardinality = 400;
+    for( int left=LEFT_, right=left+10; right<=RIGHT_; left+=10, right+=10)
+    {
+        //instance( left, right)
+        Common::MonteCarlo::ClassicalDiscreteGenerator * monteCGen_d =
+            new Common::MonteCarlo::ClassicalDiscreteGenerator( left, right);// Ctor
+        //job....
+        for( int c=0; c<populationCardinality;c++)
+        {
+            monteCGen_d->nextIntegerInInterval();
+        }
+        //monteCGen_d->showDiscretePopulation();
+        monteCGen_d->buildOmega( left, right );
+        monteCGen_d->buildDiscreteFrequencyDistribution();
+        //monteCGen_d->showFrequencyDistribution();
+        monteCGen_d->showCumulatedFrequency();
+//        // resize on existing instance:
+//        for( int resize_nr=0; resize_nr<3; resize_nr++)
+//        {
+//            // resize( left++, right--)// narrowing
+//            monteCGen_d->resetExtractionInterval( left++, right--);// narrowing
+//            // job...
+//            for( int c=0; c<populationCardinality;c++)
+//            {
+//                monteCGen_d->nextIntegerInInterval();
+//            }
+//            monteCGen_d->showDiscretePopulation();
+//            monteCGen_d->buildOmega( left, right );
+//            monteCGen_d->buildDiscreteFrequencyDistribution();
+//            monteCGen_d->showFrequencyDistribution();
+//            monteCGen_d->showCumulatedFrequency();
+//        }// for ..resized
+        delete monteCGen_d;// finally delete
+        monteCGen_d = nullptr;// and create a new instance
+    }// for
+}// test_discrete
 
 
 //    Common::MonteCarlo::BaseConverter b(false);
@@ -109,4 +121,4 @@ void Test_Unit_MonteCarlo::monolite()
 //        }
 //    }
 
-}// monolite
+

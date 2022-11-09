@@ -37,6 +37,8 @@
  }// end test
 
 
+#define LinuxPlatf
+#ifdef LinuxPlatf
 void Process::testCpp11_MonteCarlo()
 {
     //thread_local
@@ -49,3 +51,4 @@ void Process::testCpp11_MonteCarlo()
     std::cout << std::endl;
     delete randCpp11;
 }// end void Process::testCpp11_MonteCarlo()
+#endif
