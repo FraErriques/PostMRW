@@ -38,7 +38,8 @@ int main()
     //
     // Process::testMonteCarlo(); TODO
     Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
-    test_MonteCarlo->monolite();
+    //test_MonteCarlo->monolite();
+    test_MonteCarlo->test_discrete();
     delete test_MonteCarlo;
     //
 //    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();

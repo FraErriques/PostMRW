@@ -10,6 +10,7 @@ class Test_Unit_MonteCarlo
         /** Default destructor */
         virtual ~Test_Unit_MonteCarlo();
         void monolite();
+        void test_discrete();
 
     protected:
 
