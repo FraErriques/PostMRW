@@ -43,15 +43,17 @@ private:
     double omothetia;// it's rational since it contains a ratio, for proportion with default interval.
     int translation;
     std::vector<int> * discretePopulation;
-    std::vector<DeltaOmega> * frequencyDistribution;
+    std::vector<DeltaOmega*> * frequencyDistribution;
 
 public:
-    ClassicalDiscreteGenerator( unsigned int seed);// : currentSeed(seed), generatorSUP(RAND_MAX);
-    // You can pass in a pointer to a time_t object that time will fill up with the current time (and the return value is the same
-    // one that you pointed to). If you pass in NULL, it just ignores it and merely returns a new time_t object that represents the current time.
-    ClassicalDiscreteGenerator();// : currentSeed( time(NULL)), generatorSUP(RAND_MAX);
+    // Note on time_seed: You can pass in a pointer to a time_t object that time will fill up with the
+    // current time (and the return value is the same one that you pointed to). If you pass in NULL, it just
+    // ignores it and merely returns a new time_t object that represents the current time.
+    ClassicalDiscreteGenerator( unsigned int seed, int left, int right );// : currentSeed(seed), generatorSUP(RAND_MAX);
+    ClassicalDiscreteGenerator( int left, int right);// : currentSeed( time(NULL)), generatorSUP(RAND_MAX);
+    ~ClassicalDiscreteGenerator();//Dtor
     void resetExtractionInterval( int left, int right );// non const; resets instance members.
-    void nextIntegerInInterval() const;
+    int nextIntegerInInterval() const;
     void showDiscretePopulation() const;
     void showFrequencyDistribution() const;
     void showCumulatedFrequency() const;

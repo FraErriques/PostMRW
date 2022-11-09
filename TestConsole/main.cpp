@@ -24,6 +24,7 @@
 #include "Unit_Tests/Test_Unit_PrimesFinder.h"
 #include "Unit_Tests/Test_Unit_Logger.h"
 #include "Unit_Tests/Test_Unit_selectInterval.h"
+#include "Unit_Tests/Test_Unit_MonteCarlo.h"
 //
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 
@@ -35,7 +36,10 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Process::testMonteCarlo();
+    // Process::testMonteCarlo(); TODO
+    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
+    test_MonteCarlo->monolite();
+    delete test_MonteCarlo;
     //
 //    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
 //    std::vector<std::string> *theKeys = configPtr->getAllKeys();
