@@ -8,7 +8,7 @@
 #include "../../Common/Stream/stream_io_.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
 
-namespace Process{
+namespace Process{//the logical-namespace is Process while the convenient library is Common
 namespace LogWrappers{
 
 

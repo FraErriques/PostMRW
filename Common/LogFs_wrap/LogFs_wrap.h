@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace Process{
+namespace Process{//the logical-namespace is Process while the convenient library is Common
 namespace LogWrappers{
 
         void JustConstructTEST( const char * name, int sectionVerbosity);

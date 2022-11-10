@@ -1,17 +1,10 @@
-/*
-    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
-    before any call to rand or srand.
-    Two different initializations with the same seed will generate the same succession of results
-    in subsequent calls to rand.
-*/
-
-
 #include <stdio.h>      /* NULL */
 #include <stdlib.h>     /* RAND_MAX , srand , rand */
 #include <time.h>       /* time */
 #include <cmath>
 #include <iostream>
-//  #include "../StringBuilder/StringBuilder.h"
+#include "../StringBuilder/StringBuilder.h"
+#include "../LogFs_wrap/LogFs_wrap.h"
 #include "ClassicalDiscreteGenerator.h"
 
 namespace Common
@@ -19,6 +12,13 @@ namespace Common
 
 namespace MonteCarlo
 {
+/*
+    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
+    before any call to rand or srand.
+    Two different initializations with the same seed will generate the same succession of results
+    in subsequent calls to rand.
+*/
+
 
 ClassicalDiscreteGenerator::ClassicalDiscreteGenerator( unsigned int seed, int left, int right) : currentSeed(seed), generatorSUP(RAND_MAX)
 {
@@ -61,12 +61,18 @@ ClassicalDiscreteGenerator::ClassicalDiscreteGenerator( int left, int right) : c
 
 void ClassicalDiscreteGenerator::resetExtractionInterval( int left, int right )
 {//NB. for DiscreteGenerator the domain is a compact [left,right]
+    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator::resetExtractionInterval", 0);
     this->Min = left;// reset.
     this->Sup = right;// reset.
+    Process::LogWrappers::SectionContent_variable_name_value("this->Min", (long long int)this->Min, 0);
+    Process::LogWrappers::SectionContent_variable_name_value("this->Sup", (long long int)this->Sup, 0);
     this->theIntervalMeasure = right-left+1;// init for Discrete models: measure[+1,+3]==+3=={1,2,3}==right-left+1
+    Process::LogWrappers::SectionContent_variable_name_value("this->theIntervalMeasure", (long long int)this->theIntervalMeasure, 0);
     // default model is [min,sup) on [0,RAND_MAX)==[0,32767)
     this->omothetia = this->theIntervalMeasure/((double)RAND_MAX);
-    this->translation = left;// NB. valid within a single population.
+    Process::LogWrappers::SectionContent_variable_name_value("this->omothetia", (long long int)this->omothetia, 0);
+    this->translation = left;// shift
+    Process::LogWrappers::SectionContent_variable_name_value("this->translation", (long long int)this->translation, 0);
     if( nullptr != this->discretePopulation)
     {
         delete this->discretePopulation;
@@ -87,7 +93,9 @@ void ClassicalDiscreteGenerator::resetExtractionInterval( int left, int right )
         this->frequencyDistribution = nullptr;
     }// else the frequencyDistribution vector is already null.
     this->frequencyDistribution = new std::vector<DeltaOmega*>();// get a new frequencyDistribution.
+    Process::LogWrappers::SectionClose();
 }// ex_Ctor
+
 
 ClassicalDiscreteGenerator::~ClassicalDiscreteGenerator()
 {// Dtor
@@ -128,102 +136,100 @@ int ClassicalDiscreteGenerator::nextIntegerInInterval() const
 
 
 
-        void ClassicalDiscreteGenerator::showDiscretePopulation() const
-        {
-          if( nullptr == this->discretePopulation)
-                {
-                    return;
-                }
-            for( std::vector<int>::const_iterator it=this->discretePopulation->begin();
-                 it!=this->discretePopulation->end();
-                 it++
-                )
-                {
-                    std::cout<< *it<<std::endl;
-                }
-        }// END showDiscretePopulation() const
+void ClassicalDiscreteGenerator::showDiscretePopulation() const
+{
+    if( nullptr == this->discretePopulation)
+    {
+        return;
+    }
+    for( std::vector<int>::const_iterator it=this->discretePopulation->begin();
+            it!=this->discretePopulation->end();
+            it++  )
+    {
+        std::cout<< *it<<std::endl;
+    }
+}// END showDiscretePopulation() const
 
 
-        void ClassicalDiscreteGenerator::showFrequencyDistribution() const
-        {
-          if( nullptr == this->frequencyDistribution)
-                {
-                    return;
-                }
-            for( std::vector<DeltaOmega*>::const_iterator it=this->frequencyDistribution->begin();
-                 it!=this->frequencyDistribution->end();
-                 it++
-                )
-                {
-                    std::cout<<" mediana "<< (*it)->mediana
-                    <<" eta "<<(*it)->eta
-                    <<" DeltaOmegaCardinality " << (*it)->DeltaOmegaCardinality
-                    <<" categoryFrequency "<< (*it)->categoryFrequency <<std::endl;
-                }
-        }// END showFrequencyDistribution() const
+void ClassicalDiscreteGenerator::showFrequencyDistribution() const
+{
+    if( nullptr == this->frequencyDistribution)
+    {
+        return;
+    }
+    for( std::vector<DeltaOmega*>::const_iterator it=this->frequencyDistribution->begin();
+        it!=this->frequencyDistribution->end();
+        it++  )
+    {
+        std::cout<<" mediana "<< (*it)->mediana
+        <<" eta "<<(*it)->eta
+        <<" DeltaOmegaCardinality " << (*it)->DeltaOmegaCardinality
+        <<" categoryFrequency "<< (*it)->categoryFrequency <<std::endl;
+    }
+}// END showFrequencyDistribution() const
 
-        void ClassicalDiscreteGenerator::showCumulatedFrequency() const
-        {
-           double CumulatedFrequency = 0.0;
-           for( std::vector<DeltaOmega*>::iterator frequencyWriter=this->frequencyDistribution->begin();
-                frequencyWriter != this->frequencyDistribution->end();
-                frequencyWriter++
-              )
+
+void ClassicalDiscreteGenerator::showCumulatedFrequency() const
+{
+   double CumulatedFrequency = 0.0;
+   for( std::vector<DeltaOmega*>::iterator frequencyWriter=this->frequencyDistribution->begin();
+        frequencyWriter != this->frequencyDistribution->end();
+        frequencyWriter++
+      )
+      {
+         CumulatedFrequency += (*frequencyWriter)->categoryFrequency;
+      }// for frequencyWriter
+      std::cout<< "\n\n\t CumulatedFrequency : " << CumulatedFrequency <<std::endl;
+}// END showCumulatedFrequency() const
+
+
+void ClassicalDiscreteGenerator::buildDiscreteFrequencyDistribution()
+{
+    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator::buildDiscreteFrequencyDistribution()", 0);
+    int populationCardinality = this->discretePopulation->size();
+    double elementPresenceWeight = +1.0/populationCardinality;
+    for( std::vector<int>::const_iterator populationReader=this->discretePopulation->begin();
+         populationReader != this->discretePopulation->end();
+         populationReader++  )
+   {
+       bool hasFoundHisBelongingDeltaOmega = false;
+       for( std::vector<DeltaOmega*>::iterator frequencyWriter=this->frequencyDistribution->begin();
+            frequencyWriter != this->frequencyDistribution->end();
+            frequencyWriter++  )
+          {
+              if( (*frequencyWriter)->belongsToDeltaOmega( *populationReader) )
               {
-                 CumulatedFrequency += (*frequencyWriter)->categoryFrequency;
-              }// for frequencyWriter
-              std::cout<< "\n\n\t CumulatedFrequency : " << CumulatedFrequency <<std::endl;
-        }// END showCumulatedFrequency() const
-
-
-        void ClassicalDiscreteGenerator::buildDiscreteFrequencyDistribution()
-        {
-            int populationCardinality = this->discretePopulation->size();
-            double elementPresenceWeight = +1.0/populationCardinality;
-            for( std::vector<int>::const_iterator populationReader=this->discretePopulation->begin();
-                 populationReader != this->discretePopulation->end();
-                 populationReader++
-               )
-               {
-                   bool hasFoundHisBelongingDeltaOmega = false;
-                   for( std::vector<DeltaOmega*>::iterator frequencyWriter=this->frequencyDistribution->begin();
-                        frequencyWriter != this->frequencyDistribution->end();
-                        frequencyWriter++
-                      )
-                      {
-                          if( (*frequencyWriter)->belongsToDeltaOmega( *populationReader) )
-                          {
-                              (*frequencyWriter)->categoryFrequency += elementPresenceWeight;
-                              (*frequencyWriter)->DeltaOmegaCardinality++;
-                              hasFoundHisBelongingDeltaOmega = true;// NB. log if the element has found no DeltaOmega which it belongs to.
-                              break;// belonging class found.
-                          }
-                      }// for frequencyWriter
-                      // NB. log if the element has found no DeltaOmega which it belongs to.
-                      if( ! hasFoundHisBelongingDeltaOmega)
-                      {
-                            // Common::StringBuilder sb(1024);
-                            // sb.append("element ");
-                            // std::string * strRepresentationOfPopulationReader = Common::StrManipul::doubleToString( *populationReader);
-                            // sb.append( *strRepresentationOfPopulationReader );
-                            // sb.append(" has found no DeltaOmega which it belongs to.");
-                            // Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
-                            // delete strRepresentationOfPopulationReader;
-                      }// end log.
-               }// for populationReader
-               //Process::LogWrappers::SectionClose();
-        }// buildContinuousFrequencyDistribution()
+                  (*frequencyWriter)->categoryFrequency += elementPresenceWeight;
+                  (*frequencyWriter)->DeltaOmegaCardinality++;
+                  hasFoundHisBelongingDeltaOmega = true;// NB. log if the element has found no DeltaOmega which it belongs to.
+                  break;// belonging class found.
+              }
+          }// for frequencyWriter
+          // NB. log if the element has found no DeltaOmega which it belongs to.
+          if( ! hasFoundHisBelongingDeltaOmega)
+          {
+             Common::StringBuilder sb(1024);
+             sb.append("element ");
+             std::string * strRepresentationOfPopulationReader = Common::StrManipul::doubleToString( *populationReader);
+             sb.append( *strRepresentationOfPopulationReader );
+             sb.append(" has found no DeltaOmega which it belongs to.");
+             Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
+             delete strRepresentationOfPopulationReader;
+          }// end log.
+   }// for populationReader
+   Process::LogWrappers::SectionClose();
+}// buildContinuousFrequencyDistribution()
 
 
 
-        void ClassicalDiscreteGenerator::buildOmega( int partizioneLeft ,int partizioneRight)
-        {//this->frequencyDistribution has been built by Ctor.
-            for( double position=partizioneLeft; position<=partizioneRight; position++)
-            {
-                DeltaOmega * curDeltaOmega = new DeltaOmega( position, +1E-80);// TODO verify
-                this->frequencyDistribution->push_back( curDeltaOmega );
-            }//for
-        }//buildOmega
+void ClassicalDiscreteGenerator::buildOmega( int partizioneLeft ,int partizioneRight)
+{//this->frequencyDistribution has been built by Ctor.
+    for( double position=partizioneLeft; position<=partizioneRight; position++)
+    {
+        DeltaOmega * curDeltaOmega = new DeltaOmega( position, +1E-80);// TODO verify
+        this->frequencyDistribution->push_back( curDeltaOmega );
+    }//for
+}//buildOmega
 
 //void ClassicalDiscreteGenerator::buildOmega( double partizioneLeft, double partizioneRight)
 //{//this->frequencyDistribution has been built by Ctor.
@@ -252,5 +258,4 @@ int ClassicalDiscreteGenerator::showSup() const
 
 
 } // namespace Common
-
 } // namespace MonteCarlo
