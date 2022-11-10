@@ -11,9 +11,9 @@
 #include <time.h>       /* time */
 #include <cmath>
 #include <iostream>
-//  #include "../StringBuilder/StringBuilder.h"
+#include "../StringBuilder/StringBuilder.h"
 #include "ClassicalContinuousGenerator.h"
-// TODO by now cannot log from the Common #include "../LogFs_wrap/LogFs_wrap.h"
+#include "../LogFs_wrap/LogFs_wrap.h"
 
 namespace Common
 {
@@ -125,7 +125,7 @@ ClassicalContinuousGenerator::~ClassicalContinuousGenerator()
 
     double ClassicalContinuousGenerator::nextDoubleInInterval() const
     {
-        //Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()", 0);
+        Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()", 0);
         double originalExtracted = rand();
         double temp =  originalExtracted*this->omothetia + this->translation;
         if( this->Min<= temp
@@ -135,18 +135,18 @@ ClassicalContinuousGenerator::~ClassicalContinuousGenerator()
         }
         else
         {// log about
-//            Common::StringBuilder sb(1024);
-//            sb.append("element out of bounds extracted: original was ");
-//            std::string * strOriginalExtracted = Common::StrManipul::doubleToString( originalExtracted);
-//            std::string * strAfterAffinity = Common::StrManipul::doubleToString( temp);
-//            sb.append( strOriginalExtracted->c_str() );
-//            sb.append(" while after affinity it was ");
-//            sb.append( strAfterAffinity->c_str() );
-////Process::LogWrappers::SectionContent( sb.str().c_str(), 0 );
-//            delete strOriginalExtracted;
-//            delete strAfterAffinity;
+            Common::StringBuilder sb(1024);
+            sb.append("element out of bounds extracted: original was ");
+            std::string * strOriginalExtracted = Common::StrManipul::doubleToString( originalExtracted);
+            std::string * strAfterAffinity = Common::StrManipul::doubleToString( temp);
+            sb.append( strOriginalExtracted->c_str() );
+            sb.append(" while after affinity it was ");
+            sb.append( strAfterAffinity->c_str() );
+            Process::LogWrappers::SectionContent( sb.str().c_str(), 0 );
+            delete strOriginalExtracted;
+            delete strAfterAffinity;
         }
-        //Process::LogWrappers::SectionClose();
+        Process::LogWrappers::SectionClose();
         // ready.
         return temp;
     }// END nextDoubleInInterval
@@ -228,16 +228,16 @@ ClassicalContinuousGenerator::~ClassicalContinuousGenerator()
                       // NB. log if the element has found no DeltaOmega which it belongs to.
                       if( ! hasFoundHisBelongingDeltaOmega)
                       {
-//                          Common::StringBuilder sb(1024);
-//                          sb.append("element ");
-//                          std::string * strRepresentationOfPopulationReader = Common::StrManipul::doubleToString( *populationReader);
-//                          sb.append( *strRepresentationOfPopulationReader );
-//                          sb.append(" has found no DeltaOmega which it belongs to.");
-////Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
-//                          delete strRepresentationOfPopulationReader;
+                          Common::StringBuilder sb(1024);
+                          sb.append("element ");
+                          std::string * strRepresentationOfPopulationReader = Common::StrManipul::doubleToString( *populationReader);
+                          sb.append( *strRepresentationOfPopulationReader );
+                          sb.append(" has found no DeltaOmega which it belongs to.");
+                          Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
+                          delete strRepresentationOfPopulationReader;
                       }// end log.
                }// for populationReader
-               //Process::LogWrappers::SectionClose();
+               Process::LogWrappers::SectionClose();
         }// buildContinuousFrequencyDistribution()
 
 

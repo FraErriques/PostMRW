@@ -2,7 +2,7 @@
 #include "InternalAlgos.h"
 #include "../../Common/ConfigurationService/ConfigurationService.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
-#include "../../Process/LogFs_wrap/LogFs_wrap.h"
+#include "../../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../Integration/Integration.h"
 #include <iostream>
 #include <string>

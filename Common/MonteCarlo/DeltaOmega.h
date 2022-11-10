@@ -7,8 +7,8 @@ namespace Common{
 namespace MonteCarlo{
 
 
-//   class ClassicalDiscreteGenerator; // FFWD not necessary
-//   class ClassicalContinuousGenerator;
+//   class ClassicalDiscreteGenerator     FFWD not necessary
+//   class ClassicalContinuousGenerator   FFWD not necessary
 
 
 class DeltaOmega
