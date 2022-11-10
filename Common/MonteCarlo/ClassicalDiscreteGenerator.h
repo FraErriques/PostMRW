@@ -38,7 +38,7 @@ private:
     friend class DeltaOmega;
     bool ConstructorCanContinue;
     std::string * ReasonForAbortingConstructor;
-    int theIntervalMeasure;
+    double theIntervalMeasure;
     int Min, Sup;
     double omothetia;// it's rational since it contains a ratio, for proportion with default interval.
     int translation;

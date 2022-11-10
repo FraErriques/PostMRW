@@ -59,7 +59,7 @@ void Test_Unit_MonteCarlo::test_discrete()
 {
     int LEFT_ = -50;
     int RIGHT_ = +50;
-    int populationCardinality = 400;
+    int populationCardinality = 4000;// TODO : pass to Ctor to shape the vector capacity.---------------
     for( int left=LEFT_, right=left+10; right<=RIGHT_; left+=10, right+=10)
     {
         //instance( left, right)
@@ -70,12 +70,12 @@ void Test_Unit_MonteCarlo::test_discrete()
         {
             monteCGen_d->nextIntegerInInterval();
         }
-        //monteCGen_d->showDiscretePopulation();
+//        monteCGen_d->showDiscretePopulation();
         monteCGen_d->buildOmega( left, right );
         monteCGen_d->buildDiscreteFrequencyDistribution();
-        //monteCGen_d->showFrequencyDistribution();
+//        monteCGen_d->showFrequencyDistribution();
         monteCGen_d->showCumulatedFrequency();
-//        // resize on existing instance:
+        // resize on existing instance:
 //        for( int resize_nr=0; resize_nr<3; resize_nr++)
 //        {
 //            // resize( left++, right--)// narrowing
@@ -85,10 +85,10 @@ void Test_Unit_MonteCarlo::test_discrete()
 //            {
 //                monteCGen_d->nextIntegerInInterval();
 //            }
-//            monteCGen_d->showDiscretePopulation();
+////            monteCGen_d->showDiscretePopulation();
 //            monteCGen_d->buildOmega( left, right );
 //            monteCGen_d->buildDiscreteFrequencyDistribution();
-//            monteCGen_d->showFrequencyDistribution();
+////            monteCGen_d->showFrequencyDistribution();
 //            monteCGen_d->showCumulatedFrequency();
 //        }// for ..resized
         delete monteCGen_d;// finally delete

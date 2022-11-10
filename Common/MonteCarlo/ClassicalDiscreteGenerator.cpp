@@ -66,7 +66,7 @@ void ClassicalDiscreteGenerator::resetExtractionInterval( int left, int right )
     this->Sup = right;// reset.
     Process::LogWrappers::SectionContent_variable_name_value("this->Min", (long long int)this->Min, 0);
     Process::LogWrappers::SectionContent_variable_name_value("this->Sup", (long long int)this->Sup, 0);
-    this->theIntervalMeasure = right-left+1;// init for Discrete models: measure[+1,+3]==+3=={1,2,3}==right-left+1
+    this->theIntervalMeasure = (double)right-(double)left+(double)1;// init for Discrete models: measure[+1,+3]==+3=={1,2,3}==right-left+1
     Process::LogWrappers::SectionContent_variable_name_value("this->theIntervalMeasure", (long long int)this->theIntervalMeasure, 0);
     // default model is [min,sup) on [0,RAND_MAX)==[0,32767)
     this->omothetia = this->theIntervalMeasure/((double)RAND_MAX);
