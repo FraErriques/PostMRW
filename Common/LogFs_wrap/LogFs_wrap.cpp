@@ -151,8 +151,66 @@ void SectionContent_variable_name_value(
     ,sectionVerbosity  );
 }
 
+void SectionContent_variable_name_value(
+        std::string &variable_name
+        , double variable_value
+        ,int sectionVerbosity         )
+{// SectionContent_variable_name_value for double
+    SectionContent_multiMessage_instance_mtx.lock();// START critical section.
+    {
+        // twenty is an estimate of length for a string containing a double.
+        Common::StringBuilder contentTracer( variable_name.length() + 20);
+        contentTracer.append(variable_name);
+        contentTracer.append("  ");//some separation.
+        contentTracer.append( variable_value);
+        SectionContent( contentTracer.str().c_str() , sectionVerbosity);// trace the whole.
+    }
+    SectionContent_multiMessage_instance_mtx.unlock();// END critical section.
+}// END SectionContent_variable_name_value for double
 
-// TODO goes in Process::Log_Wrappers
+void SectionContent_variable_name_value(
+    const char *variable_name
+    , double variable_value
+    ,int sectionVerbosity         )
+{// SectionContent_variable_name_value for double
+    std::string var_name( variable_name);
+    SectionContent_variable_name_value( var_name
+    ,variable_value
+    ,sectionVerbosity  );
+}// END SectionContent_variable_name_value for double
+
+// log bool
+void SectionContent_variable_name_value(
+        std::string &variable_name
+        , bool variable_value
+        ,int sectionVerbosity         )
+{// SectionContent_variable_name_value for bool
+    SectionContent_multiMessage_instance_mtx.lock();// START critical section.
+    {
+        // an estimate of length for a string containing a bool.
+        Common::StringBuilder contentTracer( variable_name.length() + 6);
+        contentTracer.append(variable_name);
+        contentTracer.append("  ");//some separation.
+        contentTracer.append_bool( variable_value);//NB. specific measure due to a type selection error.
+        SectionContent( contentTracer.str().c_str() , sectionVerbosity);// trace the whole.
+    }
+    SectionContent_multiMessage_instance_mtx.unlock();// END critical section.
+}// END SectionContent_variable_name_value for bool
+
+void SectionContent_variable_name_value(
+    const char *variable_name
+    , bool variable_value
+    ,int sectionVerbosity         )
+{// SectionContent_variable_name_value for bool
+    std::string var_name( variable_name);
+    SectionContent_variable_name_value( var_name
+    ,variable_value
+    ,sectionVerbosity  );
+}// END SectionContent_variable_name_value for bool
+// log bool
+
+
+// logical position Process::Log_Wrappers ;physical position Common:: library.
 // take std::string* and delete --------------------(V)
 // use a StringBuilder to concatenate the input ----(V)
 void SectionContent_fromMultipleStrings(int sectionVerbosity, int howMany_params, ...)

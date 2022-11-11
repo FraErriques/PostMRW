@@ -26,6 +26,8 @@ public:
     StringBuilder & append(int i); // overload to append the ASCII symbol, which has code i.
     StringBuilder & append(unsigned long long Ull); // overload to append an unsigned long long (i.e. 64bit unsigned).
     StringBuilder & append( long long Ull); // overload to append a SIGNED long long (i.e. 64bit SIGNED).
+    StringBuilder & append( double dbl); // overload to append a double
+    StringBuilder & append_bool( bool bl); // append a bool : problems of cast at runtime.
 
     // metodo che fornisce la rappresentazione stringa dello StringBuilder:
     // tale rappresentazione consiste nel portare nel buffer primario tutto cio' che e' in attesa

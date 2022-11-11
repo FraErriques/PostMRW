@@ -60,6 +60,23 @@ StringBuilder & StringBuilder::append( long long Signed_ll) // overload to appen
     return *this;// return a reference to the whole StringBuilder class.
 }// append Signed_LongLong
 
+StringBuilder & StringBuilder::append( double dbl) // overload to append a double
+{// append double
+    std::string * double_str = StrManipul::doubleToString( dbl);
+    this->append( *double_str);
+    delete double_str;
+    return *this;// return a reference to the whole StringBuilder class.
+}// append double
+
+StringBuilder & StringBuilder::append_bool( bool bl) // overload to append a bool
+{// append bool
+    std::string * bool_str = StrManipul::boolToString( bl);
+    this->append( *bool_str);
+    delete bool_str;
+    return *this;// return a reference to the whole StringBuilder class.
+}// append bool
+
+
     // metodo che fornisce la rattresentazione stringa dello StringBuilder:
     // tale rappresentazione consiste nel portare nel buffer primario tutto cio' che e' in attesa di accodamento (i.e. main.append(scratch)
     // a valle di tale copia, viene fatto lo svuotamento del buffer temporaneo.
@@ -276,14 +293,14 @@ std::string * longDoubleToString( const long double &par)
     }
 
     std::string * signedLongLongToString( const long long &par)
-    {//long-long i.e. 8 byte integral type( Signed here).
+    {// signed long long
         std::string * res = new std::string();
         std::stringstream localSstream;
-        localSstream << par;//put the Signed long-long into the stringStream
+        localSstream << par;//put the signed long long into the stringStream
         *res = localSstream.str();// get the string from the stringStream
         // N.B. the caller has to delete the return value.
         return res;
-    }
+    }// signed long long
 
     std::string * boolToString( const bool &par)
     {
