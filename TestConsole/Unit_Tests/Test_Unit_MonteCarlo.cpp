@@ -75,22 +75,22 @@ void Test_Unit_MonteCarlo::test_discrete()
         monteCGen_d->buildDiscreteFrequencyDistribution();
 //        monteCGen_d->showFrequencyDistribution();
         monteCGen_d->showCumulatedFrequency();
-        // resize on existing instance:
-        for( int resize_nr=0; resize_nr<3; resize_nr++)
-        {
-            // resize( left++, right--)// narrowing
-            monteCGen_d->resetExtractionInterval( left++, right--);// narrowing
-            // job...
-            for( int c=0; c<populationCardinality;c++)
-            {
-                monteCGen_d->nextIntegerInInterval();
-            }
-//            monteCGen_d->showDiscretePopulation();
-            monteCGen_d->buildOmega( left, right );
-            monteCGen_d->buildDiscreteFrequencyDistribution();
-//            monteCGen_d->showFrequencyDistribution();
-            monteCGen_d->showCumulatedFrequency();
-        }// for ..resized
+//        // resize on existing instance:
+//        for( int resize_nr=0; resize_nr<3; resize_nr++)
+//        {
+//            // resize( left++, right--)// narrowing
+//            monteCGen_d->resetExtractionInterval( left++, right--);// narrowing
+//            // job...
+//            for( int c=0; c<populationCardinality;c++)
+//            {
+//                monteCGen_d->nextIntegerInInterval();
+//            }
+////            monteCGen_d->showDiscretePopulation();
+//            monteCGen_d->buildOmega( left, right );
+//            monteCGen_d->buildDiscreteFrequencyDistribution();
+////            monteCGen_d->showFrequencyDistribution();
+//            monteCGen_d->showCumulatedFrequency();
+//        }// for ..resized
         delete monteCGen_d;// finally delete
         monteCGen_d = nullptr;// and create a new instance
     }// for

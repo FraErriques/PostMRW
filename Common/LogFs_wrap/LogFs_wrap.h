@@ -35,7 +35,25 @@ namespace LogWrappers{
                 const char *variable_name
                 , long long variable_value
                 ,int sectionVerbosity         );
-
+        // the double versions:
+        void SectionContent_variable_name_value(
+                std::string &variable_name
+                , double variable_value
+                ,int sectionVerbosity         );
+        void SectionContent_variable_name_value(
+                const char *variable_name
+                , double variable_value
+                ,int sectionVerbosity         );
+        // the bool versions:
+        void SectionContent_variable_name_value(
+                std::string &variable_name
+                , bool variable_value
+                ,int sectionVerbosity         );
+        void SectionContent_variable_name_value(
+                const char *variable_name
+                , bool variable_value
+                ,int sectionVerbosity         );
+        // log from multiple( variable number of) strings:
         void SectionContent_fromMultipleStrings(int sectionVerbosity, int howMany_params, ...);
 
     }// END namespace LogWrappers

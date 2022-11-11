@@ -1,7 +1,8 @@
 #ifndef DELTAOMEGA_H_INCLUDED
 #define DELTAOMEGA_H_INCLUDED
 
- #include <cmath>
+#include <cmath>
+#include "../LogFs_wrap/LogFs_wrap.h"
 
 namespace Common{
 namespace MonteCarlo{
@@ -38,8 +39,15 @@ public:
 
     bool belongsToDeltaOmega( double candidate)
     {//evaluates whether an event belongs to a histogram.
-        bool res = fabs( candidate-this->mediana)<=this->eta;
+        Process::LogWrappers::SectionOpen("belongsToDeltaOmega",0);
+        Process::LogWrappers::SectionContent_variable_name_value("param-double candidate", candidate, 0);
+        Process::LogWrappers::SectionContent_variable_name_value("this->mediana", this->mediana, 0);
+        Process::LogWrappers::SectionContent_variable_name_value("this->eta", this->eta, 0);
+        bool res = fabs( candidate-this->mediana) <= this->eta;
+        Process::LogWrappers::SectionContent_variable_name_value("fabs( candidate-this->mediana)", fabs( candidate-this->mediana), 0);
+        Process::LogWrappers::SectionContent_variable_name_value("fabs( candidate-this->mediana) <= this->eta", res , 0);
         // ready
+        Process::LogWrappers::SectionClose();
         return res;
     }// bool belongsToDeltaOmega( double candidate)
 

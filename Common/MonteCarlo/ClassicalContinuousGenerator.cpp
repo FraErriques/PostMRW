@@ -203,7 +203,7 @@ ClassicalContinuousGenerator::~ClassicalContinuousGenerator()
 
         void ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()
         {
-            //Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()", 0);
+            Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()", 0);
             int populationCardinality = this->continuousPopulation->size();
             double elementPresenceWeight = +1.0/populationCardinality;
             for( std::vector<double>::const_iterator populationReader=this->continuousPopulation->begin();
