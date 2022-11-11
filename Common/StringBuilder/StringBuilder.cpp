@@ -68,7 +68,7 @@ StringBuilder & StringBuilder::append( double dbl) // overload to append a doubl
     return *this;// return a reference to the whole StringBuilder class.
 }// append double
 
-StringBuilder & StringBuilder::append( bool bl) // overload to append a bool
+StringBuilder & StringBuilder::append_bool( bool bl) // overload to append a bool
 {// append bool
     std::string * bool_str = StrManipul::boolToString( bl);
     this->append( *bool_str);

@@ -191,7 +191,7 @@ void SectionContent_variable_name_value(
         Common::StringBuilder contentTracer( variable_name.length() + 6);
         contentTracer.append(variable_name);
         contentTracer.append("  ");//some separation.
-        contentTracer.append( variable_value);
+        contentTracer.append_bool( variable_value);//NB. specific measure due to a type selection error.
         SectionContent( contentTracer.str().c_str() , sectionVerbosity);// trace the whole.
     }
     SectionContent_multiMessage_instance_mtx.unlock();// END critical section.
