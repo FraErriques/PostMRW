@@ -188,12 +188,12 @@ SinkFs::SinkFs()
                                     isConstructorStillAlive=false;
                                     reasonForNotBeingAlive = "tryOpen failed: write permissions missing; check to be trying to Log ONLY in your home dir.";
                                 }
-                                delete configFileManager;
                             }// END check tryOpen
                         }// END check check Configuration::verbosity
                     }// END check Configuration::semaphore
                 }// END check Configuration consistency
             }// END check Configuration existence
+            delete configFileManager;
             delete logFullPathPrefix_config;
             delete semaphore_config;
             delete verbosity_config;
@@ -397,9 +397,11 @@ void SinkFs::SectionClose()
                     this->tagStack->pop();// remove the closing section from the stack.
                 }// do not operate on an empty stack.
             }// do not operate on an unprepared stack.
-            // if(sectionVerbosity < this->verbosity)
-            // NB. there's no section verbosity in a close. It necessarily has the same verbosity of it omologous open.
-            // maximum verbosity leves is zero. Higher verbosity-levels prune the lower-level messages.
+            if( currentTag.sectionVerbosity < this->verbosity)
+            {// NB. there's no section verbosity in a close. It necessarily has the same verbosity of it omologous open.
+                SinkFs_mtx.unlock();// END critical section. Cannot exit from inside a mutex.
+                return;
+            }// maximum verbosity leves is zero. Higher verbosity-levels prune the lower-level messages.
             // if got here -> can write:
             --indentmentLevel;
             tryOpen();// quick_access connection -> close at once and reopen when required.

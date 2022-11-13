@@ -7,6 +7,7 @@
 #include "../LogFs_wrap/LogFs_wrap.h"
 #include "ClassicalDiscreteGenerator.h"
 
+
 namespace Common
 {
 
@@ -22,6 +23,7 @@ namespace MonteCarlo
 
 ClassicalDiscreteGenerator::ClassicalDiscreteGenerator( unsigned int seed, int left, int right) : currentSeed(seed), generatorSUP(RAND_MAX)
 {
+    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator:: Ctor with seed",0);
     srand( seed);
     this->discretePopulation = nullptr;// necessary on Win.
     this->frequencyDistribution = nullptr;
@@ -35,6 +37,7 @@ ClassicalDiscreteGenerator::ClassicalDiscreteGenerator( unsigned int seed, int l
         this->ReasonForAbortingConstructor = nullptr;
         resetExtractionInterval( left, right );
     }
+    Process::LogWrappers::SectionClose();
 }// END Ctor( unsigned int seed)
 
 
@@ -42,6 +45,7 @@ ClassicalDiscreteGenerator::ClassicalDiscreteGenerator( unsigned int seed, int l
 // one that you pointed to). If you pass in NULL, it just ignores it and merely returns a new time_t object that represents the current time.
 ClassicalDiscreteGenerator::ClassicalDiscreteGenerator( int left, int right) : currentSeed( time(NULL)), generatorSUP(RAND_MAX)
 {// Ctor without seed
+    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator:: Ctor without seed",0);
     srand( this->currentSeed);// i.e. time(NULL)
     this->discretePopulation = nullptr;// necessary on Win.
     this->frequencyDistribution = nullptr;
@@ -55,24 +59,26 @@ ClassicalDiscreteGenerator::ClassicalDiscreteGenerator( int left, int right) : c
         this->ReasonForAbortingConstructor = nullptr;
         resetExtractionInterval( left, right );
     }
+    Process::LogWrappers::SectionClose();
 }// END Ctor()
 
 
 
 void ClassicalDiscreteGenerator::resetExtractionInterval( int left, int right )
-{//NB. for DiscreteGenerator the domain is a compact [left,right]
-    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator::resetExtractionInterval", 0);
+{
+    //NB. for DiscreteGenerator the domain is a compact [left,right]
+    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator::resetExtractionInterval",0);
     this->Min = left;// reset.
     this->Sup = right;// reset.
-    Process::LogWrappers::SectionContent_variable_name_value("this->Min", (long long int)this->Min, 0);
-    Process::LogWrappers::SectionContent_variable_name_value("this->Sup", (long long int)this->Sup, 0);
+    Process::LogWrappers::SectionContent_variable_name_value("this->Min", (long long int)this->Min,0);
+    Process::LogWrappers::SectionContent_variable_name_value("this->Sup", (long long int)this->Sup,0);
     this->theIntervalMeasure = (double)right-(double)left+(double)1;// init for Discrete models: measure[+1,+3]==+3=={1,2,3}==right-left+1
-    Process::LogWrappers::SectionContent_variable_name_value("this->theIntervalMeasure", (long long int)this->theIntervalMeasure, 0);
+    Process::LogWrappers::SectionContent_variable_name_value("this->theIntervalMeasure", (long long int)this->theIntervalMeasure,0);
     // default model is [min,sup) on [0,RAND_MAX)==[0,32767)
     this->omothetia = this->theIntervalMeasure/((double)RAND_MAX);
-    Process::LogWrappers::SectionContent_variable_name_value("this->omothetia",  this->omothetia, 0);
+    Process::LogWrappers::SectionContent_variable_name_value("this->omothetia",  this->omothetia,0);
     this->translation = left;// shift
-    Process::LogWrappers::SectionContent_variable_name_value("this->translation", (long long int)this->translation, 0);
+    Process::LogWrappers::SectionContent_variable_name_value("this->translation", (long long int)this->translation,0);
     if( nullptr != this->discretePopulation)
     {
         delete this->discretePopulation;
@@ -127,11 +133,37 @@ ClassicalDiscreteGenerator::~ClassicalDiscreteGenerator()
 }// Dtor
 
 
+long double linerarInterpolation_inline(
+    long double x0, long double x1,
+    long double y0, long double y1,
+    long double x   )
+{
+    long double DeltaX = x1 - x0;
+    long double DeltaY = y1 - y0;
+    long double DyOnDx = DeltaY/DeltaX;
+    long double y;// y=y(x) the return value; image calculated.
+    y = DyOnDx*(x-x0) + y0;
+    //ready
+    return y;
+}// linerarInterpolation_inline
+
 int ClassicalDiscreteGenerator::nextIntegerInInterval() const
 {
-    double temp =  rand()*this->omothetia + this->translation;
-    this->discretePopulation->push_back( (int)temp);
-    return ( (int)temp);
+    Process::LogWrappers::SectionOpen("nextIntegerInInterval",0);
+    // model : randomized =  rand()*this->omothetia + this->translation;
+    double randomized =  rand();
+    Process::LogWrappers::SectionContent_variable_name_value("RAND_MAX= ", (long long)RAND_MAX,0);//2^31 i.e. a 32bit integer
+    Process::LogWrappers::SectionContent_variable_name_value("randomized= ", randomized,0);
+    double transformed = randomized*this->omothetia + this->translation;
+    Process::LogWrappers::SectionContent_variable_name_value("this->omothetia= ", this->omothetia,0);
+//Process::LogWrappers::SectionContent_variable_name_value("this->translation= ", (int)this->translation,0);
+    Process::LogWrappers::SectionContent_variable_name_value("transformed= ", transformed,0);
+    double rounded_to_nearest_integer = round( transformed);
+    Process::LogWrappers::SectionContent_variable_name_value("rounded_to_nearest_integer= ", rounded_to_nearest_integer,0);
+    this->discretePopulation->push_back( (int)rounded_to_nearest_integer);
+    Process::LogWrappers::SectionClose();
+    // ready
+    return ( (int)rounded_to_nearest_integer);
 }// END nextIntegerInInterval
 
 
@@ -185,7 +217,7 @@ void ClassicalDiscreteGenerator::showCumulatedFrequency() const
 
 void ClassicalDiscreteGenerator::buildDiscreteFrequencyDistribution()
 {
-    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator::buildDiscreteFrequencyDistribution()", 0);
+    Process::LogWrappers::SectionOpen("ClassicalDiscreteGenerator::buildDiscreteFrequencyDistribution()",0);
     int populationCardinality = this->discretePopulation->size();
     double elementPresenceWeight = +1.0/populationCardinality;
     for( std::vector<int>::const_iterator populationReader=this->discretePopulation->begin();
@@ -213,7 +245,7 @@ void ClassicalDiscreteGenerator::buildDiscreteFrequencyDistribution()
              std::string * strRepresentationOfPopulationReader = Common::StrManipul::doubleToString( *populationReader);
              sb.append( *strRepresentationOfPopulationReader );
              sb.append(" has found no DeltaOmega which it belongs to.");
-             Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
+             Process::LogWrappers::SectionContent( sb.str().c_str(),0);
              delete strRepresentationOfPopulationReader;
           }// end log.
    }// for populationReader
