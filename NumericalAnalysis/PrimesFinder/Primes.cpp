@@ -1390,81 +1390,81 @@ bool Primes::distributionFunction_fromExistingMesh()
 
 
 
-unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrimeThreshold)
-{
-    //
-    //2                       0
-    //100                     29
-    //1000                    176
-    //1000000                 78626
-    //1000000000              50849654
-    //1000000000000           37607953088
-    //1000000000000000        29844572821462
-    //18446744073709551615    425656551648260822
-    //
-    struct PillarPoint
-    {
-        unsigned long long abscissa;
-        unsigned long long ordinate;
-    };
-    PillarPoint * thePillarPoints = new PillarPoint[8];
-    //
-    thePillarPoints[0].abscissa = +2;
-    thePillarPoints[0].ordinate =  0;
-    //
-    thePillarPoints[1].abscissa = +100;
-    thePillarPoints[1].ordinate =  +29;
-    //
-    thePillarPoints[2].abscissa = +1000;
-    thePillarPoints[2].ordinate =  +176;
-    //
-    thePillarPoints[3].abscissa = +1000000;// 10^6
-    thePillarPoints[3].ordinate =   +78626;
-    //
-    thePillarPoints[4].abscissa = +1000000000;// 10^9
-    thePillarPoints[4].ordinate =   +50849654;
-    //
-    thePillarPoints[5].abscissa = +1000000000000;// 10^12
-    thePillarPoints[5].ordinate =   +37607953088;
-    //
-    thePillarPoints[6].abscissa = +1000000000000000;// 10^15
-    thePillarPoints[6].ordinate =   +29844572821462;
-    //
-    thePillarPoints[7].abscissa = +18446744073709551615;// 10^19
-    thePillarPoints[7].ordinate =   +425656551648260822;
-    //
-    // DBG int selectedInterval = 0;
-    unsigned long long x0,x1,y0,y1;
-    unsigned long long x = candidatePrimeThreshold;
-    unsigned long long y;// to be interpolated
-    for(int c=0; c<7; c++)// TODO test on last interval
-    {
-        if( thePillarPoints[c].abscissa < candidatePrimeThreshold
-            && thePillarPoints[c+1].abscissa >= candidatePrimeThreshold
-           )
-        {
-            // DBG selectedInterval = c;
-            x0 = thePillarPoints[c].abscissa;
-            x1 = thePillarPoints[c+1].abscissa;
-            y0 = thePillarPoints[c].ordinate;
-            y1 = thePillarPoints[c+1].ordinate;
-            break;
-        }
-    }// for
-    unsigned long long DeltaX = x1 - x0;
-    unsigned long long DeltaY = y1 - y0;
-    long double DyOnDx = (long double)DeltaY/(long double)DeltaX;
-    y = DyOnDx*(x-x0) + y0;
-
-    // TODO : which interval does candidatePrimeThreshold belong to ?
-    //      : which are the two boundary points of the selected interval ?
-    //      : which are the parameters of the line, that interpolates the interval boundary ?
-    // : given the line y=y(x) return the interpolatedOrdinal(candidatePrimeThreshold)
-
-    delete[] thePillarPoints;//clean
-    // ready.
-    return y;
-}// interpolateOrdinal
+//unsigned long long Primes::interpolateOrdinal( unsigned long long candidatePrimeThreshold)
+//{
+//    //
+//    //2                       0
+//    //100                     29
+//    //1000                    176
+//    //1000000                 78626
+//    //1000000000              50849654
+//    //1000000000000           37607953088
+//    //1000000000000000        29844572821462
+//    //18446744073709551615    425656551648260822
+//    //
+//    struct PillarPoint
+//    {
+//        unsigned long long abscissa;
+//        unsigned long long ordinate;
+//    };
+//    PillarPoint * thePillarPoints = new PillarPoint[8];
+//    //
+//    thePillarPoints[0].abscissa = +2;
+//    thePillarPoints[0].ordinate =  0;
+//    //
+//    thePillarPoints[1].abscissa = +100;
+//    thePillarPoints[1].ordinate =  +29;
+//    //
+//    thePillarPoints[2].abscissa = +1000;
+//    thePillarPoints[2].ordinate =  +176;
+//    //
+//    thePillarPoints[3].abscissa = +1000000;// 10^6
+//    thePillarPoints[3].ordinate =   +78626;
+//    //
+//    thePillarPoints[4].abscissa = +1000000000;// 10^9
+//    thePillarPoints[4].ordinate =   +50849654;
+//    //
+//    thePillarPoints[5].abscissa = +1000000000000;// 10^12
+//    thePillarPoints[5].ordinate =   +37607953088;
+//    //
+//    thePillarPoints[6].abscissa = +1000000000000000;// 10^15
+//    thePillarPoints[6].ordinate =   +29844572821462;
+//    //
+//    thePillarPoints[7].abscissa = +18446744073709551615;// 10^19
+//    thePillarPoints[7].ordinate =   +425656551648260822;
+//    //
+//    // DBG int selectedInterval = 0;
+//    unsigned long long x0,x1,y0,y1;
+//    unsigned long long x = candidatePrimeThreshold;
+//    unsigned long long y;// to be interpolated
+//    for(int c=0; c<7; c++)// TODO test on last interval
+//    {
+//        if( thePillarPoints[c].abscissa < candidatePrimeThreshold
+//            && thePillarPoints[c+1].abscissa >= candidatePrimeThreshold
+//           )
+//        {
+//            // DBG selectedInterval = c;
+//            x0 = thePillarPoints[c].abscissa;
+//            x1 = thePillarPoints[c+1].abscissa;
+//            y0 = thePillarPoints[c].ordinate;
+//            y1 = thePillarPoints[c+1].ordinate;
+//            break;
+//        }
+//    }// for
+//    unsigned long long DeltaX = x1 - x0;
+//    unsigned long long DeltaY = y1 - y0;
+//    long double DyOnDx = (long double)DeltaY/(long double)DeltaX;
+//    y = DyOnDx*(x-x0) + y0;
+//
+//    // TODO : which interval does candidatePrimeThreshold belong to ?
+//    //      : which are the two boundary points of the selected interval ?
+//    //      : which are the parameters of the line, that interpolates the interval boundary ?
+//    // : given the line y=y(x) return the interpolatedOrdinal(candidatePrimeThreshold)
+//
+//    delete[] thePillarPoints;//clean
+//    // ready.
+//    return y;
+//}// interpolateOrdinal
 
 void Primes::mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals )
 {
@@ -1490,7 +1490,7 @@ void Primes::mapTraverseForward( std::map<unsigned long long, unsigned long long
 
 Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long candidatePrimeThreshold)
 {
-    size_t map_size = logIntegralPillars->size();
+    size_t vector_size = logIntegralPillars->size();
 //    LogIntegralPillarPoint * thePillarPoints = new LogIntegralPillarPoint[map_size];
 //    int array_index = 0;
 //    for( std::map<unsigned long long, unsigned long long>::iterator fwd=this->logIntegralPillars->begin();
@@ -1513,7 +1513,7 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
 //    //
     // DBG int selectedInterval = 0;
     LogIntegralPillarPoint * nearestIntegral = new LogIntegralPillarPoint();// caller has to delete
-    for(size_t c=0; c<map_size-1; c++)// c+1<n -> c<n-1
+    for(size_t c=0; c<vector_size-1; c++)// c+1<n -> c<n-1
     {
 
         if( this->logIntegralPillars->operator[](c).threshold < candidatePrimeThreshold
