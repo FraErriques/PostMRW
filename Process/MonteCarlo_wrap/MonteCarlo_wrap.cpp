@@ -1,45 +1,44 @@
-
 #include <iostream>
+#include <vector>
 #include "MonteCarlo_wrap.h"
+#include "../../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
+#include "../../Common/MonteCarlo/ClassicalContinuousGenerator.h"
+#include "../../Common/MonteCarlo/modernRand.h"
 
 
- void Process::testMonteCarlo()
- {
-//     Common::MonteCarlo::ClassicalDiscreteGenerator discrete_monteCarlo;
-//     discrete_monteCarlo.resetExtractionInterval( 0, 100);
-     Common::MonteCarlo::ClassicalContinuousGenerator continuous_monteCarlo( 20.0 , 80.0 );
-     //continuous_monteCarlo.resetExtractionInterval
-//    Common::MonteCarlo::ClassicalDiscreteGenerator * discrete_monteCarlo = new Common::MonteCarlo::ClassicalDiscreteGenerator();
-//    Common::MonteCarlo::ClassicalContinuousGenerator * continuous_monteCarlo = new Common::MonteCarlo::ClassicalContinuousGenerator();
-    //
-    for(int c=0; c<10; c++)
+std::vector<int> * Process::MonteCarlo::getDiscreteRandomArray(
+    size_t arrayCardinality
+    , int intervalLeftBoundary, int intervalRightBoundary  )
+{
+    Common::MonteCarlo::ClassicalDiscreteGenerator cdg( intervalLeftBoundary, intervalRightBoundary);
+    std::vector<int> * result = new std::vector<int>();
+    for( size_t c=0; c<arrayCardinality; c++)
     {
-        // discrete
-//        discrete_monteCarlo.nextIntegerInInterval();
-//        discrete_monteCarlo.showDiscretePopulation();
-        // continuous
-        continuous_monteCarlo.nextDoubleInInterval();
-        continuous_monteCarlo.showContinuousPopulation();
-        continuous_monteCarlo.buildContinuousFrequencyDistribution();
-        continuous_monteCarlo.showFrequencyDistribution();
-        continuous_monteCarlo.showSup();
-        continuous_monteCarlo.showCurrentSeed();
-        //----
-        //std::cout<<"\n\t random integer at step "<<c<<" : "<< discrete_monteCarlo->showDiscretePopulation();
-        //std::cout<<"\n\t random probability at step "<<c<<" : "<< continuous_monteCarlo->showFrequencyDistribution();
-        //std::cout<<"\n\t SUP in random integers is : "<<
-        //std::cout<<"\n\t current-SEED in random integers is : "<< <<std::endl
+        result->push_back( cdg.nextIntegerInInterval());
     }
-    //
-//    delete discrete_monteCarlo;
-//    delete continuous_monteCarlo;
-    // ready.
- }// end test
+    // ready
+    return result;// caller has to delete
+}// getDiscreteRandomArray
+
+std::vector<double> * Process::MonteCarlo::getContinuousRandomArray(
+    size_t arrayCardinality
+    , double intervalLeftBoundary, double intervalRightBoundary  )
+{
+    Common::MonteCarlo::ClassicalContinuousGenerator cdg( intervalLeftBoundary, intervalRightBoundary);
+    std::vector<double> * result = new std::vector<double>();
+    for( size_t c=0; c<arrayCardinality; c++)
+    {
+        result->push_back( cdg.nextDoubleInInterval());
+    }
+    // ready
+    return result;// caller has to delete
+}// getContinuousRandomArray
+
 
 
 //#define LinuxPlatf
 #ifdef LinuxPlatf
-void Process::testCpp11_MonteCarlo()
+void Process::MonteCarlo::testCpp11_MonteCarlo()
 {
     //thread_local
     Common::RandCpp11 * randCpp11 = new Common::RandCpp11();

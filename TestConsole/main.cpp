@@ -39,10 +39,33 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Test_Unit_RealAnalysis * realTest = new Test_Unit_RealAnalysis();
-    realTest->LinearInterpolatorCoefficients();
-    delete realTest;
 
+    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
+    for( std::vector<int>::iterator it_d=dist_d->begin();
+          it_d!=dist_d->end();
+          it_d++
+    )
+    {
+        std::cout<<*it_d<<std::endl;
+    }
+    delete dist_d;
+    //
+    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
+    //
+    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
+    for( std::vector<double>::iterator it_c=dist_c->begin();
+          it_c!=dist_c->end();
+          it_c++
+    )
+    {
+        std::cout<<*it_c<<std::endl;
+    }
+    delete dist_c;
+
+
+//    Test_Unit_RealAnalysis * realTest = new Test_Unit_RealAnalysis();
+//    realTest->LinearInterpolatorCoefficients();
+//    delete realTest;
 
 
     // Process::testMonteCarlo(); TODO

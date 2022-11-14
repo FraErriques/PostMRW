@@ -10,11 +10,8 @@
 #include <vector>
 
 
-namespace Common
-{
-
-namespace MonteCarlo
-{
+namespace Common{
+namespace MonteCarlo{
 
 
 //    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as

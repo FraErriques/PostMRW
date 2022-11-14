@@ -1,10 +1,3 @@
-/*
-    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
-    before any call to rand or srand.
-    Two different initializations with the same seed will generate the same succession of results
-    in subsequent calls to rand.
-*/
-
 
 #include <stdio.h>      /* NULL */
 #include <stdlib.h>     /* RAND_MAX , srand , rand */
@@ -15,14 +8,15 @@
 #include "ClassicalContinuousGenerator.h"
 #include "../LogFs_wrap/LogFs_wrap.h"
 
-namespace Common
-{
+namespace Common{
+namespace MonteCarlo{
 
-namespace MonteCarlo
-{
-
-
-
+/*
+    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
+    before any call to rand or srand.
+    Two different initializations with the same seed will generate the same succession of results
+    in subsequent calls to rand.
+*/
 ClassicalContinuousGenerator::ClassicalContinuousGenerator( unsigned int seed, double left, double right) : currentSeed(seed), generatorSUP(RAND_MAX)
 {// Ctor with seed
     srand( seed);
