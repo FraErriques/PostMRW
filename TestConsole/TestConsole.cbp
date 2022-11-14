@@ -61,6 +61,8 @@
 		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.h" />
 		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.h" />
+		<Unit filename="Unit_Tests/Test_Unit_RealAnalysis.cpp" />
+		<Unit filename="Unit_Tests/Test_Unit_RealAnalysis.h" />
 		<Unit filename="Unit_Tests/Test_Unit_selectInterval.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_selectInterval.h" />
 		<Unit filename="_doc/20221013_LogIntegral_secondPhase_.txt" />

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
+//
 //--------------------#include <boost/lambda/lambda.hpp>
 //#include "../Common/DbConnectionService/dbCall.h"
 //#include "../Common/DbConnectionService/mysql_connection.h"
@@ -25,8 +27,9 @@
 #include "Unit_Tests/Test_Unit_Logger.h"
 #include "Unit_Tests/Test_Unit_selectInterval.h"
 #include "Unit_Tests/Test_Unit_MonteCarlo.h"
-//
-#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
+#include "Unit_Tests/Test_Unit_RealAnalysis.h"
+//-----unit test---------
+
 
 
 
@@ -36,12 +39,40 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    // Process::testMonteCarlo(); TODO
-//    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
-//    //test_MonteCarlo->monolite();
-//    test_MonteCarlo->test_discrete();
-//    test_MonteCarlo->test_continuous();
-//    delete test_MonteCarlo;
+
+    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
+    for( std::vector<int>::iterator it_d=dist_d->begin();
+          it_d!=dist_d->end();
+          it_d++
+    )
+    {
+        std::cout<<*it_d<<std::endl;
+    }
+    delete dist_d;
+    //
+    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
+    //
+    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
+    for( std::vector<double>::iterator it_c=dist_c->begin();
+          it_c!=dist_c->end();
+          it_c++
+    )
+    {
+        std::cout<<*it_c<<std::endl;
+    }
+    delete dist_c;
+
+
+//    Test_Unit_RealAnalysis * realTest = new Test_Unit_RealAnalysis();
+//    realTest->LinearInterpolatorCoefficients();
+//    delete realTest;
+
+
+
+    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
+    test_MonteCarlo->test_discrete();
+    test_MonteCarlo->test_continuous();
+    delete test_MonteCarlo;
     //
 //    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
 //    std::vector<std::string> *theKeys = configPtr->getAllKeys();
@@ -57,115 +88,115 @@ int main()
 ////    Process::testMonteCarlo(); //  undefined reference
 //    Process::testCpp11_MonteCarlo();
 //
-//    //------Unit Test-----CANTIERE------------------------------------------------
+////    //------Unit Test-----CANTIERE------------------------------------------------
+////    //
+//    std::string prefix("this string describes the following contents: int, double : ");
+//    int i_log = 22;
+//    double d_log = 2.7182818;
+//    Process::LogWrappers::SectionContent_fromMultipleStrings(
+//        0 // section_vebosity
+//        ,3 // how many params
+//        ,Common::StrManipul::stringByValueToStringPtr(prefix)
+//        ,Common::StrManipul::intToString( i_log)
+//        ,Common::StrManipul::doubleToString(d_log)
+//     );
+//
+//    Test_Unit_Logger test_unit_logger;
+//    test_unit_logger.managementMethod();
+//
+//    Test_Unit_selectInterval test_Unit_selectInterval; //ctor performs the test-calls, in this case.
+//    test_Unit_selectInterval.managementMethod();
+//
+//
 //    //
-    std::string prefix("this string describes the following contents: int, double : ");
-    int i_log = 22;
-    double d_log = 2.7182818;
-    Process::LogWrappers::SectionContent_fromMultipleStrings(
-        0 // section_vebosity
-        ,3 // how many params
-        ,Common::StrManipul::stringByValueToStringPtr(prefix)
-        ,Common::StrManipul::intToString( i_log)
-        ,Common::StrManipul::doubleToString(d_log)
-     );
-
-    Test_Unit_Logger test_unit_logger;
-    test_unit_logger.managementMethod();
-
-    Test_Unit_selectInterval test_Unit_selectInterval; //ctor performs the test-calls, in this case.
-    test_Unit_selectInterval.managementMethod();
-
-
-    //
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-    bool seq = test->sequentialDump( 99390);// required prime==soglia
-    seq &= true;
-
-    bool rand = test->randomDump(  15,  20);
-    rand &= true;
-//    rand = test->randomDump( 900, 920);
-//    rand = test->randomDump( 1500, 1520);
-//    rand = test->randomDump( 18446744073709550510, 18446744073709551610);
-
-
-    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
-    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
-    bool outcome_recoverLastRecord = test->recoverLastRecord();
-    bool outcome_recoverDumpTail = test->recoverDumpTail();
-    outcome_dumpTailReaderByChar &= true;
-    outcome_lastRecordReaderByChar &= true;
-    outcome_recoverLastRecord &= true;
-    outcome_recoverDumpTail &= true;
-    bool reader = true; // used with &=
-    reader = test->readSequentialDump_nextRec( 60);
-    bool outcome_acquireNextRecord = test->acquireNextRecord();
-    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
-    outcome_acquireNextRecord &= true;// avoid warnings
-    outcome_acquireSequenceOfRecord &= true;
-    // DBG size_t ulong_size = sizeof( unsigned long long);
-    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
-    for (int c=1; c<1181; c++)
-    {
-        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
-    }
-    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-    getchar();
-    //bool reader;
-    reader = test->readSequentialDump_nextRec( 60);
-    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        0
-        ,915 // there must be room for just one record Prime<100.
-     );
-    for( int c=0; c<61; c++)
-    {// next Rec
-        reader &= test->readSequentialDump_nextRec(c);
-    }
-    for( int c=0; c<61; c++)
-    {// array of Rec
-        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-            c
-            ,c+915 // there must be room for just one record Prime<100.
-         );
-    }// array of Rec
-    delete test;
+//    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
+//    bool seq = test->sequentialDump( 99390);// required prime==soglia
+//    seq &= true;
 //
-////    ------Unit Test-----CANTIERE---------------------------------------------------
+//    bool rand = test->randomDump(  15,  20);
+//    rand &= true;
+////    rand = test->randomDump( 900, 920);
+////    rand = test->randomDump( 1500, 1520);
+////    rand = test->randomDump( 18446744073709550510, 18446744073709551610);
 //
-////############################################################################################################
 //
-////    ------Unit Test-----PimesFinder--------test_PRODUCTION_----------------------------------------
-        Test_Unit_PrimesFinder * test_PRODUCTION_ = new Test_Unit_PrimesFinder( 80);
-        bool p_seq = test_PRODUCTION_->sequentialDump( 9000);
-        bool p_rand = test_PRODUCTION_->randomDump( 0, 50);
-        bool p_reader = test_PRODUCTION_->readBy_OperatorSquares( +2);// ask Prime[n]
-        p_seq &= true;
-        p_rand &= true;
-        p_reader &= true;
-        for (int c=599; c<611; c++)
-        {
-            reader &= test_PRODUCTION_->readBy_OperatorSquares( c);// ask Prime[n]
-        }
-        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-        std::cout<<"\n\n\n\t Strike Enter to continue\t";
-        getchar();
-        reader &= test_PRODUCTION_->readSequentialDump_nextRec( 60);
-        reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
-        23
-        ,915 // there must be room for just one record Prime<100.
-        );
-        for( int c=0; c<61; c++)
-        {// next Rec
-            reader &= test_PRODUCTION_->readSequentialDump_nextRec(c);
-        }
-        for( int c=0; c<61; c++)
-        {// array of Rec
-            reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
-                c
-                ,c+915 // there must be room for just one record Prime<100.
-             );
-        }// array of Rec
-        delete test_PRODUCTION_;
+//    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
+//    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
+//    bool outcome_recoverLastRecord = test->recoverLastRecord();
+//    bool outcome_recoverDumpTail = test->recoverDumpTail();
+//    outcome_dumpTailReaderByChar &= true;
+//    outcome_lastRecordReaderByChar &= true;
+//    outcome_recoverLastRecord &= true;
+//    outcome_recoverDumpTail &= true;
+//    bool reader = true; // used with &=
+//    reader = test->readSequentialDump_nextRec( 60);
+//    bool outcome_acquireNextRecord = test->acquireNextRecord();
+//    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
+//    outcome_acquireNextRecord &= true;// avoid warnings
+//    outcome_acquireSequenceOfRecord &= true;
+//    // DBG size_t ulong_size = sizeof( unsigned long long);
+//    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
+//    for (int c=1; c<1181; c++)
+//    {
+//        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
+//    }
+//    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+//    getchar();
+//    //bool reader;
+//    reader = test->readSequentialDump_nextRec( 60);
+//    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//        0
+//        ,915 // there must be room for just one record Prime<100.
+//     );
+//    for( int c=0; c<61; c++)
+//    {// next Rec
+//        reader &= test->readSequentialDump_nextRec(c);
+//    }
+//    for( int c=0; c<61; c++)
+//    {// array of Rec
+//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+//            c
+//            ,c+915 // there must be room for just one record Prime<100.
+//         );
+//    }// array of Rec
+//    delete test;
+////
+//////    ------Unit Test-----CANTIERE---------------------------------------------------
+////
+//////############################################################################################################
+////
+//////    ------Unit Test-----PimesFinder--------test_PRODUCTION_----------------------------------------
+//        Test_Unit_PrimesFinder * test_PRODUCTION_ = new Test_Unit_PrimesFinder( 80);
+//        bool p_seq = test_PRODUCTION_->sequentialDump( 9000);
+//        bool p_rand = test_PRODUCTION_->randomDump( 0, 50);
+//        bool p_reader = test_PRODUCTION_->readBy_OperatorSquares( +2);// ask Prime[n]
+//        p_seq &= true;
+//        p_rand &= true;
+//        p_reader &= true;
+//        for (int c=599; c<611; c++)
+//        {
+//            reader &= test_PRODUCTION_->readBy_OperatorSquares( c);// ask Prime[n]
+//        }
+//        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+//        std::cout<<"\n\n\n\t Strike Enter to continue\t";
+//        getchar();
+//        reader &= test_PRODUCTION_->readSequentialDump_nextRec( 60);
+//        reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
+//        23
+//        ,915 // there must be room for just one record Prime<100.
+//        );
+//        for( int c=0; c<61; c++)
+//        {// next Rec
+//            reader &= test_PRODUCTION_->readSequentialDump_nextRec(c);
+//        }
+//        for( int c=0; c<61; c++)
+//        {// array of Rec
+//            reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
+//                c
+//                ,c+915 // there must be room for just one record Prime<100.
+//             );
+//        }// array of Rec
+//        delete test_PRODUCTION_;
 //    //------Unit Test--------test_PRODUCTION_---------------------------------------------
 
 

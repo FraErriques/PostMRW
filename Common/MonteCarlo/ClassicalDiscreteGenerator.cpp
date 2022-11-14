@@ -8,11 +8,8 @@
 #include "ClassicalDiscreteGenerator.h"
 
 
-namespace Common
-{
-
-namespace MonteCarlo
-{
+namespace Common{
+namespace MonteCarlo{
 /*
     If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
     before any call to rand or srand.
@@ -72,7 +69,8 @@ void ClassicalDiscreteGenerator::resetExtractionInterval( int left, int right )
     this->Sup = right;// reset.
     Process::LogWrappers::SectionContent_variable_name_value("this->Min", (long long int)this->Min,0);
     Process::LogWrappers::SectionContent_variable_name_value("this->Sup", (long long int)this->Sup,0);
-    this->theIntervalMeasure = (double)right-(double)left+(double)1;// init for Discrete models: measure[+1,+3]==+3=={1,2,3}==right-left+1
+    this->theIntervalMeasure = (double)right-(double)left;// init for Discrete models: measure[+1,+3]==+3=={1,2,3}==right-left+1
+    // but the omothetia is on continuous measures, so Measure([+1,+3])==+2 -> Meas([a,b]==b-a
     Process::LogWrappers::SectionContent_variable_name_value("this->theIntervalMeasure", (long long int)this->theIntervalMeasure,0);
     // default model is [min,sup) on [0,RAND_MAX)==[0,32767)
     this->omothetia = this->theIntervalMeasure/((double)RAND_MAX);
@@ -211,7 +209,7 @@ void ClassicalDiscreteGenerator::showCumulatedFrequency() const
       {
          CumulatedFrequency += (*frequencyWriter)->categoryFrequency;
       }// for frequencyWriter
-      std::cout<< "\n\n\t CumulatedFrequency : " << CumulatedFrequency <<std::endl;
+      std::cout<< "\n\n\t CumulatedFrequency [Discrete] : " << CumulatedFrequency <<std::endl;
 }// END showCumulatedFrequency() const
 
 
@@ -258,24 +256,12 @@ void ClassicalDiscreteGenerator::buildOmega( int partizioneLeft ,int partizioneR
 {//this->frequencyDistribution has been built by Ctor.
     for( double position=partizioneLeft; position<=partizioneRight; position++)
     {
-        DeltaOmega * curDeltaOmega = new DeltaOmega( position, +1E-80);// TODO verify
+        DeltaOmega * curDeltaOmega = new DeltaOmega( position, +1E-80);
         this->frequencyDistribution->push_back( curDeltaOmega );
     }//for
 }//buildOmega
 
-//void ClassicalDiscreteGenerator::buildOmega( double partizioneLeft, double partizioneRight)
-//{//this->frequencyDistribution has been built by Ctor.
-//    double eta = (partizioneRight-partizioneLeft)/20.0;//each DeltaOmega is 1/10*Omega. Eta is 1/2*DeltaOmega.
-//    if(eta<+0.5){eta=+1.0/+2.0;}
-//    double mediana = 0;// init
-//    for( double position=partizioneLeft-+1.0E-80; mediana<partizioneRight; position+=2.0*eta)
-//    {
-//        mediana = position+eta;
-//        if(mediana>=partizioneRight){break;}
-//        DeltaOmega * curDeltaOmega = new DeltaOmega( mediana, eta);// TODO verify
-//        this->frequencyDistribution->push_back( curDeltaOmega );
-//    }//for
-//}//buildOmega
+
 
 
 unsigned int ClassicalDiscreteGenerator::showCurrentSeed() const

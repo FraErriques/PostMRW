@@ -57,8 +57,8 @@ void Test_Unit_MonteCarlo::monolite()
 void Test_Unit_MonteCarlo::test_continuous()
 {
     double LEFT_ = -50;
-    double RIGHT_ = -30;
-    int populationCardinality = 40;
+    double RIGHT_ = +30;
+    int populationCardinality = 4000;
     for( double left=LEFT_, right=left+10; right<=RIGHT_; left+=10, right+=10)
     {
         Common::MonteCarlo::ClassicalContinuousGenerator * monteCGen_c =
@@ -81,8 +81,8 @@ void Test_Unit_MonteCarlo::test_continuous()
 void Test_Unit_MonteCarlo::test_discrete()
 {
     int LEFT_ = -50;
-    int RIGHT_ = -30;
-    int populationCardinality = 40;// TODO : pass to Ctor to shape the vector capacity.---------------
+    int RIGHT_ = +30;
+    int populationCardinality = 4000;// TODO : pass to Ctor to shape the vector capacity.---------------
     for( int left=LEFT_, right=left+10; right<=RIGHT_; left+=10, right+=10)
     {
         //instance( left, right)

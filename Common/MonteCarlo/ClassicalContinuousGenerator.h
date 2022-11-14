@@ -1,33 +1,17 @@
 #ifndef CLASSICALCONTINUOUSGENERATOR_H_INCLUDED
 #define CLASSICALCONTINUOUSGENERATOR_H_INCLUDED
 
-
-
-
-
-
-
-
-
 #include <stdio.h>      /* NULL */
 #include <stdlib.h>     /* RAND_MAX , srand , rand */
 #include <time.h>       /* time */
-//#include "MonteCarlo.h"
-//  #include "../StringBuilder/StringBuilder.h"
 #include "./DeltaOmega.h"
 #include <cmath>
 #include <iostream>
 #include <vector>
 
 
-namespace Common
-{
-
-namespace MonteCarlo
-{
-
-
-
+namespace Common{
+namespace MonteCarlo{
 
 //    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
 //    before any call to rand or srand.

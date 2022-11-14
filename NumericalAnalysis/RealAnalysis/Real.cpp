@@ -335,9 +335,12 @@ Linear_Variety_Coefficients linear (Couple left, Couple right)
 
    if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
       { Domain domain = 1; throw domain; }
-   // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
-   // a = (y1-y0)/(x1-x0)
-   // b = (y0-x0*(y1-y0)/(x1-x0)) = y0 - x0 * a
+    // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
+    // a = (y1-y0)/(x1-x0)
+    // b = (y0-x0*(y1-y0)/(x1-x0)) = y0 - x0 * a
+    // il tensore della retta per i punti {x0,y0},{x1,y1}
+    //    | x-x0    y-y0|
+    //    |x1-x0   y1-y0|
    coefficients.alpha = (y1-y0)/(x1-x0);
    coefficients.beta  = y0 - x0 * coefficients.alpha;
 
