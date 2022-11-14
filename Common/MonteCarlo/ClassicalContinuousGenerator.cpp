@@ -259,8 +259,6 @@ void ClassicalContinuousGenerator::buildOmega(
 }//buildOmega
 
 
-
-
 unsigned int ClassicalContinuousGenerator::showCurrentSeed() const
 {
     return this->currentSeed;

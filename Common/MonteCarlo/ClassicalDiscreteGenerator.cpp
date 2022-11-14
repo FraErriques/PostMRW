@@ -259,24 +259,12 @@ void ClassicalDiscreteGenerator::buildOmega( int partizioneLeft ,int partizioneR
 {//this->frequencyDistribution has been built by Ctor.
     for( double position=partizioneLeft; position<=partizioneRight; position++)
     {
-        DeltaOmega * curDeltaOmega = new DeltaOmega( position, +1E-80);// TODO verify
+        DeltaOmega * curDeltaOmega = new DeltaOmega( position, +1E-80);
         this->frequencyDistribution->push_back( curDeltaOmega );
     }//for
 }//buildOmega
 
-//void ClassicalDiscreteGenerator::buildOmega( double partizioneLeft, double partizioneRight)
-//{//this->frequencyDistribution has been built by Ctor.
-//    double eta = (partizioneRight-partizioneLeft)/20.0;//each DeltaOmega is 1/10*Omega. Eta is 1/2*DeltaOmega.
-//    if(eta<+0.5){eta=+1.0/+2.0;}
-//    double mediana = 0;// init
-//    for( double position=partizioneLeft-+1.0E-80; mediana<partizioneRight; position+=2.0*eta)
-//    {
-//        mediana = position+eta;
-//        if(mediana>=partizioneRight){break;}
-//        DeltaOmega * curDeltaOmega = new DeltaOmega( mediana, eta);// TODO verify
-//        this->frequencyDistribution->push_back( curDeltaOmega );
-//    }//for
-//}//buildOmega
+
 
 
 unsigned int ClassicalDiscreteGenerator::showCurrentSeed() const

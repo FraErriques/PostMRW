@@ -16,6 +16,7 @@
 					<Add option="-m64" />
 					<Add option="-g" />
 					<Add directory="./" />
+					<Add directory="Unit_Tests" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -35,6 +36,7 @@
 					<Add option="-std=c++11" />
 					<Add option="-m64" />
 					<Add directory="./" />
+					<Add directory="Unit_Tests" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -62,6 +64,8 @@
 		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.h" />
 		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.h" />
+		<Unit filename="Unit_Tests/Test_Unit_RealAnalysis.cpp" />
+		<Unit filename="Unit_Tests/Test_Unit_RealAnalysis.h" />
 		<Unit filename="Unit_Tests/Test_Unit_selectInterval.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_selectInterval.h" />
 		<Unit filename="_doc/20221013_LogIntegral_secondPhase_.txt" />

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
+//
 //--------------------#include <boost/lambda/lambda.hpp>
 //#include "../Common/DbConnectionService/dbCall.h"
 //#include "../Common/DbConnectionService/mysql_connection.h"
@@ -25,8 +27,9 @@
 #include "Unit_Tests/Test_Unit_Logger.h"
 #include "Unit_Tests/Test_Unit_selectInterval.h"
 #include "Unit_Tests/Test_Unit_MonteCarlo.h"
-//
-#include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
+#include "Unit_Tests/Test_Unit_RealAnalysis.h"
+//-----unit test---------
+
 
 
 
@@ -36,12 +39,17 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
+    Test_Unit_RealAnalysis * realTest = new Test_Unit_RealAnalysis();
+    realTest->LinearInterpolatorCoefficients();
+    delete realTest;
+
+
+
     // Process::testMonteCarlo(); TODO
-    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
-    //test_MonteCarlo->monolite();
-    test_MonteCarlo->test_discrete();
-    test_MonteCarlo->test_continuous();
-    delete test_MonteCarlo;
+//    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
+//    test_MonteCarlo->test_discrete();
+//    test_MonteCarlo->test_continuous();
+//    delete test_MonteCarlo;
     //
 //    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
 //    std::vector<std::string> *theKeys = configPtr->getAllKeys();
