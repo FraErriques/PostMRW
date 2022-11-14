@@ -40,6 +40,7 @@ int main()
     Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
     //test_MonteCarlo->monolite();
     test_MonteCarlo->test_discrete();
+    test_MonteCarlo->test_continuous();
     delete test_MonteCarlo;
     //
 //    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();

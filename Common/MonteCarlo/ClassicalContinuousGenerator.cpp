@@ -125,7 +125,7 @@ ClassicalContinuousGenerator::~ClassicalContinuousGenerator()
 
     double ClassicalContinuousGenerator::nextDoubleInInterval() const
     {
-        Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()", 0);
+        Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::nextDoubleInInterval()",0);
         double originalExtracted = rand();
         double temp =  originalExtracted*this->omothetia + this->translation;
         if( this->Min<= temp
@@ -197,13 +197,13 @@ ClassicalContinuousGenerator::~ClassicalContinuousGenerator()
               {
                  CumulatedFrequency += (*frequencyWriter)->categoryFrequency;
               }// for frequencyWriter
-              std::cout<< "\n\n\t CumulatedFrequency : " << CumulatedFrequency <<std::endl;
+              std::cout<< "\n\n\t CumulatedFrequency [Continuous] : " << CumulatedFrequency <<std::endl;
         }// END showCumulatedFrequency() const
 
 
         void ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()
         {
-            Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()", 0);
+            Process::LogWrappers::SectionOpen("ClassicalContinuousGenerator::buildContinuousFrequencyDistribution()",0);
             int populationCardinality = this->continuousPopulation->size();
             double elementPresenceWeight = +1.0/populationCardinality;
             for( std::vector<double>::const_iterator populationReader=this->continuousPopulation->begin();
@@ -233,7 +233,7 @@ ClassicalContinuousGenerator::~ClassicalContinuousGenerator()
                           std::string * strRepresentationOfPopulationReader = Common::StrManipul::doubleToString( *populationReader);
                           sb.append( *strRepresentationOfPopulationReader );
                           sb.append(" has found no DeltaOmega which it belongs to.");
-                          Process::LogWrappers::SectionContent( sb.str().c_str(), 0);
+                          Process::LogWrappers::SectionContent( sb.str().c_str(),0);
                           delete strRepresentationOfPopulationReader;
                       }// end log.
                }// for populationReader

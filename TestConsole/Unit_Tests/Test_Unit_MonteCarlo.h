@@ -11,6 +11,7 @@ class Test_Unit_MonteCarlo
         virtual ~Test_Unit_MonteCarlo();
         void monolite();
         void test_discrete();
+        void test_continuous();
 
     protected:
 

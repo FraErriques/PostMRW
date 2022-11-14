@@ -4,12 +4,9 @@
 
 
 
-/*
-    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
-    before any call to rand or srand.
-    Two different initializations with the same seed will generate the same succession of results
-    in subsequent calls to rand.
-*/
+
+
+
 
 
 #include <stdio.h>      /* NULL */
@@ -32,13 +29,16 @@ namespace MonteCarlo
 
 
 
-
+//    If seed is set to 1, the generator is reinitialized to its initial value and produces the same values as
+//    before any call to rand or srand.
+//    Two different initializations with the same seed will generate the same succession of results
+//    in subsequent calls to rand.
 class ClassicalContinuousGenerator
 {
 private:
     unsigned int currentSeed;
     const int generatorSUP; // = RAND_MAX;// #include <stdlib.h>
-    friend class DeltaOmega;
+    void resetExtractionInterval( double left, double right );// non const; resets instance members. Called from Ctor only.
     bool ConstructorCanContinue;
     std::string * ReasonForAbortingConstructor;
     double theIntervalMeasure;
@@ -54,13 +54,12 @@ public:
     // one that you pointed to). If you pass in NULL, it just ignores it and merely returns a new time_t object that represents the current time.
     ClassicalContinuousGenerator( double left, double right);// : currentSeed( time(NULL)), generatorSUP(RAND_MAX);
     ~ClassicalContinuousGenerator();// Dtor
-    void resetExtractionInterval( double left, double right );// non const; resets instance members.
+    //
     double nextDoubleInInterval() const;
     void showContinuousPopulation() const;
     void showFrequencyDistribution() const;
     void showCumulatedFrequency() const;
     void buildContinuousFrequencyDistribution();
-//void buildOmega( int partizioneLeft ,int partizioneRight);
     void buildOmega( double partizioneLeft, double partizioneRight);
     unsigned int showCurrentSeed() const;
     double showSup() const;

@@ -23,7 +23,6 @@ void Test_Unit_MonteCarlo::monolite()
     //
     Common::MonteCarlo::ClassicalDiscreteGenerator * monteCGen_d =
         new Common::MonteCarlo::ClassicalDiscreteGenerator( 70, 80);// Ctor
-    monteCGen_d->resetExtractionInterval( left_d, right_d);// NB. compulsory
     for( int c=0; c<populationCardinality;c++)
     {
         monteCGen_d->nextIntegerInInterval();
@@ -55,11 +54,35 @@ void Test_Unit_MonteCarlo::monolite()
  }// monolite
 
 
+void Test_Unit_MonteCarlo::test_continuous()
+{
+    double LEFT_ = -50;
+    double RIGHT_ = +30;
+    int populationCardinality = 4000;
+    for( double left=LEFT_, right=left+10; right<=RIGHT_; left+=10, right+=10)
+    {
+        Common::MonteCarlo::ClassicalContinuousGenerator * monteCGen_c =
+            new Common::MonteCarlo::ClassicalContinuousGenerator( left, right);
+        //monteCGen_c->resetExtractionInterval( left, right);// NB. compulsory
+        for( int c=0; c<populationCardinality;c++)
+        {
+            monteCGen_c->nextDoubleInInterval();
+        }
+        //monteCGen_c->showContinuousPopulation();
+        monteCGen_c->buildOmega( left, right );
+        monteCGen_c->buildContinuousFrequencyDistribution();
+    //    monteCGen_c->showFrequencyDistribution();
+        monteCGen_c->showCumulatedFrequency();
+        delete monteCGen_c;
+    }
+}// test_continuous
+
+
 void Test_Unit_MonteCarlo::test_discrete()
 {
     int LEFT_ = -50;
-    int RIGHT_ = +50;
-    int populationCardinality = 40;// TODO : pass to Ctor to shape the vector capacity.---------------
+    int RIGHT_ = +30;
+    int populationCardinality = 4000;// TODO : pass to Ctor to shape the vector capacity.---------------
     for( int left=LEFT_, right=left+10; right<=RIGHT_; left+=10, right+=10)
     {
         //instance( left, right)
@@ -75,7 +98,7 @@ void Test_Unit_MonteCarlo::test_discrete()
         monteCGen_d->buildDiscreteFrequencyDistribution();
 //        monteCGen_d->showFrequencyDistribution();
         monteCGen_d->showCumulatedFrequency();
-//        // resize on existing instance:
+        // resize on existing instance:
 //        for( int resize_nr=0; resize_nr<3; resize_nr++)
 //        {
 //            // resize( left++, right--)// narrowing

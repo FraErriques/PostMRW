@@ -66,6 +66,7 @@ double linear_ante_image   (Linear_Variety_Coefficients, double);
 double log_linear_image        (Exponential_Variety_Coefficients, double);
 double log_linear_ante_image   (Exponential_Variety_Coefficients, double);
 
+
 } // end of namespace Two_Points_Interpolation
 
 
