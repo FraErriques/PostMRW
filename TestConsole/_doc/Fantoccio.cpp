@@ -18,7 +18,7 @@
 //
 //double rettangoli()
 //{
-//    Process::LogWrappers::SectionOpen("Entity::Integration::rettangoli()", 0);
+//    Process::LogWrappers::SectionOpen("RealIntegration::rettangoli()", 0);
 //    // NB. ci vuole !!! altimenti undefined_reference in Common:: !!
 //    Common::ConfigurationService * PrimeConfig = Process::getNamedConfiguration("./PrimeConfig.txt");// name for Prime-configuration.
 //
@@ -379,7 +379,7 @@
 ////   Numerics::Integrate * intgVoghera = new Numerics::Integrate( asdrubale, 2,4,2, -9.8E+99 );
 ////   double vogheraTrapezi = intgVoghera->equi_trapezium( );
 ////   delete intgVoghera;
-////   double trapeziCorrettivoControrno = Entity::Integration::trapezi( 2,4,2, asdrubale );
+////   double trapeziCorrettivoControrno = RealIntegration::trapezi( 2,4,2, asdrubale );
 ////   double errore = vogheraTrapezi - trapeziCorrettivoControrno;
 //
 // // MonteCarlo
@@ -930,14 +930,14 @@
 //
 //    // Common::command_PREPARE(); tested : hangs with noexcept.
 //
-////    Entity::Integration::rettangoli( +100.0,
+////    RealIntegration::rettangoli( +100.0,
 ////                                     +120.0,
 ////                                     28,
 ////                                     f
 ////                                     , false // i.e. not called from inside "trapezi"
 ////                                     );
 ////
-////    Entity::Integration::trapezi( +100.0,
+////    RealIntegration::trapezi( +100.0,
 ////                                     +120.0,
 ////                                     28,
 ////                                     f
@@ -978,7 +978,7 @@
 ////    std::cout << std::endl;
 ////    delete randCpp11;
 ////
-////    Process::LogWrappers::SectionOpen("Entity::Integration::rettangoli()", 0);
+////    Process::LogWrappers::SectionOpen("RealIntegration::rettangoli()", 0);
 ////    Process::LogWrappers::SectionContent("what I am doing...", 0);
 ////    Process::LogWrappers::SectionClose();
 ////    Common::dbCall::cantiere_intg_Sin_0_Pi_INSERT_SINGLE( 5);

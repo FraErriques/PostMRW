@@ -267,13 +267,13 @@ bool Primes::RandomCalcInterface( unsigned long long infLeft, unsigned long long
     bool res = false;
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     Primes::LogIntegralPillarPoint * nearestIntegral = this->getNearestIntegral( infLeft);
     unsigned long long threshold_lastIntegral = nearestIntegral->threshold;
     unsigned long long measure_lastIntegral = nearestIntegral->logIntegral;
     delete nearestIntegral;// clean
     long double LogIntegral_lastMile =
-        Entity::Integration::trapezi(
+        RealIntegration::trapezi(
                  (long double)threshold_lastIntegral// start from last integral saved.
                  , (long double)infLeft   // get to infleft
                  , (long double)1000  // test 1000 steps
@@ -534,8 +534,8 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 //  IntegerDecomposition : the Fundamental Thm of Arithmetic.
 Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
 {
-    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
     unsigned long long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
@@ -1254,11 +1254,11 @@ void Primes::coveringIntegral()
     std::ofstream logIntegral("./LogIntegral_firstPhase_.txt", std::fstream::out);// reset.
     std::string colonneStr("inf \t sup \t LogIntegral(inf,sup) \n");
     logIntegral.write( colonneStr.c_str(), colonneStr.length() );
-    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     for( int c=0; c<=6; c++ )
     {// integrate and dump the covering intervals.
         long double quantileLogIntegral =
-            Entity::Integration::trapezi(
+            RealIntegration::trapezi(
                                          LogIntegralStep_Array[c].inf
                                          ,LogIntegralStep_Array[c].sup
                                          ,LogIntegralStep_Array[c].card_partiz // how many steps

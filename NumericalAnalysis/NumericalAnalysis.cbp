@@ -38,6 +38,8 @@
 		<Unit filename="Complex/Complex.h" />
 		<Unit filename="ComplexMatrix/ComplexMatrix.cpp" />
 		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
+		<Unit filename="Integration/Complex_Integration.cpp" />
+		<Unit filename="Integration/Complex_Integration.h" />
 		<Unit filename="Integration/Integrate.cpp" />
 		<Unit filename="Integration/Integrate.h" />
 		<Unit filename="Integration/Integration.cpp" />
