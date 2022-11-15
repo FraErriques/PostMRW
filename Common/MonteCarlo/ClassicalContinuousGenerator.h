@@ -4,8 +4,6 @@
 #include <stdio.h>      /* NULL */
 #include <stdlib.h>     /* RAND_MAX , srand , rand */
 #include <time.h>       /* time */
-//#include "MonteCarlo.h"
-//  #include "../StringBuilder/StringBuilder.h"
 #include "./DeltaOmega.h"
 #include <cmath>
 #include <iostream>

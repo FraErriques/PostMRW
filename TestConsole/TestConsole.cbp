@@ -17,6 +17,7 @@
 					<Add option="-g" />
 					<Add directory="./" />
 					<Add directory="Unit_Tests" />
+					<Add directory="NumericalAnalysis/Integration" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -37,6 +38,7 @@
 					<Add option="-m64" />
 					<Add directory="./" />
 					<Add directory="Unit_Tests" />
+					<Add directory="NumericalAnalysis/Integration" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />

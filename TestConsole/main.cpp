@@ -68,11 +68,11 @@ int main()
 //    delete realTest;
 
 
-    // Process::testMonteCarlo(); TODO
-//    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
-//    test_MonteCarlo->test_discrete();
-//    test_MonteCarlo->test_continuous();
-//    delete test_MonteCarlo;
+
+    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
+    test_MonteCarlo->test_discrete();
+    test_MonteCarlo->test_continuous();
+    delete test_MonteCarlo;
     //
 //    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
 //    std::vector<std::string> *theKeys = configPtr->getAllKeys();

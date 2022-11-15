@@ -146,8 +146,8 @@ const char * PrimesFinder::Primes::feed_CustomDumpPath() // non const
         {
             this->createOrAppend( this->customDumpPath);
             // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-            Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-            double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+            RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+            double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
             this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
             this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
             this->desiredThreshold = maxRight;
@@ -1032,8 +1032,8 @@ unsigned long   PrimesFinder::Primes::operator[] ( const unsigned long requiredO
 // IntegerDecomposition : the Fundamental Thm of Arithmetic.
 PrimesFinder::Primes::SingleFactor * PrimesFinder::Primes::IntegerDecomposition( const unsigned long dividend)
 {
-    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
     unsigned long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
@@ -1476,8 +1476,8 @@ void PrimesFinder::Primes::Start_PrimeDump_FileSys() const
 //    bool res = false;
 //    //
 //    // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-//    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-//    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+//    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+//    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
 //    unsigned long long extimatedOrdinal= (unsigned long long)LogIntegral_ofInfPar;//TODO stima !
 //    //this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
 //    //this->desiredThreshold = maxRight;
@@ -1637,8 +1637,8 @@ void PrimesFinder::Primes::Start_PrimeDump_FileSys() const
 ///*  IntegerDecomposition : the Fundamental Thm of Arithmetic.
 //SingleFactor * IntegerDecomposition( const unsigned long long dividend)
 //{
-//    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-//    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
+//    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+//    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
 //    unsigned long long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
 //    SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
 //    // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
@@ -2168,8 +2168,8 @@ bool Cantiere_Primes_2022September01_::Primes::RandomCalcInterface( unsigned lon
     bool res = false;
     //
     // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
     this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
     this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
     this->desiredThreshold = maxRight;
@@ -2484,8 +2484,8 @@ unsigned long Cantiere_Primes_2022September01_::Primes::getLastPrime()
   IntegerDecomposition : the Fundamental Thm of Arithmetic.
 Cantiere_Primes_2022September01_::Primes::SingleFactor * Cantiere_Primes_2022September01_::Primes::IntegerDecomposition( const unsigned long dividend)
 {
-    Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
     unsigned long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
@@ -2791,8 +2791,8 @@ void Cantiere_Primes_2022September01_::Primes::Start_PrimeDump_FileSys() const
         {
             this->createOrAppend( this->customDumpPath);
             // NB. no {dumpTailReader, recoverLastRecord,...} -> work in [infLeft, maxRight].
-            Entity::Integration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-            double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+            RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+            double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
             this->lastOrdinal= (unsigned long)LogIntegral_ofInfPar;//TODO stima !
             this->lastPrime = infLeft;//##### the first integer analyzed will be infLeft+1; the last will be "maxRight" parameter.##
             this->desiredThreshold = maxRight;
@@ -4546,14 +4546,14 @@ unsigned long base10ConverterTo( const std::string & base64par )
 
     // Common::command_PREPARE(); tested : hangs with noexcept.
 
-//    Entity::Integration::rettangoli( +100.0,
+//    RealIntegration::rettangoli( +100.0,
 //                                     +120.0,
 //                                     28,
 //                                     f
 //                                     , false // i.e. not called from inside "trapezi"
 //                                     );
 //
-//    Entity::Integration::trapezi( +100.0,
+//    RealIntegration::trapezi( +100.0,
 //                                     +120.0,
 //                                     28,
 //                                     f
@@ -6147,12 +6147,12 @@ cout << endl;
 //    //
 //    EunoWrapper_RealPart = zVariable.Re();
 //    EunoWrapper_ImmaginaryPart = zVariable.Im();
-//    Entity::Integration::FunctionalForm f_Re = EunoWrapper_Re;// function pointer to wrapper for Real_part.
-//    Entity::Integration::FunctionalForm f_Im = EunoWrapper_Im;// function pointer to wrapper for Immaginary_part.
+//    RealIntegration::FunctionalForm f_Re = EunoWrapper_Re;// function pointer to wrapper for Real_part.
+//    RealIntegration::FunctionalForm f_Im = EunoWrapper_Im;// function pointer to wrapper for Immaginary_part.
 //    // integrate in du , u in (0,+1)
-//    double RealPart = Entity::Integration::trapezi( 0.0, +1.0, 999, f_Re);
-//    Numerics::Complex res( Entity::Integration::trapezi( 0.03, +1.0, 999, f_Re)
-//                              , Entity::Integration::trapezi( 0.03, +1.0, 999, f_Im) );
+//    double RealPart = RealIntegration::trapezi( 0.0, +1.0, 999, f_Re);
+//    Numerics::Complex res( RealIntegration::trapezi( 0.03, +1.0, 999, f_Re)
+//                              , RealIntegration::trapezi( 0.03, +1.0, 999, f_Im) );
 //    //ready.
 //    return res;
 //}// EunoZeta
@@ -6191,8 +6191,8 @@ cout << endl;
 //    SingleFactor * factorization = new SingleFactor[100];// TODO #
 //    unsigned long sogliaStimata = par/2;// greatest involved-prime is the cofactor of the smallest one(i.e. 2).
 //    // ordinaleStimato == LogIntegral[ sogliaStimata] NB. overstimate it, for safety.
-////        Entity::Integration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
-////        double LogIntegral_ofInfPar = Entity::Integration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
+////        RealIntegration::FunctionalForm LogIntegral = LogIntegral_coChain;// function pointer.
+////        double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)infLeft, ((double)infLeft-2.0)*4, LogIntegral );
 ////     unsigned ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;//TODO stima !
 //    unsigned ordinaleStimato = 11UL; // TODO
 //    for(int c=0; c<ordinaleStimato; c++)

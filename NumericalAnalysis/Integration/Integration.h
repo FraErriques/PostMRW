@@ -1,14 +1,8 @@
 #ifndef INTEGRATION_H_INCLUDED
 #define INTEGRATION_H_INCLUDED
 
-#include "../../Common/LogFs_wrap/LogFs_wrap.h"
 
-
-namespace Entity
-{
-
-namespace Integration
-{
+namespace RealIntegration{
 
 
 typedef long double (*FunctionalForm)(long double);
@@ -36,7 +30,6 @@ long double trapezi(
                 );
 
 
-}// nmsp
 }// nmsp
 
 
