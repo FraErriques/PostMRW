@@ -19,10 +19,10 @@
 				<Linker>
 					<Add option="-m64" />
 					<Add option="-pthread" />
-					<Add library="../Process/bin/Debug/libProcess.a" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
-					<Add library="../Entity/bin/Debug/libEntity.a" />
 					<Add library="../NumericalAnalysis/bin/Debug/libNumericalAnalysis.a" />
+					<Add library="../Entity/bin/Debug/libEntity.a" />
+					<Add library="../Process/bin/Debug/libProcess.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">

@@ -20,6 +20,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-m64" />
 					<Add library="../Common/bin/Debug/libCommon.a" />
 				</Linker>
 			</Target>

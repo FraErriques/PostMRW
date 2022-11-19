@@ -20,6 +20,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="../Common/bin/Debug/libCommon.a" />
+					<Add library="../NumericalAnalysis/bin/Debug/libNumericalAnalysis.a" />
 					<Add library="../Entity/bin/Debug/libEntity.a" />
 				</Linker>
 			</Target>
@@ -37,8 +38,9 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../Entity/bin/Release/libEntity.a" />
 					<Add library="../Common/bin/Release/libCommon.a" />
+					<Add library="../NumericalAnalysis/bin/Release/libNumericalAnalysis.a" />
+					<Add library="../Entity/bin/Release/libEntity.a" />
 				</Linker>
 			</Target>
 		</Build>
