@@ -101,6 +101,8 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
         //  #endregion exampleFunctions
 
 
+        /// Contour Integral can be performed also as Sum[f(z)*(dx+I*dy)]
+        /// so that there is no need to separate Real and Imaginary parts in the image.
         Numerics::Complex Integrate_equi_trapezium_ComplexImageAsScalar(
             double t0, double tn, // extrema in the pull-back t in [t0,tn]
             fPtr_ComplexAsScalar_ complexAsScalar,
@@ -184,6 +186,8 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
             fPtr_Jordan_parametriz_ dy_differential,
             unsigned long long n );// #trapezia in the partition
 
+        /// Contour Integral can be performed also as Sum[f(z)*(dx+I*dy)]
+        /// so that there is no need to separate Real and Imaginary parts in the image.
         Numerics::Complex * ContourIntegral_AsScalar_ManagementMethod(
             Numerics::Complex z0,
             Numerics::Complex z1,
