@@ -80,38 +80,25 @@ namespace Complex_Integration{
 //general setting for contour-integrals of elementary functions.
 typedef double (*fPtr_Jordan_parametriz_)(double);// the x(t) or y(t) or dx(t) or dy(t) of the Jordan parametric contour.
 typedef double (*fPtr_U_or_V_)(double,double);// the real or immaginary part of the image.// this will work fot u=u(x,y) and v=v(x,y)
+typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole image, treated as an algebraic scalar.
 
-//        #region exampleFunctions : such simple functions can be inline.
-        double x( double t)
-        {// x(t)=t
-            return t;
-        }// x(t)
-        double y( double t )
-        {// y(t)=2*t+1
-            return 2 * t + 1;
-        }// y(t)
-        double dx( double t )
-        {// x(t)=t->dx(t)=x'(t)dt=1*dt
-            return +1.0;
-        }// x(t)
-        double dy( double t )
-        {// y(t)=2*t+1 ->dy(y)=y'(t)dt==2*dt
-            return +2.0;
-        }// y(t)
+        //  #region exampleFunctions :
         /// <summary>
         /// the functions chosen for the example are f(z)=z which implies u(x,y)=x, v(x,y)=y;
         /// the choice for the contour is x(t)=t,y(t)=2*t+1,dx=dt which means dx=1
         /// dy=2*dt which means dy=2.
         /// </summary>
-        double genericIntegrand_u_part( double x, double y )
-        {// f(z)==z -> Re(f(z))==Re(f(x+I*y))==Re(x+I*y)==x.
-            return x;
-        }// u(x,y)
-        double genericIntegrand_v_part( double x, double y )
-        {// f(z)==z -> Im(f(z))==Im(f(x+I*y))====Im(x+I*y)==y.
-            return y;
-        }// v(x,y)
-//        #endregion exampleFunctions
+        // Jordan
+        double x( double t);// x(t)=t
+        double y( double t );// y(t)=2*t+1
+        double dx( double t );// x(t)=t->dx(t)=x'(t)dt=1*dt
+        double dy( double t );// y(t)=2*t+1 ->dy(t)=y'(t)dt==2*dt
+        // f(z)==u(x,y)+I*(v(x,y)
+        double genericIntegrand_u_part( double x, double y );// f(z)==z -> Re(f(z))==Re(f(x+I*y))==Re(x+I*y)==x.
+        double genericIntegrand_v_part( double x, double y );// f(z)==z -> Im(f(z))==Im(f(x+I*y))==Im(x+I*y)==y.
+        /// w==f(z) // the whole image, treated as an algebraic scalar.
+        Numerics::Complex integrand_ComplexAsScalar( double x, double y);// the whole image, treated as an algebraic scalar.
+        //  #endregion exampleFunctions
 
 
 
