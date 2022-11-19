@@ -67,7 +67,8 @@ int main()
     delete theIntegral_result;
 
 
-
+    Numerics::Complex * complexAsScalarCoChain_result = Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+                                                                                                                       
 
 
 

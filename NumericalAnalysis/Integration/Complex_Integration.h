@@ -101,6 +101,15 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
         //  #endregion exampleFunctions
 
 
+        Numerics::Complex Integrate_equi_trapezium_ComplexImageAsScalar(
+            double t0, double tn, // extrema in the pull-back t in [t0,tn]
+            fPtr_ComplexAsScalar_ complexAsScalar,
+            fPtr_Jordan_parametriz_ x_coordinate,
+            fPtr_Jordan_parametriz_ y_coordinate,
+            fPtr_Jordan_parametriz_ dx_differential,
+            fPtr_Jordan_parametriz_ dy_differential,
+            unsigned long long n );// #trapezia in the partition
+
 
         /// <summary>
         /// Trapezium Integration. NB.: (u(x,y)+I*v(x,y) )*(dx+I*dy)==u*dx-v*dy + I*( u*dy+v*dx)
@@ -169,6 +178,17 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
             double t0, double tn, // extrema in the pull-back
             fPtr_U_or_V_ u_Part,
             fPtr_U_or_V_ v_Part,
+            fPtr_Jordan_parametriz_ x_coordinate,
+            fPtr_Jordan_parametriz_ y_coordinate,
+            fPtr_Jordan_parametriz_ dx_differential,
+            fPtr_Jordan_parametriz_ dy_differential,
+            unsigned long long n );// #trapezia in the partition
+
+        Numerics::Complex * ContourIntegral_AsScalar_ManagementMethod(
+            Numerics::Complex z0,
+            Numerics::Complex z1,
+            double t0, double tn, // extrema in the pull-back
+            fPtr_ComplexAsScalar_ complexAsScalar,
             fPtr_Jordan_parametriz_ x_coordinate,
             fPtr_Jordan_parametriz_ y_coordinate,
             fPtr_Jordan_parametriz_ dx_differential,

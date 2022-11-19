@@ -67,6 +67,17 @@ int main()
     delete theIntegral_result;
 
 
+    Numerics::Complex * complexAsScalarCoChain_result = Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+        z0,
+        z1,
+        0, 2, // extrema in the pull-back
+        complexAsScalar,
+        abscissa,
+        ordinate,
+        dx_differential,
+        dy_differential,
+        100 );// #trapezia in the partition
+    delete complexAsScalarCoChain_result;
 
 
 

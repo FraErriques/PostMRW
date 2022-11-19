@@ -43,6 +43,39 @@ namespace Complex_Integration{
         // #endregion exampleFunctions
 
 
+
+        /// <summary>
+        /// Trapezium Integration. NB.: f(z)*(dx+I*dy)
+        /// ComplexImageAsScalar
+        /// </summary>
+        Numerics::Complex Integrate_equi_trapezium_ComplexImageAsScalar(
+            double t0, double tn, // extrema in the pull-back t in [t0,tn]
+            fPtr_ComplexAsScalar_ complexAsScalar,
+            fPtr_Jordan_parametriz_ x_coordinate,
+            fPtr_Jordan_parametriz_ y_coordinate,
+            fPtr_Jordan_parametriz_ dx_differential,
+            fPtr_Jordan_parametriz_ dy_differential,
+            unsigned long long n )// #trapezia in the partition
+        {// RealPart == ==u*dx-v*dy
+            double DeltaT = (tn - t0) / (double)n,
+            t = DeltaT;// the boundaries {t0,tn} are computed separately, after the core-loop. So trapezium starts at 1*DeltaT.
+            Numerics::Complex res(0,0);
+            // kordell starts here.
+            for (; t < tn; t += DeltaT)// stop at the second to last, i.e. <tn. The boudaries are computed separately: t=t0, t=tn.
+            {// sum all the internal sides
+                res += complexAsScalar(x_coordinate(t), y_coordinate(t)) * Numerics::Complex(dx_differential(t),dy_differential(t));
+            }
+            // post kordell adjustments
+            res *= DeltaT; // multiply them for the common base
+            res += (
+                    complexAsScalar(x_coordinate(t0), y_coordinate(t0)) * Numerics::Complex(dx_differential(t0),dy_differential(t0))+
+                    complexAsScalar(x_coordinate(tn), y_coordinate(tn)) * Numerics::Complex(dx_differential(tn),dy_differential(tn))
+                    ) * 0.5 * DeltaT; // add extrema * base/2
+            // ready
+            return res;
+        }//
+
+
         /// <summary>
         /// Trapezium Integration. NB.: (u(x,y)+I*v(x,y) )*(dx+I*dy)==u*dx-v*dy + I*( u*dy+v*dx)
         /// Real Part of the Integral means : RealPart[u*dx-v*dy + I*( u*dy+v*dx)]==u*dx-v*dy
@@ -210,5 +243,45 @@ namespace Complex_Integration{
             // ready.
             return res;// Caller has to delete.
         }// ContourIntegral_ManagementMethod
+
+
+        Numerics::Complex * ContourIntegral_AsScalar_ManagementMethod(
+            Numerics::Complex z0,
+            Numerics::Complex z1,
+            double t0, double tn, // extrema in the pull-back
+            fPtr_ComplexAsScalar_ complexAsScalar,
+            fPtr_Jordan_parametriz_ x_coordinate,
+            fPtr_Jordan_parametriz_ y_coordinate,
+            fPtr_Jordan_parametriz_ dx_differential,
+            fPtr_Jordan_parametriz_ dy_differential,
+            unsigned long long n )// #trapezia in the partition
+        {
+            Process::LogWrappers::SectionOpen("ContourIntegral_AsScalar_ManagementMethod",0);
+            bool extremaAdequacy = extremaCheck(
+                z0, z1,
+                t0, tn,
+                x_coordinate,
+                y_coordinate
+            );
+            if (!extremaAdequacy)
+            {// log & return null
+                Process::LogWrappers::SectionContent_fromMultipleStrings(0,1,"Integration extrema do not match, between coChain and Jordan-path.");
+                return nullptr;
+            }//{ throw new System.Exception("Integration extrema do not match, between coChain and Jordan-path."); }
+            //
+            Numerics::Complex * res = new Numerics::Complex(
+                Integrate_equi_trapezium_ComplexImageAsScalar(
+                    t0,tn
+                    ,complexAsScalar
+                    , x_coordinate
+                    , y_coordinate
+                    , dx_differential
+                    , dy_differential
+                    ,n )
+            );
+            Process::LogWrappers::SectionClose();
+            // ready.
+            return res;// Caller has to delete.
+        }// ContourIntegral_AsScalar_ManagementMethod
 
 }// nmsp
