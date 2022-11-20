@@ -29,6 +29,7 @@
 #include "Unit_Tests/Test_Unit_selectInterval.h"
 #include "Unit_Tests/Test_Unit_MonteCarlo.h"
 #include "Unit_Tests/Test_Unit_RealAnalysis.h"
+#include "Unit_Tests/Test_Unit_Complex.h"
 //-----unit test---------
 
 
@@ -40,47 +41,50 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    // u+i*v
-    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;
-    Complex_Integration::fPtr_U_or_V_ immaginaryPart = Complex_Integration::genericIntegrand_v_part;
-    // w=f(z)
-    Complex_Integration::fPtr_ComplexAsScalar_ complexAsScalar = Complex_Integration::integrand_ComplexAsScalar;
-    // Jordan
-    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = Complex_Integration::x;
-    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = Complex_Integration::y;
-    Complex_Integration::fPtr_Jordan_parametriz_ dx_differential = Complex_Integration::dx;
-    Complex_Integration::fPtr_Jordan_parametriz_ dy_differential = Complex_Integration::dy;
-    //
-    Numerics::Complex z0(0,1);
-    Numerics::Complex z1(2,5);
-    Numerics::Complex * theIntegral_result = Complex_Integration::ContourIntegral_ManagementMethod(
-        z0,
-        z1,
-        0, 2, // extrema in the pull-back
-        realPart,
-        immaginaryPart,
-        abscissa,
-        ordinate,
-        dx_differential,
-        dy_differential,
-        100 );// #trapezia in the partition
-    delete theIntegral_result;
+    Test_Unit_Complex contour_test;
+    contour_test.manage_ComplexIntegr_asScalar();
 
-
-    Numerics::Complex * complexAsScalarCoChain_result = Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
-        z0,
-        z1,
-        0, 2, // extrema in the pull-back
-        complexAsScalar,
-        abscissa,
-        ordinate,
-        dx_differential,
-        dy_differential,
-        100 );// #trapezia in the partition
-    delete complexAsScalarCoChain_result;
-
-
-
+//    // u+i*v
+//    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;
+//    Complex_Integration::fPtr_U_or_V_ immaginaryPart = Complex_Integration::genericIntegrand_v_part;
+//    // w=f(z)
+//    Complex_Integration::fPtr_ComplexAsScalar_ complexAsScalar = Complex_Integration::integrand_ComplexAsScalar;
+//    // Jordan
+//    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = Complex_Integration::x;
+//    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = Complex_Integration::y;
+//    Complex_Integration::fPtr_Jordan_parametriz_ dx_differential = Complex_Integration::dx;
+//    Complex_Integration::fPtr_Jordan_parametriz_ dy_differential = Complex_Integration::dy;
+//    //
+//    Numerics::Complex z0(0,1);
+//    Numerics::Complex z1(2,5);
+//    Numerics::Complex * theIntegral_result = Complex_Integration::ContourIntegral_ManagementMethod(
+//        z0,
+//        z1,
+//        0, 2, // extrema in the pull-back
+//        realPart,
+//        immaginaryPart,
+//        abscissa,
+//        ordinate,
+//        dx_differential,
+//        dy_differential,
+//        100 );// #trapezia in the partition
+//    delete theIntegral_result;
+//
+//
+//    Numerics::Complex * complexAsScalarCoChain_result = Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+//        z0,
+//        z1,
+//        0, 2, // extrema in the pull-back
+//        complexAsScalar,
+//        abscissa,
+//        ordinate,
+//        dx_differential,
+//        dy_differential,
+//        100 );// #trapezia in the partition
+//    delete complexAsScalarCoChain_result;
+//
+//
+//
 
 
 

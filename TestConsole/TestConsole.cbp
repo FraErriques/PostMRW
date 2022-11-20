@@ -15,6 +15,7 @@
 					<Add option="-std=c++11" />
 					<Add option="-m64" />
 					<Add option="-g" />
+					<Add directory="Unit_Tests" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -33,6 +34,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-std=c++11" />
+					<Add directory="Unit_Tests" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -55,6 +57,8 @@
 		</Linker>
 		<Unit filename="Unit_Tests/Test_Unit_CantierePrimes.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_CantierePrimes.h" />
+		<Unit filename="Unit_Tests/Test_Unit_Complex.cpp" />
+		<Unit filename="Unit_Tests/Test_Unit_Complex.h" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.h" />
 		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.cpp" />

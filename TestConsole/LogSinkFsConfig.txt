@@ -6,6 +6,6 @@ key_verbosity
 #
 
 ./log_cpp
-off
+on
 0
 

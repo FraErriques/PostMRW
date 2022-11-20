@@ -150,7 +150,7 @@ namespace Complex_Integration{
             fPtr_Jordan_parametriz_ y_coordinate
             )
         {
-            double localEpsilon = +1.0E-13;
+            double localEpsilon = +1.0E-05;
             double z0_x_byJordan = x_coordinate(t0);
             double z0_y_byJordan = y_coordinate(t0);
             double z1_x_byJordan = x_coordinate(tn);
@@ -265,7 +265,7 @@ namespace Complex_Integration{
             );
             if (!extremaAdequacy)
             {// log & return null
-                Process::LogWrappers::SectionContent_fromMultipleStrings(0,1,"Integration extrema do not match, between coChain and Jordan-path.");
+                Process::LogWrappers::SectionContent_fromMultipleStrings(0,1,new std::string("Integration extrema do not match, between coChain and Jordan-path."));
                 return nullptr;
             }//{ throw new System.Exception("Integration extrema do not match, between coChain and Jordan-path."); }
             //
