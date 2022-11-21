@@ -3,6 +3,7 @@
 #define _MY_COMPLEX_
 
 #include "../common_data/common_data.h"
+#include "../../Common/StringBuilder/StringBuilder.h"
 
 namespace Numerics {
 
@@ -10,7 +11,9 @@ class Complex
 {
 public:
    /// Constructors and Destructors
-   Complex              (double real=0.0, double immaginary=0.0);
+   Complex              (double real=0.0, double immaginary=0.0);// default params for rectangular coordinates
+   // TODO  Complex  a Ctor for Polar coordinates : cannot overload, since the params are exactly the same TODO
+   Complex              (double ro, double theta, bool isPolar);
    // Copy Constructor
    Complex              (const Complex & original);
    // operator=
@@ -18,14 +21,16 @@ public:
    // Destructor
    ~Complex             (void){} // let it virtual if You derive
 
-   double    Re          (void)           const             {return _Re;}
-   double    Im          (void)           const             {return _Im;}
-   void      set_Re      (double par)     /* non-const */   {_Re = par; }
-   void      set_Im      (double par)     /* non-const */   {_Im = par; }
-   double    length      (void)           const;
-   double    arg         (void)           const;
-   Complex   conjugated  (void)           const;
-   Complex   real_factor (double factor)  const;
+   double       Re          (void)           const             {return _Re;}
+   double       Im          (void)           const             {return _Im;}
+   void         set_Re      (double par)     /* non-const */   {_Re = par; }
+   void         set_Im      (double par)     /* non-const */   {_Im = par; }
+   double       length      (void)           const;
+   double       arg         (void)           const;
+   Complex      conjugated  (void)           const;
+   Complex      real_factor (double factor)  const;
+   std::string  ToString    (void)           const;
+
 
    /// binary operators /////////////////////////////////////////////////////
    Complex  operator+  (const Complex & second)    const;
@@ -68,8 +73,10 @@ public:
 
 private:
    /// data /////////////////////////////////////////////////////////////////////////////////////////
-   double _Re;
+   double _Re; // rectangular Cartesian coordinates
    double _Im;
+   double _ro; // polar coordinates
+   double _theta;
 };// end Class Complex
 
 const Complex i(0.0, 1.0);

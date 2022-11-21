@@ -90,9 +90,9 @@ namespace Complex_Integration{
             fPtr_Jordan_parametriz_ dy_differential,
             unsigned long long n )// #trapezia in the partition
         {// RealPart == ==u*dx-v*dy
-            double DeltaT = (tn - t0) / (double)n,
-            res = 0.0,
-            t = DeltaT;// the boundaries {t0,tn} are computed separately, after the core-loop. So trapezium starts at 1*DeltaT.
+            double DeltaT = (tn - t0) / (double)n;
+            double res = 0.0;
+            double t = t0 + DeltaT;// the boundaries {t0,tn} are computed separately, after the core-loop. So trapezium starts at 1*DeltaT.
             // kordell starts here.
             for (; t < tn; t += DeltaT)// stop at the second to last, i.e. <tn. The boudaries are computed separately: t=t0, t=tn.
             {// sum all the internal sides
@@ -123,9 +123,9 @@ namespace Complex_Integration{
             fPtr_Jordan_parametriz_ dy_differential,
             unsigned long long n )// #trapezia in the partition
         {// ImmaginaryPart== [I*]( u*dy+v*dx)
-            double DeltaT = (tn - t0) / (double)n,
-            res = 0.0,
-            t = DeltaT;// the boundaries {t0,tn} are computed separately, after the core-loop. So trapezium starts at 1*DeltaT.
+            double DeltaT = (tn - t0) / (double)n;
+            double res = 0.0;
+            double t = t0 + DeltaT;// the boundaries {t0,tn} are computed separately, after the core-loop. So trapezium starts at 1*DeltaT.
             // kordell starts here.
             for (; t < tn; t += DeltaT)// stop at the second to last, i.e. <tn. The boudaries are computed separately: t=t0, t=tn.
             {// sum all the internal sides

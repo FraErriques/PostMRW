@@ -11,8 +11,9 @@ class Test_Unit_Complex
         /** Default destructor */
         virtual ~Test_Unit_Complex();
         //
-        Numerics::Complex ErrorFunction( double x, double y);
-        void manage_ComplexIntegr_asScalar();
+//NB. CoChains and in general function-pointees have to be declared as local function in the .cpp file only of  the test class, and not as members.
+        void manage_ComplexIntegr_asScalar_square();
+        void similErf_test();
 
     protected:
 
