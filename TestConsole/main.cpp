@@ -20,6 +20,7 @@
 #include "../NumericalAnalysis/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../NumericalAnalysis/PrimesFinder/InternalAlgos.h"
 #include "../NumericalAnalysis/Complex/Complex.h"
+#include "../NumericalAnalysis/Integration/Complex_Integration.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
 #include "Unit_Tests/Test_Unit_CantierePrimes.h"
@@ -28,6 +29,7 @@
 #include "Unit_Tests/Test_Unit_selectInterval.h"
 #include "Unit_Tests/Test_Unit_MonteCarlo.h"
 #include "Unit_Tests/Test_Unit_RealAnalysis.h"
+#include "Unit_Tests/Test_Unit_Complex.h"
 //-----unit test---------
 
 
@@ -39,41 +41,88 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
+    Test_Unit_Complex contour_test;
+    contour_test.manage_ComplexIntegr_asScalar_square();
+    contour_test.similErf_test();
 
-    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
-    for( std::vector<int>::iterator it_d=dist_d->begin();
-          it_d!=dist_d->end();
-          it_d++
-    )
-    {
-        std::cout<<*it_d<<std::endl;
-    }
-    delete dist_d;
-    //
-    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
-    //
-    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
-    for( std::vector<double>::iterator it_c=dist_c->begin();
-          it_c!=dist_c->end();
-          it_c++
-    )
-    {
-        std::cout<<*it_c<<std::endl;
-    }
-    delete dist_c;
+//    // u+i*v
+//    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;
+//    Complex_Integration::fPtr_U_or_V_ immaginaryPart = Complex_Integration::genericIntegrand_v_part;
+//    // w=f(z)
+//    Complex_Integration::fPtr_ComplexAsScalar_ complexAsScalar = Complex_Integration::integrand_ComplexAsScalar;
+//    // Jordan
+//    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = Complex_Integration::x;
+//    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = Complex_Integration::y;
+//    Complex_Integration::fPtr_Jordan_parametriz_ dx_differential = Complex_Integration::dx;
+//    Complex_Integration::fPtr_Jordan_parametriz_ dy_differential = Complex_Integration::dy;
+//    //
+//    Numerics::Complex z0(0,1);
+//    Numerics::Complex z1(2,5);
+//    Numerics::Complex * theIntegral_result = Complex_Integration::ContourIntegral_ManagementMethod(
+//        z0,
+//        z1,
+//        0, 2, // extrema in the pull-back
+//        realPart,
+//        immaginaryPart,
+//        abscissa,
+//        ordinate,
+//        dx_differential,
+//        dy_differential,
+//        100 );// #trapezia in the partition
+//    delete theIntegral_result;
+//
+//
+//    Numerics::Complex * complexAsScalarCoChain_result = Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+//        z0,
+//        z1,
+//        0, 2, // extrema in the pull-back
+//        complexAsScalar,
+//        abscissa,
+//        ordinate,
+//        dx_differential,
+//        dy_differential,
+//        100 );// #trapezia in the partition
+//    delete complexAsScalarCoChain_result;
+//
+//
+//
 
 
-//    Test_Unit_RealAnalysis * realTest = new Test_Unit_RealAnalysis();
-//    realTest->LinearInterpolatorCoefficients();
-//    delete realTest;
 
-
-
-    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
-    test_MonteCarlo->test_discrete();
-    test_MonteCarlo->test_continuous();
-    delete test_MonteCarlo;
-    //
+//    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
+//    for( std::vector<int>::iterator it_d=dist_d->begin();
+//          it_d!=dist_d->end();
+//          it_d++
+//    )
+//    {
+//        std::cout<<*it_d<<std::endl;
+//    }
+//    delete dist_d;
+//    //
+//    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
+//    //
+//    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
+//    for( std::vector<double>::iterator it_c=dist_c->begin();
+//          it_c!=dist_c->end();
+//          it_c++
+//    )
+//    {
+//        std::cout<<*it_c<<std::endl;
+//    }
+//    delete dist_c;
+//
+//
+////    Test_Unit_RealAnalysis * realTest = new Test_Unit_RealAnalysis();
+////    realTest->LinearInterpolatorCoefficients();
+////    delete realTest;
+//
+//
+//
+//    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
+//    test_MonteCarlo->test_discrete();
+//    test_MonteCarlo->test_continuous();
+//    delete test_MonteCarlo;
+//    //
 //    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
 //    std::vector<std::string> *theKeys = configPtr->getAllKeys();
 //    std::cout << "\n";

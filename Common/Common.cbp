@@ -15,12 +15,14 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
 					<Add option="-m64" />
 					<Add option="-g" />
 					<Add directory="TestConsole/Unit_Tests" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
+					<Add option="-pthread" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -33,6 +35,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
 					<Add option="-m64" />
 					<Add directory="TestConsole/Unit_Tests" />
 				</Compiler>

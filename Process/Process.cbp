@@ -15,7 +15,7 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-std=c++11" />
+					<Add option="-std=gnu++11" />
 					<Add option="-m64" />
 					<Add option="-g" />
 				</Compiler>
@@ -36,7 +36,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-std=c++11" />
+					<Add option="-std=gnu++11" />
 					<Add option="-m64" />
 				</Compiler>
 				<Linker>

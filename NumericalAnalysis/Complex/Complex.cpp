@@ -20,7 +20,19 @@ Complex::Complex (double real, double immaginary)
 {
    _Re = real;
    _Im = immaginary;
+   //
+   this->_ro = sqrt( real*real + immaginary*immaginary);
+   this->_theta = this->arg();
 }
+
+Complex::Complex (double ro, double theta, bool isPolar) // Ctor Polar
+{// TODO check parameters adequacy
+    this->_ro = ro;
+    this->_theta = theta;
+    //
+    this->_Re = this->_ro * cos( theta);
+    this->_Im = this->_ro * sin( theta);
+}// Ctor Polar
 
 Complex::Complex (const Complex & original)
 {
@@ -33,6 +45,20 @@ Complex & Complex::operator= (const Complex & original)
    _Re = original.Re();
    _Im = original.Im();
    return *this;
+}
+
+std::string Complex::ToString() const
+{
+   std::string * RealPart = Common::StrManipul::doubleToString(this->Re());
+   std::string * ImmaginaryPart = Common::StrManipul::doubleToString(this->Im());
+   Common::StringBuilder sb(55);// forecast
+   sb.append( *RealPart);
+   sb.append( std::string(" +I* "));
+   sb.append( *ImmaginaryPart);
+   delete RealPart;
+   delete ImmaginaryPart;
+   // ready
+   return sb.str();
 }
 
 
