@@ -31,6 +31,7 @@ public:
    Complex      conjugated  (void)           const;
    Complex      real_factor (double factor)  const;
    std::string  ToString    (void)           const;
+   std::string  ToString_Polar(void)         const;
 
 
    /// binary operators /////////////////////////////////////////////////////

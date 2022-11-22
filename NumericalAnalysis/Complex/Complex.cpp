@@ -1,6 +1,11 @@
 
 #include "Complex.h" // which gives common_data.h
 
+// la seguente #define attiva l'utilizzo di una libreria (RealAnalysis/Real) che consiste in sviluppi
+// in serie di potenze, delle funzioni elementari. Tale libreria viene conservata come esercizio e memoria
+// storica dei tempi di Voghera, ma e' meglio non chiamarla in produzione. In caso non sia definito il simbolo
+// USE_REAL_LIB , le macro reindirizzano sulla libreria di Sistema.
+// NB. non scommentare la seguente riga:
 //#define  USE_REAL_LIB
 #ifdef  USE_REAL_LIB
    #include "../RealAnalysis/Real.h"
@@ -76,6 +81,20 @@ std::string Complex::ToString() const
    return sb.str();
 }
 
+std::string Complex::ToString_Polar() const
+{
+   std::string * modulus_Part = Common::StrManipul::doubleToString(this->_ro);
+   std::string * argument_Part = Common::StrManipul::doubleToString(this->_theta);
+   Common::StringBuilder sb(55);// forecast
+   sb.append( *modulus_Part);
+   sb.append( std::string(" *Exp[+I* "));
+   sb.append( *argument_Part);
+   sb.append( std::string("]"));
+   delete modulus_Part;
+   delete argument_Part;
+   // ready
+   return sb.str();
+}
 
 /// binary operators
 Complex  Complex::operator+ (const Complex & second) const

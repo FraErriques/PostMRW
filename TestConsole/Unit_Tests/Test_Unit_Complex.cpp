@@ -170,3 +170,20 @@ void Test_Unit_Complex::test_Ctor_s_()
     }
     // ready
 }// test_Ctor_s_
+
+void Test_Unit_Complex::test_AmpliTwist()
+{
+    for( double realPart=+1.0; realPart<+9.0; realPart+=+1.0)
+    {
+        for( double immPart=0.0; immPart<+3.0; immPart+=+0.5)
+        {
+            Numerics::Complex left(realPart, immPart);
+            Numerics::Complex right(realPart+5, immPart+5);
+            Numerics::Complex prd = left*right;
+            std::cout << "\n\t left*right==_"<<left.ToString()<<
+                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+            std::cout << "\n\t left*right==_"<<left.ToString_Polar()<<
+                " * "<<right.ToString()<<" == "<<prd.ToString_Polar()<<std::endl;
+        }
+    }
+}// AmpliTwist

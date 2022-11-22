@@ -15,6 +15,7 @@ class Test_Unit_Complex
         void manage_ComplexIntegr_asScalar_square();
         void similErf_test();
         void test_Ctor_s_();
+        void test_AmpliTwist();
 
     protected:
 
