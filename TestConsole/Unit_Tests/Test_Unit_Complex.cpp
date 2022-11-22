@@ -171,8 +171,11 @@ void Test_Unit_Complex::test_Ctor_s_()
     // ready
 }// test_Ctor_s_
 
+// Ampli-Twist
 void Test_Unit_Complex::test_AmpliTwist()
 {
+    Process::LogWrappers::SectionOpen("Ampli-Twist",0);
+    // rectangular
     for( double realPart=+1.0; realPart<+9.0; realPart+=+1.0)
     {
         for( double immPart=0.0; immPart<+3.0; immPart+=+0.5)
@@ -180,10 +183,57 @@ void Test_Unit_Complex::test_AmpliTwist()
             Numerics::Complex left(realPart, immPart);
             Numerics::Complex right(realPart+5, immPart+5);
             Numerics::Complex prd = left*right;
-            std::cout << "\n\t left*right==_"<<left.ToString()<<
+            std::cout << "\n\t left*right== "<<left.ToString()<<
                 " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
-            std::cout << "\n\t left*right==_"<<left.ToString_Polar()<<
-                " * "<<right.ToString()<<" == "<<prd.ToString_Polar()<<std::endl;
+            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" left*right== ")
+                ,new std::string( left.ToString() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString() )
+            );
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" Pol_left*right== ")
+                ,new std::string( left.ToString_Polar() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString_Polar() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString_Polar() )
+            );
         }
-    }
+    }// END rectangular
+    // polar
+    for( double modulusPart=+1.0; modulusPart<+9.0; modulusPart+=+1.0)
+    {
+        for( double anomaliaPart=-PI/2.0; anomaliaPart<+PI/2.0; anomaliaPart+=+0.5)
+        {
+            Numerics::Complex left(std::string("polar"),modulusPart, anomaliaPart);
+            Numerics::Complex right(std::string("polar"),modulusPart+5, anomaliaPart+5);
+            Numerics::Complex prd = left*right;
+            std::cout << "\n\t left*right== "<<left.ToString()<<
+                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" left*right== ")
+                ,new std::string( left.ToString() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString() )
+            );
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" Pol_left*right== ")
+                ,new std::string( left.ToString_Polar() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString_Polar() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString_Polar() )
+            );
+        }
+    }// END polar
+    Process::LogWrappers::SectionClose();
 }// AmpliTwist
