@@ -59,7 +59,7 @@ void Test_Unit_Complex::manage_ComplexIntegr_asScalar_square()
             , quadrato
             , abscissa, ordinate
             , dx, dy
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate z^2dz {z,(0,1),(2,5) == " << res->ToString() << std::endl;
     delete res;
     // ready
@@ -117,7 +117,7 @@ void Test_Unit_Complex::similErf_test()
             , similErf_fPtr
             , abscissa_real, ordinate_real
             , dx_real, dy_real
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(0,0),(1,0) == " << res_real->ToString() << std::endl;
     // su asse immaginario
     z0 = Numerics::Complex(1,0); // points on the image-plane, through the CoChain
@@ -133,7 +133,7 @@ void Test_Unit_Complex::similErf_test()
             , similErf_fPtr
             , abscissa_img, ordinate_img
             , dx_img, dy_img
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(1,0),(1,1) == " << res_img->ToString() << std::endl;
     //---somma dei due tratti
     z0 = Numerics::Complex(0,0); // points on the image-plane, through the CoChain
@@ -149,7 +149,7 @@ void Test_Unit_Complex::similErf_test()
             , similErf_fPtr
             , abscissa, ordinate
             , dx, dy
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(0,0),(1,1) == " << res_whole->ToString() << std::endl;
     std::cout << "Sum Intg[(0,0),(1,0)]+Intg[(1,0),(1,1)] == " <<
      (*res_real+*res_img).ToString() << std::endl;
@@ -158,3 +158,15 @@ void Test_Unit_Complex::similErf_test()
     delete res_whole;
     // ready
 }// similErf_test
+
+void Test_Unit_Complex::test_Ctor_s_()
+{
+    for( int c=0; c<100; c++)
+    {
+        Numerics::Complex * rectangular = new Numerics::Complex();
+        Numerics::Complex * polar = new Numerics::Complex("polar");
+        delete rectangular;
+        delete polar;
+    }
+    // ready
+}// test_Ctor_s_

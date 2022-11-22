@@ -14,6 +14,7 @@ class Test_Unit_Complex
 //NB. CoChains and in general function-pointees have to be declared as local function in the .cpp file only of  the test class, and not as members.
         void manage_ComplexIntegr_asScalar_square();
         void similErf_test();
+        void test_Ctor_s_();
 
     protected:
 

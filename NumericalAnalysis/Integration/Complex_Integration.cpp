@@ -59,7 +59,7 @@ namespace Complex_Integration{
         {// RealPart == ==u*dx-v*dy
             double DeltaT = (tn - t0) / (double)n;
             double t = t0 + DeltaT;// the boundaries {t0,tn} are computed separately, after the core-loop. So trapezium starts at 1*DeltaT.
-            Numerics::Complex res(0,0);
+            Numerics::Complex res(0.0,0.0);
             // kordell starts here.
             for (; t < tn; t += DeltaT)// stop at the second to last, i.e. <tn. The boudaries are computed separately: t=t0, t=tn.
             {// sum all the internal sides

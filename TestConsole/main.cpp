@@ -44,6 +44,7 @@ int main()
     Test_Unit_Complex contour_test;
     contour_test.manage_ComplexIntegr_asScalar_square();
     contour_test.similErf_test();
+    contour_test.test_Ctor_s_();
 
 //    // u+i*v
 //    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;
