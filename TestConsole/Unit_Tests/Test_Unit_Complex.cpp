@@ -59,7 +59,7 @@ void Test_Unit_Complex::manage_ComplexIntegr_asScalar_square()
             , quadrato
             , abscissa, ordinate
             , dx, dy
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate z^2dz {z,(0,1),(2,5) == " << res->ToString() << std::endl;
     delete res;
     // ready
@@ -117,7 +117,7 @@ void Test_Unit_Complex::similErf_test()
             , similErf_fPtr
             , abscissa_real, ordinate_real
             , dx_real, dy_real
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(0,0),(1,0) == " << res_real->ToString() << std::endl;
     // su asse immaginario
     z0 = Numerics::Complex(1,0); // points on the image-plane, through the CoChain
@@ -133,7 +133,7 @@ void Test_Unit_Complex::similErf_test()
             , similErf_fPtr
             , abscissa_img, ordinate_img
             , dx_img, dy_img
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(1,0),(1,1) == " << res_img->ToString() << std::endl;
     //---somma dei due tratti
     z0 = Numerics::Complex(0,0); // points on the image-plane, through the CoChain
@@ -149,7 +149,7 @@ void Test_Unit_Complex::similErf_test()
             , similErf_fPtr
             , abscissa, ordinate
             , dx, dy
-            , 10000 );// #steps
+            , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(0,0),(1,1) == " << res_whole->ToString() << std::endl;
     std::cout << "Sum Intg[(0,0),(1,0)]+Intg[(1,0),(1,1)] == " <<
      (*res_real+*res_img).ToString() << std::endl;
@@ -158,3 +158,82 @@ void Test_Unit_Complex::similErf_test()
     delete res_whole;
     // ready
 }// similErf_test
+
+void Test_Unit_Complex::test_Ctor_s_()
+{
+    for( int c=0; c<100; c++)
+    {
+        Numerics::Complex * rectangular = new Numerics::Complex();
+        Numerics::Complex * polar = new Numerics::Complex("polar");
+        delete rectangular;
+        delete polar;
+    }
+    // ready
+}// test_Ctor_s_
+
+// Ampli-Twist
+void Test_Unit_Complex::test_AmpliTwist()
+{
+    Process::LogWrappers::SectionOpen("Ampli-Twist",0);
+    // rectangular
+    for( double realPart=+1.0; realPart<+9.0; realPart+=+1.0)
+    {
+        for( double immPart=0.0; immPart<+3.0; immPart+=+0.5)
+        {
+            Numerics::Complex left(realPart, immPart);
+            Numerics::Complex right(realPart+5, immPart+5);
+            Numerics::Complex prd = left*right;
+            std::cout << "\n\t left*right== "<<left.ToString()<<
+                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" left*right== ")
+                ,new std::string( left.ToString() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString() )
+            );
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" Pol_left*right== ")
+                ,new std::string( left.ToString_Polar() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString_Polar() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString_Polar() )
+            );
+        }
+    }// END rectangular
+    // polar
+    for( double modulusPart=+1.0; modulusPart<+9.0; modulusPart+=+1.0)
+    {
+        for( double anomaliaPart=-PI/2.0; anomaliaPart<+PI/2.0; anomaliaPart+=+0.5)
+        {
+            Numerics::Complex left(std::string("polar"),modulusPart, anomaliaPart);
+            Numerics::Complex right(std::string("polar"),modulusPart+5, anomaliaPart+5);
+            Numerics::Complex prd = left*right;
+            std::cout << "\n\t left*right== "<<left.ToString()<<
+                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" left*right== ")
+                ,new std::string( left.ToString() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString() )
+            );
+            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+                new std::string(" Pol_left*right== ")
+                ,new std::string( left.ToString_Polar() )
+                ,new std::string( " * " )
+                ,new std::string( right.ToString_Polar() )
+                ,new std::string( " == " )
+                ,new std::string( prd.ToString_Polar() )
+            );
+        }
+    }// END polar
+    Process::LogWrappers::SectionClose();
+}// AmpliTwist

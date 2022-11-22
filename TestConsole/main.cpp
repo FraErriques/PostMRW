@@ -41,9 +41,11 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Test_Unit_Complex contour_test;
-    contour_test.manage_ComplexIntegr_asScalar_square();
-    contour_test.similErf_test();
+    Test_Unit_Complex Complex_test;
+    Complex_test.manage_ComplexIntegr_asScalar_square();
+    Complex_test.similErf_test();
+    Complex_test.test_Ctor_s_();
+    Complex_test.test_AmpliTwist();
 
 //    // u+i*v
 //    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;

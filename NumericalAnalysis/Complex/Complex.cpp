@@ -1,6 +1,11 @@
 
 #include "Complex.h" // which gives common_data.h
 
+// la seguente #define attiva l'utilizzo di una libreria (RealAnalysis/Real) che consiste in sviluppi
+// in serie di potenze, delle funzioni elementari. Tale libreria viene conservata come esercizio e memoria
+// storica dei tempi di Voghera, ma e' meglio non chiamarla in produzione. In caso non sia definito il simbolo
+// USE_REAL_LIB , le macro reindirizzano sulla libreria di Sistema.
+// NB. non scommentare la seguente riga:
 //#define  USE_REAL_LIB
 #ifdef  USE_REAL_LIB
    #include "../RealAnalysis/Real.h"
@@ -16,34 +21,49 @@
 
 namespace Numerics {
 
+// Ctor : rectangular coordinates
 Complex::Complex (double real, double immaginary)
 {
    _Re = real;
    _Im = immaginary;
    //
-//   this->_ro = sqrt( real*real + immaginary*immaginary);  TODO
-//   this->_theta = this->arg();
-}
+   this->_ro = this->length();
+   if( fabs(_Re)<+1E-09)
+   {// adopt a trick, to do not invoke arg() on an undefined vector(0,0).
+       this->_theta = 0.0;
+   }
+   else
+   {
+       this->_theta = this->arg();
+   }
+}// Ctor : rectangular coordinates
 
-Complex::Complex (double ro, double theta, bool isPolar) // Ctor Polar
-{// TODO check parameters adequacy
+// Ctor : Polar coordinates
+Complex::Complex( std::string isPolar, double ro, double theta)
+{// NB param  isPolarFlag content is ignored, but it serves to create a valid overload.
     this->_ro = ro;
     this->_theta = theta;
     //
     this->_Re = this->_ro * cos( theta);
     this->_Im = this->_ro * sin( theta);
-}// Ctor Polar
+}// Ctor : Polar coordinates
 
 Complex::Complex (const Complex & original)
 {
    _Re = original.Re();
    _Im = original.Im();
+   //
+   _ro = original._ro;
+   _theta = original._theta;
 }
 
 Complex & Complex::operator= (const Complex & original)
 {
    _Re = original.Re();
    _Im = original.Im();
+   //
+   _ro = original._ro;
+   _theta = original._theta;
    return *this;
 }
 
@@ -61,6 +81,20 @@ std::string Complex::ToString() const
    return sb.str();
 }
 
+std::string Complex::ToString_Polar() const
+{
+   std::string * modulus_Part = Common::StrManipul::doubleToString(this->_ro);
+   std::string * argument_Part = Common::StrManipul::doubleToString(this->_theta);
+   Common::StringBuilder sb(55);// forecast
+   sb.append( *modulus_Part);
+   sb.append( std::string(" *Exp[+I* "));
+   sb.append( *argument_Part);
+   sb.append( std::string("]"));
+   delete modulus_Part;
+   delete argument_Part;
+   // ready
+   return sb.str();
+}
 
 /// binary operators
 Complex  Complex::operator+ (const Complex & second) const
@@ -176,7 +210,7 @@ double Complex::length (void) const
    catch ( Domain )
      {modulus = 0.0;} // trap error; the null vector requires e^(0.5*ln(0)) but its length is 0
    return modulus;
-}
+}// the vector modulus
 
 Complex Complex::conjugated  (void) const
 {

@@ -1,3 +1,4 @@
+// first version : Voghera 2002
 
 #ifndef _MY_COMPLEX_
 #define _MY_COMPLEX_
@@ -11,9 +12,9 @@ class Complex
 {
 public:
    /// Constructors and Destructors
-   Complex              (double real=0.0, double immaginary=0.0);// default params for rectangular coordinates
+   Complex              (double real=+1.0, double immaginary=0.0);// default params for rectangular coordinates
    // TODO  Complex  a Ctor for Polar coordinates : cannot overload, since the params are exactly the same TODO
-   Complex              (double ro, double theta, bool isPolar);
+   Complex              (std::string isPolar, double ro=+1.0, double theta=0.0);
    // Copy Constructor
    Complex              (const Complex & original);
    // operator=
@@ -30,6 +31,7 @@ public:
    Complex      conjugated  (void)           const;
    Complex      real_factor (double factor)  const;
    std::string  ToString    (void)           const;
+   std::string  ToString_Polar(void)         const;
 
 
    /// binary operators /////////////////////////////////////////////////////
