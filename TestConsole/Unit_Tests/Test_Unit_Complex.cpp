@@ -186,9 +186,31 @@ bool check_product( Numerics::Complex factorLeft
     if( ! res_anomalia)
     {
         Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_mod_2PI_=="
+            ,anomalia_mod_2PI_
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_factorLeft=="
+            ,anomalia_factorLeft
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_factorRight=="
+            ,anomalia_factorRight
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_factor_product=="
+            ,anomalia_factor_product
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
             "fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))=="
             ,fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))
             ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))=="
+            ,fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))
+            ,0);
+        Process::LogWrappers::SectionContent_fromMultipleStrings(0,1,
+            new std::string("-----record terminator-----------------------------------------------------------------------") );
     }// else skip tracing.
     double modulus_factorLeft = factorLeft.length();
     double modulus_factorRight = factorRight.length();
@@ -248,7 +270,8 @@ void Test_Unit_Complex::test_AmpliTwist()
     // START polar
     for( double modulusPart=+1.0; modulusPart<+9.0; modulusPart+=+1.0)
     {
-        for( double anomaliaPart=-PI/2.0; anomaliaPart<+PI/2.0; anomaliaPart+=+0.5)
+        double eps = +1.0E-14;
+        for( double anomaliaPart=-PI/2.0+eps; anomaliaPart<+PI/2.0-eps; anomaliaPart+=+0.5E-01)
         {
             Numerics::Complex left(std::string("polar"),modulusPart, anomaliaPart);
             Numerics::Complex right(std::string("polar"),modulusPart+5, anomaliaPart+5);

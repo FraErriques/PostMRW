@@ -45,10 +45,10 @@ int main()
     Process::LogWrappers::SectionOpen("main", 0);
     //
     //double anomalia_mod_2PI_ = fmod( +6*(2*PI)+0.3 , 2*PI );// NB. resto di divisione float
-    bool res_1 = false & // this performs the second evaluation too
-                 ret_false();
-    bool res_2 = false &&  // NB. this short-circuits the second evaluation
-                 ret_false();
+//    bool res_1 = false & // this performs the second evaluation too
+//                 ret_false();
+//    bool res_2 = false &&  // NB. this short-circuits the second evaluation
+//                 ret_false();
     //
     Test_Unit_Complex Complex_test;
 //    Complex_test.manage_ComplexIntegr_asScalar_square();
