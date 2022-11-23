@@ -46,6 +46,8 @@ void Test_Unit_Logger::singleton_logger(int threadNum)
 
 
 
+
+
 // TODO goes in Process::Log_Wrappers
 // TODO let the prototype take std::string* and delete --------------------(V)
 // TODO let the prototype use a StringBuilder to concatenate the input ----(V)
@@ -75,7 +77,7 @@ int Test_Unit_Logger::logFromMultipleStrings(int howMany_params, ...)
 }// logFromMultipleStrings
 
 
-void Test_Unit_Logger::interface_logFromMultipleStrings( int par)
+void Test_Unit_Logger::interface_logFromMultipleStrings()
 {
     std::string * s1 = Common::StrManipul::boolToString( true);
     std::string * s2 = Common::StrManipul::doubleToString( +2.7182818E+03 );
@@ -83,9 +85,24 @@ void Test_Unit_Logger::interface_logFromMultipleStrings( int par)
     std::string * s4 = Common::StrManipul::uLongLongToString( +123456789);
     std::string * s5 = Common::StrManipul::intToString( -9);
     int hm_strings_toLog = logFromMultipleStrings(
+                    // this is a test-call: there's no verbosity
                          5 // hm_params
                          , s1,s2,s3,s4,s5 ); // the actual params
     hm_strings_toLog++;// avoid warn.
+    //
+    for(int c=0; c<1000; c++)
+    {
+        Process::LogWrappers::SectionContent_fromMultipleStrings(
+            0     // verbosity
+            ,6,   // hm_params NB. params have to be POINTERS to sd::string
+            new std::string(" left*right== ")
+            ,new std::string("+2.0")  // i.e. std::string *
+            ,new std::string( " * " )
+            ,new std::string("+3.0")
+            ,new std::string( " == " )
+            ,new std::string("+6.0")
+        );
+    }
 }// interface_logFromMultipleStrings
 
 

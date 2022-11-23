@@ -29,8 +29,8 @@
 #include "Unit_Tests/Test_Unit_selectInterval.h"
 #include "Unit_Tests/Test_Unit_MonteCarlo.h"
 #include "Unit_Tests/Test_Unit_RealAnalysis.h"
+#include "Unit_Tests/Test_Unit_Complex.h"
 //-----unit test---------
-
 
 
 
@@ -40,212 +40,12 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Test_Unit_Complex contour_test;
-    contour_test.manage_ComplexIntegr_asScalar();
-    
-//    // u+i*v
-//    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;
-//    Complex_Integration::fPtr_U_or_V_ immaginaryPart = Complex_Integration::genericIntegrand_v_part;
-//    // w=f(z)
-//    Complex_Integration::fPtr_ComplexAsScalar_ complexAsScalar = Complex_Integration::integrand_ComplexAsScalar;
-//    // Jordan
-//    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = Complex_Integration::x;
-//    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = Complex_Integration::y;
-//    Complex_Integration::fPtr_Jordan_parametriz_ dx_differential = Complex_Integration::dx;
-//    Complex_Integration::fPtr_Jordan_parametriz_ dy_differential = Complex_Integration::dy;
-//    //
-//    Numerics::Complex z0(0,1);
-//    Numerics::Complex z1(2,5);
-//    Numerics::Complex * theIntegral_result = Complex_Integration::ContourIntegral_ManagementMethod(
-//        z0,
-//        z1,
-//        0, 2, // extrema in the pull-back
-//        realPart,
-//        immaginaryPart,
-//        abscissa,
-//        ordinate,
-//        dx_differential,
-//        dy_differential,
-//        100 );// #trapezia in the partition
-//    delete theIntegral_result;
-//
-//
-//    Numerics::Complex * complexAsScalarCoChain_result = Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
-//        z0,
-//        z1,
-//        0, 2, // extrema in the pull-back
-//        complexAsScalar,
-//        abscissa,
-//        ordinate,
-//        dx_differential,
-//        dy_differential,
-//        100 );// #trapezia in the partition
-//    delete complexAsScalarCoChain_result;
-//
-//
-//
-
-
-
-//    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
-//    for( std::vector<int>::iterator it_d=dist_d->begin();
-//          it_d!=dist_d->end();
-//          it_d++
-//    )
-//    {
-//        std::cout<<*it_d<<std::endl;
-//    }
-//    delete dist_d;
-//    //
-//    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
-//    //
-//    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
-//    for( std::vector<double>::iterator it_c=dist_c->begin();
-//          it_c!=dist_c->end();
-//          it_c++
-//    )
-//    {
-//        std::cout<<*it_c<<std::endl;
-//    }
-//    delete dist_c;
-//
-//
-////    Test_Unit_RealAnalysis * realTest = new Test_Unit_RealAnalysis();
-////    realTest->LinearInterpolatorCoefficients();
-////    delete realTest;
-//
-//
-//
-//    Test_Unit_MonteCarlo * test_MonteCarlo = new Test_Unit_MonteCarlo();
-//    test_MonteCarlo->test_discrete();
-//    test_MonteCarlo->test_continuous();
-//    delete test_MonteCarlo;
-//    //
-//    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
-//    std::vector<std::string> *theKeys = configPtr->getAllKeys();
-//    std::cout << "\n";
-//    for( size_t c=0; c<theKeys->size(); c++)
-//    {
-//        std::cout<< (*theKeys)[c] << "\n";
-//    }
-//    // do not delete theKeys, since they are a member and will be destroyed from the Dtor
-//    delete configPtr;
-//    configPtr = nullptr;
-//
-////    Process::testMonteCarlo(); //  undefined reference
-//    Process::testCpp11_MonteCarlo();
-//
-////    //------Unit Test-----CANTIERE------------------------------------------------
-////    //
-//    std::string prefix("this string describes the following contents: int, double : ");
-//    int i_log = 22;
-//    double d_log = 2.7182818;
-//    Process::LogWrappers::SectionContent_fromMultipleStrings(
-//        0 // section_vebosity
-//        ,3 // how many params
-//        ,Common::StrManipul::stringByValueToStringPtr(prefix)
-//        ,Common::StrManipul::intToString( i_log)
-//        ,Common::StrManipul::doubleToString(d_log)
-//     );
-//
-//    Test_Unit_Logger test_unit_logger;
-//    test_unit_logger.managementMethod();
-//
-//    Test_Unit_selectInterval test_Unit_selectInterval; //ctor performs the test-calls, in this case.
-//    test_Unit_selectInterval.managementMethod();
-//
-//
-//    //
-//    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);
-//    bool seq = test->sequentialDump( 99390);// required prime==soglia
-//    seq &= true;
-//
-//    bool rand = test->randomDump(  15,  20);
-//    rand &= true;
-////    rand = test->randomDump( 900, 920);
-////    rand = test->randomDump( 1500, 1520);
-////    rand = test->randomDump( 18446744073709550510, 18446744073709551610);
-//
-//
-//    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
-//    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
-//    bool outcome_recoverLastRecord = test->recoverLastRecord();
-//    bool outcome_recoverDumpTail = test->recoverDumpTail();
-//    outcome_dumpTailReaderByChar &= true;
-//    outcome_lastRecordReaderByChar &= true;
-//    outcome_recoverLastRecord &= true;
-//    outcome_recoverDumpTail &= true;
-//    bool reader = true; // used with &=
-//    reader = test->readSequentialDump_nextRec( 60);
-//    bool outcome_acquireNextRecord = test->acquireNextRecord();
-//    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
-//    outcome_acquireNextRecord &= true;// avoid warnings
-//    outcome_acquireSequenceOfRecord &= true;
-//    // DBG size_t ulong_size = sizeof( unsigned long long);
-//    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
-//    for (int c=1; c<1181; c++)
-//    {
-//        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
-//    }
-//    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-//    getchar();
-//    //bool reader;
-//    reader = test->readSequentialDump_nextRec( 60);
-//    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-//        0
-//        ,915 // there must be room for just one record Prime<100.
-//     );
-//    for( int c=0; c<61; c++)
-//    {// next Rec
-//        reader &= test->readSequentialDump_nextRec(c);
-//    }
-//    for( int c=0; c<61; c++)
-//    {// array of Rec
-//        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-//            c
-//            ,c+915 // there must be room for just one record Prime<100.
-//         );
-//    }// array of Rec
-//    delete test;
-////
-//////    ------Unit Test-----CANTIERE---------------------------------------------------
-////
-//////############################################################################################################
-////
-//////    ------Unit Test-----PimesFinder--------test_PRODUCTION_----------------------------------------
-//        Test_Unit_PrimesFinder * test_PRODUCTION_ = new Test_Unit_PrimesFinder( 80);
-//        bool p_seq = test_PRODUCTION_->sequentialDump( 9000);
-//        bool p_rand = test_PRODUCTION_->randomDump( 0, 50);
-//        bool p_reader = test_PRODUCTION_->readBy_OperatorSquares( +2);// ask Prime[n]
-//        p_seq &= true;
-//        p_rand &= true;
-//        p_reader &= true;
-//        for (int c=599; c<611; c++)
-//        {
-//            reader &= test_PRODUCTION_->readBy_OperatorSquares( c);// ask Prime[n]
-//        }
-//        std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-//        std::cout<<"\n\n\n\t Strike Enter to continue\t";
-//        getchar();
-//        reader &= test_PRODUCTION_->readSequentialDump_nextRec( 60);
-//        reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
-//        23
-//        ,915 // there must be room for just one record Prime<100.
-//        );
-//        for( int c=0; c<61; c++)
-//        {// next Rec
-//            reader &= test_PRODUCTION_->readSequentialDump_nextRec(c);
-//        }
-//        for( int c=0; c<61; c++)
-//        {// array of Rec
-//            reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
-//                c
-//                ,c+915 // there must be room for just one record Prime<100.
-//             );
-//        }// array of Rec
-//        delete test_PRODUCTION_;
-//    //------Unit Test--------test_PRODUCTION_---------------------------------------------
-
+    Test_Unit_Complex Complex_test;
+    Complex_test.manage_ComplexIntegr_asScalar_square();
+    Complex_test.similErf_test();
+    Complex_test.test_Ctor_s_();
+    Complex_test.test_AmpliTwist();
+    Test_Unit_Logger::logFromMultipleStrings()
 
 
     //--------------------------------------------------------------
@@ -260,6 +60,142 @@ int main()
 
 
 
+void Process_MonteCarlo_caller()
+{
+    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
+    for( std::vector<int>::iterator it_d=dist_d->begin();
+          it_d!=dist_d->end();
+          it_d++
+    )
+    {
+        std::cout<<*it_d<<std::endl;
+    }
+    delete dist_d;
+    //
+    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
+    //
+    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
+    for( std::vector<double>::iterator it_c=dist_c->begin();
+          it_c!=dist_c->end();
+          it_c++
+    )
+    {
+        std::cout<<*it_c<<std::endl;
+    }
+    delete dist_c;
+} // Process_MonteCarlo_caller
+
+
+void massive_UnitTest_caller_Cantiere()
+{// NB amplitude==0
+    //    //------Unit Test-----CANTIERE------------------------------------------------
+    std::string prefix("this string describes the following contents: int, double : ");
+    int i_log = 22;
+    double d_log = 2.7182818;
+    Process::LogWrappers::SectionContent_fromMultipleStrings(
+        0 // section_vebosity
+        ,3 // how many params
+        ,Common::StrManipul::stringByValueToStringPtr(prefix)
+        ,Common::StrManipul::intToString( i_log)
+        ,Common::StrManipul::doubleToString(d_log)
+     );
+    //
+    Test_Unit_Logger test_unit_logger;
+    test_unit_logger.managementMethod();
+    //
+    Test_Unit_selectInterval test_Unit_selectInterval; //ctor performs the test-calls, in this case.
+    test_Unit_selectInterval.managementMethod();
+    //
+    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);// NB amplitude==0  ####------########
+    bool seq = test->sequentialDump( 99390);// required prime==soglia
+    seq &= true;
+
+    bool rand = test->randomDump(  15,  20);
+    rand &= true;
+    rand = test->randomDump( 900, 920);// i.e. dump Primes on custom interval
+    rand = test->randomDump( 1500, 1520);
+    //    rand = test->randomDump( 18446744073709550510, 18446744073709551610);
+    //
+    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
+    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
+    bool outcome_recoverLastRecord = test->recoverLastRecord();
+    bool outcome_recoverDumpTail = test->recoverDumpTail();
+    outcome_dumpTailReaderByChar &= true;
+    outcome_lastRecordReaderByChar &= true;
+    outcome_recoverLastRecord &= true;
+    outcome_recoverDumpTail &= true;
+    bool reader = true; // used with &=
+    reader = test->readSequentialDump_nextRec( 60);
+    bool outcome_acquireNextRecord = test->acquireNextRecord();
+    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
+    outcome_acquireNextRecord &= true;// avoid warnings
+    outcome_acquireSequenceOfRecord &= true;
+    // DBG size_t ulong_size = sizeof( unsigned long long);
+    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
+    for (int c=1; c<1181; c++)
+    {
+        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
+    }
+    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+    getchar();
+    //bool reader;
+    reader = test->readSequentialDump_nextRec( 60);
+    reader &= test->readSequentialDump_arrayOfRec_anywhere(
+        0
+        ,915 // there must be room for just one record Prime<100.
+     );
+    for( int c=0; c<61; c++)
+    {// next Rec
+        reader &= test->readSequentialDump_nextRec(c);
+    }
+    for( int c=0; c<61; c++)
+    {// array of Rec
+        reader &= test->readSequentialDump_arrayOfRec_anywhere(
+            c
+            ,c+915 // there must be room for just one record Prime<100.
+         );
+    }// array of Rec
+    delete test;
+    ////    ----END--Unit Test-----CANTIERE---------------------------------------------------
+}//massive_UnitTest_caller_Cantiere
+
+
+void massive_UnitTest_caller_Produzione()
+{// NB amplitude==80
+    ////    ------Unit Test-----PimesFinder--------test_PRODUCTION_----------------------------------------
+    Test_Unit_PrimesFinder * test_PRODUCTION_ = new Test_Unit_PrimesFinder( 80);// NB amplitude
+    bool p_seq = test_PRODUCTION_->sequentialDump( 9000);
+    bool p_rand = test_PRODUCTION_->randomDump( 0, 50);
+    bool p_reader = test_PRODUCTION_->readBy_OperatorSquares( +2);// ask Prime[n]
+    p_seq &= true;
+    p_rand &= true;
+    p_reader &= true;
+    for (int c=599; c<611; c++)
+    {
+        p_reader &= test_PRODUCTION_->readBy_OperatorSquares( c);// ask Prime[n]
+    }
+    std::cout<<"\n\n\n\t the final outcome is : "<< p_reader<<"\n\n";
+    std::cout<<"\n\n\n\t Strike Enter to continue\t";
+    getchar();
+    p_reader &= test_PRODUCTION_->readSequentialDump_nextRec( 60);
+    p_reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
+    23
+    ,915 // there must be room for just one record Prime<100.
+    );
+    for( int c=0; c<61; c++)
+    {// next Rec
+        p_reader &= test_PRODUCTION_->readSequentialDump_nextRec(c);
+    }
+    for( int c=0; c<61; c++)
+    {// array of Rec
+        p_reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
+            c
+            ,c+915 // there must be room for just one record Prime<100.
+         );
+    }// array of Rec
+    delete test_PRODUCTION_;
+    //------Unit Test--------test_PRODUCTION_---------------------------------------------
+}//massive_UnitTest_caller_Produzione
 
 /* --------------cantina----------------------------
     Cantiere_Primes_2022September01_::Primes cantiere(200);// semi-amplitude of each map segment
@@ -322,4 +258,17 @@ int main()
 //    delete stlStringPtr;
 //    std::cout<<"\n\n\t "<< c_buffer<<"\n\n";
     //----test accessori--------------------------
+    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
+    std::vector<std::string> *theKeys = configPtr->getAllKeys();
+    std::cout << "\n";
+    for( size_t c=0; c<theKeys->size(); c++)
+    {
+        std::cout<< (*theKeys)[c] << "\n";
+    }
+    // do not delete theKeys, since they are a member and will be destroyed from the Dtor
+    delete configPtr;
+    configPtr = nullptr;
+
+    Process::testCpp11_MonteCarlo(); //  undefined reference on Win
+
 */

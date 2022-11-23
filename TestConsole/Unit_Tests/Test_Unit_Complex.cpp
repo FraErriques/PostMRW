@@ -171,69 +171,201 @@ void Test_Unit_Complex::test_Ctor_s_()
     // ready
 }// test_Ctor_s_
 
+bool check_product( Numerics::Complex factorLeft
+                   ,Numerics::Complex factorRight
+                   ,Numerics::Complex product     )
+{
+    double errorThreshold = +1E-13;
+    double anomalia_factorLeft = factorLeft.arg();
+    double anomalia_factorRight = factorRight.arg();
+    double anomalia_factor_product = product.arg();
+    double anomalia_mod_2PI_ = fmod( anomalia_factor_product , 2.0*PI );// NB. remander of float division.
+    bool res_anomalia = true;//init to true and then &=
+    // NB. keep count of arg+k*(2PI) fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))
+    res_anomalia &= ( fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))<errorThreshold);
+    if( fabs(fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))-2.0*PI)<+1.0E-11 )
+    {// not an actual mistake; just a full round.
+        res_anomalia = true;
+    }// else it's an actual mistake.
+    if( ! res_anomalia)
+    {
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_mod_2PI_=="
+            ,anomalia_mod_2PI_
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_factorLeft=="
+            ,anomalia_factorLeft
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_factorRight=="
+            ,anomalia_factorRight
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "anomalia_factor_product=="
+            ,anomalia_factor_product
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))=="
+            ,fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))
+            ,0);
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))=="
+            ,fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))
+            ,0);
+        Process::LogWrappers::SectionContent_fromMultipleStrings(0,1,
+            new std::string("-----record terminator-----------------------------------------------------------------------") );
+    }// else skip tracing.
+    double modulus_factorLeft = factorLeft.length();
+    double modulus_factorRight = factorRight.length();
+    double modulus_factor_product = product.length();
+    bool res_modulus = true;//init to true and then &=
+    res_modulus &= ( fabs(modulus_factor_product-(modulus_factorLeft*modulus_factorRight))<errorThreshold);
+    // trace on error:
+    if( ! res_modulus)
+    {
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "fabs(modulus_factor_product-(modulus_factorLeft*modulus_factorRight))=="
+            ,fabs(modulus_factor_product-(modulus_factorLeft*modulus_factorRight))
+            ,0);
+    }// else skip tracing.
+    // ready
+    return (res_anomalia & res_modulus);// here & and && are the same: no short-circuit possible.
+}// check_product
+
 // Ampli-Twist
 void Test_Unit_Complex::test_AmpliTwist()
 {
     Process::LogWrappers::SectionOpen("Ampli-Twist",0);
     // rectangular
-    for( double realPart=+1.0; realPart<+9.0; realPart+=+1.0)
+    for( double realPart=+1.0; realPart<+9.0E+01; realPart+=+1.0)
     {
         for( double immPart=0.0; immPart<+3.0; immPart+=+0.5)
         {
             Numerics::Complex left(realPart, immPart);
             Numerics::Complex right(realPart+5, immPart+5);
             Numerics::Complex prd = left*right;
-            std::cout << "\n\t left*right== "<<left.ToString()<<
-                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
-            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
-                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" left*right== ")
-                ,new std::string( left.ToString() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString() )
-            );
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" Pol_left*right== ")
-                ,new std::string( left.ToString_Polar() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString_Polar() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString_Polar() )
-            );
-        }
-    }// END rectangular
-    // polar
+            if( ! check_product(left,right,prd))
+            {
+//                std::cout << "\n\t left*right== "<<left.ToString()<<
+//                    " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+//                std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+//                    " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" left*right== ")
+//                    ,new std::string( left.ToString() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString() )
+//                );
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" Pol_left*right== ")
+//                    ,new std::string( left.ToString_Polar() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString_Polar() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString_Polar() )
+//                );
+            }// end if NOT product_check (i.e. test failed).
+            // else continue without logging.
+        }// for internal
+    }// END rectangular : for esternal
+    // START polar
     for( double modulusPart=+1.0; modulusPart<+9.0; modulusPart+=+1.0)
     {
-        for( double anomaliaPart=-PI/2.0; anomaliaPart<+PI/2.0; anomaliaPart+=+0.5)
+        double eps = +1.0E-19;
+        for( double anomaliaPart=-PI/2.0+eps; anomaliaPart<3*(+PI/2.0-eps); anomaliaPart+=+0.5E-02)
         {
             Numerics::Complex left(std::string("polar"),modulusPart, anomaliaPart);
             Numerics::Complex right(std::string("polar"),modulusPart+5, anomaliaPart+5);
             Numerics::Complex prd = left*right;
-            std::cout << "\n\t left*right== "<<left.ToString()<<
-                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
-            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
-                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" left*right== ")
-                ,new std::string( left.ToString() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString() )
-            );
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" Pol_left*right== ")
-                ,new std::string( left.ToString_Polar() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString_Polar() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString_Polar() )
-            );
-        }
-    }// END polar
+            if( ! check_product(left,right,prd))
+            {
+//                std::cout << "\n\t left*right== "<<left.ToString()<<
+//                    " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+//                std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+//                    " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" left*right== ")
+//                    ,new std::string( left.ToString() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString() )
+//                );
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" Pol_left*right== ")
+//                    ,new std::string( left.ToString_Polar() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString_Polar() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString_Polar() )
+//                );
+            }// end if NOT product_check (i.e. test failed).
+            // else continue without logging.
+        }// for internal
+    }// END polar for external
     Process::LogWrappers::SectionClose();
 }// AmpliTwist
+
+bool ret_false() {return false;}
+
+void various_exercises()
+{
+    double anomalia_mod_2PI_ = fmod( +6*(2.0*PI)+0.3 , 2*PI );// NB. resto di divisione float
+    double float_reminder = remainder( 2.0*2.0*PI , 2.0*PI );
+    double float_fmod = fmod( 2.0*2.0*PI , 2.0*PI );
+    bool res_1 = false & // this performs the second evaluation too
+                 ret_false();
+    bool res_2 = false &&  // NB. this short-circuits the second evaluation
+                 ret_false();
+ // no-warn
+ anomalia_mod_2PI_++;
+ float_reminder++;
+ float_fmod++;
+ res_1 |=1;
+ res_2 |=1;
+}// various_exercises
+
+void someBasicContourIntegrals()
+{
+    // u+i*v
+    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;
+    Complex_Integration::fPtr_U_or_V_ immaginaryPart = Complex_Integration::genericIntegrand_v_part;
+    // w=f(z)
+    Complex_Integration::fPtr_ComplexAsScalar_ complexAsScalar = Complex_Integration::integrand_ComplexAsScalar;
+    // Jordan
+    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = Complex_Integration::x;
+    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = Complex_Integration::y;
+    Complex_Integration::fPtr_Jordan_parametriz_ dx_differential = Complex_Integration::dx;
+    Complex_Integration::fPtr_Jordan_parametriz_ dy_differential = Complex_Integration::dy;
+    //
+    Numerics::Complex z0(0,1);
+    Numerics::Complex z1(2,5);
+    Numerics::Complex * theIntegral_result = Complex_Integration::ContourIntegral_ManagementMethod(
+        z0,
+        z1,
+        0, 2, // extrema in the pull-back
+        realPart,
+        immaginaryPart,
+        abscissa,
+        ordinate,
+        dx_differential,
+        dy_differential,
+        100 );// #trapezia in the partition
+    delete theIntegral_result;
+    //
+    Numerics::Complex * complexAsScalarCoChain_result =
+        Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+        z0,
+        z1,
+        0, 2, // extrema in the pull-back
+        complexAsScalar,
+        abscissa,
+        ordinate,
+        dx_differential,
+        dy_differential,
+        100 );// #trapezia in the partition
+    delete complexAsScalarCoChain_result;
+}// someBasicContourIntegrals

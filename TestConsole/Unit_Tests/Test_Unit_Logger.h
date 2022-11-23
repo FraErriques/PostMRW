@@ -16,13 +16,13 @@ class Test_Unit_Logger
         virtual ~Test_Unit_Logger();
         //
         void managementMethod();
+        static void interface_logFromMultipleStrings();
 
     protected:
 
     private:
         static void autonomous_logger(int threadNum);// have to be static, to be taken the address of.
         static void singleton_logger(int threadNum);
-        static void interface_logFromMultipleStrings(int threadNum);
         static int logFromMultipleStrings(int howMany_params, ...);
         int FindMax (int n, ...);// not static, since I don't need to point at it, by a function pointer.
 
