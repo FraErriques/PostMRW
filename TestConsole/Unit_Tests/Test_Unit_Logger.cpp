@@ -46,6 +46,8 @@ void Test_Unit_Logger::singleton_logger(int threadNum)
 
 
 
+
+
 // TODO goes in Process::Log_Wrappers
 // TODO let the prototype take std::string* and delete --------------------(V)
 // TODO let the prototype use a StringBuilder to concatenate the input ----(V)

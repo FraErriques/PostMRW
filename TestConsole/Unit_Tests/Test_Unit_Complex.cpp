@@ -171,6 +171,42 @@ void Test_Unit_Complex::test_Ctor_s_()
     // ready
 }// test_Ctor_s_
 
+bool check_product( Numerics::Complex factorLeft
+                   ,Numerics::Complex factorRight
+                   ,Numerics::Complex product     )
+{
+    double errorThreshold = +1E-13;
+    double anomalia_factorLeft = factorLeft.arg();
+    double anomalia_factorRight = factorRight.arg();
+    double anomalia_factor_product = product.arg();
+    double anomalia_mod_2PI_ = fmod( anomalia_factor_product , 2.0*PI );// NB. remander of float division.
+    bool res_anomalia = true;//init to true and then &=
+    // NB. keep count of arg+k*(2PI) fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))
+    res_anomalia &= ( fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))<errorThreshold);
+    if( ! res_anomalia)
+    {
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))=="
+            ,fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))
+            ,0);
+    }// else skip tracing.
+    double modulus_factorLeft = factorLeft.length();
+    double modulus_factorRight = factorRight.length();
+    double modulus_factor_product = product.length();
+    bool res_modulus = true;//init to true and then &=
+    res_modulus &= ( fabs(modulus_factor_product-(modulus_factorLeft*modulus_factorRight))<errorThreshold);
+    // trace on error:
+    if( ! res_modulus)
+    {
+        Process::LogWrappers::SectionContent_variable_name_value(
+            "fabs(modulus_factor_product-(modulus_factorLeft*modulus_factorRight))=="
+            ,fabs(modulus_factor_product-(modulus_factorLeft*modulus_factorRight))
+            ,0);
+    }// else skip tracing.
+    // ready
+    return (res_anomalia & res_modulus);// here & and && are the same: no short-circuit possible.
+}// check_product
+
 // Ampli-Twist
 void Test_Unit_Complex::test_AmpliTwist()
 {
@@ -183,29 +219,33 @@ void Test_Unit_Complex::test_AmpliTwist()
             Numerics::Complex left(realPart, immPart);
             Numerics::Complex right(realPart+5, immPart+5);
             Numerics::Complex prd = left*right;
-            std::cout << "\n\t left*right== "<<left.ToString()<<
-                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
-            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
-                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" left*right== ")
-                ,new std::string( left.ToString() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString() )
-            );
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" Pol_left*right== ")
-                ,new std::string( left.ToString_Polar() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString_Polar() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString_Polar() )
-            );
-        }
-    }// END rectangular
-    // polar
+            if( ! check_product(left,right,prd))
+            {
+//                std::cout << "\n\t left*right== "<<left.ToString()<<
+//                    " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+//                std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+//                    " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" left*right== ")
+//                    ,new std::string( left.ToString() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString() )
+//                );
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" Pol_left*right== ")
+//                    ,new std::string( left.ToString_Polar() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString_Polar() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString_Polar() )
+//                );
+            }// end if NOT product_check (i.e. test failed).
+            // else continue without logging.
+        }// for internal
+    }// END rectangular : for esternal
+    // START polar
     for( double modulusPart=+1.0; modulusPart<+9.0; modulusPart+=+1.0)
     {
         for( double anomaliaPart=-PI/2.0; anomaliaPart<+PI/2.0; anomaliaPart+=+0.5)
@@ -213,27 +253,31 @@ void Test_Unit_Complex::test_AmpliTwist()
             Numerics::Complex left(std::string("polar"),modulusPart, anomaliaPart);
             Numerics::Complex right(std::string("polar"),modulusPart+5, anomaliaPart+5);
             Numerics::Complex prd = left*right;
-            std::cout << "\n\t left*right== "<<left.ToString()<<
-                " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
-            std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
-                " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" left*right== ")
-                ,new std::string( left.ToString() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString() )
-            );
-            Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
-                new std::string(" Pol_left*right== ")
-                ,new std::string( left.ToString_Polar() )
-                ,new std::string( " * " )
-                ,new std::string( right.ToString_Polar() )
-                ,new std::string( " == " )
-                ,new std::string( prd.ToString_Polar() )
-            );
-        }
-    }// END polar
+            if( ! check_product(left,right,prd))
+            {
+//                std::cout << "\n\t left*right== "<<left.ToString()<<
+//                    " * "<<right.ToString()<<" == "<<prd.ToString()<<std::endl;
+//                std::cout << "\n\t Pol_left*Pol_right== "<<left.ToString_Polar()<<
+//                    " * "<<right.ToString_Polar()<<" == "<<prd.ToString_Polar()<<std::endl;
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" left*right== ")
+//                    ,new std::string( left.ToString() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString() )
+//                );
+//                Process::LogWrappers::SectionContent_fromMultipleStrings(0,6,
+//                    new std::string(" Pol_left*right== ")
+//                    ,new std::string( left.ToString_Polar() )
+//                    ,new std::string( " * " )
+//                    ,new std::string( right.ToString_Polar() )
+//                    ,new std::string( " == " )
+//                    ,new std::string( prd.ToString_Polar() )
+//                );
+            }// end if NOT product_check (i.e. test failed).
+            // else continue without logging.
+        }// for internal
+    }// END polar for external
     Process::LogWrappers::SectionClose();
 }// AmpliTwist
