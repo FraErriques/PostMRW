@@ -308,3 +308,64 @@ void Test_Unit_Complex::test_AmpliTwist()
     }// END polar for external
     Process::LogWrappers::SectionClose();
 }// AmpliTwist
+
+bool ret_false() {return false;}
+
+void various_exercises()
+{
+    double anomalia_mod_2PI_ = fmod( +6*(2.0*PI)+0.3 , 2*PI );// NB. resto di divisione float
+    double float_reminder = remainder( 2.0*2.0*PI , 2.0*PI );
+    double float_fmod = fmod( 2.0*2.0*PI , 2.0*PI );
+    bool res_1 = false & // this performs the second evaluation too
+                 ret_false();
+    bool res_2 = false &&  // NB. this short-circuits the second evaluation
+                 ret_false();
+ // no-warn
+ anomalia_mod_2PI_++;
+ float_reminder++;
+ float_fmod++;
+ res_1 |=1;
+ res_2 |=1;
+}// various_exercises
+
+void someBasicContourIntegrals()
+{
+    // u+i*v
+    Complex_Integration::fPtr_U_or_V_ realPart = Complex_Integration::genericIntegrand_u_part;
+    Complex_Integration::fPtr_U_or_V_ immaginaryPart = Complex_Integration::genericIntegrand_v_part;
+    // w=f(z)
+    Complex_Integration::fPtr_ComplexAsScalar_ complexAsScalar = Complex_Integration::integrand_ComplexAsScalar;
+    // Jordan
+    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = Complex_Integration::x;
+    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = Complex_Integration::y;
+    Complex_Integration::fPtr_Jordan_parametriz_ dx_differential = Complex_Integration::dx;
+    Complex_Integration::fPtr_Jordan_parametriz_ dy_differential = Complex_Integration::dy;
+    //
+    Numerics::Complex z0(0,1);
+    Numerics::Complex z1(2,5);
+    Numerics::Complex * theIntegral_result = Complex_Integration::ContourIntegral_ManagementMethod(
+        z0,
+        z1,
+        0, 2, // extrema in the pull-back
+        realPart,
+        immaginaryPart,
+        abscissa,
+        ordinate,
+        dx_differential,
+        dy_differential,
+        100 );// #trapezia in the partition
+    delete theIntegral_result;
+    //
+    Numerics::Complex * complexAsScalarCoChain_result =
+        Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+        z0,
+        z1,
+        0, 2, // extrema in the pull-back
+        complexAsScalar,
+        abscissa,
+        ordinate,
+        dx_differential,
+        dy_differential,
+        100 );// #trapezia in the partition
+    delete complexAsScalarCoChain_result;
+}// someBasicContourIntegrals
