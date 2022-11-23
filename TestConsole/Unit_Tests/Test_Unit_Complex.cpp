@@ -183,6 +183,10 @@ bool check_product( Numerics::Complex factorLeft
     bool res_anomalia = true;//init to true and then &=
     // NB. keep count of arg+k*(2PI) fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))
     res_anomalia &= ( fabs(anomalia_mod_2PI_-(anomalia_factorLeft+anomalia_factorRight))<errorThreshold);
+    if( fabs(fabs(anomalia_factor_product-(anomalia_factorLeft+anomalia_factorRight))-2.0*PI)<+1.0E-11 )
+    {// not an actual mistake; just a full round.
+        res_anomalia = true;
+    }// else it's an actual mistake.
     if( ! res_anomalia)
     {
         Process::LogWrappers::SectionContent_variable_name_value(
