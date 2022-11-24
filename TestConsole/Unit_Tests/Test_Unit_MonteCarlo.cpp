@@ -2,6 +2,7 @@
 #include "../../Common/MonteCarlo/BaseConverter.h"
 #include "../../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
 #include "../../Common/MonteCarlo/ClassicalContinuousGenerator.h"
+#include "../../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
 
 Test_Unit_MonteCarlo::Test_Unit_MonteCarlo()
 {
@@ -118,6 +119,33 @@ void Test_Unit_MonteCarlo::test_discrete()
         monteCGen_d = nullptr;// and create a new instance
     }// for
 }// test_discrete
+
+
+
+void Test_Unit_MonteCarlo::Process_MonteCarlo_caller()
+{
+    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
+    for( std::vector<int>::iterator it_d=dist_d->begin();
+          it_d!=dist_d->end();
+          it_d++
+    )
+    {
+        std::cout<<*it_d<<std::endl;
+    }
+    delete dist_d;
+    //
+    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
+    //
+    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
+    for( std::vector<double>::iterator it_c=dist_c->begin();
+          it_c!=dist_c->end();
+          it_c++
+    )
+    {
+        std::cout<<*it_c<<std::endl;
+    }
+    delete dist_c;
+} // Process_MonteCarlo_caller
 
 
 //    Common::MonteCarlo::BaseConverter b(false);

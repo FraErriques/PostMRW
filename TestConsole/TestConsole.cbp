@@ -60,16 +60,16 @@
 		<Linker>
 			<Add directory="/usr/local/mysql/connector-c++-8.0/lib" />
 		</Linker>
-		<Unit filename="Unit_Tests/Test_Unit_CantierePrimes.cpp" />
-		<Unit filename="Unit_Tests/Test_Unit_CantierePrimes.h" />
 		<Unit filename="Unit_Tests/Test_Unit_Complex.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_Complex.h" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.h" />
 		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.h" />
-		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.cpp" />
-		<Unit filename="Unit_Tests/Test_Unit_PrimesFinder.h" />
+		<Unit filename="Unit_Tests/Test_Unit_Primes_Cantiere_.cpp" />
+		<Unit filename="Unit_Tests/Test_Unit_Primes_Cantiere_.h" />
+		<Unit filename="Unit_Tests/Test_Unit_Primes_Production_.cpp" />
+		<Unit filename="Unit_Tests/Test_Unit_Primes_Production_.h" />
 		<Unit filename="Unit_Tests/Test_Unit_RealAnalysis.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_RealAnalysis.h" />
 		<Unit filename="Unit_Tests/Test_Unit_selectInterval.cpp" />

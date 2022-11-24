@@ -1,5 +1,5 @@
-#ifndef TEST_UNIT_CANTIEREPRIMES_H
-#define TEST_UNIT_CANTIEREPRIMES_H
+#ifndef TEST_UNIT_PRIMES_CANTIERE_H
+#define TEST_UNIT_PRIMES_CANTIERE_H
 
 #include "../../NumericalAnalysis/PrimesFinder/Cantiere_Primes_2022September01_.h"
 
@@ -9,7 +9,7 @@ class Test_Unit_CantierePrimes
         /** Constructor */
         Test_Unit_CantierePrimes(  unsigned semiAmplitudeOfEachMapSegment );
         /** Default destructor */
-        virtual ~Test_Unit_CantierePrimes();
+        ~Test_Unit_CantierePrimes();
 
         /** call the sequentialDump_Interface    */
         bool sequentialDump( unsigned long long untilThreshol);
@@ -29,21 +29,13 @@ class Test_Unit_CantierePrimes
         bool recoverDumpTail( );   // array
         bool acquireNextRecord( );
         bool acquireSequenceOfRecord( );
-
-        /** Access m_Counter
-         * \return The current value of m_Counter
-         */
-        unsigned int GetCounter() { return m_Counter; }
-        /** Set m_Counter
-         * \param val New value to set
-         */
-        void SetCounter(unsigned int val) { m_Counter = val; }
+        // operating entry point:
+        void Primes_Cantiere_managementMethod();
 
     protected:
 
     private:
-        unsigned long long m_Counter; //!< Member variable "m_Counter"
-        Cantiere_Primes_2022September01_::Primes * tested_Class;
+        Cantiere_Primes_2022September01_::Primes * test_CANTIERE_;
 };
 
-#endif // TEST_UNIT_CANTIEREPRIMES_H
+#endif // TEST_UNIT_PRIMES_CANTIERE_H

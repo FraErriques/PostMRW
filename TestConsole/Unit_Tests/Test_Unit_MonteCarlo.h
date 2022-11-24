@@ -8,10 +8,11 @@ class Test_Unit_MonteCarlo
         /** Default constructor */
         Test_Unit_MonteCarlo();
         /** Default destructor */
-        virtual ~Test_Unit_MonteCarlo();
-        void monolite();
-        void test_discrete();
-        void test_continuous();
+        ~Test_Unit_MonteCarlo();
+        static void monolite();
+        static void test_discrete();
+        static void test_continuous();
+        static void Process_MonteCarlo_caller();
 
     protected:
 

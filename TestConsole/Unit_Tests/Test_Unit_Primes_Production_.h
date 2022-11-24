@@ -1,16 +1,14 @@
-#ifndef TEST_UNIT_PRIMESFINDER_H
-#define TEST_UNIT_PRIMESFINDER_H
+#ifndef TEST_UNIT_PRIMES_PRODUCTION_H
+#define TEST_UNIT_PRIMES_PRODUCTION_H
 
 #include "../../NumericalAnalysis/PrimesFinder/Primes.h"
 
 
-class Test_Unit_PrimesFinder
+class Test_Unit_Primes_Production_
 {
     public:
-        /** Default constructor */
-        Test_Unit_PrimesFinder(  unsigned semiAmplitudeOfEachMapSegment );
-        /** Default destructor */
-        virtual ~Test_Unit_PrimesFinder();
+        Test_Unit_Primes_Production_(  unsigned semiAmplitudeOfEachMapSegment );// Ctor
+        ~Test_Unit_Primes_Production_();// Dtor
 
         /** call the sequentialDump_Interface    */
         bool sequentialDump( unsigned long long untilThreshol);
@@ -24,21 +22,14 @@ class Test_Unit_PrimesFinder
             , unsigned long long recArray_seek_END  );
         /** read by means of operator[] */
         bool readBy_OperatorSquares( unsigned long long desiredOrdinal );
+        // operating entry point:
+        void Primes_Production_managementMethod();
 
-        /** Access m_Counter
-         * \return The current value of m_Counter
-         */
-        unsigned long long Getm_Counter() { return m_Counter; }
-        /** Set m_Counter
-         * \param val New value to set
-         */
-        void Setm_Counter(unsigned long long val) { m_Counter = val; }
 
     protected:
 
     private:
-        unsigned long long m_Counter; //!< Member variable "m_Counter"
-        PrimesFinder::Primes * tested_Class;// NB. here we test Entity::PrimesFinder::Primes
+        PrimesFinder::Primes * test_PRODUCTION_;// NB. here we test Entity::PrimesFinder::Primes
 };
 
-#endif // TEST_UNIT_PRIMESFINDER_H
+#endif // TEST_UNIT_PRIMES_PRODUCTION_H
