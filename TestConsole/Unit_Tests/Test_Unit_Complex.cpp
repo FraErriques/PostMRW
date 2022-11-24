@@ -238,7 +238,7 @@ void Test_Unit_Complex::test_AmpliTwist()
 {
     Process::LogWrappers::SectionOpen("Ampli-Twist",0);
     // rectangular
-    for( double realPart=+1.0; realPart<+9.0; realPart+=+1.0)
+    for( double realPart=+1.0; realPart<+9.0E+01; realPart+=+1.0)
     {
         for( double immPart=0.0; immPart<+3.0; immPart+=+0.5)
         {
@@ -274,8 +274,8 @@ void Test_Unit_Complex::test_AmpliTwist()
     // START polar
     for( double modulusPart=+1.0; modulusPart<+9.0; modulusPart+=+1.0)
     {
-        double eps = +1.0E-14;
-        for( double anomaliaPart=-PI/2.0+eps; anomaliaPart<+PI/2.0-eps; anomaliaPart+=+0.5E-01)
+        double eps = +1.0E-19;
+        for( double anomaliaPart=-PI/2.0+eps; anomaliaPart<3*(+PI/2.0-eps); anomaliaPart+=+0.5E-02)
         {
             Numerics::Complex left(std::string("polar"),modulusPart, anomaliaPart);
             Numerics::Complex right(std::string("polar"),modulusPart+5, anomaliaPart+5);

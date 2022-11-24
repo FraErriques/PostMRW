@@ -45,6 +45,7 @@ int main()
     Complex_test.similErf_test();
     Complex_test.test_Ctor_s_();
     Complex_test.test_AmpliTwist();
+    Test_Unit_Logger::interface_logFromMultipleStrings();
 
 
     //--------------------------------------------------------------
