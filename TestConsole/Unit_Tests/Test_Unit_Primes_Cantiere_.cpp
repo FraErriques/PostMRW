@@ -52,7 +52,7 @@ void Test_Unit_CantierePrimes::Primes_Cantiere_managementMethod()
     {
         reader &= this->readBy_OperatorSquares( c);// ask "n" in Prime[n]
     }
-    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
+    std::cout<<"\n\n\n\t the final outcome _CANTIERE_ is : "<< reader<<"\n\n";
     getchar();
     //bool reader;
     reader = this->readSequentialDump_nextRec( 60);
