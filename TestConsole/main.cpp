@@ -40,19 +40,23 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
+    Cantiere_Primes_2022September01_::Primes cantiere(15);
+    cantiere.RandomCalcInterface(999999, 1001999);
+
+
     // NO instance: Unit tests are preferrably static classes // Test_Unit_Complex:: Complex_test;
-    Test_Unit_Complex::manage_ComplexIntegr_asScalar_square();
-    Test_Unit_Complex::similErf_test();
-    Test_Unit_Complex::test_Ctor_s_();
-    Test_Unit_Complex::test_AmpliTwist();
-    //
-    Test_Unit_Logger::interface_logFromMultipleStrings();
-    //
-    Test_Unit_CantierePrimes primes_Cantiere(0);
-    primes_Cantiere.Primes_Cantiere_managementMethod();
-    //
-    Test_Unit_Primes_Production_ primes_Production(80);
-    primes_Production.Primes_Production_managementMethod();
+//    Test_Unit_Complex::manage_ComplexIntegr_asScalar_square();
+//    Test_Unit_Complex::similErf_test();
+//    Test_Unit_Complex::test_Ctor_s_();
+//    Test_Unit_Complex::test_AmpliTwist();
+//    //
+//    Test_Unit_Logger::interface_logFromMultipleStrings();
+//    //
+//    Test_Unit_CantierePrimes primes_Cantiere(0);
+//    primes_Cantiere.Primes_Cantiere_managementMethod();
+//    //
+//    Test_Unit_Primes_Production_ primes_Production(80);
+//    primes_Production.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------
