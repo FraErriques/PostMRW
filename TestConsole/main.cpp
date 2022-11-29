@@ -40,8 +40,15 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Cantiere_Primes_2022September01_::Primes cantiere(15);
-    cantiere.RandomCalcInterface(999999, 1001999);
+    Numerics::Complex x(100.0 , 0.0);
+    Numerics::Complex ro_1(+0.5, +14.123);
+    Numerics::Complex x_raised_ro( x^ro_1);
+    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
+    Test_Unit_Complex::ExpIntegralEi_test();
+
+    //
+//    Cantiere_Primes_2022September01_::Primes cantiere(15);
+//    cantiere.RandomCalcInterface(999999, 1001999);
 
 
     // NO instance: Unit tests are preferrably static classes // Test_Unit_Complex:: Complex_test;

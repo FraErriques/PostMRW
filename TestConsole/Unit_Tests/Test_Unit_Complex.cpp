@@ -62,16 +62,16 @@ void Test_Unit_Complex::manage_ComplexIntegr_asScalar_square()
     Complex_Integration::fPtr_Jordan_parametriz_ dx = local_Dabscissa;
     Complex_Integration::fPtr_Jordan_parametriz_ dy = local_Dordinate;
     //
-    Numerics::Complex z0(0,1); // points on the image-plane, through the CoChain
-    Numerics::Complex z1(2,5); // points on the image-plane, through the CoChain
-    double t0 = 0; // SAME points on the image-plane, reached via PullBack, through the Chain
+    Numerics::Complex z0(0,1); // points on the argument-plane
+    Numerics::Complex z1(2,5); // points on the argument-plane
+    double t0 = 0; // SAME points on the argument-plane, reached via PullBack, through the Chain
     double t1 = 2;//{t0, t1} == {E, 0.5226811514040275`}
     Numerics::Complex *res =
         Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
-              z0 // points on the image-plane, through the CoChain
-            , z1 // points on the image-plane, through the CoChain
-            , t0 // SAME points on the image-plane, reached via PullBack, through the Chain
-            , t1 // SAME points on the image-plane, reached via PullBack, through the Chain
+              z0 // points on the argument-plane
+            , z1 // points on the argument-plane
+            , t0 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , t1 // SAME points on the argument-plane, reached via PullBack, through the Chain
             , quadrato
             , abscissa, ordinate
             , dx, dy
@@ -96,7 +96,7 @@ double local_abscissa_Erf_bisector( double t){return t;}
 double local_ordinate_Erf_bisector( double t){return t;}
 double local_Dabscissa_Erf_bisector( double t){return +1;}
 double local_Dordinate_Erf_bisector( double t){return +1;}
-// Jordan Erf su bisettrice
+// Jordan Erf su semicirconferenza intorno a singolarita' in (x0,y0)
 double local_abscissa_Erf_bump( double t, double x0){return x0+cos(t);}
 double local_ordinate_Erf_bump( double t, double y0){return y0+sin(t);}
 double local_Dabscissa_Erf_bump( double t){return -sin(t);}
@@ -125,48 +125,48 @@ void Test_Unit_Complex::similErf_test()
     Complex_Integration::fPtr_Jordan_parametriz_ dy = local_Dordinate_Erf_bisector;
     //
     // su asse reale
-    Numerics::Complex z0(0,0); // points on the image-plane, through the CoChain
-    Numerics::Complex z1(1,0); // points on the image-plane, through the CoChain
-    double t0 = 0; // SAME points on the image-plane, reached via PullBack, through the Chain
+    Numerics::Complex z0(0,0); // points on the argument-plane
+    Numerics::Complex z1(1,0); // points on the argument-plane
+    double t0 = 0; // SAME points on the argument-plane, reached via PullBack, through the Chain
     double t1 = 1;//{t0, t1}=={0,1} in the PullBack.
     Numerics::Complex *res_real =
         Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
-              z0 // points on the image-plane, through the CoChain
-            , z1 // points on the image-plane, through the CoChain
-            , t0 // SAME points on the image-plane, reached via PullBack, through the Chain
-            , t1 // SAME points on the image-plane, reached via PullBack, through the Chain
+              z0 // points on the argument-plane
+            , z1 // points on the argument-plane
+            , t0 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , t1 // SAME points on the argument-plane, reached via PullBack, through the Chain
             , similErf_fPtr
             , abscissa_real, ordinate_real
             , dx_real, dy_real
             , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(0,0),(1,0) == " << res_real->ToString() << std::endl;
     // su asse immaginario
-    z0 = Numerics::Complex(1,0); // points on the image-plane, through the CoChain
-    z1 = Numerics::Complex(1,1); // points on the image-plane, through the CoChain
-    t0 = 0; // SAME points on the image-plane, reached via PullBack, through the Chain
+    z0 = Numerics::Complex(1,0); // points on the argument-plane
+    z1 = Numerics::Complex(1,1); // points on the argument-plane
+    t0 = 0; // SAME points on the argument-plane, reached via PullBack, through the Chain
     t1 = 1;//{t0, t1}=={0,1} in the PullBack.
     Numerics::Complex *res_img =
         Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
-              z0 // points on the image-plane, through the CoChain
-            , z1 // points on the image-plane, through the CoChain
-            , t0 // SAME points on the image-plane, reached via PullBack, through the Chain
-            , t1 // SAME points on the image-plane, reached via PullBack, through the Chain
+              z0 // points on the argument-plane
+            , z1 // points on the argument-plane
+            , t0 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , t1 // SAME points on the argument-plane, reached via PullBack, through the Chain
             , similErf_fPtr
             , abscissa_img, ordinate_img
             , dx_img, dy_img
             , 1000 );// #steps
     std::cout << "Integrate Exp[-z^2]dz {z,(1,0),(1,1) == " << res_img->ToString() << std::endl;
     //---somma dei due tratti
-    z0 = Numerics::Complex(0,0); // points on the image-plane, through the CoChain
-    z1 = Numerics::Complex(1,1); // points on the image-plane, through the CoChain
-    t0 = 0; // SAME points on the image-plane, reached via PullBack, through the Chain
+    z0 = Numerics::Complex(0,0); // points on the argument-plane
+    z1 = Numerics::Complex(1,1); // points on the argument-plane
+    t0 = 0; // SAME points on the argument-plane, reached via PullBack, through the Chain
     t1 = 1;//{t0, t1}=={0,1} in the PullBack.
     Numerics::Complex *res_whole =
         Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
-              z0 // points on the image-plane, through the CoChain
-            , z1 // points on the image-plane, through the CoChain
-            , t0 // SAME points on the image-plane, reached via PullBack, through the Chain
-            , t1 // SAME points on the image-plane, reached via PullBack, through the Chain
+              z0 // points on the argument-plane
+            , z1 // points on the argument-plane
+            , t0 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , t1 // SAME points on the argument-plane, reached via PullBack, through the Chain
             , similErf_fPtr
             , abscissa, ordinate
             , dx, dy
@@ -179,6 +179,89 @@ void Test_Unit_Complex::similErf_test()
     delete res_whole;
     // ready
 }// similErf_test
+
+
+void Test_Unit_Complex::ExpIntegralEi_test()
+{
+    // CoChain f(z)==Exp[z]/z called ExpIntegralEi
+    Complex_Integration::fPtr_ComplexAsScalar_  ExpIntegralEi_fPtr = ExpIntegralEi_CoChain;
+    // Chains
+    // Jordan su asse reale
+    Complex_Integration::fPtr_Jordan_parametriz_ abscissa_real = local_abscissa_Erf_asseReale;
+    Complex_Integration::fPtr_Jordan_parametriz_ ordinate_real = local_ordinate_Erf_asseReale;
+    Complex_Integration::fPtr_Jordan_parametriz_ dx_real = local_Dabscissa_Erf_asseReale;
+    Complex_Integration::fPtr_Jordan_parametriz_ dy_real = local_Dordinate_Erf_asseReale;
+    // Jordan su asse immaginario
+    Complex_Integration::fPtr_Jordan_parametriz_ abscissa_img = local_abscissa_Erf_asseImg;
+    Complex_Integration::fPtr_Jordan_parametriz_ ordinate_img = local_ordinate_Erf_asseImg;
+    Complex_Integration::fPtr_Jordan_parametriz_ dx_img = local_Dabscissa_Erf_asseImg;
+    Complex_Integration::fPtr_Jordan_parametriz_ dy_img = local_Dordinate_Erf_asseImg;
+    // Jordan su bump
+//    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = local_abscissa_Erf_bisector;
+//    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = local_ordinate_Erf_bisector;
+//    Complex_Integration::fPtr_Jordan_parametriz_ dx = local_Dabscissa_Erf_bisector;
+//    Complex_Integration::fPtr_Jordan_parametriz_ dy = local_Dordinate_Erf_bisector;
+    //
+    // su asse reale a sx dell'origine
+    Numerics::Complex z0(-999.0, 0.0); // points on the argument-plane
+    Numerics::Complex z1(-0.1, 0.0); // points on the argument-plane
+    double t0 = -999.0; // SAME points on the argument-plane, reached via PullBack, through the Chain
+    double t1 = -0.1;//in the PullBack.
+    Numerics::Complex *res_leftOrigin =
+        Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+              z0 // points on the argument-plane
+            , z1 // points on the argument-plane
+            , t0 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , t1 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , ExpIntegralEi_fPtr
+            , abscissa_real, ordinate_real
+            , dx_real, dy_real
+            , 10000 );// #steps
+    std::cout << "Integrate Exp[z]/z d(Re(z))==dx {z,(-Infinity,0),(-0.1,0) == " << res_leftOrigin->ToString() << std::endl;
+    // su asse reale a dx dell'origine
+    z0 = Numerics::Complex(+0.1,0.0); // points on the argument-plane
+    z1 = Numerics::Complex(+1.52154, 0.0); // points on the argument-plane
+    t0 = +0.1; // SAME points on the argument-plane, reached via PullBack, through the Chain
+    t1 = +1.52154;//{t0, t1}=={0,1} in the PullBack.
+    Numerics::Complex *res_rightOrigin =
+        Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+              z0 // points on the argument-plane
+            , z1 // points on the argument-plane
+            , t0 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , t1 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , ExpIntegralEi_fPtr
+            , abscissa_real, ordinate_real
+            , dx_real, dy_real
+            , 1000 );// #steps
+    std::cout << "Integrate Exp[z]/z d(Re(z))==dx {z,(+0.1,0),(+1.52154,0) == " << res_rightOrigin->ToString() << std::endl;
+    // su asse parallelo a quello immaginario
+    z0 = Numerics::Complex(+1.52154, 0.0); // points on the argument-plane
+    z1 = Numerics::Complex(+1.52154, +6.29636); // points on the argument-plane
+    t0 = +1.52154; // SAME points on the argument-plane, reached via PullBack, through the Chain
+    t1 = +6.29636;//{t0, t1}=={0,1} in the PullBack.
+    Numerics::Complex *res_img =
+        Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
+              z0 // points on the argument-plane
+            , z1 // points on the argument-plane
+            , t0 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , t1 // SAME points on the argument-plane, reached via PullBack, through the Chain
+            , ExpIntegralEi_fPtr
+            , abscissa_img, ordinate_img
+            , dx_img, dy_img
+            , 1000 );// #steps
+    std::cout << "Integrate Exp[z]/z dz {z,(+1.52154,0),(+1.52154,+6.29636) == " << res_img->ToString() << std::endl;
+    //---totale
+    Numerics::Complex res_whole = Numerics::Complex( *res_leftOrigin+ *res_rightOrigin + *res_img);
+    std::cout << "Integrate Exp[z]/z_dz {z,(-Infinity,0),(2.30259+I*2.20697) == " << res_whole.ToString() << std::endl;
+    //
+    delete res_leftOrigin;
+    delete res_rightOrigin;
+    delete res_img;
+    // NO delete res_whole it's an automatic variable.
+    // ready
+}// ExpIntegralEi_test
+
+
 
 void Test_Unit_Complex::test_Ctor_s_()
 {

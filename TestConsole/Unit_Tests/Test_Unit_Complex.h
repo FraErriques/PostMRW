@@ -14,6 +14,7 @@ class Test_Unit_Complex
         static void similErf_test();
         static void test_Ctor_s_();
         static void test_AmpliTwist();
+        static void ExpIntegralEi_test();
 
     protected:
     private:

@@ -51,7 +51,7 @@ public:
    Complex & operator*= (const double    second);  // non-const
    Complex & operator/= (const Complex & second);  // non-const
    Complex & operator^= (const Complex & second);  // non-const: *this = *this^second
-   /// Complex Analisys section /////////////////////////////////////////////////////////////////////////////////////////
+   /// Complex Analysis section /////////////////////////////////////////////////////////////////////////////////////////
    Complex LnC          (void)                     const;
    Complex ExpC         (void)                     const;
    Complex ExpC_selfish (void)                     const;  // exponential e^z mediante serie di McLaurin
