@@ -334,7 +334,12 @@ Linear_Variety_Coefficients linear (Couple left, Couple right)
    y1 = right.image;
 
    if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
-      { Domain domain = 1; throw domain; }
+      //{ Domain domain = 1; throw domain; }
+      {// TODO test
+          coefficients.alpha = 0.0;
+          coefficients.beta = x0;//==x1 for each parameter-value.
+          return  coefficients;
+      }// caso retta verticale
     // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
     // a = (y1-y0)/(x1-x0)
     // b = (y0-x0*(y1-y0)/(x1-x0)) = y0 - x0 * a

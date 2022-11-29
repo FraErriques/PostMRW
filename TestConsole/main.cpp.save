@@ -20,11 +20,12 @@
 #include "../NumericalAnalysis/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../NumericalAnalysis/PrimesFinder/InternalAlgos.h"
 #include "../NumericalAnalysis/Complex/Complex.h"
+#include "../NumericalAnalysis/Integration/Integrate.h"
 #include "../NumericalAnalysis/Integration/Complex_Integration.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
-#include "Unit_Tests/Test_Unit_CantierePrimes.h"
-#include "Unit_Tests/Test_Unit_PrimesFinder.h"
+#include "Unit_Tests/Test_Unit_Primes_Cantiere_.h"
+#include "Unit_Tests/Test_Unit_Primes_Production_.h"
 #include "Unit_Tests/Test_Unit_Logger.h"
 #include "Unit_Tests/Test_Unit_selectInterval.h"
 #include "Unit_Tests/Test_Unit_MonteCarlo.h"
@@ -40,12 +41,40 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Test_Unit_Complex Complex_test;
-    Complex_test.manage_ComplexIntegr_asScalar_square();
-    Complex_test.similErf_test();
-    Complex_test.test_Ctor_s_();
-    Complex_test.test_AmpliTwist();
-    Test_Unit_Logger::logFromMultipleStrings()
+    Couple left;
+    left.argument = +5;
+    left.image = 0;
+    //
+    Couple right;
+    right.argument = +5;
+    right.image = 6.5;
+    //
+    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura = Two_Points_Interpolation::linear(left,right);
+
+    Numerics::Complex x(100.0 , 0.0);
+    Numerics::Complex ro_1(+0.5, +14.123);
+    Numerics::Complex x_raised_ro( x^ro_1);
+    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
+    Test_Unit_Complex::ExpIntegralEi_test();
+
+    //
+//    Cantiere_Primes_2022September01_::Primes cantiere(15);
+//    cantiere.RandomCalcInterface(999999, 1001999);
+
+
+    // NO instance: Unit tests are preferrably static classes // Test_Unit_Complex:: Complex_test;
+//    Test_Unit_Complex::manage_ComplexIntegr_asScalar_square();
+//    Test_Unit_Complex::similErf_test();
+//    Test_Unit_Complex::test_Ctor_s_();
+//    Test_Unit_Complex::test_AmpliTwist();
+//    //
+//    Test_Unit_Logger::interface_logFromMultipleStrings();
+//    //
+//    Test_Unit_CantierePrimes primes_Cantiere(0);
+//    primes_Cantiere.Primes_Cantiere_managementMethod();
+//    //
+//    Test_Unit_Primes_Production_ primes_Production(80);
+//    primes_Production.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------
@@ -57,218 +86,6 @@ int main()
     return 0;
 }// main
 
-
-
-
-void Process_MonteCarlo_caller()
-{
-    std::vector<int> * dist_d = Process::MonteCarlo::getDiscreteRandomArray( 10, -50, -40);
-    for( std::vector<int>::iterator it_d=dist_d->begin();
-          it_d!=dist_d->end();
-          it_d++
-    )
-    {
-        std::cout<<*it_d<<std::endl;
-    }
-    delete dist_d;
-    //
-    std::cout<<"\n\t separation between Discrete and Continuous : "<<std::endl;
-    //
-    std::vector<double> * dist_c = Process::MonteCarlo::getContinuousRandomArray( 10, -50, -40);
-    for( std::vector<double>::iterator it_c=dist_c->begin();
-          it_c!=dist_c->end();
-          it_c++
-    )
-    {
-        std::cout<<*it_c<<std::endl;
-    }
-    delete dist_c;
-} // Process_MonteCarlo_caller
-
-
-void massive_UnitTest_caller_Cantiere()
-{// NB amplitude==0
-    //    //------Unit Test-----CANTIERE------------------------------------------------
-    std::string prefix("this string describes the following contents: int, double : ");
-    int i_log = 22;
-    double d_log = 2.7182818;
-    Process::LogWrappers::SectionContent_fromMultipleStrings(
-        0 // section_vebosity
-        ,3 // how many params
-        ,Common::StrManipul::stringByValueToStringPtr(prefix)
-        ,Common::StrManipul::intToString( i_log)
-        ,Common::StrManipul::doubleToString(d_log)
-     );
-    //
-    Test_Unit_Logger test_unit_logger;
-    test_unit_logger.managementMethod();
-    //
-    Test_Unit_selectInterval test_Unit_selectInterval; //ctor performs the test-calls, in this case.
-    test_Unit_selectInterval.managementMethod();
-    //
-    Test_Unit_CantierePrimes * test = new Test_Unit_CantierePrimes( 0);// NB amplitude==0  ####------########
-    bool seq = test->sequentialDump( 99390);// required prime==soglia
-    seq &= true;
-
-    bool rand = test->randomDump(  15,  20);
-    rand &= true;
-    rand = test->randomDump( 900, 920);// i.e. dump Primes on custom interval
-    rand = test->randomDump( 1500, 1520);
-    //    rand = test->randomDump( 18446744073709550510, 18446744073709551610);
-    //
-    bool outcome_dumpTailReaderByChar = test->dumpTailReaderByChar();
-    bool outcome_lastRecordReaderByChar = test->lastRecordReaderByChar();
-    bool outcome_recoverLastRecord = test->recoverLastRecord();
-    bool outcome_recoverDumpTail = test->recoverDumpTail();
-    outcome_dumpTailReaderByChar &= true;
-    outcome_lastRecordReaderByChar &= true;
-    outcome_recoverLastRecord &= true;
-    outcome_recoverDumpTail &= true;
-    bool reader = true; // used with &=
-    reader = test->readSequentialDump_nextRec( 60);
-    bool outcome_acquireNextRecord = test->acquireNextRecord();
-    bool outcome_acquireSequenceOfRecord = test->acquireSequenceOfRecord();
-    outcome_acquireNextRecord &= true;// avoid warnings
-    outcome_acquireSequenceOfRecord &= true;
-    // DBG size_t ulong_size = sizeof( unsigned long long);
-    reader &= test->readBy_OperatorSquares( 99);// ask Prime[n]
-    for (int c=1; c<1181; c++)
-    {
-        reader &= test->readBy_OperatorSquares( c);// ask "n" in Prime[n]
-    }
-    std::cout<<"\n\n\n\t the final outcome is : "<< reader<<"\n\n";
-    getchar();
-    //bool reader;
-    reader = test->readSequentialDump_nextRec( 60);
-    reader &= test->readSequentialDump_arrayOfRec_anywhere(
-        0
-        ,915 // there must be room for just one record Prime<100.
-     );
-    for( int c=0; c<61; c++)
-    {// next Rec
-        reader &= test->readSequentialDump_nextRec(c);
-    }
-    for( int c=0; c<61; c++)
-    {// array of Rec
-        reader &= test->readSequentialDump_arrayOfRec_anywhere(
-            c
-            ,c+915 // there must be room for just one record Prime<100.
-         );
-    }// array of Rec
-    delete test;
-    ////    ----END--Unit Test-----CANTIERE---------------------------------------------------
-}//massive_UnitTest_caller_Cantiere
-
-
-void massive_UnitTest_caller_Produzione()
-{// NB amplitude==80
-    ////    ------Unit Test-----PimesFinder--------test_PRODUCTION_----------------------------------------
-    Test_Unit_PrimesFinder * test_PRODUCTION_ = new Test_Unit_PrimesFinder( 80);// NB amplitude
-    bool p_seq = test_PRODUCTION_->sequentialDump( 9000);
-    bool p_rand = test_PRODUCTION_->randomDump( 0, 50);
-    bool p_reader = test_PRODUCTION_->readBy_OperatorSquares( +2);// ask Prime[n]
-    p_seq &= true;
-    p_rand &= true;
-    p_reader &= true;
-    for (int c=599; c<611; c++)
-    {
-        p_reader &= test_PRODUCTION_->readBy_OperatorSquares( c);// ask Prime[n]
-    }
-    std::cout<<"\n\n\n\t the final outcome is : "<< p_reader<<"\n\n";
-    std::cout<<"\n\n\n\t Strike Enter to continue\t";
-    getchar();
-    p_reader &= test_PRODUCTION_->readSequentialDump_nextRec( 60);
-    p_reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
-    23
-    ,915 // there must be room for just one record Prime<100.
-    );
-    for( int c=0; c<61; c++)
-    {// next Rec
-        p_reader &= test_PRODUCTION_->readSequentialDump_nextRec(c);
-    }
-    for( int c=0; c<61; c++)
-    {// array of Rec
-        p_reader &= test_PRODUCTION_->readSequentialDump_arrayOfRec_anywhere(
-            c
-            ,c+915 // there must be room for just one record Prime<100.
-         );
-    }// array of Rec
-    delete test_PRODUCTION_;
-    //------Unit Test--------test_PRODUCTION_---------------------------------------------
-}//massive_UnitTest_caller_Produzione
-
 /* --------------cantina----------------------------
-    Cantiere_Primes_2022September01_::Primes cantiere(200);// semi-amplitude of each map segment
-    cantiere.distributionFunction_fromExistingMesh();
-    //Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 97*19);
-    const std::string * sequentialPath = cantiere.feed_sequentialDumpPath();
-    const std::string * randomPath = cantiere.feed_customDumpPath();
-    const std::string * meshRenewalPath = cantiere.feed_meshSpecificationPath();
-    const std::string * localIntegralPath = cantiere.feed_localIntegralPath();
-    const std::string * globalIntegralPath = cantiere.feed_globalIntegralPath();
-//  DON'T  delete sequentialPath; NB DON'T  they are pointers to members deleted by the Dtor
-// //  DON'T   delete randomPath;
-//  //  DON'T  delete meshRenewalPath;
-//  //  DON'T  delete localIntegralPath;
-// //  DON'T   delete globalIntegralPath;
-
-    // NB. cannot do an auto-instance, since the Dtor gets called after the Singleton<Log>_destruction and that's a leak.
-    // do a dynamical (pointer) instance instead and delete before the last call to the log; or, otherwise, do not call
-    // the log from inside Primes::Destructor.
-//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
-////    cantiere.coveringIntegral();
-//    bool dumped = cantiere.distributionFunction( "./LogIntegral_firstPhase_.txt");
-//    cantiere.mapTraverseForward( cantiere.logIntegralPillars);
-//    cantiere.RandomCalcInterface( 300, 350);
-//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( 46);// estimate the ordinal of a candidate prime or of a threshold.
-//    int ifromStr = Common::StrManipul::stringToInt("test Exception : Antani");//NB. returns zero on invalid input.
-
-      int m;
-      m= FindMax (7 // how many params
-                  ,999,422,631,834,892,104,772 );// the actual params
-      printf ("The largest value is: %d\n",m);
-
-
-     std::string * s1 = Common::StrManipul::boolToString( true);
-     std::string * s2 = Common::StrManipul::doubleToString( +2.7182818E+03 );
-     std::string * s3 = Common::StrManipul::longDoubleToString( +3.1415E-03);
-     std::string * s4 = Common::StrManipul::uLongLongToString( +123456789);
-     std::string * s5 = Common::StrManipul::intToString( -9);
-    int hm_strings_toLog = logFromMultipleStrings(
-                                                 5 // hm_params
-                                                 , s1,s2,s3,s4,s5 ); // the actual params
-
-//    Cantiere_Primes_2022September01_::Primes cantiere(50);// semi-amplitude of each map segment
-//Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
-//    unsigned long long candidateThreshold = 100;
-//    unsigned long long interpolatedOrdinal = cantiere.interpolateOrdinal( candidateThreshold);
-//    std::cout<< "interpolatedOrdinal("<<candidateThreshold<<")=="<<interpolatedOrdinal<<std::endl;
-//Cantiere_Primes_2022September01_::Primes::SingleFactor * xx = cantiere.IntegerDecomposition( 18);
-    //----test accessori--------------------------
-//    unsigned long long ull_r = 6000000400;
-//    unsigned long long ull_l = 6000000100;
-//    int Delta = ull_r - ull_l; // neanche un warning !
-//    Common::StringBuilder *sb = new Common::StringBuilder( 100);
-//    sb->append( ull_r);
-//    const char *ull_r_str = sb->str().c_str();
-//    delete sb;
-//    std::cout<<"\n\n\t "<< ull_r_str<<"\n\n";
-//    std::string * stlStringPtr = new std::string("some_data");
-//    const char *c_buffer = stlStringPtr->c_str();
-//    delete stlStringPtr;
-//    std::cout<<"\n\n\t "<< c_buffer<<"\n\n";
-    //----test accessori--------------------------
-    Common::ConfigurationService *configPtr = Process::Configuration::getConfigurationOfLogSinkFs();
-    std::vector<std::string> *theKeys = configPtr->getAllKeys();
-    std::cout << "\n";
-    for( size_t c=0; c<theKeys->size(); c++)
-    {
-        std::cout<< (*theKeys)[c] << "\n";
-    }
-    // do not delete theKeys, since they are a member and will be destroyed from the Dtor
-    delete configPtr;
-    configPtr = nullptr;
-
-    Process::testCpp11_MonteCarlo(); //  undefined reference on Win
 
 */

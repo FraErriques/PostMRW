@@ -20,6 +20,7 @@
 #include "../NumericalAnalysis/PrimesFinder/Cantiere_Primes_2022September01_.h"
 #include "../NumericalAnalysis/PrimesFinder/InternalAlgos.h"
 #include "../NumericalAnalysis/Complex/Complex.h"
+#include "../NumericalAnalysis/RealAnalysis/Real.h"
 #include "../NumericalAnalysis/Integration/Complex_Integration.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
@@ -40,19 +41,40 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
+    Couple left;
+    left.argument = +5;
+    left.image = 0;
+    //
+    Couple right;
+    right.argument = +5;
+    right.image = 20;
+    //
+    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura = Two_Points_Interpolation::linear(left,right);
+
+    Numerics::Complex x(100.0 , 0.0);
+    Numerics::Complex ro_1(+0.5, +14.123);
+    Numerics::Complex x_raised_ro( x^ro_1);
+    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
+    Test_Unit_Complex::ExpIntegralEi_test();
+
+    //
+//    Cantiere_Primes_2022September01_::Primes cantiere(15);
+//    cantiere.RandomCalcInterface(999999, 1001999);
+
+
     // NO instance: Unit tests are preferrably static classes // Test_Unit_Complex:: Complex_test;
-    Test_Unit_Complex::manage_ComplexIntegr_asScalar_square();
-    Test_Unit_Complex::similErf_test();
-    Test_Unit_Complex::test_Ctor_s_();
-    Test_Unit_Complex::test_AmpliTwist();
-    //
-    Test_Unit_Logger::interface_logFromMultipleStrings();
-    //
-    Test_Unit_CantierePrimes primes_Cantiere(0);
-    primes_Cantiere.Primes_Cantiere_managementMethod();
-    //
-    Test_Unit_Primes_Production_ primes_Production(80);
-    primes_Production.Primes_Production_managementMethod();
+//    Test_Unit_Complex::manage_ComplexIntegr_asScalar_square();
+//    Test_Unit_Complex::similErf_test();
+//    Test_Unit_Complex::test_Ctor_s_();
+//    Test_Unit_Complex::test_AmpliTwist();
+//    //
+//    Test_Unit_Logger::interface_logFromMultipleStrings();
+//    //
+//    Test_Unit_CantierePrimes primes_Cantiere(0);
+//    primes_Cantiere.Primes_Cantiere_managementMethod();
+//    //
+//    Test_Unit_Primes_Production_ primes_Production(80);
+//    primes_Production.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------
