@@ -87,7 +87,7 @@ double local_ordinate_Erf_asseReale( double t){return 0;}
 double local_Dabscissa_Erf_asseReale( double t){return +1;}
 double local_Dordinate_Erf_asseReale( double t){return 0;}
 // Jordan Erf su segmento parallelo all'asse immaginario
-double local_abscissa_Erf_asseImg( double where){return where;}// x=x0
+double local_abscissa_Erf_asseImg( double where){return +1.52154;}// fix x=x0
 double local_ordinate_Erf_asseImg( double t){return t;}
 double local_Dabscissa_Erf_asseImg( double t){return 0;}
 double local_Dordinate_Erf_asseImg( double t){return +1;}
@@ -203,9 +203,9 @@ void Test_Unit_Complex::ExpIntegralEi_test()
 //    Complex_Integration::fPtr_Jordan_parametriz_ dy = local_Dordinate_Erf_bisector;
     //
     // su asse reale a sx dell'origine
-    Numerics::Complex z0(-999.0, 0.0); // points on the argument-plane
+    Numerics::Complex z0(-9999.0, 0.0); // points on the argument-plane
     Numerics::Complex z1(-0.1, 0.0); // points on the argument-plane
-    double t0 = -999.0; // SAME points on the argument-plane, reached via PullBack, through the Chain
+    double t0 = -9999.0; // SAME points on the argument-plane, reached via PullBack, through the Chain
     double t1 = -0.1;//in the PullBack.
     Numerics::Complex *res_leftOrigin =
         Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
@@ -216,7 +216,7 @@ void Test_Unit_Complex::ExpIntegralEi_test()
             , ExpIntegralEi_fPtr
             , abscissa_real, ordinate_real
             , dx_real, dy_real
-            , 10000 );// #steps
+            , 1000000 );// #steps
     std::cout << "Integrate Exp[z]/z d(Re(z))==dx {z,(-Infinity,0),(-0.1,0) == " << res_leftOrigin->ToString() << std::endl;
     // su asse reale a dx dell'origine
     z0 = Numerics::Complex(+0.1,0.0); // points on the argument-plane
@@ -237,7 +237,7 @@ void Test_Unit_Complex::ExpIntegralEi_test()
     // su asse parallelo a quello immaginario
     z0 = Numerics::Complex(+1.52154, 0.0); // points on the argument-plane
     z1 = Numerics::Complex(+1.52154, +6.29636); // points on the argument-plane
-    t0 = +1.52154; // SAME points on the argument-plane, reached via PullBack, through the Chain
+    t0 = 0; // SAME points on the argument-plane, reached via PullBack, through the Chain
     t1 = +6.29636;//{t0, t1}=={0,1} in the PullBack.
     Numerics::Complex *res_img =
         Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
@@ -252,7 +252,7 @@ void Test_Unit_Complex::ExpIntegralEi_test()
     std::cout << "Integrate Exp[z]/z dz {z,(+1.52154,0),(+1.52154,+6.29636) == " << res_img->ToString() << std::endl;
     //---totale
     Numerics::Complex res_whole = Numerics::Complex( *res_leftOrigin+ *res_rightOrigin + *res_img);
-    std::cout << "Integrate Exp[z]/z_dz {z,(-Infinity,0),(2.30259+I*2.20697) == " << res_whole.ToString() << std::endl;
+    std::cout << "Integrate Exp[z]/z_dz {z,(-Infinity,0),(+1.52154,+6.29636) == " << res_whole.ToString() << std::endl;
     //
     delete res_leftOrigin;
     delete res_rightOrigin;
