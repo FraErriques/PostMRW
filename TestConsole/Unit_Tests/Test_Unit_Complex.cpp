@@ -21,6 +21,22 @@ Numerics::Complex similErf( double x, double y)// the whole image, treated as an
     return res;
 }// integrand_ComplexAsScalar
 
+Numerics::Complex ExpIntegralEi_CoChain( double x, double y)// the whole image, treated as an algebraic scalar.
+{// Exp[z]/z
+    Numerics::Complex z( x,y);
+    Numerics::Complex Exp_z_( z.ExpC());
+    Numerics::Complex res( Exp_z_/z);
+    return res;
+}// integrand_ComplexAsScalar
+
+Numerics::Complex LogIntegral_CoChain( double x, double y)// the whole image, treated as an algebraic scalar.
+{// 1/Log[z]
+    Numerics::Complex z( x,y);
+    Numerics::Complex Log_z_( z.LnC());
+    Numerics::Complex res( Numerics::Complex()/Log_z_);//i.e. 1/Ln[z]
+    return res;
+}// integrand_ComplexAsScalar
+
 Numerics::Complex Square( double x, double y)// the whole image, treated as an algebraic scalar.
 {
     Numerics::Complex z( x,y);
@@ -71,15 +87,20 @@ double local_ordinate_Erf_asseReale( double t){return 0;}
 double local_Dabscissa_Erf_asseReale( double t){return +1;}
 double local_Dordinate_Erf_asseReale( double t){return 0;}
 // Jordan Erf su segmento parallelo all'asse immaginario
-double local_abscissa_Erf_asseImg( double t){return +1;}
+double local_abscissa_Erf_asseImg( double where){return where;}// x=x0
 double local_ordinate_Erf_asseImg( double t){return t;}
 double local_Dabscissa_Erf_asseImg( double t){return 0;}
 double local_Dordinate_Erf_asseImg( double t){return +1;}
 // Jordan Erf su bisettrice
-double local_abscissa_Erf( double t){return t;}
-double local_ordinate_Erf( double t){return t;}
-double local_Dabscissa_Erf( double t){return +1;}
-double local_Dordinate_Erf( double t){return +1;}
+double local_abscissa_Erf_bisector( double t){return t;}
+double local_ordinate_Erf_bisector( double t){return t;}
+double local_Dabscissa_Erf_bisector( double t){return +1;}
+double local_Dordinate_Erf_bisector( double t){return +1;}
+// Jordan Erf su bisettrice
+double local_abscissa_Erf_bump( double t, double x0){return x0+cos(t);}
+double local_ordinate_Erf_bump( double t, double y0){return y0+sin(t);}
+double local_Dabscissa_Erf_bump( double t){return -sin(t);}
+double local_Dordinate_Erf_bump( double t){return +cos(t);}
 
 void Test_Unit_Complex::similErf_test()
 {
@@ -98,10 +119,10 @@ void Test_Unit_Complex::similErf_test()
     Complex_Integration::fPtr_Jordan_parametriz_ dx_img = local_Dabscissa_Erf_asseImg;
     Complex_Integration::fPtr_Jordan_parametriz_ dy_img = local_Dordinate_Erf_asseImg;
     // Jordan su bisettrice
-    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = local_abscissa_Erf;
-    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = local_ordinate_Erf;
-    Complex_Integration::fPtr_Jordan_parametriz_ dx = local_Dabscissa_Erf;
-    Complex_Integration::fPtr_Jordan_parametriz_ dy = local_Dordinate_Erf;
+    Complex_Integration::fPtr_Jordan_parametriz_ abscissa = local_abscissa_Erf_bisector;
+    Complex_Integration::fPtr_Jordan_parametriz_ ordinate = local_ordinate_Erf_bisector;
+    Complex_Integration::fPtr_Jordan_parametriz_ dx = local_Dabscissa_Erf_bisector;
+    Complex_Integration::fPtr_Jordan_parametriz_ dy = local_Dordinate_Erf_bisector;
     //
     // su asse reale
     Numerics::Complex z0(0,0); // points on the image-plane, through the CoChain
