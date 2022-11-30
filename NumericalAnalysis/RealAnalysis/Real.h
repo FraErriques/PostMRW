@@ -39,11 +39,25 @@ namespace Two_Points_Interpolation {
 struct Linear_Variety_Coefficients // line between two points
 {
    // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
-   // a = (y1-y0)/(x1-x0)
-   // b = (y0-x0*(y1-y0)/(x1-x0)) = y0 - x0 * a
+   // Def. (y1-y0)/(x1-x0)=:Dy/Dx
+   // Dy/Dx*x + y0 - x0*Dy/Dx -> Dy/Dx*(x-x0)+y0 == y(x)
+   // a = (y1-y0)/(x1-x0) =: Dy/Dx
+   // b = (y0-x0*(y1-y0)/(x1-x0)) = y0-x0*a == y0 - x0*Dy/Dx
    double alpha;
    double beta;
 };
+
+struct Parametric_Linear_Manifold
+{// a line in R2 parametrized as useful for contour integration: {x[t]=a*x+b, y[t]=c*x+d}
+   // f[t]==a*t+b==(y1-y0)/(x1-x0)*(t-x0)+y0
+   // Def. (y1-y0)/(x1-x0)=:Dy/Dx
+   // -> f[t]==Dy/Dx*(t-x0)+y0 when fabs(x1-x0)>epsilon else {x[t]=x0,y[t]=t}
+   // two coefficients for each equations are provided. But the parametrizations above are enough for all the lines in R2.
+   double alpha_x;
+   double beta_x;
+   double alpha_y;
+   double beta_y;
+};// a line in R2 parametrized as useful for contour integration: {x[t]=a*x+b, y[t]=c*x+d}
 
 struct Exponential_Variety_Coefficients // exponential between two points
 {
@@ -59,7 +73,8 @@ struct Exponential_Variety_Coefficients // exponential between two points
    double fi;    ///   x1-x0
 };
 
-Linear_Variety_Coefficients       linear     (Couple left, Couple right);
+Linear_Variety_Coefficients  linear( Couple left, Couple right);
+Parametric_Linear_Manifold   linear_parametric( Couple left, Couple right);
 Exponential_Variety_Coefficients  log_linear (Couple left, Couple right);
 double linear_image        (Linear_Variety_Coefficients, double);
 double linear_ante_image   (Linear_Variety_Coefficients, double);

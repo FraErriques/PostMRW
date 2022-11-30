@@ -49,7 +49,8 @@ int main()
     right.argument = +5;
     right.image = 20;
     //
-    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura = Two_Points_Interpolation::linear(left,right);
+    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
+        Two_Points_Interpolation::linear_parametric(left,right);
 
     Numerics::Complex x(100.0 , 0.0);
     Numerics::Complex ro_1(+0.5, +14.123);
