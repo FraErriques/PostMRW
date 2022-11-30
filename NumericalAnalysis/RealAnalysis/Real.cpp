@@ -323,7 +323,7 @@ double linear_ante_image ( Linear_Variety_Coefficients coefficients,
    return x;
 }
 
-
+// only for cartesian equations y==y(x)==a*x+b
 Linear_Variety_Coefficients linear (Couple left, Couple right)
 {
    Linear_Variety_Coefficients  coefficients;
@@ -334,7 +334,7 @@ Linear_Variety_Coefficients linear (Couple left, Couple right)
    y1 = right.image;
 
    if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
-      { Domain domain = 1; throw domain; }
+      { Domain domain = 1; throw domain; }// vertical line case: {x=x0,y=t}
     // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
     // a = (y1-y0)/(x1-x0)
     // b = (y0-x0*(y1-y0)/(x1-x0)) = y0 - x0 * a
@@ -345,8 +345,37 @@ Linear_Variety_Coefficients linear (Couple left, Couple right)
    coefficients.beta  = y0 - x0 * coefficients.alpha;
 
    return  coefficients;
-}
+}// only for cartesian equations y==y(x)==a*x+b
 
+
+// for parametric equations of a linear manifold of dimension one.
+void * linear_parametric (Couple left, Couple right) // TODO
+{
+//   Linear_Variety_Coefficients  coefficients;
+//   double x0,x1, y0,y1;
+//   x0 = left.argument;
+//   x1 = right.argument;
+//   y0 = left.image;
+//   y1 = right.image;
+//
+//   if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
+//      //{ Domain domain = 1; throw domain; }
+//      {// TODO test
+//          coefficients.alpha = 0.0;
+//          coefficients.beta = x0;//==x1 for each parameter-value.
+//          return  coefficients;
+//      }// caso retta verticale
+//    // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
+//    // a = (y1-y0)/(x1-x0)
+//    // b = (y0-x0*(y1-y0)/(x1-x0)) = y0 - x0 * a
+//    // il tensore della retta per i punti {x0,y0},{x1,y1}
+//    //    | x-x0    y-y0|
+//    //    |x1-x0   y1-y0|
+//   coefficients.alpha = (y1-y0)/(x1-x0);
+//   coefficients.beta  = y0 - x0 * coefficients.alpha;
+    // ready
+   return  nullptr;// TODO
+}// for parametric equations of a linear manifold of dimension one.
 
 
 double log_linear_image ( Exponential_Variety_Coefficients coefficients,

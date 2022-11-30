@@ -59,7 +59,8 @@ struct Exponential_Variety_Coefficients // exponential between two points
    double fi;    ///   x1-x0
 };
 
-Linear_Variety_Coefficients       linear     (Couple left, Couple right);
+Linear_Variety_Coefficients   linear( Couple left, Couple right);
+void *                        linear_parametric( Couple left, Couple right); // TODO
 Exponential_Variety_Coefficients  log_linear (Couple left, Couple right);
 double linear_image        (Linear_Variety_Coefficients, double);
 double linear_ante_image   (Linear_Variety_Coefficients, double);
