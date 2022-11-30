@@ -79,6 +79,10 @@ namespace Complex_Integration{
 // fPtr Types
 //general setting for contour-integrals of elementary functions.
 typedef double (*fPtr_Jordan_parametriz_)(double);// the x(t) or y(t) or dx(t) or dy(t) of the Jordan parametric contour.
+typedef double (*fPtr_JordanPiecewice_linearPiece_)(double,double,double);// the x(t) or y(t) in form x[t]=a*t+b. Input is(a,t,b) Output is x==x[t]. Such function requires no rewrite. It
+// can just be called with the current parameters. Oss. Every Jordan-path can be sub-divided in portions like this one. Its derivative is of the form x'[t]=a for every t in R.
+// So the derivative's parametrization will be:
+typedef double (*fPtr_JordanPiecewice_linearPiece_derivative_)(void);// the dx or dy of the Jordan parametric-linear contour; they are constant.
 typedef double (*fPtr_U_or_V_)(double,double);// the real or immaginary part of the image.// this will work fot u=u(x,y) and v=v(x,y)
 typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole image, treated as an algebraic scalar.
 
