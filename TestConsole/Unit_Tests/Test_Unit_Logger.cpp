@@ -44,8 +44,28 @@ void Test_Unit_Logger::singleton_logger(int threadNum)
     Process::LogWrappers::SectionClose();
 }// singleton_logger
 
+void IntegrationPieceMaker_one(void)
+{
+    Process::LogWrappers::SectionOpen("IntegrationPieceMaker_one",0);
+    Process::LogWrappers::SectionContent_variable_name_value("Integrate[x,{x,1,2}]==[x^2/2]{1,2}==",(1.0/2.0)*(4.0-1.0), 0);
+    Process::LogWrappers::SectionClose();
+}// IntegrationPieceMaker_one
 
+void IntegrationPieceMaker_two(void)
+{
+    Process::LogWrappers::SectionOpen("IntegrationPieceMaker_two",0);
+    Process::LogWrappers::SectionContent_variable_name_value("Integrate[x,{x,2,3}]==[x^2/2]{2,3}==",(1.0/2.0)*(9.0-4.0), 0);
+    Process::LogWrappers::SectionClose();
+}// IntegrationPieceMaker_two
 
+void Test_Unit_Logger::parallel_Integral()
+{
+//    Common::FuncPtr thread_funcPtr = IntegrationPieceMaker;
+    std::thread t_one(IntegrationPieceMaker_one);
+    t_one.join();
+    std::thread t_two(IntegrationPieceMaker_two);
+    t_two.join();
+}//parallel_Integral
 
 
 // TODO goes in Process::Log_Wrappers
@@ -94,7 +114,7 @@ void Test_Unit_Logger::interface_logFromMultipleStrings()
     {
         Process::LogWrappers::SectionContent_fromMultipleStrings(
             0     // verbosity
-            ,6,   // hm_params NB. params have to be POINTERS to sd::string
+            ,6,   // hm_params NB. params have to be POINTERS to std::string
             new std::string(" left*right== ")
             ,new std::string("+2.0")  // i.e. std::string *
             ,new std::string( " * " )
