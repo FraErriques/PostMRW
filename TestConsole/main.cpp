@@ -41,22 +41,28 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Couple left;
-    left.argument = +5;
-    left.image = 0;
-    //
-    Couple right;
-    right.argument = +5;
-    right.image = 20;
-    //
-    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
-        Two_Points_Interpolation::linear_parametric(left,right);
+    Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
+    Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
+        cantiere_Pr.IntegerDecomposition( 36);
+    delete[] res;
 
-    Numerics::Complex x(100.0 , 0.0);
-    Numerics::Complex ro_1(+0.5, +14.123);
-    Numerics::Complex x_raised_ro( x^ro_1);
-    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
-    Test_Unit_Complex::ExpIntegralEi_test();
+//    //
+//    Couple left;
+//    left.argument = +5;
+//    left.image = 0;
+//    //
+//    Couple right;
+//    right.argument = +5;
+//    right.image = 20;
+//    //
+//    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
+//        Two_Points_Interpolation::linear_parametric(left,right);
+//
+//    Numerics::Complex x(100.0 , 0.0);
+//    Numerics::Complex ro_1(+0.5, +14.123);
+//    Numerics::Complex x_raised_ro( x^ro_1);
+//    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
+//    Test_Unit_Complex::ExpIntegralEi_test();
 
     //
 //    Cantiere_Primes_2022September01_::Primes cantiere(15);

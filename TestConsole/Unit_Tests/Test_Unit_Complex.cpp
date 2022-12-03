@@ -203,9 +203,9 @@ void Test_Unit_Complex::ExpIntegralEi_test()
 //    Complex_Integration::fPtr_Jordan_parametriz_ dy = local_Dordinate_Erf_bisector;
     //
     // su asse reale a sx dell'origine
-    Numerics::Complex z0(-999999.0, 0.0); // points on the argument-plane
+    Numerics::Complex z0(-9.0E+05, 0.0); // points on the argument-plane
     Numerics::Complex z1(-0.1, 0.0); // points on the argument-plane
-    double t0 = -999999.0; // SAME points on the argument-plane, reached via PullBack, through the Chain
+    double t0 = -9.0E+05; // SAME points on the argument-plane, reached via PullBack, through the Chain
     double t1 = -0.1;//in the PullBack.
     Numerics::Complex *res_leftOrigin =
         Complex_Integration::ContourIntegral_AsScalar_ManagementMethod(
@@ -216,8 +216,10 @@ void Test_Unit_Complex::ExpIntegralEi_test()
             , ExpIntegralEi_fPtr
             , abscissa_real, ordinate_real
             , dx_real, dy_real
-            , 100000000 );// #steps
+            , 1.0E+09 );// #steps
     std::cout << "Integrate Exp[z]/z d(Re(z))==dx {z,(-Infinity,0),(-0.1,0) == " << res_leftOrigin->ToString() << std::endl;
+    Process::LogWrappers::SectionContent_variable_name_value("res_leftOrigin->Re()", res_leftOrigin->Re(), 0);
+    Process::LogWrappers::SectionContent_variable_name_value("res_leftOrigin->Im()", res_leftOrigin->Im(), 0);
     // su asse reale a dx dell'origine
     z0 = Numerics::Complex(+0.1,0.0); // points on the argument-plane
     z1 = Numerics::Complex(+1.52154, 0.0); // points on the argument-plane

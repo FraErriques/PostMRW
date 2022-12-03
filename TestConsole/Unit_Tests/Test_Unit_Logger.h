@@ -17,6 +17,7 @@ class Test_Unit_Logger
         //
         void managementMethod();
         static void interface_logFromMultipleStrings();
+        static void parallel_Integral();
 
     protected:
 
