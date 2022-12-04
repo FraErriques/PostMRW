@@ -38,6 +38,11 @@ class Primes
         unsigned long long threshold;
         unsigned long long logIntegral;
     };
+    struct Omega
+    {
+        int small;
+        int big;
+    };
     /// Ctor
     Primes( unsigned semiAmplitudeOfEachMapSegment );
     virtual ~Primes();
@@ -115,6 +120,7 @@ class Primes
     LogIntegralPillarPoint * getNearestIntegral( unsigned long long candidatePrimeThreshold);
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
+    Omega * omegaProducer( const unsigned long long candidate);
 
 };// class
 

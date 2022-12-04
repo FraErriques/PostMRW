@@ -45,6 +45,9 @@ int main()
     Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
         cantiere_Pr.IntegerDecomposition( 36);
     delete[] res;
+    //
+    Cantiere_Primes_2022September01_::Primes::Omega * omega = cantiere_Pr.omegaProducer(+100);
+    delete omega;
 
 //    //
 //    Couple left;

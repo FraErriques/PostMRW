@@ -1551,6 +1551,25 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
     return nearestIntegral;
 }// getNearestIntegral
 
+Primes::Omega * Primes::omegaProducer( const unsigned long long candidate)
+{
+    Omega * omega = new Omega();// caller has to delete.
+    SingleFactor * factorization = IntegerDecomposition( candidate);
+    int c=0;
+    for( c=0; factorization[c].factorBase!=0; c++){}//count how many factors before the zero-terminator.
+    omega->small = c;
+    //
+    omega->big = 0;
+    for( c=0; factorization[c].factorBase!=0; c++)
+    {// sum up the multiplicity of each factor.
+        omega->big += factorization[c].factorMultiplicity;
+    }
+    // clean-up
+    delete[] factorization;
+    // ready.
+    return omega;// caller has to delete.
+}// omegaProducer
+
 }// namespace Cantiere_Primes_2022September01_
 
 
