@@ -41,8 +41,15 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Test_Unit_Logger::parallel_Integral();
+    Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
+    Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
+        cantiere_Pr.IntegerDecomposition( 36);
+    delete[] res;
     //
+    Cantiere_Primes_2022September01_::Primes::Omega omega = cantiere_Pr.omegaProducer(+100);
+
+
+//    //
 //    Couple left;
 //    left.argument = +5;
 //    left.image = 0;

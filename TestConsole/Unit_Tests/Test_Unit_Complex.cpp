@@ -218,6 +218,8 @@ void Test_Unit_Complex::ExpIntegralEi_test()
             , dx_real, dy_real
             , (unsigned long long)+1.0E+03 );// #steps
     std::cout << "Integrate Exp[z]/z d(Re(z))==dx {z,(-Infinity,0),(-0.1,0) == " << res_leftOrigin->ToString() << std::endl;
+    Process::LogWrappers::SectionContent_variable_name_value("res_leftOrigin->Re()", res_leftOrigin->Re(), 0);
+    Process::LogWrappers::SectionContent_variable_name_value("res_leftOrigin->Im()", res_leftOrigin->Im(), 0);
     // su asse reale a dx dell'origine
     z0 = Numerics::Complex(+0.1,0.0); // points on the argument-plane
     z1 = Numerics::Complex(+1.52154, 0.0); // points on the argument-plane
