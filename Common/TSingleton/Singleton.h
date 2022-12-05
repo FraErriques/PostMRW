@@ -327,7 +327,7 @@ void EntryPointThreadSpawn_TraceOnly_( int par)
 
 
 
-    int threadForker( int nThreads)
+    int threadSpawn( int nThreads)
     {
         //int nThreads = 3;
         std::thread threads[nThreads];
@@ -342,7 +342,7 @@ void EntryPointThreadSpawn_TraceOnly_( int par)
             th.join();
         }
         return 0;// TODO
-    }// END threadForker
+    }// END threadSpawn
 
     /*****
      *********** function pointer to member function : instantiation :

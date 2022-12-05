@@ -132,21 +132,21 @@ void Test_Unit_Logger::managementMethod()
     autonomous_logger( -1);// from main thread, without spawning new threads
     singleton_logger( -1);// from main thread, without spawning new threads
     //
-    // the following test logs from an automatic(i.e. Stack) instance of Common::SinkFs, forking new threads
+    // the following test logs from an automatic(i.e. Stack) instance of Common::SinkFs, spawning new threads
     Common::FuncPtr autonomousLogger_funcPtr;
     autonomousLogger_funcPtr = (void (*)(int))(&this->autonomous_logger);// take the address of a member function
-    Common::ThreadForker threadForker( autonomousLogger_funcPtr, 8);
-    threadForker.theForkingPoint();// forking new threads
-    // the following test logs from a Singleton<Common::SinkFs>, forking new threads
+    Common::ThreadSpawn threadSpawn( autonomousLogger_funcPtr, 8);
+    threadSpawn.theSpawnPoint();// Spawning new threads
+    // the following test logs from a Singleton<Common::SinkFs>, Spawning new threads
     Common::FuncPtr  singletonLogger_funcPtr;
     singletonLogger_funcPtr = (void (*)(int))(&this->singleton_logger);// take the address of a member function
-    Common::ThreadForker singleton_threadForker( singletonLogger_funcPtr, 8);
-    singleton_threadForker.theForkingPoint();// forking new threads
-    // the following test logs from logFromMultipleStrings, forking new threads
+    Common::ThreadSpawn singleton_threadSpawn( singletonLogger_funcPtr, 8);
+    singleton_threadSpawn.theSpawnPoint();// Spawn new threads
+    // the following test logs from logFromMultipleStrings, Spawn new threads
     Common::FuncPtr  logFromMultipleStrings_funcPtr;
     logFromMultipleStrings_funcPtr = (void (*)(int))(&this->interface_logFromMultipleStrings);// take the address of a member function
-    Common::ThreadForker logFromMultipleStrings_threadForker( logFromMultipleStrings_funcPtr, 98);
-    logFromMultipleStrings_threadForker.theForkingPoint();// forking new threads
+    Common::ThreadSpawn logFromMultipleStrings_threadSpawn( logFromMultipleStrings_funcPtr, 98);
+    logFromMultipleStrings_threadSpawn.theSpawnPoint();// Spawning new threads
 }// managementMethod
 
 

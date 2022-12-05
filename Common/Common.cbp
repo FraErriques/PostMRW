@@ -77,8 +77,8 @@
 		<Unit filename="StringBuilder/StringBuilder.h" />
 		<Unit filename="TSingleton/Singleton.h" />
 		<Unit filename="Template/template.h" />
-		<Unit filename="ThreadForker/ThreadForker.cpp" />
-		<Unit filename="ThreadForker/ThreadForker.h" />
+		<Unit filename="ThreadSpawn/ThreadSpawn.cpp" />
+		<Unit filename="ThreadSpawn/ThreadSpawn.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
