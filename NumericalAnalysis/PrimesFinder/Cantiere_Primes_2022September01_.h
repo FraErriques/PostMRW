@@ -120,7 +120,9 @@ class Primes
     LogIntegralPillarPoint * getNearestIntegral( unsigned long long candidatePrimeThreshold);
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
-    Omega * omegaProducer( const unsigned long long candidate);
+    Omega omegaProducer( const unsigned long long candidate);
+    int LiouvilleLambda( const unsigned long long candidate);
+    int MoebiusMu( const unsigned long long candidate);
 
 };// class
 

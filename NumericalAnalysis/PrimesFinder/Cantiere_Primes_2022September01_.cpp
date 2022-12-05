@@ -1551,24 +1551,52 @@ Primes::LogIntegralPillarPoint *  Primes::getNearestIntegral( unsigned long long
     return nearestIntegral;
 }// getNearestIntegral
 
-Primes::Omega * Primes::omegaProducer( const unsigned long long candidate)
+Primes::Omega Primes::omegaProducer( const unsigned long long candidate)
 {
-    Omega * omega = new Omega();// caller has to delete.
+    Omega omega;// will be returned by value( i.e. on the Stack)
     SingleFactor * factorization = IntegerDecomposition( candidate);
     int c=0;
     for( c=0; factorization[c].factorBase!=0; c++){}//count how many factors before the zero-terminator.
-    omega->small = c;
+    omega.small = c;
     //
-    omega->big = 0;
+    omega.big = 0;
     for( c=0; factorization[c].factorBase!=0; c++)
     {// sum up the multiplicity of each factor.
-        omega->big += factorization[c].factorMultiplicity;
+        omega.big += factorization[c].factorMultiplicity;
     }
     // clean-up
     delete[] factorization;
     // ready.
     return omega;// caller has to delete.
 }// omegaProducer
+
+int Primes::LiouvilleLambda( const unsigned long long candidate)
+{
+    Omega omega = this->omegaProducer( candidate);
+    double res = pow(-1.0, omega.big);
+    return (int)res;
+}//LiouvilleLambda
+
+int DeltaKronecker_Omega( Primes::Omega theOmegas)
+{
+    int res = -3;// init to invalid.
+    if( theOmegas.small == theOmegas.big)
+    {
+        res = +1;
+    }
+    else
+    {// in the MoebiusMu , the weight of a candidate containing squares is cancelled.
+        res = 0;
+    }
+    return res;
+}// DeltaKronecker_Omega
+
+int Primes::MoebiusMu( const unsigned long long candidate)
+{// MoebiusMu=: DeltaKronecker_Omega(omega)*LiouvilleLambda() here Lambda is calculated without calling it.
+    Omega omega = omegaProducer( candidate);
+    int MoebiusMu_res = DeltaKronecker_Omega(omega)*pow(-1.0, omega.big);
+    return MoebiusMu_res;
+}// MoebiusMu
 
 }// namespace Cantiere_Primes_2022September01_
 

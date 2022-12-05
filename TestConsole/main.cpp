@@ -2,10 +2,6 @@
 #include <vector>
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 //
-//--------------------#include <boost/lambda/lambda.hpp>
-//#include "../Common/DbConnectionService/dbCall.h"
-//#include "../Common/DbConnectionService/mysql_connection.h"
-//#include "../Common/DbConnectionService/DbConnectionService.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
@@ -46,8 +42,8 @@ int main()
         cantiere_Pr.IntegerDecomposition( 36);
     delete[] res;
     //
-    Cantiere_Primes_2022September01_::Primes::Omega * omega = cantiere_Pr.omegaProducer(+100);
-    delete omega;
+    Cantiere_Primes_2022September01_::Primes::Omega omega = cantiere_Pr.omegaProducer(+100);
+
 
 //    //
 //    Couple left;
@@ -80,8 +76,8 @@ int main()
 //    //
 //    Test_Unit_Logger::interface_logFromMultipleStrings();
 //    //
-//    Test_Unit_CantierePrimes primes_Cantiere(0);
-//    primes_Cantiere.Primes_Cantiere_managementMethod();
+    Test_Unit_CantierePrimes primes_Cantiere(0);
+    primes_Cantiere.Primes_Cantiere_managementMethod();
 //    //
 //    Test_Unit_Primes_Production_ primes_Production(80);
 //    primes_Production.Primes_Production_managementMethod();
