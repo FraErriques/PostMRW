@@ -358,6 +358,9 @@ Parametric_Linear_Manifold   linear_parametric( Couple left, Couple right)
     y0 = left.image;
     y1 = right.image;
     //
+   if( Fabs(x1-x0)<1.e-12
+       && Fabs(y1-y0)<1.e-12 )// the two points are the same one: no single line, but a bundle.
+      { Domain domain = 1; throw domain; }
     if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
     {// TODO test
         coefficients.alpha_x = 0.0;
