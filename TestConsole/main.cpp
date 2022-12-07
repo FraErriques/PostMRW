@@ -47,34 +47,30 @@ int main()
 
     //
     Couple left;
-    left.argument = 0;
-    left.image = 0;
+    left.argument = 5;
+    left.image = 5;
     //
     Couple right;
-    right.argument = 0;
-    right.image = 0;
+    right.argument = 7;
+    right.image = 7;
     //
-    try
+    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
+        Two_Points_Interpolation::linear_parametric( left,right);
+    if( giacitura.isProblemWellPosed==false)
     {
-        Domain d;
-        throw d;
-        Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
-            Two_Points_Interpolation::linear_parametric( left,right);
-        Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
-            Two_Points_Interpolation::linear( left,right);
+        std::cout<<"\n\t Parametric Problem not well posed.\n"<<std::endl;
+    }
+    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
+        Two_Points_Interpolation::linear( left,right);
+    if( giacitura_Cartesiana.isProblemWellPosed==false)
+    {
+        std::cout<<"\n\t Cartesian Problem not well posed.\n"<<std::endl;
+    }
+    else
+    {// when the problem has been well posed :
         double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
-    }// try
-    catch( Domain)
-    {
-        int i=3;
-        i++;
-        --i;
-        i+=3;
-    }// catch Domain
-    catch(...)
-    {
-        int i=3;
-    }// catch all
+    }
+
 
 //
 //    Numerics::Complex x(100.0 , 0.0);

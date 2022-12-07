@@ -28,11 +28,6 @@ double Tanh (double x);
 
 
 
-
-
-
-
-
 /// varieties between two points
 namespace Two_Points_Interpolation {
 
@@ -45,7 +40,9 @@ struct Linear_Variety_Coefficients // line between two points
    // b = (y0-x0*(y1-y0)/(x1-x0)) = y0-x0*a == y0 - x0*Dy/Dx
    double alpha;
    double beta;
-};
+   //
+   bool isProblemWellPosed;
+};// a Cartesian linear equation, like y[x]==alpha*x+beta
 
 struct Parametric_Linear_Manifold
 {// a line in R2 parametrized as useful for contour integration: {x[t]=a*x+b, y[t]=c*x+d}
@@ -57,6 +54,8 @@ struct Parametric_Linear_Manifold
    double beta_x;
    double alpha_y;
    double beta_y;
+   //
+   bool isProblemWellPosed;
 };// a line in R2 parametrized as useful for contour integration: {x[t]=a*x+b, y[t]=c*x+d}
 
 struct Exponential_Variety_Coefficients // exponential between two points
