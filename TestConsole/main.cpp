@@ -80,6 +80,11 @@ int main()
     vectorR2.show();
     Numerics::RealMatrix pullback_left = MatA.inverse() * vectorR2;
     pullback_left.show();
+    vectorR2.insert(2,  0,0);
+    vectorR2.insert(10, 1,0);
+    vectorR2.show();
+    pullback_left = MatA.inverse() * vectorR2;
+    pullback_left.show();
 
 //
 //    Numerics::Complex x(100.0 , 0.0);
