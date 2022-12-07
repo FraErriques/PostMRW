@@ -17,6 +17,7 @@
 #include "../NumericalAnalysis/PrimesFinder/InternalAlgos.h"
 #include "../NumericalAnalysis/Complex/Complex.h"
 #include "../NumericalAnalysis/RealAnalysis/Real.h"
+#include "../NumericalAnalysis/RealMatrix/RealMatrix.h"
 #include "../NumericalAnalysis/Integration/Complex_Integration.h"
 #include "../Common/Dictionary/MapOperation.h"
 //-----unit test---------
@@ -47,12 +48,12 @@ int main()
 
     //
     Couple left;
-    left.argument = 5;
-    left.image = 5;
+    left.argument = 1;
+    left.image = 6;
     //
     Couple right;
-    right.argument = 7;
-    right.image = 7;
+    right.argument = 2;
+    right.image = 10;
     //
     Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
         Two_Points_Interpolation::linear_parametric( left,right);
@@ -70,7 +71,15 @@ int main()
     {// when the problem has been well posed :
         double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
     }
-
+    Numerics::RealMatrix MatA(2,2,"./MatA.txt");
+    MatA.show();
+    MatA.inverse().show();
+    Numerics::RealMatrix vectorR2( 2,1);
+    vectorR2.insert(1, 0,0);
+    vectorR2.insert(6, 1,0);
+    vectorR2.show();
+    Numerics::RealMatrix pullback_left = MatA.inverse() * vectorR2;
+    pullback_left.show();
 
 //
 //    Numerics::Complex x(100.0 , 0.0);
