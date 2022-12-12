@@ -216,7 +216,7 @@ void Test_Unit_Complex::ExpIntegralEi_test()
             , ExpIntegralEi_fPtr
             , abscissa_real, ordinate_real
             , dx_real, dy_real
-            , (unsigned long long)+1.0E+09 );// #steps
+            , (unsigned long long)+1.0E+02 );// #steps TODO register result
     std::cout << "Integrate Exp[z]/z d(Re(z))==dx {z,(-Infinity,0),(-0.1,0) == " << res_leftOrigin->ToString() << std::endl;
     Process::LogWrappers::SectionContent_variable_name_value("res_leftOrigin->Re()", res_leftOrigin->Re(), 0);
     Process::LogWrappers::SectionContent_variable_name_value("res_leftOrigin->Im()", res_leftOrigin->Im(), 0);

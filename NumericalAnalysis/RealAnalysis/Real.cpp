@@ -326,25 +326,32 @@ double linear_ante_image ( Linear_Variety_Coefficients coefficients,
 // only for cartesian equations y==y(x)==a*x+b
 Linear_Variety_Coefficients linear (Couple left, Couple right)
 {
-   Linear_Variety_Coefficients  coefficients;
-   double x0,x1, y0,y1;
-   x0 = left.argument;
-   x1 = right.argument;
-   y0 = left.image;
-   y1 = right.image;
-
-   if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
-      { Domain domain = 1; throw domain; }// vertical line case: {x=x0,y=t}
+    Linear_Variety_Coefficients  coefficients;
+    double x0,x1, y0,y1;
+    x0 = left.argument;
+    x1 = right.argument;
+    y0 = left.image;
+    y1 = right.image;
+    //
+    if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
+    {// ex Domain domain = 1; throw domain; }// vertical line case: {x=x0,y=t}
+        coefficients.isProblemWellPosed = false;
+        coefficients.alpha = NAN;//i.e. Not A Number
+        coefficients.beta = NAN;
+        return coefficients;
+    }// END // vertical line case: {x=x0,y=t}
+    // tensor info:
     // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
     // a = (y1-y0)/(x1-x0)
     // b = (y0-x0*(y1-y0)/(x1-x0)) = y0 - x0 * a
     // il tensore della retta per i punti {x0,y0},{x1,y1}
     //    | x-x0    y-y0|
     //    |x1-x0   y1-y0|
-   coefficients.alpha = (y1-y0)/(x1-x0);
-   coefficients.beta  = y0 - x0 * coefficients.alpha;
-
-   return  coefficients;
+    coefficients.alpha = (y1-y0)/(x1-x0);
+    coefficients.beta  = y0 - x0 * coefficients.alpha;
+    coefficients.isProblemWellPosed = true;
+    //ready
+    return  coefficients;
 }// only for cartesian equations y==y(x)==a*x+b
 
 
@@ -358,15 +365,27 @@ Parametric_Linear_Manifold   linear_parametric( Couple left, Couple right)
     y0 = left.image;
     y1 = right.image;
     //
+   if( Fabs(x1-x0)<1.e-12
+       && Fabs(y1-y0)<1.e-12 )// the two points are the same one: no single line, but a bundle.
+    {// ex Domain domain = 1; throw domain; }// in case the two points are the same one; then it's a bundle.
+        coefficients.isProblemWellPosed = false;
+        coefficients.alpha_x = NAN;//i.e. Not A Number
+        coefficients.beta_x = NAN;
+        coefficients.alpha_y = NAN;//i.e. Not A Number
+        coefficients.beta_y = NAN;
+        return coefficients;
+    }// END in case the two points are the same one; then it's a bundle.
     if (Fabs(x1-x0)<1.e-12)// vertical line x=x0
-    {// TODO test
+    {// caso retta verticale -> {x[t]=x0,y[t]=t}
+        coefficients.isProblemWellPosed = true;
         coefficients.alpha_x = 0.0;
         coefficients.beta_x = x0;//==x1 for each and every parameter-value.
         // now parametrize y[t]==t  -> {x[t]=x0,y[t]=t}
         coefficients.alpha_y = +1.0;
         coefficients.beta_y = 0.0;
         return  coefficients;
-    }// caso retta verticale -> {x[t]=x0,y[t]=t}
+    }// END caso retta verticale -> {x[t]=x0,y[t]=t}
+    // info Tensor :
     // else y==y[x] in this case : {x[t]=t, y[t]=a*x+b}
     // y = a*x+b = (y1-y0)/(x1-x0)*x + (y0-x0*(y1-y0)/(x1-x0))
     // a = (y1-y0)/(x1-x0)
@@ -378,6 +397,7 @@ Parametric_Linear_Manifold   linear_parametric( Couple left, Couple right)
     coefficients.beta_x = 0.0;// x[t]=+1.0*t+0.0
     coefficients.alpha_y = (y1-y0)/(x1-x0);
     coefficients.beta_y = y0 - x0 * coefficients.alpha_y;
+    coefficients.isProblemWellPosed = true;
     // ready
     return coefficients;
 }// for parametric equations of a linear manifold of dimension one.
