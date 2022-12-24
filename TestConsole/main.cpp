@@ -38,60 +38,61 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
 
-    Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
-    Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
-        cantiere_Pr.IntegerDecomposition( 36);
-    delete[] res;
-    //
-    Cantiere_Primes_2022September01_::Primes::Omega omega = cantiere_Pr.omegaProducer(+100);
-
-
-    //
-    Couple left;
-    left.argument = 1;
-    left.image = 6;
-    //
-    Couple right;
-    right.argument = 2;
-    right.image = 10;
-    //
-    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
-        Two_Points_Interpolation::linear_parametric( left,right);
-    if( giacitura.isProblemWellPosed==false)
-    {
-        std::cout<<"\n\t Parametric Problem not well posed.\n"<<std::endl;
-    }
-    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
-        Two_Points_Interpolation::linear( left,right);
-    if( giacitura_Cartesiana.isProblemWellPosed==false)
-    {
-        std::cout<<"\n\t Cartesian Problem not well posed.\n"<<std::endl;
-    }
-    else
-    {// when the problem has been well posed :
-        double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
-    }
-    Numerics::RealMatrix MatA(2,2,"./MatA.txt");
+//    Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
+//    Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
+//        cantiere_Pr.IntegerDecomposition( 36);
+//    delete[] res;
+//    //
+//    Cantiere_Primes_2022September01_::Primes::Omega omega = cantiere_Pr.omegaProducer(+100);
+//
+//
+//    //
+//    Couple left;
+//    left.argument = 1;
+//    left.image = 6;
+//    //
+//    Couple right;
+//    right.argument = 2;
+//    right.image = 10;
+//    //
+//    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
+//        Two_Points_Interpolation::linear_parametric( left,right);
+//    if( giacitura.isProblemWellPosed==false)
+//    {
+//        std::cout<<"\n\t Parametric Problem not well posed.\n"<<std::endl;
+//    }
+//    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
+//        Two_Points_Interpolation::linear( left,right);
+//    if( giacitura_Cartesiana.isProblemWellPosed==false)
+//    {
+//        std::cout<<"\n\t Cartesian Problem not well posed.\n"<<std::endl;
+//    }
+//    else
+//    {// when the problem has been well posed :
+//        double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
+//    }
+    Numerics::RealMatrix MatA(10,10,true);
     MatA.show();
     MatA.inverse().show();
-    Numerics::RealMatrix vectorR2( 2,1);
-    vectorR2.insert(1, 0,0);
-    vectorR2.insert(6, 1,0);
-    vectorR2.show();
-    Numerics::RealMatrix pullback_left = MatA.inverse() * vectorR2;
-    pullback_left.show();
-    vectorR2.insert(2,  0,0);
-    vectorR2.insert(10, 1,0);
-    vectorR2.show();
-    pullback_left = MatA.inverse() * vectorR2;
-    pullback_left.show();
+    (MatA*MatA.inverse()).show();// should be the identity(20,20).
+//    Numerics::RealMatrix vectorR2( 2,1);
+//    vectorR2.insert(1, 0,0);
+//    vectorR2.insert(6, 1,0);
+//    vectorR2.show();
+//    Numerics::RealMatrix pullback_left = MatA.inverse() * vectorR2;
+//    pullback_left.show();
+//    vectorR2.insert(2,  0,0);
+//    vectorR2.insert(10, 1,0);
+//    vectorR2.show();
+//    pullback_left = MatA.inverse() * vectorR2;
+//    pullback_left.show();
 
 
-    Numerics::Complex x(100.0 , 0.0);
-    Numerics::Complex ro_1(+0.5, +14.123);
-    Numerics::Complex x_raised_ro( x^ro_1);
-    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
-    Test_Unit_Complex::ExpIntegralEi_test();
+//    Numerics::Complex x(100.0 , 0.0);
+//    Numerics::Complex ro_1(+0.5, +14.123);
+//    Numerics::Complex x_raised_ro( x^ro_1);
+//    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
+//    Test_Unit_Complex::ExpIntegralEi_test();
 
 
 
