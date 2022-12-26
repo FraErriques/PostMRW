@@ -8,6 +8,7 @@
 #include "../Common/MonteCarlo/BaseConverter.h"
 #include "../Common/MonteCarlo/ClassicalDiscreteGenerator.h"
 #include "../Common/MonteCarlo/ClassicalContinuousGenerator.h"
+#include "../Common/Exception/Exception_model.h"//-------NB. Exception suggestions.
 #include "../Process/Config_wrap/Config_wrap.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../NumericalAnalysis/Integration/Integration.h"
@@ -31,12 +32,12 @@
 //-----unit test---------
 
 
-
-
 //---entry point-------------------------
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
+
+    someFunc();
 
 //    Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
 //    Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
@@ -71,10 +72,24 @@ int main()
 //    {// when the problem has been well posed :
 //        double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
 //    }
-    Numerics::RealMatrix MatA(10,10,true);
-    MatA.show();
-    MatA.inverse().show();
-    (MatA*MatA.inverse()).show();// should be the identity(20,20).
+    try
+    {
+        Numerics::RealMatrix MatA(10,5,true);
+        MatA.show();
+        MatA.inverse().show();
+        (MatA*MatA.inverse()).show();// should be the identity(20,20).
+    }
+    catch( Crash curExcp)
+    {
+        int c = -1;
+        c++;
+        std::cout<<"\n\t from inside: catch( Crash curExcp) "<<std::endl;
+    }
+    catch(...)
+    {
+        int c = -1;
+        c++;
+    }
 //    Numerics::RealMatrix vectorR2( 2,1);
 //    vectorR2.insert(1, 0,0);
 //    vectorR2.insert(6, 1,0);

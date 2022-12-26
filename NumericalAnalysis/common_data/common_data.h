@@ -17,6 +17,7 @@ struct Crash // a type for Exception-Handling
    Crash (const char * message) {std::cout << "\n\t" << message << "\n\t";}
    Crash (void)                 {char  message[] = "\n\tMemory Fault\n\n"; std::cout<<message;}
 };
+// another type for Exceptions is coded in Common::Exception; the boolean field is intended to be used as a semaphore for continuing.
 
 struct Couple // the generic vector of R2, used by the interpolation methods
 {
