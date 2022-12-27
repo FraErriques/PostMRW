@@ -534,10 +534,22 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 //  IntegerDecomposition : the Fundamental Thm of Arithmetic.
 Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
 {
+    Process::LogWrappers::SectionOpen("Primes::IntegerDecomposition",0);
     RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
+    // by now using the "offset-LogIntegral"
+    unsigned long long corrected_dividend=dividend;
+    if( dividend<=+2.0)
+    {
+        corrected_dividend = 50;// go right to avoid singularity.
+    }
+    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)corrected_dividend, ((double)corrected_dividend-2.0)*4, LogIntegral );
     unsigned long long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
+    if(ordinaleStimato<5)
+    {
+        ordinaleStimato = 50;//give a default-inf to avoid crashes.
+    }// else ok.
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
+    if(nullptr==factorization){return nullptr;}
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
     for( unsigned long long c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
@@ -551,7 +563,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
     }// end filling up the candidate prime-factor array.
     unsigned long long dividendo, divisore;
-    dividendo = dividend;
+    dividendo = corrected_dividend;
     double realQuotient;
     unsigned long long intQuotient;
     int i=0;// start from +2. indice nel vettore dei primi.
@@ -600,8 +612,17 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
     {
         factorization_srk_[c] = factorization[c];
     }
-    if( factorization[acc+1].factorBase != 0) {throw;}// check on the nullity of last record. It's a placeholder.
+    if( factorization[acc+1].factorBase != 0)
+    {// check on the nullity of last record. It's a placeholder.
+        Process::LogWrappers::SectionContent("DBG: malformed array found in IntegerDecomposition.",0);
+        delete[] factorization;
+        factorization = nullptr;
+        delete[] factorization_srk_;
+        factorization_srk_ = nullptr;
+        return nullptr;
+    }
     delete[] factorization;// NB. delete the prudentially oversized array, after copying it, in a fit-size one.
+    Process::LogWrappers::SectionClose();
     // ready.
     return factorization_srk_;// NB. the caller has to delete.
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
@@ -945,7 +966,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
 template<typename It>
 void printInsertionStatus(It it, bool success)
 {
-    std::cout << "Insertion of " << it->first << (success ? " succeeded\n" : " failed\n");
+    // DBG std::cout << "Insertion of " << it->first << (success ? " succeeded\n" : " failed\n");
 }
 
 bool Primes::MoveToMap(
@@ -1179,7 +1200,7 @@ unsigned long long Primes::queryMap( unsigned long long desiredOrdinal)
     }// else return zero, as error-code, since the required key is absent in the map.
     else
     {// else means count==0. In the map count has only the states{0==absent, +1==present}.
-        std::cout<<"----\n\t Key "<<desiredOrdinal<<" not found."; // DBG
+         // DBG std::cout<<"----\n\t Key "<<desiredOrdinal<<" not found.";
         return 0;
     }
 }// queryMap
@@ -1189,7 +1210,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     unsigned long long  desiredPrime = this->queryMap( desiredOrdinal);// check if there's already the record in Map.
     if( 0 != desiredPrime)
     {
-        std::cout<<"-------\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
+        // DBG std::cout<<"-------\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
         return desiredPrime;
     }
     else // zero returned by queryMap means key-absent.
@@ -1206,7 +1227,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     }// DBG !
     else
     {
-        std::cout<<"\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
+        // DBG std::cout<<"\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
     }// DBG !
     //
     return desiredPrime;

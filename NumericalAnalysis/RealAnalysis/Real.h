@@ -72,14 +72,26 @@ struct Exponential_Variety_Coefficients // exponential between two points
    double fi;    ///   x1-x0
 };
 
+//obtain the coefficients of a non-vertical line between points {left,right}
 Linear_Variety_Coefficients  linear( Couple left, Couple right);
+//obtain the coefficients of any line between points {left,right}(i.e. even vertical)
 Parametric_Linear_Manifold   linear_parametric( Couple left, Couple right);
+//obtain the coefficients of an exponential curve between two points
 Exponential_Variety_Coefficients  log_linear (Couple left, Couple right);
+// via the coefficients of a Cartesian line, obtain y==y(x)
 double linear_image        (Linear_Variety_Coefficients, double);
+// via the coefficients of a Cartesian line, obtain x==x(y)
 double linear_ante_image   (Linear_Variety_Coefficients, double);
+// via the coefficients of an exponential function, obtain y==y(x)
 double log_linear_image        (Exponential_Variety_Coefficients, double);
+// via the coefficients of an exponential function, obtain x==x(y)
 double log_linear_ante_image   (Exponential_Variety_Coefficients, double);
-
+//---NB. gain {x[t],y[t]}, giving {m,t,q} to compose m*t+q
+double *f( Parametric_Linear_Manifold parametric_layout, double independent_parameter);
+// via the points {{x0,y0},{x1,y1}} and the Parametric_Linear_Manifold coefficients, obtain two extrema in the pullback {t0,t1}.
+double *parametricLinear_ante_image( Parametric_Linear_Manifold parametric_layout
+                                    ,double x0,double y0
+                                    ,double x1,double y1  );
 
 } // end of namespace Two_Points_Interpolation
 

@@ -1,5 +1,5 @@
-
 # include "Real.h"
+#include "../RealMatrix/RealMatrix.h"
 
 double Fabs (double x)
 {
@@ -403,6 +403,71 @@ Parametric_Linear_Manifold   linear_parametric( Couple left, Couple right)
 }// for parametric equations of a linear manifold of dimension one.
 
 
+// the following two function has to be called twice each. Both of the plane coordinates are parametric.
+//---NB. gain {x[t],y[t]}, giving {m,t,q} to compose m*t+q
+double *parametricLinear_image( Parametric_Linear_Manifold parametric_layout, double independent_parameter)
+{
+    if( ! parametric_layout.isProblemWellPosed) {return nullptr;}//else continue.
+    double *planePoint = new double[2];//{x,y} caller has to delete.
+    planePoint[0] = parametric_layout.alpha_x * independent_parameter + parametric_layout.beta_x;
+    planePoint[1] = parametric_layout.alpha_y * independent_parameter + parametric_layout.beta_y;
+    return planePoint;// caller has to delete
+}//parametricLinear_image
+
+// via the points {{x0,y0},{x1,y1}} and the Parametric_Linear_Manifold coefficients, obtain two extrema in the pullback {t0,t1}.
+double *parametricLinear_ante_image( Parametric_Linear_Manifold parametric_layout
+                                    ,double x0,double y0
+                                    ,double x1,double y1  )
+{
+    if( ! parametric_layout.isProblemWellPosed) {return nullptr;}//else continue.
+    //
+    Couple left;//it's assumed that left={x0,y0}
+    left.argument = x0;
+    left.image = y0;
+    Couple right;//it's assumed that right={x1,y1}
+    right.argument = x1;
+    right.image = y1;
+    //
+    Numerics::RealMatrix Mat_ParametricLayout(2,2);
+    Mat_ParametricLayout.insert( parametric_layout.alpha_x, 0,0);Mat_ParametricLayout.insert( parametric_layout.beta_x , 0,1);// row (I)
+    Mat_ParametricLayout.insert( parametric_layout.alpha_y, 1,0);Mat_ParametricLayout.insert( parametric_layout.beta_y , 1,1);// row (II)
+    double pullback_alpha;
+    double pullback_beta;
+    try
+    {
+        Mat_ParametricLayout.show();// DBG
+        if( fabs(Mat_ParametricLayout.get_at(0,0))<+1E-20// two zeros on the principal diagonal->vertical line.
+            && fabs(Mat_ParametricLayout.get_at(1,1))<+1E-20 )
+        {// caso retta verticale: the y==t and the x=x0
+            pullback_alpha = left.image;
+            pullback_beta = right.image;
+        }
+        if( fabs(Mat_ParametricLayout.get_at(0,0)-1.0)<+1E-20)//+1 at[0][0] means x[t]==t ->function->NON_vertical line.
+        {// caso retta y==y(x), x[t]=t
+            pullback_alpha = left.argument;
+            pullback_beta = right.argument;
+        }
+        else
+        {
+            Crash crash("DEBUG: unknown matrix layout.");
+            throw crash;
+        }
+    }// try
+    catch( Crash curExcp)
+    {
+        std::cout<<"\n\t from inside: catch( Crash curExcp) "<<std::endl;
+    }
+    catch(...)
+    {
+        std::cout<<"\n\t from inside: catch(...) "<<std::endl;
+    }
+    double *pullbackDomain = new double[2];
+    pullbackDomain[0] = pullback_alpha;
+    pullbackDomain[1] = pullback_beta;
+    return pullbackDomain;//caller has to delete.
+}// parametricLinear_ante_image
+
+//--exponential between two points
 double log_linear_image ( Exponential_Variety_Coefficients coefficients,
                           double x )
 {

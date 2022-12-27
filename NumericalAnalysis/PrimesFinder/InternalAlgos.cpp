@@ -1,6 +1,7 @@
 #include <cmath>
 #include <string>
 #include "../../Common/StringBuilder/StringBuilder.h"
+#include "../common_data/common_data.h"
 
 namespace internalAlgos
 {
@@ -10,6 +11,12 @@ namespace internalAlgos
 // an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
 long double LogIntegral_coChain( long double x)
 {// an internal helper, which is the coChain of LogIntegral. Used for ordinal estimates.
+    if( x<=0.0
+        || fabs(x-1.0)<+1E-20 )
+    {
+        Crash crash("LogIntegral has a branch line on the negative RealAxis and an essential singularity in +1.0");
+        throw crash;
+    }
     return +1.0/log(x);
 }// LogIntegral_coChain
 

@@ -1,4 +1,6 @@
 #include "Complex_Integration.h"
+#include "../RealAnalysis/Real.h"
+#include "../RealMatrix/RealMatrix.h"
 
 namespace Complex_Integration{
 
@@ -283,5 +285,81 @@ namespace Complex_Integration{
             // ready.
             return res;// Caller has to delete.
         }// ContourIntegral_AsScalar_ManagementMethod
+
+/// Contour Integral can be performed also as Sum[f(z)*(dx+I*dy)]
+/// so that there is no need to separate Real and Imaginary parts in the image.
+/// this implementation finds the layout of a parametric LINE between the points {z0,z1}
+/// the line equation is always the same and takes parameters for:{angular coefficient,independent variable,translation}
+/// the differential is the angular coefficient. The methods that find the line layout are in RealAnalysis::linear_parametric(
+/// for vertical lines, the implementation is {x=t0,y=t}. For non-vertical ones {x=t,y=m*t+q}, t in [t1,t2]
+/// so  [t1,t2] is the pullback domain; it is identified by means of RealAnalysis::Real::TODO!!!
+Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMethod(
+    Numerics::Complex z0,
+    Numerics::Complex z1,
+    // extrema in the pull-back will be auto-detected
+    fPtr_ComplexAsScalar_ complexAsScalar,
+    //the JordanLinear equations are always the same, since they take all as parameter(m,x,q) in y=m*t+q
+    //the differentials need no function pointer either, since d/dt{m*t+q}==m
+    //the JordanLinear equations are a pair, since they allow for a representation of all lines in the plane
+    unsigned long long n )// #trapezia in the partition
+{
+    Process::LogWrappers::SectionOpen("ComplexIntegration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMethod", 0);
+    Couple left;//it's assumed that integration goes from_z0_to_z1
+    left.argument = z0.Re();// left is z0
+    left.image = z0.Im();
+    Couple right;
+    right.argument = z1.Re();// right is z1; if the pullback will grow backwards, the sign will be changed.
+    right.image = z1.Im();
+    //
+    Two_Points_Interpolation::Parametric_Linear_Manifold parametric_giacitura =
+        Two_Points_Interpolation::linear_parametric( left,right);
+    if( parametric_giacitura.isProblemWellPosed==false)
+    {
+        Process::LogWrappers::SectionContent("Interpolation: Parametric Problem not well posed.",0);
+    }
+    Numerics::RealMatrix Mat_ParametricLayout(2,2,true);
+    Mat_ParametricLayout.insert( parametric_giacitura.alpha_x, 0,0);Mat_ParametricLayout.insert( parametric_giacitura.beta_x , 0,1);// row (I)
+    Mat_ParametricLayout.insert( parametric_giacitura.alpha_y, 1,0);Mat_ParametricLayout.insert( parametric_giacitura.beta_y , 1,1);// row (II)
+    double pullback_alpha;
+    double pullback_beta;
+    try
+    {
+        Mat_ParametricLayout.show();// DBG
+        if( fabs(Mat_ParametricLayout.get_at(0,0))<+1E-20// two zeros on the principal diagonal->vertical line.
+            && fabs(Mat_ParametricLayout.get_at(1,1))<+1E-20 )
+        {// caso retta verticale: the y==t and the x=x0
+            pullback_alpha = left.image;
+            pullback_beta = right.image;
+        }
+        if( fabs(Mat_ParametricLayout.get_at(0,0)-1.0)<+1E-20)//+1 at[0][0] means x[t]==t ->function->NON_vertical line.
+        {// caso retta y==y(x), x[t]=t
+            pullback_alpha = left.argument;
+            pullback_beta = right.argument;
+        }
+        else
+        {
+            Crash crash("DEBUG: unknown matrix layout.");
+            throw crash;
+        }
+        // the algo requires the pullback to be stepped-in in growing sense:
+        if( pullback_alpha<=pullback_beta)
+        {}//nothing to change
+        else
+        {
+            // TODO change sign
+        }
+    }
+    catch( Crash curExcp)
+    {
+        Process::LogWrappers::SectionContent("from inside: catch( Crash curExcp) specific of JordanLinear interpolation",0);
+    }
+    catch(...)
+    {
+        Process::LogWrappers::SectionContent("from inside: catch(...) generic in JordanLinear interpolation",0);
+    }
+    //
+    ///......
+    Process::LogWrappers::SectionClose();
+}// ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMethod
 
 }// nmsp

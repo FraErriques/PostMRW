@@ -203,6 +203,23 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
             fPtr_Jordan_parametriz_ dy_differential,
             unsigned long long n );// #trapezia in the partition
 
+        /// Contour Integral can be performed also as Sum[f(z)*(dx+I*dy)]
+        /// so that there is no need to separate Real and Imaginary parts in the image.
+        /// this implementation finds the layout of a parametric LINE between the points {z0,z1}
+        /// the line equation is always the same and takes parameters for:{angular coefficient,independent variable,translation}
+        /// the differential is the angular coefficient. The methods that find the line layout are in RealAnalysis::linear_parametric(
+        /// for vertical lines, the implementation is {x=t0,y=t}. For non-vertical ones {x=t,y=m*t+q}, t in [t1,t2]
+        /// so  [t1,t2] is the pullback domain; it is identified by means of RealAnalysis::Real::TODO!!!
+        Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMethod(
+            Numerics::Complex z0,
+            Numerics::Complex z1,
+            // extrema in the pull-back will be auto-detected
+            fPtr_ComplexAsScalar_ complexAsScalar,
+            //the JordanLinear equations are always the same, since they take all as parameter(m,x,q) in y=m*t+q
+            //the differentials need no function pointer either, since d/dt{m*t+q}==m
+            //the JordanLinear equations are a pair, since they allow for a representation of all lines in the plane
+            unsigned long long n );// #trapezia in the partition
+
 }// nmsp
 
 #endif // COMPLEX_INTEGRATION_H

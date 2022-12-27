@@ -37,7 +37,11 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
 
-    someFunc();
+    Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
+    for( int c=656; c<676; c++)
+    {
+        std::cout<< "\n\t MoebiusMu["<<c<<"]== "<<cantiere_Pr.MoebiusMu( c)<<std::endl;
+    }
 
 //    Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
 //    Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
@@ -47,49 +51,31 @@ int main()
 //    Cantiere_Primes_2022September01_::Primes::Omega omega = cantiere_Pr.omegaProducer(+100);
 //
 //
-//    //
-//    Couple left;
-//    left.argument = 1;
-//    left.image = 6;
-//    //
-//    Couple right;
-//    right.argument = 2;
-//    right.image = 10;
-//    //
-//    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
-//        Two_Points_Interpolation::linear_parametric( left,right);
-//    if( giacitura.isProblemWellPosed==false)
-//    {
-//        std::cout<<"\n\t Parametric Problem not well posed.\n"<<std::endl;
-//    }
-//    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
-//        Two_Points_Interpolation::linear( left,right);
-//    if( giacitura_Cartesiana.isProblemWellPosed==false)
-//    {
-//        std::cout<<"\n\t Cartesian Problem not well posed.\n"<<std::endl;
-//    }
-//    else
-//    {// when the problem has been well posed :
-//        double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
-//    }
+    //
+    Couple left;
+    left.argument = 56;
+    left.image = 226;
+    //
+    Couple right;
+    right.argument = 56;
+    right.image = 370;
+    //
+    Two_Points_Interpolation::Parametric_Linear_Manifold giacitura =
+        Two_Points_Interpolation::linear_parametric( left,right);
+    if( giacitura.isProblemWellPosed==false)
+    {
+        std::cout<<"\n\t Parametric Problem not well posed.\n"<<std::endl;
+    }
+
+    Numerics::RealMatrix MatA(2,2,true);
+    MatA.insert( giacitura.alpha_x, 0,0);MatA.insert( giacitura.beta_x , 0,1);// row (I)
+    MatA.insert( giacitura.alpha_y, 1,0);MatA.insert( giacitura.beta_y , 1,1);// row (II)
     try
     {
-        Numerics::RealMatrix MatA(10,5,true);
-        MatA.show();
-        MatA.inverse().show();
-        (MatA*MatA.inverse()).show();// should be the identity(20,20).
-    }
-    catch( Crash curExcp)
-    {
-        int c = -1;
-        c++;
-        std::cout<<"\n\t from inside: catch( Crash curExcp) "<<"bool_canResume=="<<(bool)(theException.canResume)<<std::endl;        
-    }
-    catch(...)
-    {
-        int c = -1;
-        c++;
-    }
+//        MatA.show();
+//        MatA.inverse().show();
+//        (MatA*MatA.inverse()).show();// should be the identity(20,20).
+    //-------- pullback identification --------------
 //    Numerics::RealMatrix vectorR2( 2,1);
 //    vectorR2.insert(1, 0,0);
 //    vectorR2.insert(6, 1,0);
@@ -101,6 +87,32 @@ int main()
 //    vectorR2.show();
 //    pullback_left = MatA.inverse() * vectorR2;
 //    pullback_left.show();
+    //
+        Numerics::RealMatrix vectorR2( 2,1);
+        vectorR2.insert(56, 0,0);
+        vectorR2.insert(226, 1,0);
+        vectorR2.show();
+        Numerics::RealMatrix pullback_left = MatA.inverse() * vectorR2;
+        pullback_left.show();
+        vectorR2.insert(56, 0,0);
+        vectorR2.insert(370, 1,0);
+        vectorR2.show();
+        pullback_left = MatA.inverse() * vectorR2;
+        pullback_left.show();
+    }
+    catch( Crash curExcp)
+    {
+        int c = -1;
+        c++;
+        std::cout<<"\n\t from inside: catch( Crash curExcp) "<<std::endl;
+    }
+    catch(...)
+    {
+        int c = -1;
+        c++;
+    }
+    //
+
 
 
 //    Numerics::Complex x(100.0 , 0.0);
@@ -108,10 +120,6 @@ int main()
 //    Numerics::Complex x_raised_ro( x^ro_1);
 //    Numerics::Complex Log_x_raised_ro( x_raised_ro.LnC() );
 //    Test_Unit_Complex::ExpIntegralEi_test();
-
-
-
-
 //     // NO instance: Unit tests are preferrably static classes // Test_Unit_Complex:: Complex_test;
 //    Test_Unit_Complex::manage_ComplexIntegr_asScalar_square();
 //    Test_Unit_Complex::similErf_test();
@@ -137,9 +145,21 @@ int main()
 }// main
 
 /* --------------cantina----------------------------
-    //
+//    someFunc();
+//
 //    Cantiere_Primes_2022September01_::Primes cantiere(15);
 //    cantiere.RandomCalcInterface(999999, 1001999);
-
+//
 //    Test_Unit_Logger::interface_logFromMultipleStrings();
+//    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
+//        Two_Points_Interpolation::linear( left,right);
+//    if( giacitura_Cartesiana.isProblemWellPosed==false)
+//    {
+//        std::cout<<"\n\t Cartesian Problem not well posed.\n"<<std::endl;
+//    }
+//    else
+//    {// when the problem has been well posed :
+//        double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
+//    }
+
 */
