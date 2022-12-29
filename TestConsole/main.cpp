@@ -37,16 +37,43 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
-       Numerics::Complex(+2.0, +3.0)
-       ,Numerics::Complex(+5.0, +7.0)
-       ,100
-    );
-    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
-       Numerics::Complex(-112.0, -30.0)
-       ,Numerics::Complex(+5.0, +7.0)
-       ,100000   // #trapezia in the partition
-    );
+//    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
+//       Numerics::Complex(+2.0, +3.0)
+//       ,Numerics::Complex(+5.0, +7.0)
+//       ,100
+//    );
+//    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
+//       Numerics::Complex(-112.0, -30.0)
+//       ,Numerics::Complex(+5.0, +7.0)
+//       ,100000   // #trapezia in the partition
+//    );
+    //
+    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann_test(
+      Numerics::Complex(+3.0,+1.0),
+      1000 );
+    //
+    Numerics::Complex *suiCateti =
+        Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_onExpIntegralEiCoChain_test(
+            Numerics::Complex( log(sqrt(+2.0)) , 0.0),
+            Numerics::Complex(+3.0, 0.0),
+            1000 );
+
+    Numerics::Complex *secondoCateto =
+        Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_onExpIntegralEiCoChain_test(
+            Numerics::Complex(+3.0, 0.0),
+            Numerics::Complex(+3.0,+1.0),
+            1000 );
+    *suiCateti += *secondoCateto;
+    Process::LogWrappers::SectionContent_fromMultipleStrings(
+        0 // verbosity
+        ,2 // how many std::string*
+        ,new std::string("sui cateti {a,b,c}={log(sqrt(+2.0),0.0},{+3.0,0.0},{+3.0,+1.0}== ")
+        ,new std::string( (*suiCateti).ToString() )
+        );
+    delete suiCateti;
+    delete secondoCateto;
+
+
 
 
     //--------------------------------------------------------------
