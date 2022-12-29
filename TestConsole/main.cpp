@@ -36,7 +36,47 @@
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
+    //
+    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
+       Numerics::Complex(+2.0, +3.0)
+       ,Numerics::Complex(+5.0, +7.0)
+       ,100
+    );
+    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
+       Numerics::Complex(-112.0, -30.0)
+       ,Numerics::Complex(+5.0, +7.0)
+       ,100000   // #trapezia in the partition
+    );
 
+
+    //--------------------------------------------------------------
+    Process::LogWrappers::SectionClose();
+    Process::LogWrappers::EndOfApplication_MANDATORY_();// destroy a global Singleton:: NECESSARY!
+    //---ready---------------
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+/* --------------cantina----------------------------
+//    someFunc();
+//
+//    Cantiere_Primes_2022September01_::Primes cantiere(15);
+//    cantiere.RandomCalcInterface(999999, 1001999);
+//
+//    Test_Unit_Logger::interface_logFromMultipleStrings();
+//    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
+//        Two_Points_Interpolation::linear( left,right);
+//    if( giacitura_Cartesiana.isProblemWellPosed==false)
+//    {
+//        std::cout<<"\n\t Cartesian Problem not well posed.\n"<<std::endl;
+//    }
+//    else
+//    {// when the problem has been well posed :
+//        double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
+//    }
     Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
     for( int c=1; c<6; c++)
     {
@@ -113,8 +153,6 @@ int main()
     }
     //
 
-
-
 //    Numerics::Complex x(100.0 , 0.0);
 //    Numerics::Complex ro_1(+0.5, +14.123);
 //    Numerics::Complex x_raised_ro( x^ro_1);
@@ -134,32 +172,5 @@ int main()
 //    Test_Unit_Primes_Production_ primes_Production(80);
 //    primes_Production.Primes_Production_managementMethod();
 
-
-    //--------------------------------------------------------------
-    Process::LogWrappers::SectionClose();
-    Process::LogWrappers::EndOfApplication_MANDATORY_();// destroy a global Singleton:: NECESSARY!
-    //---ready---------------
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-/* --------------cantina----------------------------
-//    someFunc();
-//
-//    Cantiere_Primes_2022September01_::Primes cantiere(15);
-//    cantiere.RandomCalcInterface(999999, 1001999);
-//
-//    Test_Unit_Logger::interface_logFromMultipleStrings();
-//    Two_Points_Interpolation::Linear_Variety_Coefficients giacitura_Cartesiana =
-//        Two_Points_Interpolation::linear( left,right);
-//    if( giacitura_Cartesiana.isProblemWellPosed==false)
-//    {
-//        std::cout<<"\n\t Cartesian Problem not well posed.\n"<<std::endl;
-//    }
-//    else
-//    {// when the problem has been well posed :
-//        double anteImage = Two_Points_Interpolation::linear_ante_image( giacitura_Cartesiana, 12);
-//    }
 
 */

@@ -166,6 +166,37 @@ void Test_Unit_Complex::similErf_test()
 }// similErf_test
 
 
+
+void Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
+Numerics::Complex z0
+,Numerics::Complex z1
+,unsigned long long n )// #trapezia in the partition
+{
+    Process::LogWrappers::SectionOpen("Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test()",0);
+    Complex_Integration::fPtr_ComplexAsScalar_ complexAsScalar = Square;// coChain f_ptr
+    Numerics::Complex *res =
+        Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect(
+                z0,
+                z1,
+                // extrema in the pull-back will be auto-detected
+                complexAsScalar,// coChain f_ptr
+                //the JordanLinear equations are always the same, since they take all as parameter(m,x,q) in y=m*t+q
+                //the differentials need no function pointer either, since d/dt{m*t+q}==m
+                //the JordanLinear equations are a pair, since they allow for a representation of all lines in the plane
+                1000 );// #trapezia in the partition
+    Process::LogWrappers::SectionContent_fromMultipleStrings(
+        0 // verbosity
+        ,6 // how many std::string*
+        ,new std::string("Integrate[z^2, {z,")
+        ,new std::string( z0.ToString() )
+        ,new std::string(" , ")
+        ,new std::string( z1.ToString() )
+        ,new std::string("}== ")
+        ,new std::string(res->ToString())  );
+    Process::LogWrappers::SectionClose();
+    delete res;
+}// ContourIntegral_AsScalar_JordanLinearAutoDetect_test
+
 void Test_Unit_Complex::ExpIntegralEi_test()
 {
     // CoChain f(z)==Exp[z]/z called ExpIntegralEi

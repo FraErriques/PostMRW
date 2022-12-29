@@ -292,8 +292,8 @@ namespace Complex_Integration{
 /// the line equation is always the same and takes parameters for:{angular coefficient,independent variable,translation}
 /// the differential is the angular coefficient. The methods that find the line layout are in RealAnalysis::linear_parametric(
 /// for vertical lines, the implementation is {x=t0,y=t}. For non-vertical ones {x=t,y=m*t+q}, t in [t1,t2]
-/// so  [t1,t2] is the pullback domain; it is identified by means of RealAnalysis::Real::TODO!!!
-Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMethod(
+/// so  [t1,t2] is the pullback domain; it is identified by means of RealAnalysis::Real::parametricLinear_ante_image,here inlined.
+Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect(
     Numerics::Complex z0,
     Numerics::Complex z1,
     // extrema in the pull-back will be auto-detected
@@ -303,7 +303,7 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMe
     //the JordanLinear equations are a pair, since they allow for a representation of all lines in the plane
     unsigned long long n )// #trapezia in the partition
 {
-    Process::LogWrappers::SectionOpen("ComplexIntegration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMethod", 0);
+    Process::LogWrappers::SectionOpen("ComplexIntegration::ContourIntegral_AsScalar_JordanLinearAutoDetect", 0);
     Couple left;//it's assumed that integration goes from_z0_to_z1
     left.argument = z0.Re();// left is z0
     left.image = z0.Im();
@@ -323,6 +323,8 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMe
     double pullback_alpha;
     double pullback_beta;
     Numerics::Complex * res = new Numerics::Complex(0.0, 0.0);//results will be added on it.
+    double * t0x_t0y = nullptr;// needed for deletion outside the try-block.
+    double * tnx_tny = nullptr;
     try
     {
         Mat_ParametricLayout.show();// DBG
@@ -357,8 +359,8 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMe
         }
         // check integration extrema adequacy in the push forward
         double localEpsilon = +1.0E-05;
-        double * t0x_t0y = parametricLinear_image( parametric_giacitura, pullback_alpha);
-        double * tnx_tny = parametricLinear_image( parametric_giacitura, pullback_beta);
+        t0x_t0y = parametricLinear_image( parametric_giacitura, pullback_alpha);
+        tnx_tny = parametricLinear_image( parametric_giacitura, pullback_beta);
         //
         double z0_x_byJordan = t0x_t0y[0];// extrema in the push forward
         double z0_y_byJordan = t0x_t0y[1];
@@ -384,12 +386,13 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMe
         //
         // now let's step into the integral:
         //NB. Integrate_equi_trapezium_ComplexImageAsScalar has been inlined here
-        // legenda:
+        //-------------------- legenda:
         double t0 = pullback_alpha;
         double tn = pullback_beta;
         double DeltaT = (tn - t0) / (double)n;
         double t = t0 + DeltaT;// the boundaries {t0,tn} are computed separately, after the core-loop. So trapezium starts at 1*DeltaT.
         double * tix_tiy = nullptr;
+        //-------------------- legenda:
         // tix_tiy[0] == (ti)->x
         // tix_tiy[1] == (ti)->y
         // parametric_giacitura.alpha_x == dx_differential(t)
@@ -413,8 +416,8 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMe
         // post kordell adjustments
         *res *= DeltaT; // multiply them for the common base
         // re-use the following arrays, before deletion:
-        // t0x_t0y
-        // tnx_tny
+        // t0x_t0y point z0 in the argument plane through pushForward of pullback_alpha
+        // tnx_tny point z1 in the argument plane through pushForward of pullback_beta
         *res += (
                 complexAsScalar(t0x_t0y[0],t0x_t0y[1]) * Numerics::Complex(parametric_giacitura.alpha_x,parametric_giacitura.alpha_y)+
                 complexAsScalar(tnx_tny[0],tnx_tny[1]) * Numerics::Complex(parametric_giacitura.alpha_x,parametric_giacitura.alpha_y)
@@ -422,12 +425,42 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMe
         // ready.
     }// try
     catch( Crash curExcp)
-    {
+    {//this same deletion block is needed three times in a few rows, due to different possible execution paths.
         Process::LogWrappers::SectionContent("from inside: catch( Crash curExcp) specific of JordanLinear interpolation",0);
+        if(nullptr!= t0x_t0y)
+        {
+            delete[] t0x_t0y;
+            t0x_t0y = nullptr;
+        }
+        if(nullptr!= tnx_tny)
+        {
+            delete[] tnx_tny;
+            tnx_tny = nullptr;
+        }
     }
     catch(...)
     {
         Process::LogWrappers::SectionContent("from inside: catch(...) generic in JordanLinear interpolation",0);
+        if(nullptr!= t0x_t0y)
+        {//this same deletion block is needed three times in a few rows, due to different possible execution paths.
+            delete[] t0x_t0y;
+            t0x_t0y = nullptr;
+        }
+        if(nullptr!= tnx_tny)
+        {
+            delete[] tnx_tny;
+            tnx_tny = nullptr;
+        }
+    }
+    if(nullptr!= t0x_t0y)
+    {//this same deletion block is needed three times in a few rows, due to different possible execution paths.
+        delete[] t0x_t0y;
+        t0x_t0y = nullptr;
+    }
+    if(nullptr!= tnx_tny)
+    {
+        delete[] tnx_tny;
+        tnx_tny = nullptr;
     }
     // ready.
     Process::LogWrappers::SectionClose();

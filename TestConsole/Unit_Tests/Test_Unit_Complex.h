@@ -15,6 +15,10 @@ class Test_Unit_Complex
         static void test_Ctor_s_();
         static void test_AmpliTwist();
         static void ExpIntegralEi_test();
+        static void ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
+            Numerics::Complex z0
+            ,Numerics::Complex z1
+            ,unsigned long long n );// #trapezia in the partition
 
     protected:
     private:

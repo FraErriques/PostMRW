@@ -209,8 +209,8 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
         /// the line equation is always the same and takes parameters for:{angular coefficient,independent variable,translation}
         /// the differential is the angular coefficient. The methods that find the line layout are in RealAnalysis::linear_parametric(
         /// for vertical lines, the implementation is {x=t0,y=t}. For non-vertical ones {x=t,y=m*t+q}, t in [t1,t2]
-        /// so  [t1,t2] is the pullback domain; it is identified by means of RealAnalysis::Real::TODO!!!
-        Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ManagementMethod(
+        /// so  [t1,t2] is the pullback domain; it is identified by means of RealAnalysis::Real::parametricLinear_ante_image,here inlined.
+        Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect(
             Numerics::Complex z0,
             Numerics::Complex z1,
             // extrema in the pull-back will be auto-detected
