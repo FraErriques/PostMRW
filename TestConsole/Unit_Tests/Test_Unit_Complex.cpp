@@ -21,21 +21,6 @@ Numerics::Complex similErf( double x, double y)// the whole image, treated as an
     return res;
 }// integrand_ComplexAsScalar
 
-Numerics::Complex ExpIntegralEi_CoChain( double x, double y)// the whole image, treated as an algebraic scalar.
-{// Exp[z]/z
-    Numerics::Complex z( x,y);
-    Numerics::Complex Exp_z_( z.ExpC());
-    Numerics::Complex res( Exp_z_/z);
-    return res;
-}// integrand_ComplexAsScalar
-
-Numerics::Complex LogIntegral_CoChain( double x, double y)// the whole image, treated as an algebraic scalar.
-{// 1/Log[z]
-    Numerics::Complex z( x,y);
-    Numerics::Complex Log_z_( z.LnC());
-    Numerics::Complex res( Numerics::Complex()/Log_z_);//i.e. 1/Ln[z]
-    return res;
-}// integrand_ComplexAsScalar
 
 Numerics::Complex Square( double x, double y)// the whole image, treated as an algebraic scalar.
 {
@@ -184,7 +169,7 @@ void Test_Unit_Complex::similErf_test()
 void Test_Unit_Complex::ExpIntegralEi_test()
 {
     // CoChain f(z)==Exp[z]/z called ExpIntegralEi
-    Complex_Integration::fPtr_ComplexAsScalar_  ExpIntegralEi_fPtr = ExpIntegralEi_CoChain;
+    Complex_Integration::fPtr_ComplexAsScalar_  ExpIntegralEi_fPtr = Complex_Integration::ExpIntegralEi_CoChain;// production impl
     // Chains
     // Jordan su asse reale
     Complex_Integration::fPtr_Jordan_parametriz_ abscissa_real = local_abscissa_Erf_asseReale;

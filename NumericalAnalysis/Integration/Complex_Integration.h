@@ -220,6 +220,10 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
             //the JordanLinear equations are a pair, since they allow for a representation of all lines in the plane
             unsigned long long n );// #trapezia in the partition
 
+Numerics::Complex ExpIntegralEi_CoChain( double x, double y);// ExpIntegralEi[Log[z]]==LogIntegral[z]
+Numerics::Complex LogIntegral_CoChain( double x, double y);// ExpIntegralEi[Log[z]]==LogIntegral[z]
+
+
 }// nmsp
 
 #endif // COMPLEX_INTEGRATION_H
