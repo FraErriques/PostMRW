@@ -37,6 +37,10 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
+    for(int c=+1; c<4; c++)
+    {
+        std::cout<<"\n\t 2^(1/"<<c<<")== "<<pow((double)c,+1.0/(double)c)<<std::endl;
+    }
 //    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
 //       Numerics::Complex(+2.0, +3.0)
 //       ,Numerics::Complex(+5.0, +7.0)
