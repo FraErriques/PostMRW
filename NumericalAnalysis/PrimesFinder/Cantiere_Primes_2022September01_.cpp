@@ -1619,6 +1619,35 @@ int Primes::MoebiusMu( const unsigned long long candidate)
     return MoebiusMu_res;
 }// MoebiusMu
 
+double Primes::Pi_of_J( double Xsoglia)
+{
+    double Log_base2_Xsoglia = log(Xsoglia)/log(+2);
+    double radiceEnnesima;
+    int c=ceil(Log_base2_Xsoglia);
+    for(; pow(Xsoglia,+1.0/(double)c)>=+2.0; c++)
+    {
+        radiceEnnesima = pow(Xsoglia,+1.0/(double)c);
+        std::cout<<"\n\t 2^(1/"<<c<<")== "<<radiceEnnesima<<std::endl;
+        if(radiceEnnesima<+2.0)
+        {
+            break;
+        }// else continue;
+    }// for
+    std::cout<<"\n\t ultima radice utile== "<<c<<" radicale== "<<radiceEnnesima<<std::endl;
+}// PI_of_J
+
+
+double J_of_Z();
+double PrincipalTerm()
+{
+    //const double termineCorrettivo
+    return 0.0;
+}
+
+double Periodic_Terms();
+double Third_Term();
+double Fourth_Term();
+
 }// namespace Cantiere_Primes_2022September01_
 
 

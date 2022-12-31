@@ -122,6 +122,14 @@ class Primes
     Omega omegaProducer( const unsigned long long candidate);
     int LiouvilleLambda( const unsigned long long candidate);
     int MoebiusMu( const unsigned long long candidate);
+    double Pi_of_J( double Xsoglia);
+    double J_of_Z();
+    double PrincipalTerm();
+    double Periodic_Terms();
+    double Third_Term();
+    double Fourth_Term();
+
+
 
 };// class
 
