@@ -1619,34 +1619,76 @@ int Primes::MoebiusMu( const unsigned long long candidate)
     return MoebiusMu_res;
 }// MoebiusMu
 
+
+struct PanelMainFormula
+{
+    int i;// root index
+    int MoebiusMu;
+    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
+    double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
+    double mainTerm_addendoUno_i_;
+    double periodicTerm_addendoDue_i_;
+    double logConstantTerm_addendoTre_i_;
+    double lastRealIntegralTerm_addendoQuattro_i_;
+};
+
 double Primes::Pi_of_J( double Xsoglia)
 {
     double Log_base2_Xsoglia = log(Xsoglia)/log(+2);
-    double radiceEnnesima;
-    int c=ceil(Log_base2_Xsoglia);
-    for(; pow(Xsoglia,+1.0/(double)c)>=+2.0; c++)
+    int firstRootUnderThreshold=ceil(Log_base2_Xsoglia);
+    PanelMainFormula *mainFormulaPanel = new PanelMainFormula[firstRootUnderThreshold];
+    int c=+1;
+    for( ; c<=firstRootUnderThreshold; c++)
     {
-        radiceEnnesima = pow(Xsoglia,+1.0/(double)c);
-        std::cout<<"\n\t 2^(1/"<<c<<")== "<<radiceEnnesima<<std::endl;
-        if(radiceEnnesima<+2.0)
+        mainFormulaPanel[c-1].Xsoglia_i_root = pow(Xsoglia,+1.0/(double)c);
+        std::cout<<"\n\t 2^(1/"<<c<<")== "<<mainFormulaPanel[c-1].Xsoglia_i_root<<std::endl;
+        if(mainFormulaPanel[c-1].Xsoglia_i_root<+2.0)
         {
             break;
         }// else continue;
     }// for
-    std::cout<<"\n\t ultima radice utile== "<<c<<" radicale== "<<radiceEnnesima<<std::endl;
+    std::cout<<"\n\t ultima radice utile== "<< c-2 <<" radicale== "<<mainFormulaPanel[c-2].Xsoglia_i_root<<std::endl;
+    //
+    //ready.
+    return 0.0;
 }// PI_of_J
 
 
-double J_of_Z();
-double PrincipalTerm()
+double Primes::J_of_Z()
+{
+    //
+    //ready.
+    return 0.0;
+}// J_of_Z
+
+
+double Primes::PrincipalTerm()
 {
     //const double termineCorrettivo
     return 0.0;
 }
 
-double Periodic_Terms();
-double Third_Term();
-double Fourth_Term();
+double Primes::Periodic_Terms()
+{
+    //
+    //ready.
+    return 0.0;
+}// Periodic_Terms
+
+double Primes::Third_Term()
+{
+    //
+    //ready.
+    return 0.0;
+}// Third_Term
+
+double Primes::Fourth_Term()
+{
+    //
+    //ready.
+    return 0.0;
+}// Fourth_Term
+
 
 }// namespace Cantiere_Primes_2022September01_
 
