@@ -1654,7 +1654,7 @@ double Primes::Pi_of_J( double Xsoglia)
 }// PI_of_J
 
 
-double Primes::J_of_Z()
+double Primes::J_of_Z( double Xsoglia)
 {
     //
     //ready.
@@ -1662,31 +1662,44 @@ double Primes::J_of_Z()
 }// J_of_Z
 
 
-double Primes::PrincipalTerm()
-{
-    //const double termineCorrettivo
-    return 0.0;
+double Primes::PrincipalTerm( double Xsoglia)
+{// LogIntegral on the Real-positive-semiAxis.
+    const double termineCorrettivo_offsetLogIntegral = +1.04516;
+    double sign = +1.0;
+    // Complex_Integration::LogIntegral_CoChain() NO this one is complex.
+    RealIntegration::FunctionalForm logIntegralReal_fptr = internalAlgos::LogIntegral_coChain;
+    long double addendoUno = 0.0;// TODO integrale prossimita'
+    addendoUno += RealIntegration::trapezi( +2.0, Xsoglia, +1E+5, logIntegralReal_fptr);
+    addendoUno += termineCorrettivo_offsetLogIntegral;
+    return sign * addendoUno;
 }
 
-double Primes::Periodic_Terms()
+double Primes::Periodic_Terms( double Xsoglia)
 {
+    double sign = -1.0;
     //
     //ready.
-    return 0.0;
+    return sign * 0.0;
 }// Periodic_Terms
 
 double Primes::Third_Term()
 {
-    //
-    //ready.
-    return 0.0;
+    double minusLog2 = -log(+2.0);
+    return minusLog2;
 }// Third_Term
 
-double Primes::Fourth_Term()
-{
-    //
-    //ready.
-    return 0.0;
+long double Fourth_Term_CoChain( long double t)
+{// integral in R+ [Xsoglia, +Inf]
+    // TODO pass the CoChain to Trapezi
+    return 1.0/(t*(t*t-1.0)*log(t));
+}// Fourth_Term_CoChain
+double Primes::Fourth_Term( double Xsoglia)
+{// integral in R+ [Xsoglia, +Inf]
+    // pass the CoChain to Trapezi
+    RealIntegration::FunctionalForm trapezia = Fourth_Term_CoChain;
+    double resTermFour = RealIntegration::trapezi( Xsoglia, +9E+6,+1E+5, trapezia );
+    double sign = +1.0;
+    return sign * resTermFour;
 }// Fourth_Term
 
 

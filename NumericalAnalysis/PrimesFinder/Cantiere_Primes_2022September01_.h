@@ -112,7 +112,6 @@ class Primes
     unsigned long long queryMap( unsigned long long desiredOrdinal);
     bool Bisection( unsigned long long requiredOrdinal );
     void coveringIntegral();
-// bool distributionFunction(const char * path);  NO MORE
     bool distributionFunction_fromExistingMesh();
     unsigned long long interpolateOrdinal( unsigned long long candidatePrimeThreshold);
     void mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals );
@@ -123,11 +122,11 @@ class Primes
     int LiouvilleLambda( const unsigned long long candidate);
     int MoebiusMu( const unsigned long long candidate);
     double Pi_of_J( double Xsoglia);
-    double J_of_Z();
-    double PrincipalTerm();
-    double Periodic_Terms();
+    double J_of_Z( double Xsoglia);
+    double PrincipalTerm( double Xsoglia);
+    double Periodic_Terms( double Xsoglia);
     double Third_Term();
-    double Fourth_Term();
+    double Fourth_Term( double Xsoglia);
 
 
 
