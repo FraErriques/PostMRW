@@ -41,7 +41,7 @@ int main()
     Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
 //    primes_Cantiere.MoebiusMu( 100);
 //    primes_Cantiere.Pi_of_J( 100);
-    primes_Cantiere.Periodic_Terms(100);
+    double periodic = primes_Cantiere.Periodic_Terms(100);
     //
 
 

@@ -1763,15 +1763,26 @@ double Primes::Periodic_Terms( double Xsoglia)
     ExpEi_LogXRo_Writer.flush();
     ExpEi_LogXRo_Writer.close();
     //
-
-        //-----
+    Numerics::Complex periodicTerm(0.0, 0.0);
+    for( size_t c=0; c<theBufSize ; c++)
+    {// this is the definitive result, i.e. Sum[Li[x^ro]]==Sum[ExpIntegralEi[Log[x^ro]]]
+        periodicTerm += (*(expEi_LogXRo+c)).positiveRoot;// sum in order of growing modulus of Imaginary part
+        periodicTerm += (*(expEi_LogXRo+c)).conjugateRoot;// convergence is conditional! NB.
+    }// for : Sum periodic terms in order of growing modulus of Imaginary part
+    if( abs(periodicTerm.Im())>+1.0E-5)
+    {
+        Crash crash("no imaginary part is expected!");
+        throw crash;
+    }// NB. throws
     //
+    delete[] logXsogliaToRo;// clean screen-points
+    delete[] expEi_LogXRo;// clean integrals
     //ready.
-    return sign * 0.0;
+    return sign * periodicTerm.Re();//NB. sign==minus.
 }// Periodic_Terms
 
 double Primes::Third_Term()
-{
+{//NB. the minus sign.
     double minusLog2 = -log(+2.0);
     return minusLog2;
 }// Third_Term
@@ -1785,7 +1796,11 @@ double Primes::Fourth_Term( double Xsoglia)
 {// integral in R+ [Xsoglia, +Inf]
     // pass the CoChain to Trapezi
     RealIntegration::FunctionalForm trapezia = Fourth_Term_CoChain;
-    double resTermFour = RealIntegration::trapezi( Xsoglia, +9E+6,+1E+5, trapezia );
+    double resTermFour = RealIntegration::trapezi(
+        Xsoglia      // from
+        ,+9E+6       // until
+        ,+1E+5       // partition cardinality; think to a proximity integral, if needed.
+        ,trapezia ); // f_ptr
     double sign = +1.0;
     return sign * resTermFour;
 }// Fourth_Term
