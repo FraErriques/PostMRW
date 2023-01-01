@@ -4,6 +4,7 @@
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../Integration/Integration.h"
+#include "../Complex/Complex.h"
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -1690,6 +1691,45 @@ double Primes::PrincipalTerm( double Xsoglia)
 double Primes::Periodic_Terms( double Xsoglia)
 {
     double sign = -1.0;
+    //
+    size_t theBufSize = 100;
+    double thePositiveImPartOf100Zero[theBufSize];
+    std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
+    for( size_t c=0; c<theBufSize ; c++)
+    {
+        char theDelimiter = '\n';
+        char *thePointer = new char[theBufSize+1];// plus the terminator
+        Zero_Reader.getline( thePointer, theBufSize, theDelimiter);
+        thePositiveImPartOf100Zero[c] = Common::StrManipul::stringToDouble(std::string(thePointer));
+        delete[] thePointer;
+        thePointer = nullptr;// no dangling.
+    }// for
+    Zero_Reader.close();// close input-file.
+    //
+    struct LogXsogliaToRo
+    {
+        Numerics::Complex positiveRoot;
+        Numerics::Complex conjugateRoot;
+    };
+    LogXsogliaToRo *logXsogliaToRo = new LogXsogliaToRo[theBufSize];
+    std::ofstream LogXsogliaToRo_Writer( "./LogXsogliaToRo_.txt", std::fstream::out );// no append->rewrite.
+    LogXsogliaToRo_Writer<<" #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;
+    for( size_t c=0; c<theBufSize ; c++)
+    {// this is an intermediate state, devoted to logging LogXsogliaToRo
+        LogXsogliaToRo_Writer << c <<"\t";//------common part of the loop
+        Numerics::Complex Xsoglia_C(Xsoglia,0.0);
+        //-----
+        Numerics::Complex positiveRoot_C(+0.5,thePositiveImPartOf100Zero[c]);// automatic variables get renewed at each step.
+        (*(logXsogliaToRo+c)).positiveRoot = (Xsoglia_C^positiveRoot_C).LnC();
+        LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).positiveRoot.ToString()<<"\t";
+        //-----
+        Numerics::Complex conjugateRoot_C(+0.5, -1.0*thePositiveImPartOf100Zero[c]);
+        (*(logXsogliaToRo+c)).conjugateRoot = (Xsoglia_C^conjugateRoot_C).LnC();
+        LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
+    }// for
+    LogXsogliaToRo_Writer<<"END #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
+    LogXsogliaToRo_Writer.flush();
+    LogXsogliaToRo_Writer.close();
     //
     //ready.
     return sign * 0.0;
