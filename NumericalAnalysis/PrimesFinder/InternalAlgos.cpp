@@ -15,7 +15,7 @@ long double LogIntegral_coChain( long double x)
         || fabs(x-1.0)<+1E-20 )
     {
         Crash crash("LogIntegral has a branch line on the negative RealAxis and an essential singularity in +1.0");
-        throw crash;
+        return 0.0;// no contribution near singularities and NO throw crash;
     }
     return +1.0/log(x);
 }// LogIntegral_coChain

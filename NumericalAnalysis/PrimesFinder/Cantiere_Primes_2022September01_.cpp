@@ -1639,28 +1639,45 @@ double Primes::Pi_of_J( double Xsoglia)
     double Log_base2_Xsoglia = log(Xsoglia)/log(+2);
     int firstRootUnderThreshold=ceil(Log_base2_Xsoglia);
     PanelMainFormula *mainFormulaPanel = new PanelMainFormula[firstRootUnderThreshold];
-    int c=+1;
-    for( ; c<=firstRootUnderThreshold; c++)
+    int c=0;
+    for( ; c<firstRootUnderThreshold; c++)
     {
-        mainFormulaPanel[c-1].Xsoglia_i_root = pow(Xsoglia,+1.0/(double)c);
-        std::cout<<"\n\t 2^(1/"<<c<<")== "<<mainFormulaPanel[c-1].Xsoglia_i_root<<std::endl;
-        if(mainFormulaPanel[c-1].Xsoglia_i_root<+2.0)
+        mainFormulaPanel[c].i = c;// root-index
+        mainFormulaPanel[c].Xsoglia_i_root = pow(Xsoglia,+1.0/(double)(c+1));//NB. root-index starts from +1 end grows.
+        std::cout<<"\n\t 2^(1/"<<c+1<<")== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
+        if(mainFormulaPanel[c].Xsoglia_i_root<+2.0)
         {
             break;
         }// else continue;
     }// for
-    std::cout<<"\n\t ultima radice utile== "<< c-2 <<" radicale== "<<mainFormulaPanel[c-2].Xsoglia_i_root<<std::endl;
+    for(c=0 ; c<firstRootUnderThreshold; c++)
+    {
+        std::cout<<"\n\t radice di indice== "<< c+1 <<" radicale== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
+    }
     //
+    double res = 0.0;
+//    int i;// root index
+//    int MoebiusMu;
+//    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
+//    double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
+//    double mainTerm_addendoUno_i_;
+//    double periodicTerm_addendoDue_i_;
+//    double logConstantTerm_addendoTre_i_;
+//    double lastRealIntegralTerm_addendoQuattro_i_;
+    for( c=0; c<firstRootUnderThreshold; c++)
+    {
+        mainFormulaPanel[c].MoebiusMu = MoebiusMu(c+1);
+        // mainFormulaPanel[c-1].Xsoglia_i_root gia valorizzato
+        res += (double)mainFormulaPanel[c].MoebiusMu/(double)c * J_of_Z( mainFormulaPanel[c].Xsoglia_i_root);
+    }
     //ready.
-    return 0.0;
+    return res;// TODO : complete the panel & dump it on filesys.
 }// PI_of_J
 
 
 double Primes::J_of_Z( double Xsoglia)
-{
-    //
-    //ready.
-    return 0.0;
+{//NB. the  sign of  each term comes from its elaboration.
+    return PrincipalTerm(Xsoglia) + Periodic_Terms(Xsoglia) + Third_Term() + Fourth_Term(Xsoglia);
 }// J_of_Z
 
 
@@ -1673,16 +1690,27 @@ double Primes::PrincipalTerm( double Xsoglia)
     // TODO integrale prossimita'
     // Complex_Integration::LogIntegral_CoChain() NO this one is complex.
     RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    Primes::LogIntegralPillarPoint * nearestIntegral = this->getNearestIntegral( Xsoglia);
-    unsigned long long threshold_lastIntegral = nearestIntegral->threshold;
-    unsigned long long measure_lastIntegral = nearestIntegral->logIntegral;
-    delete nearestIntegral;// clean
+    unsigned long long threshold_lastIntegral;
+    unsigned long long measure_lastIntegral=0;
+    if( Xsoglia>+1E06)
+    {
+        Primes::LogIntegralPillarPoint * nearestIntegral = this->getNearestIntegral( Xsoglia);
+        threshold_lastIntegral = nearestIntegral->threshold;
+        measure_lastIntegral = nearestIntegral->logIntegral;
+        delete nearestIntegral;// clean
+    }
+    else
+    {
+        threshold_lastIntegral = +2.0;
+    }
+    // no need to try    {
     long double LogIntegral_lastMile =
         RealIntegration::trapezi(
                  (long double)threshold_lastIntegral// start from last integral saved.
                  , (long double)Xsoglia   // get to Xsoglia
                  , (long double)1000  // test 1000 steps
                  , LogIntegral ); // func-pointer to RealVersion of LogIntegral
+    // no need to catch
     addendoUno += (long double)( measure_lastIntegral + LogIntegral_lastMile);//TODO test
     // TODO test integrale prossimita'
     addendoUno += termineCorrettivo_offsetLogIntegral;// NB. correttivo perIntg[0,2]
