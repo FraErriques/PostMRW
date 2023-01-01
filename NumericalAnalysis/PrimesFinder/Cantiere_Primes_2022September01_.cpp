@@ -4,6 +4,7 @@
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../Integration/Integration.h"
+#include "../Integration/Complex_Integration.h"
 #include "../Complex/Complex.h"
 #include <iostream>
 #include <string>
@@ -1716,7 +1717,7 @@ double Primes::Periodic_Terms( double Xsoglia)
     LogXsogliaToRo_Writer<<" #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;
     for( size_t c=0; c<theBufSize ; c++)
     {// this is an intermediate state, devoted to logging LogXsogliaToRo
-        LogXsogliaToRo_Writer << c <<"\t";//------common part of the loop
+        LogXsogliaToRo_Writer << c+1 <<"\t";//------common part of the loop
         Numerics::Complex Xsoglia_C(Xsoglia,0.0);
         //-----
         Numerics::Complex positiveRoot_C(+0.5,thePositiveImPartOf100Zero[c]);// automatic variables get renewed at each step.
@@ -1727,9 +1728,43 @@ double Primes::Periodic_Terms( double Xsoglia)
         (*(logXsogliaToRo+c)).conjugateRoot = (Xsoglia_C^conjugateRoot_C).LnC();
         LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
     }// for
-    LogXsogliaToRo_Writer<<"END #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
+    LogXsogliaToRo_Writer<<"\nEND #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
     LogXsogliaToRo_Writer.flush();
     LogXsogliaToRo_Writer.close();
+    //
+    struct ExpEi_LogXRo
+    {
+        Numerics::Complex positiveRoot;
+        Numerics::Complex conjugateRoot;
+    };
+    ExpEi_LogXRo *expEi_LogXRo = new ExpEi_LogXRo[theBufSize];
+    std::ofstream ExpEi_LogXRo_Writer( "./ExpEi_LogXRo_.txt", std::fstream::out );// no append->rewrite.
+    ExpEi_LogXRo_Writer<<" #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot\n"<<std::endl;
+    unsigned partitionCardinality = 1000;// #steps in trapezia
+    for( size_t c=0; c<theBufSize ; c++)
+    {// this is an intermediate state, devoted to logging ExpEi_LogXRo
+        ExpEi_LogXRo_Writer << c+1 <<"\t";//------common part of the loop
+        //-----
+        Numerics::Complex *ExpEi_positiveRoot =
+            Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
+                (*(logXsogliaToRo+c)).positiveRoot, partitionCardinality);
+        (*(expEi_LogXRo+c)).positiveRoot = *ExpEi_positiveRoot;
+        ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).positiveRoot.ToString()<<"\t";
+        delete ExpEi_positiveRoot;
+        //
+        Numerics::Complex *ExpEi_conjugateRoot =
+            Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
+                (*(logXsogliaToRo+c)).conjugateRoot, partitionCardinality);
+        (*(expEi_LogXRo+c)).conjugateRoot = *ExpEi_conjugateRoot;
+        ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
+        delete ExpEi_conjugateRoot;
+    }// for
+    ExpEi_LogXRo_Writer<<"\nEND #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
+    ExpEi_LogXRo_Writer.flush();
+    ExpEi_LogXRo_Writer.close();
+    //
+
+        //-----
     //
     //ready.
     return sign * 0.0;
