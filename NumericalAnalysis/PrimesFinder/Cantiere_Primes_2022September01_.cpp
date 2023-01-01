@@ -1666,11 +1666,24 @@ double Primes::PrincipalTerm( double Xsoglia)
 {// LogIntegral on the Real-positive-semiAxis.
     const double termineCorrettivo_offsetLogIntegral = +1.04516;
     double sign = +1.0;
+    long double addendoUno = 0.0;
+
+    // TODO integrale prossimita'
     // Complex_Integration::LogIntegral_CoChain() NO this one is complex.
-    RealIntegration::FunctionalForm logIntegralReal_fptr = internalAlgos::LogIntegral_coChain;
-    long double addendoUno = 0.0;// TODO integrale prossimita'
-    addendoUno += RealIntegration::trapezi( +2.0, Xsoglia, +1E+5, logIntegralReal_fptr);
-    addendoUno += termineCorrettivo_offsetLogIntegral;
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    Primes::LogIntegralPillarPoint * nearestIntegral = this->getNearestIntegral( Xsoglia);
+    unsigned long long threshold_lastIntegral = nearestIntegral->threshold;
+    unsigned long long measure_lastIntegral = nearestIntegral->logIntegral;
+    delete nearestIntegral;// clean
+    long double LogIntegral_lastMile =
+        RealIntegration::trapezi(
+                 (long double)threshold_lastIntegral// start from last integral saved.
+                 , (long double)Xsoglia   // get to Xsoglia
+                 , (long double)1000  // test 1000 steps
+                 , LogIntegral ); // func-pointer to RealVersion of LogIntegral
+    addendoUno += (long double)( measure_lastIntegral + LogIntegral_lastMile);//TODO test
+    // TODO test integrale prossimita'
+    addendoUno += termineCorrettivo_offsetLogIntegral;// NB. correttivo perIntg[0,2]
     return sign * addendoUno;
 }
 
