@@ -1,0 +1,5 @@
+ #c	ExpEi_LogXRo_positiveRoot	ExpEi_LogXRo_conjugateRoot
+
+1	
+END #c	ExpEi_LogXRo_positiveRoot	ExpEi_LogXRo_conjugateRoot
+

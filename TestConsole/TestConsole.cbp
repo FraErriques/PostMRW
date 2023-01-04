@@ -58,7 +58,6 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Linker>
-			<Add directory="/usr/local/mysql/connector-c++-8.0/lib" />
 		</Linker>
 		<Unit filename="Unit_Tests/Test_Unit_Complex.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_Complex.h" />
@@ -78,10 +77,7 @@
 		<Unit filename="_doc/AppConfig.txt" />
 		<Unit filename="_doc/Cantina.txt" />
 		<Unit filename="_doc/Ei_parametrization_.txt" />
-		<Unit filename="_doc/Fantoccio.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="_doc/Fantoccio.cpp" />
 		<Unit filename="_doc/LogIntegral_firstPhase_.txt" />
 		<Unit filename="_doc/LogIntegral_highZone_cumul_safePoint_.txt" />
 		<Unit filename="_doc/LogIntegral_highZone_safePoint_.txt" />
@@ -107,7 +103,6 @@
 		<Unit filename="_doc/writeVectorFieldR2Affine_.txt" />
 		<Unit filename="main.cpp" />
 		<Extensions>
-			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

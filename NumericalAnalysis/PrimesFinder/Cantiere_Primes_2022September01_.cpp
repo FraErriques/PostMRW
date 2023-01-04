@@ -4,6 +4,8 @@
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
 #include "../Integration/Integration.h"
+#include "../Integration/Complex_Integration.h"
+#include "../Complex/Complex.h"
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -534,10 +536,22 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 //  IntegerDecomposition : the Fundamental Thm of Arithmetic.
 Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
 {
+    Process::LogWrappers::SectionOpen("Primes::IntegerDecomposition",0);
     RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
-    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)dividend, ((double)dividend-2.0)*4, LogIntegral );
+    // by now using the "offset-LogIntegral"
+    unsigned long long corrected_dividend=dividend;
+    if( dividend<=+2.0)
+    {
+        corrected_dividend = 50;// go right to avoid singularity.
+    }
+    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)corrected_dividend, ((double)corrected_dividend-2.0)*4, LogIntegral );
     unsigned long long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
+    if(ordinaleStimato<5)
+    {
+        ordinaleStimato = 50;//give a default-inf to avoid crashes.
+    }// else ok.
     SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
+    if(nullptr==factorization){return nullptr;}
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
     for( unsigned long long c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
@@ -551,7 +565,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
     }// end filling up the candidate prime-factor array.
     unsigned long long dividendo, divisore;
-    dividendo = dividend;
+    dividendo = corrected_dividend;
     double realQuotient;
     unsigned long long intQuotient;
     int i=0;// start from +2. indice nel vettore dei primi.
@@ -561,6 +575,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
     // #### start factorization loop ######################################################################################
     for(  ; +1<dividendo; )
     {// dividendo will be substituted by Quotient, until dividendo==+1.
+        if(fabs(divisore)<+1.0E-06){return nullptr;}//happens on "no-sequential-dump".
         realQuotient = (double)dividendo/(double)divisore;
         intQuotient = dividendo/divisore;
         if( realQuotient-intQuotient <+1.0E-80 )// ####### ramo lastDivisionWasDiophantine ##
@@ -600,8 +615,17 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
     {
         factorization_srk_[c] = factorization[c];
     }
-    if( factorization[acc+1].factorBase != 0) {throw;}// check on the nullity of last record. It's a placeholder.
+    if( factorization[acc+1].factorBase != 0)
+    {// check on the nullity of last record. It's a placeholder.
+        Process::LogWrappers::SectionContent("DBG: malformed array found in IntegerDecomposition.",0);
+        delete[] factorization;
+        factorization = nullptr;
+        delete[] factorization_srk_;
+        factorization_srk_ = nullptr;
+        return nullptr;
+    }
     delete[] factorization;// NB. delete the prudentially oversized array, after copying it, in a fit-size one.
+    Process::LogWrappers::SectionClose();
     // ready.
     return factorization_srk_;// NB. the caller has to delete.
 }// IntegerDecomposition : the Fundamental Thm of Arithmetic.
@@ -945,7 +969,7 @@ Primes::DumpElement * Primes::acquireSequenceOfRecord(
 template<typename It>
 void printInsertionStatus(It it, bool success)
 {
-    std::cout << "Insertion of " << it->first << (success ? " succeeded\n" : " failed\n");
+    // DBG std::cout << "Insertion of " << it->first << (success ? " succeeded\n" : " failed\n");
 }
 
 bool Primes::MoveToMap(
@@ -1179,7 +1203,7 @@ unsigned long long Primes::queryMap( unsigned long long desiredOrdinal)
     }// else return zero, as error-code, since the required key is absent in the map.
     else
     {// else means count==0. In the map count has only the states{0==absent, +1==present}.
-        std::cout<<"----\n\t Key "<<desiredOrdinal<<" not found."; // DBG
+         // DBG std::cout<<"----\n\t Key "<<desiredOrdinal<<" not found.";
         return 0;
     }
 }// queryMap
@@ -1189,7 +1213,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     unsigned long long  desiredPrime = this->queryMap( desiredOrdinal);// check if there's already the record in Map.
     if( 0 != desiredPrime)
     {
-        std::cout<<"-------\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
+        // DBG std::cout<<"-------\n\t Key FOUND in map. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
         return desiredPrime;
     }
     else // zero returned by queryMap means key-absent.
@@ -1206,7 +1230,7 @@ unsigned long long Primes::operator[]( unsigned long long desiredOrdinal )
     }// DBG !
     else
     {
-        std::cout<<"\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
+        // DBG std::cout<<"\t Key FOUND, after feeding it. Prime["<<desiredOrdinal<<"]=="<< desiredPrime<<" \n----------";
     }// DBG !
     //
     return desiredPrime;
@@ -1597,6 +1621,224 @@ int Primes::MoebiusMu( const unsigned long long candidate)
     int MoebiusMu_res = DeltaKronecker_Omega(omega)*pow(-1.0, omega.big);
     return MoebiusMu_res;
 }// MoebiusMu
+
+
+struct PanelMainFormula
+{
+    int i;// root index
+    int MoebiusMu;
+    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
+    double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
+    double mainTerm_addendoUno_i_;
+    double periodicTerm_addendoDue_i_;
+    double logConstantTerm_addendoTre_i_;
+    double lastRealIntegralTerm_addendoQuattro_i_;
+};
+
+double Primes::Pi_of_J( double Xsoglia)
+{
+    double Log_base2_Xsoglia = log(Xsoglia)/log(+2);
+    int firstRootUnderThreshold=ceil(Log_base2_Xsoglia);
+    PanelMainFormula *mainFormulaPanel = new PanelMainFormula[firstRootUnderThreshold];
+    int c=0;
+    for( ; c<firstRootUnderThreshold; c++)
+    {
+        mainFormulaPanel[c].i = c;// root-index
+        mainFormulaPanel[c].Xsoglia_i_root = pow(Xsoglia,+1.0/(double)(c+1));//NB. root-index starts from +1 end grows.
+        std::cout<<"\n\t 2^(1/"<<c+1<<")== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
+        if(mainFormulaPanel[c].Xsoglia_i_root<+2.0)
+        {
+            break;
+        }// else continue;
+    }// for
+    for(c=0 ; c<firstRootUnderThreshold; c++)
+    {
+        std::cout<<"\n\t radice di indice== "<< c+1 <<" radicale== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
+    }
+    //
+    double res = 0.0;
+//    int i;// root index
+//    int MoebiusMu;
+//    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
+//    double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
+//    double mainTerm_addendoUno_i_;
+//    double periodicTerm_addendoDue_i_;
+//    double logConstantTerm_addendoTre_i_;
+//    double lastRealIntegralTerm_addendoQuattro_i_;
+    for( c=0; c<firstRootUnderThreshold; c++)
+    {
+        mainFormulaPanel[c].MoebiusMu = MoebiusMu(c+1);
+        // mainFormulaPanel[c-1].Xsoglia_i_root gia valorizzato
+        res += (double)mainFormulaPanel[c].MoebiusMu/(double)c * J_of_Z( mainFormulaPanel[c].Xsoglia_i_root);
+    }
+    //ready.
+    return res;// TODO : complete the panel & dump it on filesys.
+}// PI_of_J
+
+
+double Primes::J_of_Z( double Xsoglia)
+{//NB. the  sign of  each term comes from its elaboration.
+    return PrincipalTerm(Xsoglia) + Periodic_Terms(Xsoglia) + Third_Term() + Fourth_Term(Xsoglia);
+}// J_of_Z
+
+
+double Primes::PrincipalTerm( double Xsoglia)
+{// LogIntegral on the Real-positive-semiAxis.
+    const double termineCorrettivo_offsetLogIntegral = +1.04516;
+    double sign = +1.0;
+    long double addendoUno = 0.0;
+
+    // TODO integrale prossimita'
+    // Complex_Integration::LogIntegral_CoChain() NO this one is complex.
+    RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
+    unsigned long long threshold_lastIntegral;
+    unsigned long long measure_lastIntegral=0;
+    if( Xsoglia>+1E06)
+    {
+        Primes::LogIntegralPillarPoint * nearestIntegral = this->getNearestIntegral( Xsoglia);
+        threshold_lastIntegral = nearestIntegral->threshold;
+        measure_lastIntegral = nearestIntegral->logIntegral;
+        delete nearestIntegral;// clean
+    }
+    else
+    {
+        threshold_lastIntegral = +2.0;
+    }
+    // no need to try    {
+    long double LogIntegral_lastMile =
+        RealIntegration::trapezi(
+                 (long double)threshold_lastIntegral// start from last integral saved.
+                 , (long double)Xsoglia   // get to Xsoglia
+                 , (long double)1000  // test 1000 steps
+                 , LogIntegral ); // func-pointer to RealVersion of LogIntegral
+    // no need to catch
+    addendoUno += (long double)( measure_lastIntegral + LogIntegral_lastMile);//TODO test
+    // TODO test integrale prossimita'
+    addendoUno += termineCorrettivo_offsetLogIntegral;// NB. correttivo perIntg[0,2]
+    return sign * addendoUno;
+}
+
+double Primes::Periodic_Terms( double Xsoglia)
+{
+    double sign = -1.0;
+    //
+    size_t theBufSize = 100;
+    double thePositiveImPartOf100Zero[theBufSize];
+    std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
+    for( size_t c=0; c<theBufSize ; c++)
+    {
+        char theDelimiter = '\n';
+        char *thePointer = new char[theBufSize+1];// plus the terminator
+        Zero_Reader.getline( thePointer, theBufSize, theDelimiter);
+        thePositiveImPartOf100Zero[c] = Common::StrManipul::stringToDouble(std::string(thePointer));
+        delete[] thePointer;
+        thePointer = nullptr;// no dangling.
+    }// for
+    Zero_Reader.close();// close input-file.
+    //
+    struct LogXsogliaToRo
+    {
+        Numerics::Complex positiveRoot;
+        Numerics::Complex conjugateRoot;
+    };
+    LogXsogliaToRo *logXsogliaToRo = new LogXsogliaToRo[theBufSize];
+    std::ofstream LogXsogliaToRo_Writer( "./LogXsogliaToRo_.txt", std::fstream::out );// no append->rewrite.
+    LogXsogliaToRo_Writer<<" #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;
+    for( size_t c=0; c<theBufSize ; c++)
+    {// this is an intermediate state, devoted to logging LogXsogliaToRo
+        LogXsogliaToRo_Writer << c+1 <<"\t";//------common part of the loop
+        Numerics::Complex Xsoglia_C(Xsoglia,0.0);
+        //-----
+        Numerics::Complex positiveRoot_C(+0.5,thePositiveImPartOf100Zero[c]);// automatic variables get renewed at each step.
+        (*(logXsogliaToRo+c)).positiveRoot = (Xsoglia_C^positiveRoot_C).LnC();
+        LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).positiveRoot.ToString()<<"\t";
+        //-----
+        Numerics::Complex conjugateRoot_C(+0.5, -1.0*thePositiveImPartOf100Zero[c]);
+        (*(logXsogliaToRo+c)).conjugateRoot = (Xsoglia_C^conjugateRoot_C).LnC();
+        LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
+    }// for
+    LogXsogliaToRo_Writer<<"\nEND #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
+    LogXsogliaToRo_Writer.flush();
+    LogXsogliaToRo_Writer.close();
+    //
+    struct ExpEi_LogXRo
+    {
+        Numerics::Complex positiveRoot;
+        Numerics::Complex conjugateRoot;
+    };
+    ExpEi_LogXRo *expEi_LogXRo = new ExpEi_LogXRo[theBufSize];
+    std::ofstream ExpEi_LogXRo_Writer( "./ExpEi_LogXRo_.txt", std::fstream::out );// no append->rewrite.
+    ExpEi_LogXRo_Writer<<" #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot\n"<<std::endl;
+    unsigned partitionCardinality = 1000;// #steps in trapezia
+    for( size_t c=0; c<theBufSize ; c++)
+    {// this is an intermediate state, devoted to logging ExpEi_LogXRo
+        ExpEi_LogXRo_Writer << c+1 <<"\t";//------common part of the loop
+        //-----
+        Numerics::Complex *ExpEi_positiveRoot =
+            Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
+                (*(logXsogliaToRo+c)).positiveRoot, partitionCardinality);
+        if(nullptr==ExpEi_positiveRoot)
+        {
+            std::cout<<"\n\t DBG : nullptr produced by ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann "<<std::endl;
+            break;// skip invalid entry.
+        }// else continue.
+        (*(expEi_LogXRo+c)).positiveRoot = *ExpEi_positiveRoot;
+        ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).positiveRoot.ToString()<<"\t";
+        delete ExpEi_positiveRoot;
+        //
+        Numerics::Complex *ExpEi_conjugateRoot =
+            Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
+                (*(logXsogliaToRo+c)).conjugateRoot, partitionCardinality);
+        (*(expEi_LogXRo+c)).conjugateRoot = *ExpEi_conjugateRoot;
+        ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
+        delete ExpEi_conjugateRoot;
+    }// for
+    ExpEi_LogXRo_Writer<<"\nEND #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
+    ExpEi_LogXRo_Writer.flush();
+    ExpEi_LogXRo_Writer.close();
+    //
+    Numerics::Complex periodicTerm(0.0, 0.0);
+    for( size_t c=0; c<theBufSize ; c++)
+    {// this is the definitive result, i.e. Sum[Li[x^ro]]==Sum[ExpIntegralEi[Log[x^ro]]]
+        periodicTerm += (*(expEi_LogXRo+c)).positiveRoot;// sum in order of growing modulus of Imaginary part
+        periodicTerm += (*(expEi_LogXRo+c)).conjugateRoot;// convergence is conditional! NB.
+    }// for : Sum periodic terms in order of growing modulus of Imaginary part
+    if( abs(periodicTerm.Im())>+1.0E-5)
+    {
+        Crash crash("no imaginary part is expected!");
+        throw crash;
+    }// NB. throws
+    //
+    delete[] logXsogliaToRo;// clean screen-points
+    delete[] expEi_LogXRo;// clean integrals
+    //ready.
+    return sign * periodicTerm.Re();//NB. sign==minus.
+}// Periodic_Terms
+
+double Primes::Third_Term()
+{//NB. the minus sign.
+    double minusLog2 = -log(+2.0);
+    return minusLog2;
+}// Third_Term
+
+long double Fourth_Term_CoChain( long double t)
+{// integral in R+ [Xsoglia, +Inf]
+    // TODO pass the CoChain to Trapezi
+    return 1.0/(t*(t*t-1.0)*log(t));
+}// Fourth_Term_CoChain
+double Primes::Fourth_Term( double Xsoglia)
+{// integral in R+ [Xsoglia, +Inf]
+    // pass the CoChain to Trapezi
+    RealIntegration::FunctionalForm trapezia = Fourth_Term_CoChain;
+    double resTermFour = RealIntegration::trapezi(
+        Xsoglia      // from
+        ,+9E+6       // until
+        ,+1E+5       // partition cardinality; think to a proximity integral, if needed.
+        ,trapezia ); // f_ptr
+    double sign = +1.0;
+    return sign * resTermFour;
+}// Fourth_Term
+
 
 }// namespace Cantiere_Primes_2022September01_
 

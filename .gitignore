@@ -15,9 +15,6 @@ log/
 *.*~
 *.depend
 *.layout
-*.cbp
-*.workspace
-*.layout
 *.save
 *.log
 TestConsole/*.log
