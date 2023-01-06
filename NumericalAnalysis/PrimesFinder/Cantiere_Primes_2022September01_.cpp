@@ -575,6 +575,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
     // #### start factorization loop ######################################################################################
     for(  ; +1<dividendo; )
     {// dividendo will be substituted by Quotient, until dividendo==+1.
+        if(fabs(divisore)<+1.0E-06){return nullptr;}//happens on "no-sequential-dump".
         realQuotient = (double)dividendo/(double)divisore;
         intQuotient = dividendo/divisore;
         if( realQuotient-intQuotient <+1.0E-80 )// ####### ramo lastDivisionWasDiophantine ##
@@ -1776,6 +1777,11 @@ double Primes::Periodic_Terms( double Xsoglia)
         Numerics::Complex *ExpEi_positiveRoot =
             Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
                 (*(logXsogliaToRo+c)).positiveRoot, partitionCardinality);
+        if(nullptr==ExpEi_positiveRoot)
+        {
+            std::cout<<"\n\t DBG : nullptr produced by ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann "<<std::endl;
+            break;// skip invalid entry.
+        }// else continue.
         (*(expEi_LogXRo+c)).positiveRoot = *ExpEi_positiveRoot;
         ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).positiveRoot.ToString()<<"\t";
         delete ExpEi_positiveRoot;
