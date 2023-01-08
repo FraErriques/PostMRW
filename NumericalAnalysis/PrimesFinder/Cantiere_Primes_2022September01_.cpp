@@ -1681,6 +1681,7 @@ struct PanelMainFormula
 {
     int i_root_index;
     int MoebiusMu;
+    double correttivoMoebius;
     double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
     double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
     double mainTerm_addendoUno_i_;
@@ -1732,11 +1733,11 @@ double Primes::Pi_of_J( double Xsoglia)
         }// else calculate as follows:
         // already written: mainFormulaPanel[c].Xsoglia_i_root =
         // mainFormulaPanel.J_Xsoglia_i_root by now we don't need this term: -> separate calculations for each of the 4 adding.
-        double correttivoMoebius = (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1);
-        mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root) *correttivoMoebius;
-        mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms( mainFormulaPanel[c].Xsoglia_i_root)*correttivoMoebius;
-        mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = Third_Term()*correttivoMoebius;
-        mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = Fourth_Term( mainFormulaPanel[c].Xsoglia_i_root)*correttivoMoebius;
+        mainFormulaPanel[c].correttivoMoebius = (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1);
+        mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root) *mainFormulaPanel[c].correttivoMoebius;
+        mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms( mainFormulaPanel[c].Xsoglia_i_root)*mainFormulaPanel[c].correttivoMoebius;
+        mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = Third_Term()*mainFormulaPanel[c].correttivoMoebius;
+        mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = Fourth_Term( mainFormulaPanel[c].Xsoglia_i_root)*mainFormulaPanel[c].correttivoMoebius;
         //
         res += ( // NB. correttivoMoebius already applied : (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1)
             mainFormulaPanel[c].mainTerm_addendoUno_i_
@@ -1747,6 +1748,7 @@ double Primes::Pi_of_J( double Xsoglia)
         // data dump
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].i_root_index = "<< mainFormulaPanel[c].i_root_index << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].MoebiusMu = "<< mainFormulaPanel[c].MoebiusMu << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].correttivoMoebius = "<< mainFormulaPanel[c].correttivoMoebius << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].Xsoglia_i_root = "<< mainFormulaPanel[c].Xsoglia_i_root << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].mainTerm_addendoUno_i_ = "<< mainFormulaPanel[c].mainTerm_addendoUno_i_ << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].periodicTerm_addendoDue_i_ = "<< mainFormulaPanel[c].periodicTerm_addendoDue_i_ << std::endl;

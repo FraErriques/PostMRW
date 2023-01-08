@@ -2,6 +2,7 @@
 
 	 mainFormulaPanel[0].i_root_index = 1
 	 mainFormulaPanel[0].MoebiusMu = 1
+	 mainFormulaPanel[0].correttivoMoebius = 1
 	 mainFormulaPanel[0].Xsoglia_i_root = 100
 	 mainFormulaPanel[0].mainTerm_addendoUno_i_ = 30.127
 	 mainFormulaPanel[0].periodicTerm_addendoDue_i_ = -676.978
@@ -12,6 +13,7 @@
 
 	 mainFormulaPanel[1].i_root_index = 2
 	 mainFormulaPanel[1].MoebiusMu = -1
+	 mainFormulaPanel[1].correttivoMoebius = -0.5
 	 mainFormulaPanel[1].Xsoglia_i_root = 10
 	 mainFormulaPanel[1].mainTerm_addendoUno_i_ = -3.0828
 	 mainFormulaPanel[1].periodicTerm_addendoDue_i_ = 148.619
@@ -22,6 +24,7 @@
 
 	 mainFormulaPanel[2].i_root_index = 3
 	 mainFormulaPanel[2].MoebiusMu = -1
+	 mainFormulaPanel[2].correttivoMoebius = -0.333333
 	 mainFormulaPanel[2].Xsoglia_i_root = 4.64159
 	 mainFormulaPanel[2].mainTerm_addendoUno_i_ = -1.13555
 	 mainFormulaPanel[2].periodicTerm_addendoDue_i_ = 68.866
@@ -32,6 +35,7 @@
 
 	 mainFormulaPanel[4].i_root_index = 5
 	 mainFormulaPanel[4].MoebiusMu = -1
+	 mainFormulaPanel[4].correttivoMoebius = -0.2
 	 mainFormulaPanel[4].Xsoglia_i_root = 2.51189
 	 mainFormulaPanel[4].mainTerm_addendoUno_i_ = -0.336046
 	 mainFormulaPanel[4].periodicTerm_addendoDue_i_ = 28.1844
@@ -42,6 +46,7 @@
 
 	 mainFormulaPanel[5].i_root_index = 6
 	 mainFormulaPanel[5].MoebiusMu = 1
+	 mainFormulaPanel[5].correttivoMoebius = 0.166667
 	 mainFormulaPanel[5].Xsoglia_i_root = 2.15443
 	 mainFormulaPanel[5].mainTerm_addendoUno_i_ = 0.209444
 	 mainFormulaPanel[5].periodicTerm_addendoDue_i_ = -20.3887
