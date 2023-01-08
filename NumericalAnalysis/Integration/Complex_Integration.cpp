@@ -511,7 +511,7 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralE
     double * tnx_tny = nullptr;
     try
     {
-        Mat_ParametricLayout.show();// DBG
+        // DBG  Mat_ParametricLayout.show();
         if( fabs(Mat_ParametricLayout.get_at(0,0))<+1E-20// two zeros on the principal diagonal->vertical line.
             && fabs(Mat_ParametricLayout.get_at(1,1))<+1E-20 )
         {// caso retta verticale: the y==t and the x=x0

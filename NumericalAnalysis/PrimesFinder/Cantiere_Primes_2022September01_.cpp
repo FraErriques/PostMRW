@@ -532,26 +532,55 @@ const std::string * Primes::dumpTailReaderByChar( const std::string * fullPath)
 }// dumpTailReaderByChar()
 
 
+ void Primes::show_IntegerDecomposition_helper( Primes::SingleFactor * theFactors)
+ {//NB. there's no deletion of param, since this function is not the final user.
+     for( int c=0; theFactors[c].factorBase!=0; c++)
+     {
+         std::cout<<"\n\t factor-base = "<<theFactors[c].factorBase<<" ";
+         std::cout<<"\n\t factor-exponent = "<<theFactors[c].factorMultiplicity<<" "<<std::endl;
+     }
+ }
 
 //  IntegerDecomposition : the Fundamental Thm of Arithmetic.
 Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long dividend)
 {
     Process::LogWrappers::SectionOpen("Primes::IntegerDecomposition",0);
+    if( +1 > dividend)
+    {
+        std::cout<<"\n\t IntegerDecomposition takes arguments >=+1 \n"<<std::endl;
+        Process::LogWrappers::SectionContent("IntegerDecomposition takes arguments >=+1",0);
+        Process::LogWrappers::SectionClose();
+        return nullptr;// it gives zero weight in Moebius inversion.
+    }
+    else if( +1==dividend)
+    {
+        SingleFactor * factorization = new SingleFactor[1];
+        factorization[0].factorBase = 0;
+        factorization[0].factorMultiplicity = 0;
+        return factorization;
+    }// else continue.
     RealIntegration::FunctionalForm LogIntegral = internalAlgos::LogIntegral_coChain;// function pointer.
     // by now using the "offset-LogIntegral"
-    unsigned long long corrected_dividend=dividend;
-    if( dividend<=+2.0)
-    {
-        corrected_dividend = 50;// go right to avoid singularity.
-    }
-    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)corrected_dividend, ((double)corrected_dividend-2.0)*4, LogIntegral );
+    double LogIntegral_ofInfPar = RealIntegration::trapezi( +2.0, (double)dividend, ((double)dividend*4.0), LogIntegral );
     unsigned long long ordinaleStimato = (unsigned long)LogIntegral_ofInfPar;// approx eccesso: LogIntegral[Soglia]==LastOrdinal_under_Soglia==Cardinalita[sottoSoglia].
-    if(ordinaleStimato<5)
+    if( ordinaleStimato<=+25)
+    {// get at least the array-terminator.
+        ordinaleStimato=+25;
+    }
+    SingleFactor * factorization = nullptr;
+    try
     {
-        ordinaleStimato = 50;//give a default-inf to avoid crashes.
-    }// else ok.
-    SingleFactor * factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
-    if(nullptr==factorization){return nullptr;}
+        factorization = new SingleFactor[ordinaleStimato];// stimare #fattoriMaximal.
+        if( nullptr==factorization)
+        {
+            return nullptr;
+        }//else continue
+    }
+    catch(...)
+    {
+        Process::LogWrappers::SectionContent("bad alloc of pointer : DBG! ",0);
+        return nullptr;
+    }// catch
     // Oss. greatest involved-prime==dividend/2 in a composite, since greatestFactor is the cofactor of the PotentialSmallest(i.e. 2).
     for( unsigned long long c=0; c<ordinaleStimato; c++)
     {// init to zeroContentMemory.
@@ -565,7 +594,7 @@ Primes::SingleFactor * Primes::IntegerDecomposition( const unsigned long long di
         involvedPrimes[c] = (*this)[c+1];//NB. Prime[1]==2 , Prime[0]==error.
     }// end filling up the candidate prime-factor array.
     unsigned long long dividendo, divisore;
-    dividendo = corrected_dividend;
+    dividendo = dividend;
     double realQuotient;
     unsigned long long intQuotient;
     int i=0;// start from +2. indice nel vettore dei primi.
@@ -1579,8 +1608,21 @@ Primes::Omega Primes::omegaProducer( const unsigned long long candidate)
 {
     Omega omega;// will be returned by value( i.e. on the Stack)
     SingleFactor * factorization = IntegerDecomposition( candidate);
+    if(nullptr== factorization)
+    {// NB. candidate==+1 should follow into this case: +1 has no prime factors.
+        omega.small = 0;
+        omega.big = 0;
+        return omega;
+    }
     int c=0;
-    for( c=0; factorization[c].factorBase!=0; c++){}//count how many factors before the zero-terminator.
+    for( c=0; 0!=factorization[c].factorBase; )
+    {//count how many factors before the zero-terminator.
+        if( 0==factorization[c].factorBase)
+        {
+            break;
+        }// else continue.
+        c++;
+    }
     omega.small = c;
     //
     omega.big = 0;
@@ -1591,11 +1633,17 @@ Primes::Omega Primes::omegaProducer( const unsigned long long candidate)
     // clean-up
     delete[] factorization;
     // ready.
-    return omega;// caller has to delete.
+    return omega;
 }// omegaProducer
 
 int Primes::LiouvilleLambda( const unsigned long long candidate)
 {
+    if( +1 > candidate)
+    {
+        // DBG std::cout<<"\n\t LiouvilleLambda takes natural arguments, i.e. >=+1 \n"<<std::endl;
+        Process::LogWrappers::SectionContent("LiouvilleLambda takes natural arguments, i.e. >=+1",0);
+        return 0;// error code.
+    }// else continue.
     Omega omega = this->omegaProducer( candidate);
     double res = pow(-1.0, omega.big);
     return (int)res;
@@ -1617,6 +1665,12 @@ int DeltaKronecker_Omega( Primes::Omega theOmegas)
 
 int Primes::MoebiusMu( const unsigned long long candidate)
 {// MoebiusMu=: DeltaKronecker_Omega(omega)*LiouvilleLambda() here Lambda is calculated without calling it.
+    if( +1 > candidate)
+    {
+        // DBG std::cout<<"\n\t MoebiusMu takes natural arguments, i.e. >=+1 \n"<<std::endl;
+        Process::LogWrappers::SectionContent("MoebiusMu takes natural arguments, i.e. >=+1",0);
+        return 0;// it gives zero weight in Moebius inversion.
+    }// else continue.
     Omega omega = omegaProducer( candidate);
     int MoebiusMu_res = DeltaKronecker_Omega(omega)*pow(-1.0, omega.big);
     return MoebiusMu_res;
@@ -1625,7 +1679,7 @@ int Primes::MoebiusMu( const unsigned long long candidate)
 
 struct PanelMainFormula
 {
-    int i;// root index
+    int i_root_index;
     int MoebiusMu;
     double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
     double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
@@ -1639,11 +1693,12 @@ double Primes::Pi_of_J( double Xsoglia)
 {
     double Log_base2_Xsoglia = log(Xsoglia)/log(+2);
     int firstRootUnderThreshold=ceil(Log_base2_Xsoglia);
+    std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold;
     PanelMainFormula *mainFormulaPanel = new PanelMainFormula[firstRootUnderThreshold];
     int c=0;
     for( ; c<firstRootUnderThreshold; c++)
     {
-        mainFormulaPanel[c].i = c;// root-index
+        mainFormulaPanel[c].i_root_index = c+1;// root-index
         mainFormulaPanel[c].Xsoglia_i_root = pow(Xsoglia,+1.0/(double)(c+1));//NB. root-index starts from +1 end grows.
         std::cout<<"\n\t 2^(1/"<<c+1<<")== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
         if(mainFormulaPanel[c].Xsoglia_i_root<+2.0)
@@ -1651,13 +1706,14 @@ double Primes::Pi_of_J( double Xsoglia)
             break;
         }// else continue;
     }// for
+    std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold;
     for(c=0 ; c<firstRootUnderThreshold; c++)
     {
         std::cout<<"\n\t radice di indice== "<< c+1 <<" radicale== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
     }
     //
     double res = 0.0;
-//    int i;// root index
+//    int i_root_index;
 //    int MoebiusMu;
 //    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
 //    double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
@@ -1665,17 +1721,50 @@ double Primes::Pi_of_J( double Xsoglia)
 //    double periodicTerm_addendoDue_i_;
 //    double logConstantTerm_addendoTre_i_;
 //    double lastRealIntegralTerm_addendoQuattro_i_;
-    for( c=0; c<firstRootUnderThreshold; c++)
-    {
+    std::ofstream mainFormulaPanel_Writer( "./mainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
+    mainFormulaPanel_Writer<<" #c\t mainFormulaPanel : a main formula for each useful root of threshold (i.e. root>=+2) \n"<<std::endl;
+    for( c=0; c<firstRootUnderThreshold-1; c++)// exclude firstRootUnderThreshold
+    {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
         mainFormulaPanel[c].MoebiusMu = MoebiusMu(c+1);
-        // mainFormulaPanel[c-1].Xsoglia_i_root gia valorizzato
-        res += (double)mainFormulaPanel[c].MoebiusMu/(double)c * J_of_Z( mainFormulaPanel[c].Xsoglia_i_root);
-    }
+        if(0==mainFormulaPanel[c].MoebiusMu)
+        {
+            continue;// skip null-weighted entries.
+        }// else calculate as follows:
+        // already written: mainFormulaPanel[c].Xsoglia_i_root =
+        // mainFormulaPanel.J_Xsoglia_i_root by now we don't need this term: -> separate calculations for each of the 4 adding.
+        double correttivoMoebius = (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1);
+        mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root) *correttivoMoebius;
+        mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms( mainFormulaPanel[c].Xsoglia_i_root)*correttivoMoebius;
+        mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = Third_Term()*correttivoMoebius;
+        mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = Fourth_Term( mainFormulaPanel[c].Xsoglia_i_root)*correttivoMoebius;
+        //
+        res += ( // NB. correttivoMoebius already applied : (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1)
+            mainFormulaPanel[c].mainTerm_addendoUno_i_
+            + mainFormulaPanel[c].periodicTerm_addendoDue_i_
+            + mainFormulaPanel[c].logConstantTerm_addendoTre_i_
+            + mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ );
+        //
+        // data dump
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].i_root_index = "<< mainFormulaPanel[c].i_root_index << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].MoebiusMu = "<< mainFormulaPanel[c].MoebiusMu << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].Xsoglia_i_root = "<< mainFormulaPanel[c].Xsoglia_i_root << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].mainTerm_addendoUno_i_ = "<< mainFormulaPanel[c].mainTerm_addendoUno_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].periodicTerm_addendoDue_i_ = "<< mainFormulaPanel[c].periodicTerm_addendoDue_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].logConstantTerm_addendoTre_i_ = "<< mainFormulaPanel[c].logConstantTerm_addendoTre_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].lastRealIntegralTerm_addendoQuattro_i_ = "<< mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormula res to root["<<c<<"] = "<<res<<"\n##########------end record----#########\n"<< std::endl;
+    }// for loop on root(soglia)
+    // close data-dump:
+    mainFormulaPanel_Writer.flush();
+    mainFormulaPanel_Writer.close();
+    delete[] mainFormulaPanel;
     //ready.
     return res;// TODO : complete the panel & dump it on filesys.
 }// PI_of_J
 
 
+/// Riemann's main formula : used for direct evaluation of J==J(z)
+/// In ordinary calculation, it gets not called since it's necessary to have separate logs for each of the four terms.
 double Primes::J_of_Z( double Xsoglia)
 {//NB. the  sign of  each term comes from its elaboration.
     return PrincipalTerm(Xsoglia) + Periodic_Terms(Xsoglia) + Third_Term() + Fourth_Term(Xsoglia);
@@ -1790,6 +1879,11 @@ double Primes::Periodic_Terms( double Xsoglia)
             Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
                 (*(logXsogliaToRo+c)).conjugateRoot, partitionCardinality);
         (*(expEi_LogXRo+c)).conjugateRoot = *ExpEi_conjugateRoot;
+        if(nullptr==ExpEi_conjugateRoot)
+        {
+            std::cout<<"\n\t DBG : nullptr produced by ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann "<<std::endl;
+            break;// skip invalid entry.
+        }// else continue.
         ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
         delete ExpEi_conjugateRoot;
     }// for

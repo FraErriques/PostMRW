@@ -37,10 +37,49 @@ int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
     //
-    for(int c=+1; c<4; c++)
+    //------NB.------ Primes Cantiere
+    Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
+    for( int c=0; c<10; c++)
     {
-        std::cout<<"\n\t 2^(1/"<<c<<")== "<<pow((double)c,+1.0/(double)c)<<std::endl;
+        std::cout<<"\n\t current index = "<<c<<std::endl;
+        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
+        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.primes_Cantiere.MoebiusMu( c) <<std::endl;
+        
+        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
+        if( nullptr!= factorization)
+        {
+            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
+            delete[] factorization;
+            factorization = nullptr;
+        }// else skip a null factorization.
     }
+
+
+//    primes_Cantiere.Pi_of_J( 100);
+    //double periodic = primes_Cantiere.Periodic_Terms(100);
+    //
+
+
+//    //------NB.------TEST Primes Cantiere & Production ------------------------------
+//    Test_Unit_CantierePrimes primes_Cantiere(0);
+//    primes_Cantiere.Primes_Cantiere_managementMethod();
+//    //
+//    Test_Unit_Primes_Production_ primes_Production(80);
+//    primes_Production.Primes_Production_managementMethod();
+
+
+    //--------------------------------------------------------------
+    Process::LogWrappers::SectionClose();
+    Process::LogWrappers::EndOfApplication_MANDATORY_();// destroy a global Singleton:: NECESSARY!
+    //---ready---------------
+    std::cout<<"\n\n\n\t Strike Enter to leave\t";
+    getchar();
+    return 0;
+}// main
+
+
+
+/* --------------cantina----------------------------
 //    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
 //       Numerics::Complex(+2.0, +3.0)
 //       ,Numerics::Complex(+5.0, +7.0)
@@ -77,21 +116,6 @@ int main()
     delete suiCateti;
     delete secondoCateto;
 
-
-
-
-    //--------------------------------------------------------------
-    Process::LogWrappers::SectionClose();
-    Process::LogWrappers::EndOfApplication_MANDATORY_();// destroy a global Singleton:: NECESSARY!
-    //---ready---------------
-    std::cout<<"\n\n\n\t Strike Enter to leave\t";
-    getchar();
-    return 0;
-}// main
-
-
-
-/* --------------cantina----------------------------
 //    someFunc();
 //
 //    Cantiere_Primes_2022September01_::Primes cantiere(15);

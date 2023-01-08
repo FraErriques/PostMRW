@@ -39,11 +39,23 @@ int main()
     //
     //------NB.------ Primes Cantiere
     Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
-//    primes_Cantiere.MoebiusMu( 100);
-//    primes_Cantiere.Pi_of_J( 100);
+//    for( int c=9300; c<9320; c++)
+//    {
+//        std::cout<<"\n\t current index = "<<c<<std::endl;
+//        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
+//        std::cout<<"\n\t MoebiusMu = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
+//        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
+//        if( nullptr!= factorization)
+//        {
+//            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
+//            delete[] factorization;
+//            factorization = nullptr;
+//        }// else skip a null factorization.
+//        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
+//    }
+
+
     primes_Cantiere.Pi_of_J( 100);
-    //double periodic = primes_Cantiere.Periodic_Terms(100);
-    //
 
 
 //    //------NB.------TEST Primes Cantiere & Production ------------------------------

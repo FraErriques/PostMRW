@@ -1,0 +1,52 @@
+ #c	 mainFormulaPanel : a main formula for each useful root of threshold (i.e. root>=+2) 
+
+	 mainFormulaPanel[0].i_root_index = 1
+	 mainFormulaPanel[0].MoebiusMu = 1
+	 mainFormulaPanel[0].Xsoglia_i_root = 100
+	 mainFormulaPanel[0].mainTerm_addendoUno_i_ = 30.127
+	 mainFormulaPanel[0].periodicTerm_addendoDue_i_ = -676.978
+	 mainFormulaPanel[0].logConstantTerm_addendoTre_i_ = -0.693147
+	 mainFormulaPanel[0].lastRealIntegralTerm_addendoQuattro_i_ = 1.37426e-05
+	 mainFormula res to root[0] = -647.545
+##########------end record----#########
+
+	 mainFormulaPanel[1].i_root_index = 2
+	 mainFormulaPanel[1].MoebiusMu = -1
+	 mainFormulaPanel[1].Xsoglia_i_root = 10
+	 mainFormulaPanel[1].mainTerm_addendoUno_i_ = -3.0828
+	 mainFormulaPanel[1].periodicTerm_addendoDue_i_ = 148.619
+	 mainFormulaPanel[1].logConstantTerm_addendoTre_i_ = 0.346574
+	 mainFormulaPanel[1].lastRealIntegralTerm_addendoQuattro_i_ = -0.00988208
+	 mainFormula res to root[1] = -501.672
+##########------end record----#########
+
+	 mainFormulaPanel[2].i_root_index = 3
+	 mainFormulaPanel[2].MoebiusMu = -1
+	 mainFormulaPanel[2].Xsoglia_i_root = 4.64159
+	 mainFormulaPanel[2].mainTerm_addendoUno_i_ = -1.13555
+	 mainFormulaPanel[2].periodicTerm_addendoDue_i_ = 68.866
+	 mainFormulaPanel[2].logConstantTerm_addendoTre_i_ = 0.231049
+	 mainFormulaPanel[2].lastRealIntegralTerm_addendoQuattro_i_ = -0.102482
+	 mainFormula res to root[2] = -433.813
+##########------end record----#########
+
+	 mainFormulaPanel[4].i_root_index = 5
+	 mainFormulaPanel[4].MoebiusMu = -1
+	 mainFormulaPanel[4].Xsoglia_i_root = 2.51189
+	 mainFormulaPanel[4].mainTerm_addendoUno_i_ = -0.336046
+	 mainFormulaPanel[4].periodicTerm_addendoDue_i_ = 28.1844
+	 mainFormulaPanel[4].logConstantTerm_addendoTre_i_ = 0.138629
+	 mainFormulaPanel[4].lastRealIntegralTerm_addendoQuattro_i_ = -0.732674
+	 mainFormula res to root[4] = -406.558
+##########------end record----#########
+
+	 mainFormulaPanel[5].i_root_index = 6
+	 mainFormulaPanel[5].MoebiusMu = 1
+	 mainFormulaPanel[5].Xsoglia_i_root = 2.15443
+	 mainFormulaPanel[5].mainTerm_addendoUno_i_ = 0.209444
+	 mainFormulaPanel[5].periodicTerm_addendoDue_i_ = -20.3887
+	 mainFormulaPanel[5].logConstantTerm_addendoTre_i_ = -0.115525
+	 mainFormulaPanel[5].lastRealIntegralTerm_addendoQuattro_i_ = 1.2455
+	 mainFormula res to root[5] = -425.608
+##########------end record----#########
+
