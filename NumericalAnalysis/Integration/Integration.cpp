@@ -2,7 +2,7 @@
 #include "Integration.h"
 #include "../../Common/StringBuilder/StringBuilder.h"
 #include "../../Common/LogFs_wrap/LogFs_wrap.h"
-
+# include "../common_data/common_data.h"
 
 namespace RealIntegration{
 
@@ -131,7 +131,20 @@ long double rettangoli(
                    ,bool calledFromTrapezi
                   )
 {
+    if( fabs(sup-inf)<+1.0E-18)
+    {
+        return 0.0;// zero measure on such a small Dx.
+    }
+    if( cardPartiz<+1.0)
+    {
+        cardPartiz = +1.0;
+    }
     double dx = (sup-inf) / cardPartiz;
+    if( dx <= 0)
+    {
+        Crash crash("wrong extrema: dx has to be positive.");
+        throw crash;
+    }
     long double res = 0.0;// step adding on it
     unsigned long long stepOrdinal = 0;// step ordinal
     for( long double x=inf; x<sup; x+=dx)
