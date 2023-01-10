@@ -5,10 +5,10 @@
 	 mainFormulaPanel[0].correttivoMoebius = 1
 	 mainFormulaPanel[0].Xsoglia_i_root = 100
 	 mainFormulaPanel[0].mainTerm_addendoUno_i_ = 30.127
-	 mainFormulaPanel[0].periodicTerm_addendoDue_i_ = -1253.75
+	 mainFormulaPanel[0].periodicTerm_addendoDue_i_ = -615.044
 	 mainFormulaPanel[0].logConstantTerm_addendoTre_i_ = -0.693147
 	 mainFormulaPanel[0].lastRealIntegralTerm_addendoQuattro_i_ = 1.37426e-05
-	 mainFormula res to root[0] = -1224.32
+	 mainFormula res to root[0] = -585.61
 ##########------end record----#########
 
 	 mainFormulaPanel[1].i_root_index = 2
@@ -16,10 +16,10 @@
 	 mainFormulaPanel[1].correttivoMoebius = -0.5
 	 mainFormulaPanel[1].Xsoglia_i_root = 10
 	 mainFormulaPanel[1].mainTerm_addendoUno_i_ = -3.0828
-	 mainFormulaPanel[1].periodicTerm_addendoDue_i_ = 241.334
+	 mainFormulaPanel[1].periodicTerm_addendoDue_i_ = 156.072
 	 mainFormulaPanel[1].logConstantTerm_addendoTre_i_ = 0.346574
 	 mainFormulaPanel[1].lastRealIntegralTerm_addendoQuattro_i_ = -0.00988208
-	 mainFormula res to root[1] = -985.733
+	 mainFormula res to root[1] = -432.284
 ##########------end record----#########
 
 	 mainFormulaPanel[2].i_root_index = 3
@@ -27,10 +27,10 @@
 	 mainFormulaPanel[2].correttivoMoebius = -0.333333
 	 mainFormulaPanel[2].Xsoglia_i_root = 4.64159
 	 mainFormulaPanel[2].mainTerm_addendoUno_i_ = -1.13555
-	 mainFormulaPanel[2].periodicTerm_addendoDue_i_ = 90.7452
+	 mainFormulaPanel[2].periodicTerm_addendoDue_i_ = 70.7291
 	 mainFormulaPanel[2].logConstantTerm_addendoTre_i_ = 0.231049
 	 mainFormulaPanel[2].lastRealIntegralTerm_addendoQuattro_i_ = -0.102482
-	 mainFormula res to root[2] = -895.995
+	 mainFormula res to root[2] = -362.562
 ##########------end record----#########
 
 	 mainFormulaPanel[4].i_root_index = 5
@@ -38,10 +38,10 @@
 	 mainFormulaPanel[4].correttivoMoebius = -0.2
 	 mainFormulaPanel[4].Xsoglia_i_root = 2.51189
 	 mainFormulaPanel[4].mainTerm_addendoUno_i_ = -0.336046
-	 mainFormulaPanel[4].periodicTerm_addendoDue_i_ = 17.0011
+	 mainFormulaPanel[4].periodicTerm_addendoDue_i_ = 27.323
 	 mainFormulaPanel[4].logConstantTerm_addendoTre_i_ = 0.138629
 	 mainFormulaPanel[4].lastRealIntegralTerm_addendoQuattro_i_ = -0.732674
-	 mainFormula res to root[4] = -879.924
+	 mainFormula res to root[4] = -336.169
 ##########------end record----#########
 
 	 mainFormulaPanel[5].i_root_index = 6
@@ -49,9 +49,9 @@
 	 mainFormulaPanel[5].correttivoMoebius = 0.166667
 	 mainFormulaPanel[5].Xsoglia_i_root = 2.15443
 	 mainFormulaPanel[5].mainTerm_addendoUno_i_ = 0.209444
-	 mainFormulaPanel[5].periodicTerm_addendoDue_i_ = -4.89397
+	 mainFormulaPanel[5].periodicTerm_addendoDue_i_ = -19.8137
 	 mainFormulaPanel[5].logConstantTerm_addendoTre_i_ = -0.115525
 	 mainFormulaPanel[5].lastRealIntegralTerm_addendoQuattro_i_ = 1.2455
-	 mainFormula res to root[5] = -883.478
+	 mainFormula res to root[5] = -354.643
 ##########------end record----#########
 
