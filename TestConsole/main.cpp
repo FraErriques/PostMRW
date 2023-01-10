@@ -55,7 +55,7 @@ int main()
 //    }
 
 
-    primes_Cantiere.Pi_of_J( 100);
+    primes_Cantiere.Pi_of_J( 20);
 
 
 //    //------NB.------TEST Primes Cantiere & Production ------------------------------
