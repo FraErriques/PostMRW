@@ -1735,7 +1735,11 @@ double Primes::Pi_of_J( double Xsoglia)
         // mainFormulaPanel.J_Xsoglia_i_root by now we don't need this term: -> separate calculations for each of the 4 adding.
         mainFormulaPanel[c].correttivoMoebius = (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1);
         mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root) *mainFormulaPanel[c].correttivoMoebius;
-        mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms( mainFormulaPanel[c].Xsoglia_i_root)*mainFormulaPanel[c].correttivoMoebius;
+        mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms(
+            mainFormulaPanel[c].Xsoglia_i_root
+            ,mainFormulaPanel[c].i_root_index
+            ,mainFormulaPanel[c].Xsoglia_i_root
+         )*mainFormulaPanel[c].correttivoMoebius;
         mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = Third_Term()*mainFormulaPanel[c].correttivoMoebius;
         mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = Fourth_Term( mainFormulaPanel[c].Xsoglia_i_root)*mainFormulaPanel[c].correttivoMoebius;
         //
@@ -1767,9 +1771,10 @@ double Primes::Pi_of_J( double Xsoglia)
 
 /// Riemann's main formula : used for direct evaluation of J==J(z)
 /// In ordinary calculation, it gets not called since it's necessary to have separate logs for each of the four terms.
-double Primes::J_of_Z( double Xsoglia)
+double Primes::J_of_Z( double Xsoglia, int i_root_index, double Xsoglia_i_root)
 {//NB. the  sign of  each term comes from its elaboration.
-    return PrincipalTerm(Xsoglia) + Periodic_Terms(Xsoglia) + Third_Term() + Fourth_Term(Xsoglia);
+    return PrincipalTerm(Xsoglia) +
+        Periodic_Terms(Xsoglia,i_root_index,Xsoglia_i_root) + Third_Term() + Fourth_Term(Xsoglia);
 }// J_of_Z
 
 
@@ -1809,9 +1814,17 @@ double Primes::PrincipalTerm( double Xsoglia)
     return sign * addendoUno;
 }
 
-double Primes::Periodic_Terms( double Xsoglia)
+double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_i_root )
 {
     double sign = -1.0;
+
+//std::string * doubleToString( const double &par);
+//std::string * intToString( const int &par);
+    std::string *indiceRadice_str = Common::StrManipul::intToString(i_root_index);
+    std::string *Xsoglia_i_root_str = Common::StrManipul::doubleToString(Xsoglia_i_root,false);
+    std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimLeft(*Xsoglia_i_root_str));
+    delete indiceRadice_str;
+    delete Xsoglia_i_root_str;
     //
     size_t theBufSize = 100;
     double thePositiveImPartOf100Zero[theBufSize];
@@ -1833,8 +1846,12 @@ double Primes::Periodic_Terms( double Xsoglia)
         Numerics::Complex conjugateRoot;
     };
     LogXsogliaToRo *logXsogliaToRo = new LogXsogliaToRo[theBufSize];
-    std::ofstream LogXsogliaToRo_Writer( "./LogXsogliaToRo_.txt", std::fstream::out );// no append->rewrite.
-    LogXsogliaToRo_Writer<<" #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;
+    std::string logFileName( std::string("./LogXsogliaToRo_")
+        +desinenzaFilename
+        +".txt" );
+    std::ofstream LogXsogliaToRo_Writer( logFileName, std::fstream::out );// no append->rewrite.
+    LogXsogliaToRo_Writer<<" #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot \tRe+Im\t \n"<<std::endl;
+    LogXsogliaToRo_Writer<<"i_root_index== "<<i_root_index<<" Xsoglia_i_root== "<<Xsoglia_i_root<<"\n\n";
     for( size_t c=0; c<theBufSize ; c++)
     {// this is an intermediate state, devoted to logging LogXsogliaToRo
         LogXsogliaToRo_Writer << c+1 <<"\t";//------common part of the loop
@@ -1846,9 +1863,11 @@ double Primes::Periodic_Terms( double Xsoglia)
         //-----
         Numerics::Complex conjugateRoot_C(+0.5, -1.0*thePositiveImPartOf100Zero[c]);
         (*(logXsogliaToRo+c)).conjugateRoot = (Xsoglia_C^conjugateRoot_C).LnC();
-        LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
+        LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).conjugateRoot.ToString()<<"\t";// still have to print Re+Im
+        // print Re + Im
+        LogXsogliaToRo_Writer<< ((*(logXsogliaToRo+c)).positiveRoot+(*(logXsogliaToRo+c)).conjugateRoot).ToString()<<std::endl;// flush at EndOfLine
     }// for
-    LogXsogliaToRo_Writer<<"\nEND #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
+    LogXsogliaToRo_Writer<<"\nEND #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot \tRe+Im\t \n"<<std::endl;// flush at EndOfLine
     LogXsogliaToRo_Writer.flush();
     LogXsogliaToRo_Writer.close();
     //
@@ -1858,9 +1877,14 @@ double Primes::Periodic_Terms( double Xsoglia)
         Numerics::Complex conjugateRoot;
     };
     ExpEi_LogXRo *expEi_LogXRo = new ExpEi_LogXRo[theBufSize];
-    std::ofstream ExpEi_LogXRo_Writer( "./ExpEi_LogXRo_.txt", std::fstream::out );// no append->rewrite.
-    ExpEi_LogXRo_Writer<<" #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot\n"<<std::endl;
-    unsigned partitionCardinality = 1000;// #steps in trapezia
+    std::string expeiFileName( std::string("./ExpEi_LogXRo_")
+        +desinenzaFilename
+        +".txt" );
+    std::ofstream ExpEi_LogXRo_Writer( expeiFileName, std::fstream::out );// no append->rewrite.
+    ExpEi_LogXRo_Writer<<" #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot \tRe+Im\t \n"<<std::endl;
+    ExpEi_LogXRo_Writer<<"i_root_index== "<<i_root_index<<" Xsoglia_i_root== "<<Xsoglia_i_root<<"\n\n";
+    unsigned partitionCardinality = 8000;// #steps in trapezia
+    Numerics::Complex periodicTerm(0.0, 0.0);
     for( size_t c=0; c<theBufSize ; c++)
     {// this is an intermediate state, devoted to logging ExpEi_LogXRo
         ExpEi_LogXRo_Writer << c+1 <<"\t";//------common part of the loop
@@ -1875,7 +1899,6 @@ double Primes::Periodic_Terms( double Xsoglia)
         }// else continue.
         (*(expEi_LogXRo+c)).positiveRoot = *ExpEi_positiveRoot;
         ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).positiveRoot.ToString()<<"\t";
-        delete ExpEi_positiveRoot;
         //
         Numerics::Complex *ExpEi_conjugateRoot =
             Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
@@ -1886,24 +1909,28 @@ double Primes::Periodic_Terms( double Xsoglia)
             std::cout<<"\n\t DBG : nullptr produced by ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann "<<std::endl;
             break;// skip invalid entry.
         }// else continue.
-        ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).conjugateRoot.ToString()<<std::endl;// flush at EndOfLine
-        delete ExpEi_conjugateRoot;
-    }// for
-    ExpEi_LogXRo_Writer<<"\nEND #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot\n"<<std::endl;// flush at EndOfLine
-    ExpEi_LogXRo_Writer.flush();
-    ExpEi_LogXRo_Writer.close();
-    //
-    Numerics::Complex periodicTerm(0.0, 0.0);
-    for( size_t c=0; c<theBufSize ; c++)
-    {// this is the definitive result, i.e. Sum[Li[x^ro]]==Sum[ExpIntegralEi[Log[x^ro]]]
+        ExpEi_LogXRo_Writer<< (*(expEi_LogXRo+c)).conjugateRoot.ToString()<<"\t";// still have to print the total Re+Im.
+        // print Re+Im
         periodicTerm += (*(expEi_LogXRo+c)).positiveRoot;// sum in order of growing modulus of Imaginary part
         periodicTerm += (*(expEi_LogXRo+c)).conjugateRoot;// convergence is conditional! NB.
-    }// for : Sum periodic terms in order of growing modulus of Imaginary part
-    if( abs(periodicTerm.Im())>+1.0E-5)
-    {
-        Crash crash("no imaginary part is expected!");
-        throw crash;
-    }// NB. throws
+        ExpEi_LogXRo_Writer<< ((*(expEi_LogXRo+c)).positiveRoot+(*(expEi_LogXRo+c)).conjugateRoot).ToString()<<std::endl;// flush at EndOfLine
+        // for : Sum periodic terms in order of growing modulus of Imaginary part
+        if( abs(periodicTerm.Im())>+1.0E-5)
+        {
+            ExpEi_LogXRo_Writer<<"no imaginary part is expected!"<<"\n";
+            Crash crash("no imaginary part is expected!");
+            ExpEi_LogXRo_Writer<<"\nEND #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot \tRe+Im\t \n"<<std::endl;// flush at EndOfLine
+            ExpEi_LogXRo_Writer.flush();
+            ExpEi_LogXRo_Writer.close();
+            throw crash;
+        }// NB. throws
+        // clean
+        delete ExpEi_positiveRoot;
+        delete ExpEi_conjugateRoot;
+    }// for
+    ExpEi_LogXRo_Writer<<"\nEND #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot \tRe+Im\t \n"<<std::endl;// flush at EndOfLine
+    ExpEi_LogXRo_Writer.flush();
+    ExpEi_LogXRo_Writer.close();
     //
     delete[] logXsogliaToRo;// clean screen-points
     delete[] expEi_LogXRo;// clean integrals

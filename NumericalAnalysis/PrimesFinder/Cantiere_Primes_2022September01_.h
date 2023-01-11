@@ -123,9 +123,9 @@ class Primes
     int LiouvilleLambda( const unsigned long long candidate);
     int MoebiusMu( const unsigned long long candidate);
     double Pi_of_J( double Xsoglia);
-    double J_of_Z( double Xsoglia);
+    double J_of_Z( double Xsoglia, int i_root_index, double Xsoglia_i_root);
     double PrincipalTerm( double Xsoglia);
-    double Periodic_Terms( double Xsoglia);
+    double Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_i_root);
     double Third_Term();
     double Fourth_Term( double Xsoglia);
 
