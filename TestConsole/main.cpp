@@ -54,8 +54,19 @@ int main()
 //        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
 //    }
 
-
-    primes_Cantiere.Pi_of_J( 100);
+    Numerics::Complex z(+0.5, +14.123);
+    double z_arg = z.arg();
+    Numerics::Complex z_log = z.LnC();
+    Numerics::Complex *z_Ei = Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann( z_log, 999);
+    //
+    Numerics::Complex zw(+0.5, +914.123);
+    double zw_arg = zw.arg();
+    Numerics::Complex zw_log = zw.LnC();
+    Numerics::Complex *zw_Ei = Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann( zw_log, 999);
+    //
+    primes_Cantiere.Pi_of_J( 20);
+    delete z_Ei;
+    delete zw_Ei;
 
 
 //    //------NB.------TEST Primes Cantiere & Production ------------------------------
