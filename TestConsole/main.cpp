@@ -55,11 +55,13 @@ int main()
 //    }
 
     Numerics::Complex z(+0.5, +14.123);
+    Numerics::Complex pow_z = Numerics::Complex(+20.0,0.0)^z;
     double z_arg = z.arg();
     Numerics::Complex z_log = z.LnC();
     Numerics::Complex *z_Ei = Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann( z_log, 999);
     //
     Numerics::Complex zw(+0.5, +914.123);
+    Numerics::Complex pow_zw = Numerics::Complex(+20.0,0.0)^zw;
     double zw_arg = zw.arg();
     Numerics::Complex zw_log = zw.LnC();
     Numerics::Complex *zw_Ei = Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann( zw_log, 999);
