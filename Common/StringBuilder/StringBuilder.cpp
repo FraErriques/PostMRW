@@ -235,13 +235,21 @@ namespace StrManipul
 
 
 
-    std::string * doubleToString( const double &par)
+    std::string * doubleToString( const double &par, bool isScientific)
     {
         std::string * res = new std::string();
         std::stringstream localSstream;
         localSstream.width( 18);// 2 for sign and decimal point
-        localSstream.precision(16);
-        localSstream.setf( std::ios_base::scientific);
+        if( isScientific)
+        {
+            localSstream.precision(16);
+            localSstream.setf( std::ios_base::scientific);
+        }
+        else
+        {
+            localSstream.precision(4);
+            localSstream.setf( std::ios_base::fixed);
+        }
         localSstream << par;//put the double into the stringStream
         *res = localSstream.str();// get the string from the stringStream
         // N.B. the caller has to delete the return value.
