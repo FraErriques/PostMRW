@@ -209,7 +209,7 @@ std::string &trimBoth_ToBeTested( std::string &original)
         // core
         do// core  ---LEFT---
         {
-            where = original.find( 32);
+            where = original.find( 32);// i.e. char blank==' '
             if(std::string::npos==where){break;}//-1 means not-found
             if(32!=original[c]){break;}// blanks at string-start(i.e. at [0]) are over. There might be blanks inside or at string-end, but we don't care here.
             //original.replace( where, howManyCharToBeReplaced, ""); evaluate which of the two lines
