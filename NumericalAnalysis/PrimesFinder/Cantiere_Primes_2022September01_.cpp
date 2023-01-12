@@ -1816,17 +1816,14 @@ double Primes::PrincipalTerm( double Xsoglia)
 
 double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_i_root )
 {
-    double sign = -1.0;
-
-//std::string * doubleToString( const double &par);
-//std::string * intToString( const int &par);
+    double sign = -1.0;// sign of second_addend (i.e. periodic terms)
+    //
     std::string *indiceRadice_str = Common::StrManipul::intToString(i_root_index);
     std::string *Xsoglia_i_root_str = Common::StrManipul::doubleToString(Xsoglia_i_root,false);
-    std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimLeft(*Xsoglia_i_root_str));
+    std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimBoth(*Xsoglia_i_root_str));
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
-    //
-    size_t theBufSize = 100;
+    size_t theBufSize = 100;// numero di zeri-Zeta utilizzati.
     double thePositiveImPartOf100Zero[theBufSize];
     std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
     for( size_t c=0; c<theBufSize ; c++)

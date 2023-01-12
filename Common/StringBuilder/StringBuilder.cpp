@@ -165,12 +165,13 @@ namespace StrManipul
         // core
         do// core
         {
-            where = original.find( " ");
-            if(-1==(int)where){break;}
-            if(32!=original[c]){break;}// blanks on the left are over. There might be blanks on the right, but we don't care here.
-            original.replace( where, howManyCharToBeReplaced, "");
+            where = original.find( 32);
+            if(std::string::npos==(int)where){break;}
+            if(32!=original[c]){break;}// blanks at string-start(i.e. at [0]) are over. There might be blanks inside or at string-end, but we don't care here.
+//original.replace( where, howManyCharToBeReplaced, "");
+            original.erase(where,howManyCharToBeReplaced);
         }// END core
-        while( -1 !=(int)where);
+        while( std::string::npos != where);
         // ready.
         return original;// NB. it has been modified.
     }// end trimLeft
@@ -183,27 +184,49 @@ namespace StrManipul
         // core
         do// core
         {
-            where = original.rfind( " ");
-            if(-1==(int)where){break;}
-            original.replace( where, howManyCharToBeReplaced, "");
-            if(32!=original[where-1]){break;}// blanks on the left are over. There might be blanks on the right, but we don't care here.
+            where = original.rfind( 32);
+            if(std::string::npos==(int)where){break;}
+//original.replace( where, howManyCharToBeReplaced, "");
+            original.erase(where,howManyCharToBeReplaced);
+            if(32!=original[where-1]){break;}// blanks at end-of-string are over. There might be termination nulls after, but we don't care about.
         }// END core
-        while( -1 !=(int)where);
+        while( std::string::npos != where);
         // ready.
         return original;// NB. it has been modified.
     }// end trimRight
 
     std::string &trimBoth( std::string &original)
     {
-        std::string &res = trimRight( original);
-        res = trimLeft( res);
-        return res;
-    }// end trimBoth
+        size_t where = 0;
+        const size_t howManyCharToBeReplaced = 1;// 1 blank at a time. -------Left only-------
+        int c=0;
+        // std::string::npos  === -1
+        // core
+        do// core  ---LEFT---
+        {
+            where = original.find( 32);// i.e. char blank==' '
+            if(std::string::npos==where){break;}//-1 means not-found
+            if(32!=original[c]){break;}// blanks at string-start(i.e. at [0]) are over. There might be blanks inside or at string-end, but we don't care here.
+            original.erase(where,howManyCharToBeReplaced);//shorten the string, of the current char.// evaluate which of the two lines: this one shortens the string.
+        }// END core
+        while( std::string::npos !=where);
+        //
+        do// core   ---RIGHT------
+        {
+            where = original.rfind( ' ');// i.e. 32
+            if(std::string::npos==where){break;}
+            original.erase(where,howManyCharToBeReplaced);//shorten the string, of the current char.// evaluate which of the two lines: this one shortens the string.
+            if(32!=original[where-1]){break;}// blanks at end-of-string are over. There might be termination nulls after, but we don't care about.
+        }// END core
+        while( std::string::npos !=where);
+        // ready.
+        return original;// NB. it has been modified.
+    }// trimBoth
 
 
     bool isInvisibleString( const std::string &analyzed)
     {
-        bool res = true;// intit assuming it true.
+        bool res = true;// init assuming it true.
         for(size_t c=0; c<analyzed.size(); c++)
         {
             res &= (       32==analyzed[c]      // blank
