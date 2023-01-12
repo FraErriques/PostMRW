@@ -50,6 +50,7 @@ std::vector<std::string> * stringSplit( const std::string &tokenToSplitOn, std::
 std::string &trimLeft( std::string &original);
 std::string &trimRight( std::string &original);
 std::string &trimBoth( std::string &original);
+std::string &trimBoth_ToBeTested( std::string &original);
 bool isInvisibleString( const std::string &analyzed);
 std::vector<std::string> * removeEmptyEntries( std::vector<std::string> * original);
 // follow the xToString() and stringToX() functions:

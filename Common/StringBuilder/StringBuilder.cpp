@@ -200,6 +200,36 @@ namespace StrManipul
         return res;
     }// end trimBoth
 
+std::string &trimBoth_ToBeTested( std::string &original)
+{
+        size_t where = 0;
+        const size_t howManyCharToBeReplaced = 1;// 1 blank at a time. -------Left only-------
+        int c=0;
+        // std::string::npos  === -1
+        // core
+        do// core  ---LEFT---
+        {
+            where = original.find( 32);
+            if(std::string::npos==where){break;}//-1 means not-found
+            if(32!=original[c]){break;}// blanks at string-start(i.e. at [0]) are over. There might be blanks inside or at string-end, but we don't care here.
+            //original.replace( where, howManyCharToBeReplaced, ""); evaluate which of the two lines
+            original.erase(where,howManyCharToBeReplaced);//shorten the string, of the current char.// evaluate which of the two lines: this one shortens the string.
+        }// END core
+        while( std::string::npos !=where);
+        //
+        do// core   ---RIGHT------
+        {
+            where = original.rfind( ' ');// i.e. 32
+            if(std::string::npos==where){break;}
+            // original.replace( where, howManyCharToBeReplaced, "");
+            original.erase(where,howManyCharToBeReplaced);//shorten the string, of the current char.// evaluate which of the two lines: this one shortens the string.
+            if(32!=original[where-1]){break;}// blanks at end-of-string are over. There might be termination nulls after, but we don't care about.
+        }// END core
+        while( std::string::npos !=where);
+        // ready.
+        return original;// NB. it has been modified.
+}// trimBoth_ToBeTested
+
 
     bool isInvisibleString( const std::string &analyzed)
     {
