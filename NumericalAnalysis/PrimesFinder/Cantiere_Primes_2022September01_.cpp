@@ -1822,7 +1822,7 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
 //std::string * intToString( const int &par);
     std::string *indiceRadice_str = Common::StrManipul::intToString(i_root_index);
     std::string *Xsoglia_i_root_str = Common::StrManipul::doubleToString(Xsoglia_i_root,false);
-    std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimBoth(*Xsoglia_i_root_str));
+    std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimLeft(*Xsoglia_i_root_str));
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
     //

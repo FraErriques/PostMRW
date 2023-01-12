@@ -54,6 +54,22 @@ int main()
 //        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
 //    }
 
+    std::string s("  toBeTrimmed  ");
+    std::string p = Common::StrManipul::trimLeft(s);
+    std::string q = Common::StrManipul::trimRight(p);
+    std::string zstr = Common::StrManipul::trimBoth(p);
+    //
+    std::string *indiceRadice_str = Common::StrManipul::intToString(99);
+    std::string *Xsoglia_i_root_str = Common::StrManipul::doubleToString( +23.987,false);
+    //std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimBoth(*Xsoglia_i_root_str));
+    Common::StringBuilder sb(200);//stima riga
+    sb.append( *indiceRadice_str);
+    sb.append( std::string("_") );
+//sb.append( Common::StrManipul::trimBoth(*Xsoglia_i_root_str));
+    std::string desinenzaFilename = sb.str();
+    delete indiceRadice_str;
+    delete Xsoglia_i_root_str;
+
     Numerics::Complex z(+0.5, +14.123);
     Numerics::Complex pow_z = Numerics::Complex(+20.0,0.0)^z;
     double z_arg = z.arg();
