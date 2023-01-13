@@ -166,9 +166,8 @@ namespace StrManipul
         do// core
         {
             where = original.find( 32);
-            if(std::string::npos==(int)where){break;}
+            if(std::string::npos==where){break;}
             if(32!=original[c]){break;}// blanks at string-start(i.e. at [0]) are over. There might be blanks inside or at string-end, but we don't care here.
-//original.replace( where, howManyCharToBeReplaced, "");
             original.erase(where,howManyCharToBeReplaced);
         }// END core
         while( std::string::npos != where);
@@ -185,8 +184,7 @@ namespace StrManipul
         do// core
         {
             where = original.rfind( 32);
-            if(std::string::npos==(int)where){break;}
-//original.replace( where, howManyCharToBeReplaced, "");
+            if(std::string::npos==where){break;}
             original.erase(where,howManyCharToBeReplaced);
             if(32!=original[where-1]){break;}// blanks at end-of-string are over. There might be termination nulls after, but we don't care about.
         }// END core

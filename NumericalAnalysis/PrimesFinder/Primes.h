@@ -48,6 +48,11 @@ class Primes
         unsigned long long threshold;
         unsigned long long logIntegral;
     };
+    struct Omega
+    {
+        int small;
+        int big;
+    };
     /// Ctor
     Primes( unsigned semiAmplitudeOfEachMapSegment );
     virtual ~Primes();
@@ -66,7 +71,6 @@ class Primes
     /// Data
     std::map<unsigned long long, unsigned long long> * memoryMappedDump;
     std::vector<LogIntegralPillarPoint> * logIntegralPillars;
-//std::map<unsigned long long, unsigned long long>
     bool isHealthlyConstructed = false;
     bool canOperate = false;
     const std::string * sequentialDumpPath = nullptr;// NB. remember to share and delete
@@ -118,13 +122,24 @@ class Primes
     unsigned long long queryMap( unsigned long long desiredOrdinal);
     bool Bisection( unsigned long long requiredOrdinal );
     void coveringIntegral();
-// bool distributionFunction(const char * path);  NO MORE
     bool distributionFunction_fromExistingMesh();
     unsigned long long interpolateOrdinal( unsigned long long candidatePrimeThreshold);
     void mapTraverseForward( std::map<unsigned long long, unsigned long long> * mapOfNaturals );
     LogIntegralPillarPoint * getNearestIntegral( unsigned long long candidatePrimeThreshold);
     // follows : IntegerDecomposition : the Fundamental Thm of Arithmetic.
     SingleFactor * IntegerDecomposition( const unsigned long long dividend);
+    void show_IntegerDecomposition_helper( Primes::SingleFactor * theFactors);
+    Omega omegaProducer( const unsigned long long candidate);
+    int LiouvilleLambda( const unsigned long long candidate);
+    int MoebiusMu( const unsigned long long candidate);
+    double Pi_of_J( double Xsoglia);
+    double J_of_Z( double Xsoglia, int i_root_index, double Xsoglia_i_root);
+    double PrincipalTerm( double Xsoglia);
+    double Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_i_root);
+    double Third_Term();
+    double Fourth_Term( double Xsoglia);
+
+
 
 };// class
 

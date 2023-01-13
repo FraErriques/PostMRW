@@ -53,7 +53,7 @@ int main()
 //        }// else skip a null factorization.
 //        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
 //    }
-
+/*
     std::string *s = new std::string("   to be trimmed, but not inside    ");
     std::string rambaldo = Common::StrManipul::trimBoth( *s);
     delete s;
@@ -89,14 +89,14 @@ int main()
     primes_Cantiere.Pi_of_J( 20);
     delete z_Ei;
     delete zw_Ei;
-
+*/
 
 //    //------NB.------TEST Primes Cantiere & Production ------------------------------
-//    Test_Unit_CantierePrimes primes_Cantiere(0);
-//    primes_Cantiere.Primes_Cantiere_managementMethod();
+//    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
+//    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
 //    //
-//    Test_Unit_Primes_Production_ primes_Production(80);
-//    primes_Production.Primes_Production_managementMethod();
+    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
+    primes_unitTestProduction.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------
