@@ -13,10 +13,10 @@
 
 
 /*  TODO
-*   there must be a specification file for the Mesh of real-LogIntegral
+*(1) There must be a specification file for the Mesh of real-LogIntegral
 *   such specification file has to be read only on demand; the construction of an instance doesn't have to parse the mesh specification
 *   ordinary Ctor has to read a second-phase dump, which is a file containing the Distribution measures, at pillar points
-*   for an ordinary Ctor, the mesh is specified in the glonalIntegrals_dump, and has to be copied in RAM in a std::vector<Pillar>
+*   for an ordinary Ctor, the mesh is specified in the globalIntegral_.ini , and has to be copied in RAM in a std::vector<Pillar>
 *   the dump-files involved in the process have to be specified in the Config; they will be:
 *   meshSpecification.txt
 *   localIntegrals.txt
@@ -29,12 +29,22 @@
 *   call distributionProducer; finds in Config localIntegrals.txt. Sums the local results and writes globalIntegrals.txt.
 *   at this point the new mesh is ready and the bool acquireExistingMesh() can be called, to put the mesh in RAM, in the vector.
 *
+*(2) There must be a unique function for calls to RealLogIntegral and it has to manage boundaries and proximity integrals. The callers (by now) are:
+*   -   Random_calc_Interface
+*   -   FirstAddend(i.e. termine primario)
+*   -   IntegerFactorization
+*   -   more can come, in successive developments
+*
+*(3) Implement the Moebius-Inversion on firstAddend only (i.e. Prime Number Theorem)
+*
+*(4) Let the cardinality of used zeros a parameter in PeriodicTerms. Test numerical stability.
+*
 *   old things:
 *   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
 *   transformed the char* into sdt::string * with const clause.-------------------------------------------------------(V)
 *   let the StreamReader an automatic variable and let the seekg internal to the reading-methods.---------------------(V)
 *   why complete renewal of sequentialDump only for dump<100k  ?------------------------------------------------------(V)
-*   enrich StringBuilder and Log for better tracing, overloading variable types-------------------------TODO
+*   enrich StringBuilder and Log for better tracing, overloading variable types--------------(V)------------TODO
 *   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
 */
 
@@ -108,6 +118,7 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
 //    this->append_Random_Stream = nullptr;
     Process::LogWrappers::SectionClose();
 }// empty Ctor(semiAmplitudeOfEachMapSegment)
+
 
 
 
@@ -1958,6 +1969,8 @@ double Primes::Fourth_Term( double Xsoglia)
     double sign = +1.0;
     return sign * resTermFour;
 }// Fourth_Term
+
+
 
 
 }// namespace Cantiere_Primes_2022September01_
