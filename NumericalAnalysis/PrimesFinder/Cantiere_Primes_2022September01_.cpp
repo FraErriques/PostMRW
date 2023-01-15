@@ -1733,7 +1733,7 @@ double Primes::Pi_of_J( double Xsoglia)
 //    double periodicTerm_addendoDue_i_;
 //    double logConstantTerm_addendoTre_i_;
 //    double lastRealIntegralTerm_addendoQuattro_i_;
-    std::ofstream mainFormulaPanel_Writer( "./mainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
+    std::ofstream mainFormulaPanel_Writer( "./DUMPmainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
     mainFormulaPanel_Writer<<" #c\t mainFormulaPanel : a main formula for each useful root of threshold (i.e. root>=+2) \n"<<std::endl;
     for( c=0; c<firstRootUnderThreshold-1; c++)// exclude firstRootUnderThreshold
     {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
@@ -1834,7 +1834,7 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
     std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimBoth(*Xsoglia_i_root_str));
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
-    size_t theBufSize = 100;// numero di zeri-Zeta utilizzati.
+    size_t theBufSize = 5;//100;// numero di zeri-Zeta utilizzati.
     double thePositiveImPartOf100Zero[theBufSize];
     std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
     for( size_t c=0; c<theBufSize ; c++)
@@ -1891,7 +1891,7 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
     std::ofstream ExpEi_LogXRo_Writer( expeiFileName, std::fstream::out );// no append->rewrite.
     ExpEi_LogXRo_Writer<<" #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot \tRe+Im\t \n"<<std::endl;
     ExpEi_LogXRo_Writer<<"i_root_index== "<<i_root_index<<" Xsoglia_i_root== "<<Xsoglia_i_root<<"\n\n";
-    unsigned partitionCardinality = 8000;// #steps in trapezia
+    unsigned partitionCardinality = 18000;// #steps in trapezia
     Numerics::Complex periodicTerm(0.0, 0.0);
     for( size_t c=0; c<theBufSize ; c++)
     {// this is an intermediate state, devoted to logging ExpEi_LogXRo
