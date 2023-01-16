@@ -1733,7 +1733,7 @@ double Primes::Pi_of_J( double Xsoglia)
 //    double periodicTerm_addendoDue_i_;
 //    double logConstantTerm_addendoTre_i_;
 //    double lastRealIntegralTerm_addendoQuattro_i_;
-    std::ofstream mainFormulaPanel_Writer( "./mainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
+    std::ofstream mainFormulaPanel_Writer( "./DUMPmainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
     mainFormulaPanel_Writer<<" #c\t mainFormulaPanel : a main formula for each useful root of threshold (i.e. root>=+2) \n"<<std::endl;
     for( c=0; c<firstRootUnderThreshold-1; c++)// exclude firstRootUnderThreshold
     {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
@@ -1834,14 +1834,15 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
     std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimBoth(*Xsoglia_i_root_str));
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
-    size_t theBufSize = 100;// numero di zeri-Zeta utilizzati.
-    double thePositiveImPartOf100Zero[theBufSize];
+    size_t singleLineSize = 80;// line length limit, in the dump of Zeta-zeros.
+    size_t cardUsedZeros = 5;//100;// numero di zeri-Zeta utilizzati.
+    double thePositiveImPartOf100Zero[cardUsedZeros];
     std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
-    for( size_t c=0; c<theBufSize ; c++)
+    for( size_t c=0; c<cardUsedZeros ; c++)
     {
         char theDelimiter = '\n';
-        char *thePointer = new char[theBufSize+1];// plus the terminator
-        Zero_Reader.getline( thePointer, theBufSize, theDelimiter);
+        char *thePointer = new char[singleLineSize+1];// plus the terminator
+        Zero_Reader.getline( thePointer, singleLineSize, theDelimiter);
         thePositiveImPartOf100Zero[c] = Common::StrManipul::stringToDouble(std::string(thePointer));
         delete[] thePointer;
         thePointer = nullptr;// no dangling.
@@ -1853,14 +1854,14 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
         Numerics::Complex positiveRoot;
         Numerics::Complex conjugateRoot;
     };
-    LogXsogliaToRo *logXsogliaToRo = new LogXsogliaToRo[theBufSize];
+    LogXsogliaToRo *logXsogliaToRo = new LogXsogliaToRo[cardUsedZeros];
     std::string logFileName( std::string("./LogXsogliaToRo_")
         +desinenzaFilename
         +".txt" );
     std::ofstream LogXsogliaToRo_Writer( logFileName, std::fstream::out );// no append->rewrite.
     LogXsogliaToRo_Writer<<" #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot \tRe+Im\t \n"<<std::endl;
     LogXsogliaToRo_Writer<<"i_root_index== "<<i_root_index<<" Xsoglia_i_root== "<<Xsoglia_i_root<<"\n\n";
-    for( size_t c=0; c<theBufSize ; c++)
+    for( size_t c=0; c<cardUsedZeros ; c++)
     {// this is an intermediate state, devoted to logging LogXsogliaToRo
         LogXsogliaToRo_Writer << c+1 <<"\t";//------common part of the loop
         Numerics::Complex Xsoglia_C(Xsoglia,0.0);
@@ -1884,16 +1885,16 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
         Numerics::Complex positiveRoot;
         Numerics::Complex conjugateRoot;
     };
-    ExpEi_LogXRo *expEi_LogXRo = new ExpEi_LogXRo[theBufSize];
+    ExpEi_LogXRo *expEi_LogXRo = new ExpEi_LogXRo[cardUsedZeros];
     std::string expeiFileName( std::string("./ExpEi_LogXRo_")
         +desinenzaFilename
         +".txt" );
     std::ofstream ExpEi_LogXRo_Writer( expeiFileName, std::fstream::out );// no append->rewrite.
     ExpEi_LogXRo_Writer<<" #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot \tRe+Im\t \n"<<std::endl;
     ExpEi_LogXRo_Writer<<"i_root_index== "<<i_root_index<<" Xsoglia_i_root== "<<Xsoglia_i_root<<"\n\n";
-    unsigned partitionCardinality = 8000;// #steps in trapezia
+    unsigned partitionCardinality = 18000;// #steps in trapezia
     Numerics::Complex periodicTerm(0.0, 0.0);
-    for( size_t c=0; c<theBufSize ; c++)
+    for( size_t c=0; c<cardUsedZeros ; c++)
     {// this is an intermediate state, devoted to logging ExpEi_LogXRo
         ExpEi_LogXRo_Writer << c+1 <<"\t";//------common part of the loop
         //-----
