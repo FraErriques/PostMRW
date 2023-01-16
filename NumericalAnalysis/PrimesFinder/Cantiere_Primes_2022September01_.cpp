@@ -13,10 +13,10 @@
 
 
 /*  TODO
-*   there must be a specification file for the Mesh of real-LogIntegral
+*(1) There must be a specification file for the Mesh of real-LogIntegral
 *   such specification file has to be read only on demand; the construction of an instance doesn't have to parse the mesh specification
 *   ordinary Ctor has to read a second-phase dump, which is a file containing the Distribution measures, at pillar points
-*   for an ordinary Ctor, the mesh is specified in the glonalIntegrals_dump, and has to be copied in RAM in a std::vector<Pillar>
+*   for an ordinary Ctor, the mesh is specified in the globalIntegral_.ini , and has to be copied in RAM in a std::vector<Pillar>
 *   the dump-files involved in the process have to be specified in the Config; they will be:
 *   meshSpecification.txt
 *   localIntegrals.txt
@@ -29,12 +29,22 @@
 *   call distributionProducer; finds in Config localIntegrals.txt. Sums the local results and writes globalIntegrals.txt.
 *   at this point the new mesh is ready and the bool acquireExistingMesh() can be called, to put the mesh in RAM, in the vector.
 *
+*(2) There must be a unique function for calls to RealLogIntegral and it has to manage boundaries and proximity integrals. The callers (by now) are:
+*   -   Random_calc_Interface
+*   -   FirstAddend(i.e. termine primario)
+*   -   IntegerFactorization
+*   -   more can come, in successive developments
+*
+*(3) Implement the Moebius-Inversion on firstAddend only (i.e. Prime Number Theorem)
+*
+*(4) Let the cardinality of used zeros a parameter in PeriodicTerms. Test numerical stability.
+*
 *   old things:
 *   when the discriminatingElement is negative Bisection:: fails. This lets unreachable the first few elements.  -----(V)
 *   transformed the char* into sdt::string * with const clause.-------------------------------------------------------(V)
 *   let the StreamReader an automatic variable and let the seekg internal to the reading-methods.---------------------(V)
 *   why complete renewal of sequentialDump only for dump<100k  ?------------------------------------------------------(V)
-*   enrich StringBuilder and Log for better tracing, overloading variable types-------------------------TODO
+*   enrich StringBuilder and Log for better tracing, overloading variable types--------------(V)------------TODO
 *   let the StreamWriter an automatic variable -----------------------------------------------------------------------(V)
 */
 
@@ -108,6 +118,7 @@ Primes::Primes( unsigned semiAmplitudeOfEachMapSegment )
 //    this->append_Random_Stream = nullptr;
     Process::LogWrappers::SectionClose();
 }// empty Ctor(semiAmplitudeOfEachMapSegment)
+
 
 
 
@@ -1722,7 +1733,7 @@ double Primes::Pi_of_J( double Xsoglia)
 //    double periodicTerm_addendoDue_i_;
 //    double logConstantTerm_addendoTre_i_;
 //    double lastRealIntegralTerm_addendoQuattro_i_;
-    std::ofstream mainFormulaPanel_Writer( "./mainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
+    std::ofstream mainFormulaPanel_Writer( "./DUMPmainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
     mainFormulaPanel_Writer<<" #c\t mainFormulaPanel : a main formula for each useful root of threshold (i.e. root>=+2) \n"<<std::endl;
     for( c=0; c<firstRootUnderThreshold-1; c++)// exclude firstRootUnderThreshold
     {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
@@ -1823,14 +1834,15 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
     std::string desinenzaFilename(*indiceRadice_str+std::string("_")+ Common::StrManipul::trimBoth(*Xsoglia_i_root_str));
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
-    size_t theBufSize = 100;// numero di zeri-Zeta utilizzati.
-    double thePositiveImPartOf100Zero[theBufSize];
+    size_t singleLineSize = 80;// line length limit, in the dump of Zeta-zeros.
+    size_t cardUsedZeros = 5;//100;// numero di zeri-Zeta utilizzati.
+    double thePositiveImPartOf100Zero[cardUsedZeros];
     std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
-    for( size_t c=0; c<theBufSize ; c++)
+    for( size_t c=0; c<cardUsedZeros ; c++)
     {
         char theDelimiter = '\n';
-        char *thePointer = new char[theBufSize+1];// plus the terminator
-        Zero_Reader.getline( thePointer, theBufSize, theDelimiter);
+        char *thePointer = new char[singleLineSize+1];// plus the terminator
+        Zero_Reader.getline( thePointer, singleLineSize, theDelimiter);
         thePositiveImPartOf100Zero[c] = Common::StrManipul::stringToDouble(std::string(thePointer));
         delete[] thePointer;
         thePointer = nullptr;// no dangling.
@@ -1842,14 +1854,14 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
         Numerics::Complex positiveRoot;
         Numerics::Complex conjugateRoot;
     };
-    LogXsogliaToRo *logXsogliaToRo = new LogXsogliaToRo[theBufSize];
+    LogXsogliaToRo *logXsogliaToRo = new LogXsogliaToRo[cardUsedZeros];
     std::string logFileName( std::string("./LogXsogliaToRo_")
         +desinenzaFilename
         +".txt" );
     std::ofstream LogXsogliaToRo_Writer( logFileName, std::fstream::out );// no append->rewrite.
     LogXsogliaToRo_Writer<<" #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot \tRe+Im\t \n"<<std::endl;
     LogXsogliaToRo_Writer<<"i_root_index== "<<i_root_index<<" Xsoglia_i_root== "<<Xsoglia_i_root<<"\n\n";
-    for( size_t c=0; c<theBufSize ; c++)
+    for( size_t c=0; c<cardUsedZeros ; c++)
     {// this is an intermediate state, devoted to logging LogXsogliaToRo
         LogXsogliaToRo_Writer << c+1 <<"\t";//------common part of the loop
         Numerics::Complex Xsoglia_C(Xsoglia,0.0);
@@ -1873,16 +1885,16 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
         Numerics::Complex positiveRoot;
         Numerics::Complex conjugateRoot;
     };
-    ExpEi_LogXRo *expEi_LogXRo = new ExpEi_LogXRo[theBufSize];
+    ExpEi_LogXRo *expEi_LogXRo = new ExpEi_LogXRo[cardUsedZeros];
     std::string expeiFileName( std::string("./ExpEi_LogXRo_")
         +desinenzaFilename
         +".txt" );
     std::ofstream ExpEi_LogXRo_Writer( expeiFileName, std::fstream::out );// no append->rewrite.
     ExpEi_LogXRo_Writer<<" #c\tExpEi_LogXRo_positiveRoot\tExpEi_LogXRo_conjugateRoot \tRe+Im\t \n"<<std::endl;
     ExpEi_LogXRo_Writer<<"i_root_index== "<<i_root_index<<" Xsoglia_i_root== "<<Xsoglia_i_root<<"\n\n";
-    unsigned partitionCardinality = 8000;// #steps in trapezia
+    unsigned partitionCardinality = 18000;// #steps in trapezia
     Numerics::Complex periodicTerm(0.0, 0.0);
-    for( size_t c=0; c<theBufSize ; c++)
+    for( size_t c=0; c<cardUsedZeros ; c++)
     {// this is an intermediate state, devoted to logging ExpEi_LogXRo
         ExpEi_LogXRo_Writer << c+1 <<"\t";//------common part of the loop
         //-----
@@ -1958,6 +1970,8 @@ double Primes::Fourth_Term( double Xsoglia)
     double sign = +1.0;
     return sign * resTermFour;
 }// Fourth_Term
+
+
 
 
 }// namespace Cantiere_Primes_2022September01_
