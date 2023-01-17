@@ -1835,7 +1835,7 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
     size_t singleLineSize = 80;// line length limit, in the dump of Zeta-zeros.
-    size_t cardUsedZeros = 5;//100;// numero di zeri-Zeta utilizzati.
+    size_t cardUsedZeros = 15;//100;// numero di zeri-Zeta utilizzati.
     double thePositiveImPartOf100Zero[cardUsedZeros];
     std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
     for( size_t c=0; c<cardUsedZeros ; c++)
