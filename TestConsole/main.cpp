@@ -73,7 +73,7 @@ int main()
     std::string desinenzaFilename_viaStringBuilder = sb.str();
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
-*/
+
     Numerics::Complex z(+0.5, +14.123);
     Numerics::Complex pow_z = Numerics::Complex(+20.0,0.0)^z;
     double z_arg = z.arg();
@@ -85,11 +85,13 @@ int main()
     double zw_arg = zw.arg();
     Numerics::Complex zw_log = zw.LnC();
     Numerics::Complex *zw_Ei = Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann( zw_log, 999);
-    //
-
-    primes_Cantiere.Pi_of_J( 20);
     delete z_Ei;
     delete zw_Ei;
+    //
+    */
+
+    primes_Cantiere.Pi_of_J( 100);
+
 
 
 //    //------NB.------TEST Primes Cantiere & Production ------------------------------
