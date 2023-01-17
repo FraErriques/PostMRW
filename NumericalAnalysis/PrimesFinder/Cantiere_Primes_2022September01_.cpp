@@ -1693,7 +1693,7 @@ struct PanelMainFormula
     int i_root_index;
     int MoebiusMu;
     double correttivoMoebius;
-    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
+    double Xsoglia_i_root;// i.e. root of index i ,i.e. Xsoglia^(1/i)
     double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
     double mainTerm_addendoUno_i_;
     double periodicTerm_addendoDue_i_;
@@ -1717,6 +1717,16 @@ double Primes::Pi_of_J( double Xsoglia)
         {
             break;
         }// else continue;
+        // init
+        // ready int i_root_index;
+        mainFormulaPanel[c].MoebiusMu = 0;
+        mainFormulaPanel[c].correttivoMoebius = 0.0;
+        // ready mainFormulaPanel[c].Xsoglia_i_root    i.e. root of index i ,i.e. Xsoglia^(1/i)
+        mainFormulaPanel[c].J_Xsoglia_i_root = 0.0;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
+        mainFormulaPanel[c].mainTerm_addendoUno_i_ = 0.0;
+        mainFormulaPanel[c].periodicTerm_addendoDue_i_ = 0.0;
+        mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = 0.0;
+        mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = 0.0;
     }// for
     std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold;
     for(c=0 ; c<firstRootUnderThreshold; c++)
@@ -1742,23 +1752,23 @@ double Primes::Pi_of_J( double Xsoglia)
         {
             continue;// skip null-weighted entries.
         }// else calculate as follows:
-        // already written: mainFormulaPanel[c].Xsoglia_i_root =
-        // mainFormulaPanel.J_Xsoglia_i_root by now we don't need this term: -> separate calculations for each of the 4 adding.
+        // term already written: mainFormulaPanel[c].Xsoglia_i_root
         mainFormulaPanel[c].correttivoMoebius = (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1);
-        mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root) *mainFormulaPanel[c].correttivoMoebius;
+        mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root);
         mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms(
-            mainFormulaPanel[c].Xsoglia_i_root
-            ,mainFormulaPanel[c].i_root_index
+            mainFormulaPanel[c].i_root_index
             ,mainFormulaPanel[c].Xsoglia_i_root
-         )*mainFormulaPanel[c].correttivoMoebius;
-        mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = Third_Term()*mainFormulaPanel[c].correttivoMoebius;
-        mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = Fourth_Term( mainFormulaPanel[c].Xsoglia_i_root)*mainFormulaPanel[c].correttivoMoebius;
-        //
-        res += ( // NB. correttivoMoebius already applied : (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1)
+         );
+        mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = Third_Term();
+        mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = Fourth_Term( mainFormulaPanel[c].Xsoglia_i_root);
+        // follows the composition of J==J(Zeta)
+        mainFormulaPanel[c].J_Xsoglia_i_root = ( // NB. correttivoMoebius gets applied here:
             mainFormulaPanel[c].mainTerm_addendoUno_i_
             + mainFormulaPanel[c].periodicTerm_addendoDue_i_
             + mainFormulaPanel[c].logConstantTerm_addendoTre_i_
-            + mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ );
+            + mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ ) *mainFormulaPanel[c].correttivoMoebius;//<--Moebius factor
+        //
+        res += mainFormulaPanel[c].J_Xsoglia_i_root;
         //
         // data dump
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].i_root_index = "<< mainFormulaPanel[c].i_root_index << std::endl;
@@ -1769,8 +1779,29 @@ double Primes::Pi_of_J( double Xsoglia)
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].periodicTerm_addendoDue_i_ = "<< mainFormulaPanel[c].periodicTerm_addendoDue_i_ << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].logConstantTerm_addendoTre_i_ = "<< mainFormulaPanel[c].logConstantTerm_addendoTre_i_ << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].lastRealIntegralTerm_addendoQuattro_i_ = "<< mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].J_Xsoglia_i_root = "<< mainFormulaPanel[c].J_Xsoglia_i_root << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormula res to root["<<c<<"] = "<<res<<"\n##########------end record----#########\n"<< std::endl;
     }// for loop on root(soglia)
+    // write sections per-addendum
+    double totAddend_one = 0.0;
+    double totAddend_two = 0.0;
+    double totAddend_three = 0.0;
+    double totAddend_four = 0.0;
+    for( c=0; c<firstRootUnderThreshold-1; c++)// exclude firstRootUnderThreshold
+    {
+        totAddend_one += mainFormulaPanel[c].mainTerm_addendoUno_i_ *mainFormulaPanel[c].correttivoMoebius;
+        totAddend_two += mainFormulaPanel[c].periodicTerm_addendoDue_i_ *mainFormulaPanel[c].correttivoMoebius;
+        totAddend_three += mainFormulaPanel[c].logConstantTerm_addendoTre_i_ *mainFormulaPanel[c].correttivoMoebius;
+        totAddend_four += mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ *mainFormulaPanel[c].correttivoMoebius;
+        //
+        mainFormulaPanel_Writer<<"\n\t ##########------start record "<<c+1<<" SECTION per addendum ----#########"<< std::endl;
+        mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoUno LogIntegral Real == "<< totAddend_one << std::endl;
+        mainFormulaPanel_Writer<<"\t TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == "<< totAddend_two << std::endl;
+        mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoTre = "<< totAddend_three << std::endl;
+        mainFormulaPanel_Writer<<"\t TOT lastRealIntegralTerm_addendoQuattro = "<< totAddend_four << std::endl;
+        mainFormulaPanel_Writer<<"\t ##########------end record "<<c+1<<" SECTION per addendum ----#########\n"<< std::endl;
+    }
+
     // close data-dump:
     mainFormulaPanel_Writer.flush();
     mainFormulaPanel_Writer.close();
@@ -1785,7 +1816,7 @@ double Primes::Pi_of_J( double Xsoglia)
 double Primes::J_of_Z( double Xsoglia, int i_root_index, double Xsoglia_i_root)
 {//NB. the  sign of  each term comes from its elaboration.
     return PrincipalTerm(Xsoglia) +
-        Periodic_Terms(Xsoglia,i_root_index,Xsoglia_i_root) + Third_Term() + Fourth_Term(Xsoglia);
+        Periodic_Terms(i_root_index,Xsoglia_i_root) + Third_Term() + Fourth_Term(Xsoglia);
 }// J_of_Z
 
 
@@ -1825,7 +1856,7 @@ double Primes::PrincipalTerm( double Xsoglia)
     return sign * addendoUno;
 }
 
-double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_i_root )
+double Primes::Periodic_Terms( int i_root_index, double Xsoglia_i_root)
 {
     double sign = -1.0;// sign of second_addend (i.e. periodic terms)
     //
@@ -1835,7 +1866,7 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
     delete indiceRadice_str;
     delete Xsoglia_i_root_str;
     size_t singleLineSize = 80;// line length limit, in the dump of Zeta-zeros.
-    size_t cardUsedZeros = 5;//100;// numero di zeri-Zeta utilizzati.
+    size_t cardUsedZeros = 100;// numero di zeri-Zeta utilizzati.
     double thePositiveImPartOf100Zero[cardUsedZeros];
     std::ifstream Zero_Reader( "./100ZetaZero_.txt", std::fstream::in );
     for( size_t c=0; c<cardUsedZeros ; c++)
@@ -1864,7 +1895,7 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
     for( size_t c=0; c<cardUsedZeros ; c++)
     {// this is an intermediate state, devoted to logging LogXsogliaToRo
         LogXsogliaToRo_Writer << c+1 <<"\t";//------common part of the loop
-        Numerics::Complex Xsoglia_C(Xsoglia,0.0);
+        Numerics::Complex Xsoglia_C(Xsoglia_i_root,0.0);
         //-----
         Numerics::Complex positiveRoot_C(+0.5,thePositiveImPartOf100Zero[c]);// automatic variables get renewed at each step.
         (*(logXsogliaToRo+c)).positiveRoot = (Xsoglia_C^positiveRoot_C).LnC();
@@ -1873,8 +1904,9 @@ double Primes::Periodic_Terms( double Xsoglia, int i_root_index, double Xsoglia_
         Numerics::Complex conjugateRoot_C(+0.5, -1.0*thePositiveImPartOf100Zero[c]);
         (*(logXsogliaToRo+c)).conjugateRoot = (Xsoglia_C^conjugateRoot_C).LnC();
         LogXsogliaToRo_Writer<< (*(logXsogliaToRo+c)).conjugateRoot.ToString()<<"\t";// still have to print Re+Im
-        // print Re + Im
-        LogXsogliaToRo_Writer<< ((*(logXsogliaToRo+c)).positiveRoot+(*(logXsogliaToRo+c)).conjugateRoot).ToString()<<std::endl;// flush at EndOfLine
+        // don't print Re + Im since points on the screens are distintc; the coupling is interesting only when summing the conditional series Li[x^ro]
+        LogXsogliaToRo_Writer<<std::endl;// flush at EndOfLine
+        // LogXsogliaToRo_Writer<< ((*(logXsogliaToRo+c)).positiveRoot+(*(logXsogliaToRo+c)).conjugateRoot).ToString()<<std::endl;// flush at EndOfLine
     }// for
     LogXsogliaToRo_Writer<<"\nEND #c\tLogXsogliaToRo_positiveRoot\tLogXsogliaToRo_conjugateRoot \tRe+Im\t \n"<<std::endl;// flush at EndOfLine
     LogXsogliaToRo_Writer.flush();
