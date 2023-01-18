@@ -90,7 +90,7 @@ int main()
     //
     */
 
-    primes_Cantiere.Pi_of_J( 100);
+    primes_Cantiere.Pi_of_J( 20);
 
 
 

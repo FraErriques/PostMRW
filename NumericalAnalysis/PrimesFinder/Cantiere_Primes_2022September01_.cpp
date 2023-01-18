@@ -1717,6 +1717,16 @@ double Primes::Pi_of_J( double Xsoglia)
         {
             break;
         }// else continue;
+        // init
+        // ready int i_root_index;
+        mainFormulaPanel[c].MoebiusMu = 0;
+        mainFormulaPanel[c].correttivoMoebius = 0.0;
+        // ready mainFormulaPanel[c].Xsoglia_i_root    i.e. root of index i ,i.e. Xsoglia^(1/i)
+        mainFormulaPanel[c].J_Xsoglia_i_root = 0.0;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
+        mainFormulaPanel[c].mainTerm_addendoUno_i_ = 0.0;
+        mainFormulaPanel[c].periodicTerm_addendoDue_i_ = 0.0;
+        mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = 0.0;
+        mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = 0.0;
     }// for
     std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold;
     for(c=0 ; c<firstRootUnderThreshold; c++)
@@ -1735,8 +1745,12 @@ double Primes::Pi_of_J( double Xsoglia)
 //    double lastRealIntegralTerm_addendoQuattro_i_;
     std::ofstream mainFormulaPanel_Writer( "./DUMPmainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
     mainFormulaPanel_Writer<<" #c\t mainFormulaPanel : a main formula for each useful root of threshold (i.e. root>=+2) \n"<<std::endl;
-    for( c=0; c<firstRootUnderThreshold-1; c++)// exclude firstRootUnderThreshold
+    for( c=0; c<firstRootUnderThreshold; c++)// exclude firstRootUnderThreshold
     {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
+        if( mainFormulaPanel[c].Xsoglia_i_root < +2.0 )
+        {
+            break;
+        }
         mainFormulaPanel[c].MoebiusMu = MoebiusMu(c+1);
         if(0==mainFormulaPanel[c].MoebiusMu)
         {
@@ -1746,7 +1760,6 @@ double Primes::Pi_of_J( double Xsoglia)
         mainFormulaPanel[c].correttivoMoebius = (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1);
         mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root);
         mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms(
-            // mainFormulaPanel[c].Xsoglia_i_root
             mainFormulaPanel[c].i_root_index
             ,mainFormulaPanel[c].Xsoglia_i_root
          );
@@ -1778,19 +1791,25 @@ double Primes::Pi_of_J( double Xsoglia)
     double totAddend_two = 0.0;
     double totAddend_three = 0.0;
     double totAddend_four = 0.0;
-    for( c=0; c<firstRootUnderThreshold-1; c++)// exclude firstRootUnderThreshold
+    for( c=0; c<firstRootUnderThreshold; c++)// exclude firstRootUnderThreshold
     {
+//        if( mainFormulaPanel[c].Xsoglia_i_root < +2.0 )
+//        {
+//            break;
+//        }
         totAddend_one += mainFormulaPanel[c].mainTerm_addendoUno_i_ *mainFormulaPanel[c].correttivoMoebius;
         totAddend_two += mainFormulaPanel[c].periodicTerm_addendoDue_i_ *mainFormulaPanel[c].correttivoMoebius;
         totAddend_three += mainFormulaPanel[c].logConstantTerm_addendoTre_i_ *mainFormulaPanel[c].correttivoMoebius;
         totAddend_four += mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ *mainFormulaPanel[c].correttivoMoebius;
+        //
+        mainFormulaPanel_Writer<<"\n\t ##########------start record "<<c+1<<" SECTION per addendum ----#########"<< std::endl;
+        mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoUno LogIntegral Real == "<< totAddend_one << std::endl;
+        mainFormulaPanel_Writer<<"\t TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == "<< totAddend_two << std::endl;
+        mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoTre = "<< totAddend_three << std::endl;
+        mainFormulaPanel_Writer<<"\t TOT lastRealIntegralTerm_addendoQuattro = "<< totAddend_four << std::endl;
+        mainFormulaPanel_Writer<<"\t ##########------end record "<<c+1<<" SECTION per addendum ----#########\n"<< std::endl;
     }
-    mainFormulaPanel_Writer<<"\n\t ##########------start record  SECTION per addendum ----#########\n"<< std::endl;
-    mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoUno LogIntegral Real == "<< totAddend_one << std::endl;
-    mainFormulaPanel_Writer<<"\t TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == "<< totAddend_two << std::endl;
-    mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoTre = "<< totAddend_three << std::endl;
-    mainFormulaPanel_Writer<<"\t TOT lastRealIntegralTerm_addendoQuattro = "<< totAddend_four << std::endl;
-    mainFormulaPanel_Writer<<"\n\t ##########------end record  SECTION per addendum ----#########\n"<< std::endl;
+
     // close data-dump:
     mainFormulaPanel_Writer.flush();
     mainFormulaPanel_Writer.close();
