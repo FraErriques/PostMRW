@@ -39,11 +39,11 @@ int main()
     //
     //------NB.------ Primes Cantiere
     Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
-//    for( int c=9300; c<9320; c++)
+//    for( int c=0; c<9; c++)
 //    {
 //        std::cout<<"\n\t current index = "<<c<<std::endl;
 //        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
-//        std::cout<<"\n\t MoebiusMu = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
+//        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
 //        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
 //        if( nullptr!= factorization)
 //        {

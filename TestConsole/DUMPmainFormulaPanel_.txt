@@ -37,42 +37,14 @@
 ##########------end record----#########
 
 
-	 ##########------start record 1 SECTION per addendum ----#########
-	 TOT logConstantTerm_addendoUno LogIntegral Real == 9.90532
-	 TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == -406.64
-	 TOT logConstantTerm_addendoTre = -0.693147
-	 TOT lastRealIntegralTerm_addendoQuattro = 0.00190023
-	 ##########------end record 1 SECTION per addendum ----#########
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(4)== 0 correttivo Mu==0
 
+	 calcolo Pi(J) non eseguito causa sotto soglia: radice_5_ di 20 == 1.82056
 
-	 ##########------start record 2 SECTION per addendum ----#########
-	 TOT logConstantTerm_addendoUno LogIntegral Real == 8.25787
-	 TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == -304.324
-	 TOT logConstantTerm_addendoTre = -0.346574
-	 TOT lastRealIntegralTerm_addendoQuattro = -0.174897
-	 ##########------end record 2 SECTION per addendum ----#########
-
-
-	 ##########------start record 3 SECTION per addendum ----#########
+	 ##########------start record SECTION per addendum ----#########
 	 TOT logConstantTerm_addendoUno LogIntegral Real == 7.62745
 	 TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == -255.699
 	 TOT logConstantTerm_addendoTre = -0.115525
 	 TOT lastRealIntegralTerm_addendoQuattro = -1.04392
-	 ##########------end record 3 SECTION per addendum ----#########
-
-
-	 ##########------start record 4 SECTION per addendum ----#########
-	 TOT logConstantTerm_addendoUno LogIntegral Real == 7.62745
-	 TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == -255.699
-	 TOT logConstantTerm_addendoTre = -0.115525
-	 TOT lastRealIntegralTerm_addendoQuattro = -1.04392
-	 ##########------end record 4 SECTION per addendum ----#########
-
-
-	 ##########------start record 5 SECTION per addendum ----#########
-	 TOT logConstantTerm_addendoUno LogIntegral Real == 7.62745
-	 TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == -255.699
-	 TOT logConstantTerm_addendoTre = -0.115525
-	 TOT lastRealIntegralTerm_addendoQuattro = -1.04392
-	 ##########------end record 5 SECTION per addendum ----#########
+	 ##########------end record SECTION per addendum ----#########
 

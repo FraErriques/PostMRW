@@ -1705,58 +1705,65 @@ double Primes::Pi_of_J( double Xsoglia)
 {
     double Log_base2_Xsoglia = log(Xsoglia)/log(+2);
     int firstRootUnderThreshold=ceil(Log_base2_Xsoglia);
-    std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold;
+    std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold<<"\n";
     PanelMainFormula *mainFormulaPanel = new PanelMainFormula[firstRootUnderThreshold];
     int c=0;
     for( ; c<firstRootUnderThreshold; c++)
-    {
+    {// init
         mainFormulaPanel[c].i_root_index = c+1;// root-index
-        mainFormulaPanel[c].Xsoglia_i_root = pow(Xsoglia,+1.0/(double)(c+1));//NB. root-index starts from +1 end grows.
-        std::cout<<"\n\t 2^(1/"<<c+1<<")== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
-        if(mainFormulaPanel[c].Xsoglia_i_root<+2.0)
-        {
-            break;
-        }// else continue;
-        // init
-        // ready int i_root_index;
         mainFormulaPanel[c].MoebiusMu = 0;
         mainFormulaPanel[c].correttivoMoebius = 0.0;
-        // ready mainFormulaPanel[c].Xsoglia_i_root    i.e. root of index i ,i.e. Xsoglia^(1/i)
+        mainFormulaPanel[c].Xsoglia_i_root = pow(Xsoglia,+1.0/(double)(c+1));//NB. root-index starts from +1 and grows.
+        std::cout<<"\t 2^(1/"<<c+1<<")== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;// dbg
         mainFormulaPanel[c].J_Xsoglia_i_root = 0.0;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
         mainFormulaPanel[c].mainTerm_addendoUno_i_ = 0.0;
         mainFormulaPanel[c].periodicTerm_addendoDue_i_ = 0.0;
         mainFormulaPanel[c].logConstantTerm_addendoTre_i_ = 0.0;
         mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ = 0.0;
+        // end init
     }// for
-    std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold;
+    std::cout<<"\n\t firstRootUnderThreshold = "<<firstRootUnderThreshold<<"\n" << std::endl;
     for(c=0 ; c<firstRootUnderThreshold; c++)
-    {
-        std::cout<<"\n\t radice di indice== "<< c+1 <<" radicale== "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
-    }
+    {// MatrixForm of the Panel
+        std::cout<<              mainFormulaPanel[c].i_root_index
+                          <<" "<<mainFormulaPanel[c].MoebiusMu
+                          <<" "<<mainFormulaPanel[c].correttivoMoebius
+                          <<" "<<mainFormulaPanel[c].Xsoglia_i_root
+                          <<" "<<mainFormulaPanel[c].mainTerm_addendoUno_i_
+                          <<" "<<mainFormulaPanel[c].periodicTerm_addendoDue_i_
+                          <<" "<<mainFormulaPanel[c].logConstantTerm_addendoTre_i_
+                          <<" "<<mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ << std::endl;
+    }// end MatrixForm of the Panel
     //
     double res = 0.0;
-//    int i_root_index;
-//    int MoebiusMu;
-//    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
-//    double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
-//    double mainTerm_addendoUno_i_;
-//    double periodicTerm_addendoDue_i_;
-//    double logConstantTerm_addendoTre_i_;
-//    double lastRealIntegralTerm_addendoQuattro_i_;
+    // legend:
+    //    int i_root_index;
+    //    int MoebiusMu;
+    //    double Xsoglia_i_root;// i.e. root id index i ,i.e. Xsoglia^(1/i)
+    //    double J_Xsoglia_i_root;// means the J(Xsoglia_i_root) i.e. call nr.i to J(Xsoglia^(1/i))
+    //    double mainTerm_addendoUno_i_;
+    //    double periodicTerm_addendoDue_i_;
+    //    double logConstantTerm_addendoTre_i_;
+    //    double lastRealIntegralTerm_addendoQuattro_i_;
     std::ofstream mainFormulaPanel_Writer( "./DUMPmainFormulaPanel_.txt", std::fstream::out );// no append->rewrite.
     mainFormulaPanel_Writer<<" #c\t mainFormulaPanel : a main formula for each useful root of threshold (i.e. root>=+2) \n"<<std::endl;
     for( c=0; c<firstRootUnderThreshold; c++)// exclude firstRootUnderThreshold
     {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
         if( mainFormulaPanel[c].Xsoglia_i_root < +2.0 )
         {
+            std::cout<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
+            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
             break;
-        }
+        }// else calculate.
         mainFormulaPanel[c].MoebiusMu = MoebiusMu(c+1);
         if(0==mainFormulaPanel[c].MoebiusMu)
         {
+            std::cout<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius <<std::endl;
+            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius <<std::endl;
             continue;// skip null-weighted entries.
         }// else calculate as follows:
-        // term already written: mainFormulaPanel[c].Xsoglia_i_root
+        // term already written in init-Panel : mainFormulaPanel[c].i_root_index
+        // term already written in init-Panel : mainFormulaPanel[c].Xsoglia_i_root
         mainFormulaPanel[c].correttivoMoebius = (double)mainFormulaPanel[c].MoebiusMu/(double)(c+1);
         mainFormulaPanel[c].mainTerm_addendoUno_i_ = PrincipalTerm( mainFormulaPanel[c].Xsoglia_i_root);
         mainFormulaPanel[c].periodicTerm_addendoDue_i_ = Periodic_Terms(
@@ -1793,30 +1800,25 @@ double Primes::Pi_of_J( double Xsoglia)
     double totAddend_four = 0.0;
     for( c=0; c<firstRootUnderThreshold; c++)// exclude firstRootUnderThreshold
     {
-//        if( mainFormulaPanel[c].Xsoglia_i_root < +2.0 )
-//        {
-//            break;
-//        }
         totAddend_one += mainFormulaPanel[c].mainTerm_addendoUno_i_ *mainFormulaPanel[c].correttivoMoebius;
         totAddend_two += mainFormulaPanel[c].periodicTerm_addendoDue_i_ *mainFormulaPanel[c].correttivoMoebius;
         totAddend_three += mainFormulaPanel[c].logConstantTerm_addendoTre_i_ *mainFormulaPanel[c].correttivoMoebius;
         totAddend_four += mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ *mainFormulaPanel[c].correttivoMoebius;
-        //
-        mainFormulaPanel_Writer<<"\n\t ##########------start record "<<c+1<<" SECTION per addendum ----#########"<< std::endl;
-        mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoUno LogIntegral Real == "<< totAddend_one << std::endl;
-        mainFormulaPanel_Writer<<"\t TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == "<< totAddend_two << std::endl;
-        mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoTre = "<< totAddend_three << std::endl;
-        mainFormulaPanel_Writer<<"\t TOT lastRealIntegralTerm_addendoQuattro = "<< totAddend_four << std::endl;
-        mainFormulaPanel_Writer<<"\t ##########------end record "<<c+1<<" SECTION per addendum ----#########\n"<< std::endl;
     }
-
+    // totale sezioni per addend
+    mainFormulaPanel_Writer<<"\n\t ##########------start record SECTION per addendum ----#########"<< std::endl;
+    mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoUno LogIntegral Real == "<< totAddend_one << std::endl;
+    mainFormulaPanel_Writer<<"\t TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == "<< totAddend_two << std::endl;
+    mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoTre = "<< totAddend_three << std::endl;
+    mainFormulaPanel_Writer<<"\t TOT lastRealIntegralTerm_addendoQuattro = "<< totAddend_four << std::endl;
+    mainFormulaPanel_Writer<<"\t ##########------end record SECTION per addendum ----#########\n"<< std::endl;
     // close data-dump:
     mainFormulaPanel_Writer.flush();
     mainFormulaPanel_Writer.close();
     delete[] mainFormulaPanel;
     //ready.
-    return res;// TODO : complete the panel & dump it on filesys.
-}// PI_of_J
+    return res;
+}// Pi_of_J i.e. Pi=Pi(J(Z))
 
 
 /// Riemann's main formula : used for direct evaluation of J==J(z)
