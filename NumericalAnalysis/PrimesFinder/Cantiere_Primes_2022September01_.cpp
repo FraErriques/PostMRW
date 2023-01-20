@@ -1751,15 +1751,15 @@ double Primes::Pi_of_J( double Xsoglia)
     {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
         if( mainFormulaPanel[c].Xsoglia_i_root < +2.0 )
         {
-            std::cout<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
-            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
+            std::cout<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<"\n\n"<<std::endl;
+            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<"\n\n"<<std::endl;
             break;
         }// else calculate.
         mainFormulaPanel[c].MoebiusMu = MoebiusMu(c+1);
         if(0==mainFormulaPanel[c].MoebiusMu)
         {
-            std::cout<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius <<std::endl;
-            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius <<std::endl;
+            std::cout<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius<<"--------------------------\n\n"<<std::endl;
+            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius<<"--------------------------\n\n"<<std::endl;
             continue;// skip null-weighted entries.
         }// else calculate as follows:
         // term already written in init-Panel : mainFormulaPanel[c].i_root_index
@@ -1786,11 +1786,11 @@ double Primes::Pi_of_J( double Xsoglia)
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].MoebiusMu = "<< mainFormulaPanel[c].MoebiusMu << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].correttivoMoebius = "<< mainFormulaPanel[c].correttivoMoebius << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].Xsoglia_i_root = "<< mainFormulaPanel[c].Xsoglia_i_root << std::endl;
-        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].mainTerm_addendoUno_i_ = "<< mainFormulaPanel[c].mainTerm_addendoUno_i_ << std::endl;
-        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].periodicTerm_addendoDue_i_ = "<< mainFormulaPanel[c].periodicTerm_addendoDue_i_ << std::endl;
-        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].logConstantTerm_addendoTre_i_ = "<< mainFormulaPanel[c].logConstantTerm_addendoTre_i_ << std::endl;
-        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].lastRealIntegralTerm_addendoQuattro_i_ = "<< mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ << std::endl;
-        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].J_Xsoglia_i_root = "<< mainFormulaPanel[c].J_Xsoglia_i_root << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = "<< mainFormulaPanel[c].mainTerm_addendoUno_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = "<< mainFormulaPanel[c].periodicTerm_addendoDue_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = "<< mainFormulaPanel[c].logConstantTerm_addendoTre_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = "<< mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ << std::endl;
+        mainFormulaPanel_Writer<<"\t mainFormulaPanel["<<c<<"].J_Xsoglia_i_root WITH MOEBIUS factor = "<< mainFormulaPanel[c].J_Xsoglia_i_root << std::endl;
         mainFormulaPanel_Writer<<"\t mainFormula res to root["<<c<<"] = "<<res<<"\n##########------end record----#########\n"<< std::endl;
     }// for loop on root(soglia)
     // write sections per-addendum
@@ -1806,12 +1806,12 @@ double Primes::Pi_of_J( double Xsoglia)
         totAddend_four += mainFormulaPanel[c].lastRealIntegralTerm_addendoQuattro_i_ *mainFormulaPanel[c].correttivoMoebius;
     }
     // totale sezioni per addend
-    mainFormulaPanel_Writer<<"\n\t ##########------start record SECTION per addendum ----#########"<< std::endl;
+    mainFormulaPanel_Writer<<"\n\t ##########------start record TOTAL SUM OF SECTION per addendum WITH Moebius(n)/n----#########"<< std::endl;
     mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoUno LogIntegral Real == "<< totAddend_one << std::endl;
     mainFormulaPanel_Writer<<"\t TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == "<< totAddend_two << std::endl;
     mainFormulaPanel_Writer<<"\t TOT logConstantTerm_addendoTre = "<< totAddend_three << std::endl;
     mainFormulaPanel_Writer<<"\t TOT lastRealIntegralTerm_addendoQuattro = "<< totAddend_four << std::endl;
-    mainFormulaPanel_Writer<<"\t ##########------end record SECTION per addendum ----#########\n"<< std::endl;
+    mainFormulaPanel_Writer<<"\t ##########------end record TOTAL SUM OF SECTION  per addendum WITH Moebius(n)/n ----#########\n"<< std::endl;
     // close data-dump:
     mainFormulaPanel_Writer.flush();
     mainFormulaPanel_Writer.close();
