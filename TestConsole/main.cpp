@@ -32,6 +32,16 @@
 //-----unit test---------
 
 
+#pragma region alpha
+/* used to create a documentation area or to group some functions
+*/
+
+void exampleOfFunctionInRegion(double par)
+{
+    return;
+}
+#pragma endregion alpha
+
 //---entry point-------------------------
 int main()
 {
