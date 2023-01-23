@@ -32,6 +32,18 @@
 //-----unit test---------
 
 
+#pragma region alpha
+/* used to create a documentation area or to group some functions
+    multiline comment
+    data...
+*/
+
+void exampleOfFunctionInRegion(double par)
+{
+    return;
+}
+#pragma endregion alpha
+
 //---entry point-------------------------
 int main()
 {
@@ -90,7 +102,7 @@ int main()
     //
     */
 
-    primes_Cantiere.Pi_of_J( 20);
+    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
 
 
 

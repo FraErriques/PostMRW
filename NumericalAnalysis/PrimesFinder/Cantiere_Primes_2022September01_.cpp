@@ -1751,15 +1751,15 @@ double Primes::Pi_of_J( double Xsoglia)
     {//NB. the four addends will have to be treated with SUM[ MoebiusMu[n]/n]*J
         if( mainFormulaPanel[c].Xsoglia_i_root < +2.0 )
         {
-            std::cout<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
-            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<std::endl;
+            std::cout<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<"\n\n"<<std::endl;
+            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa sotto soglia: radice_"<<c+1<<"_ di "<<Xsoglia<<" == "<<mainFormulaPanel[c].Xsoglia_i_root<<"\n\n"<<std::endl;
             break;
         }// else calculate.
         mainFormulaPanel[c].MoebiusMu = MoebiusMu(c+1);
         if(0==mainFormulaPanel[c].MoebiusMu)
         {
-            std::cout<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius <<std::endl;
-            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius <<std::endl;
+            std::cout<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius<<"--------------------------\n\n"<<std::endl;
+            mainFormulaPanel_Writer<<"\n\t calcolo Pi(J) non eseguito causa Mu_Moebius("<<c+1<<")== "<<mainFormulaPanel[c].MoebiusMu<<" correttivo Mu=="<<mainFormulaPanel[c].correttivoMoebius<<"--------------------------\n\n"<<std::endl;
             continue;// skip null-weighted entries.
         }// else calculate as follows:
         // term already written in init-Panel : mainFormulaPanel[c].i_root_index
@@ -2006,7 +2006,7 @@ double Primes::Fourth_Term( double Xsoglia)
     RealIntegration::FunctionalForm trapezia = Fourth_Term_CoChain;
     double resTermFour = RealIntegration::trapezi(
         Xsoglia      // from
-        ,+9E+6       // until
+        ,Xsoglia+9E+6       // until
         ,+1E+5       // partition cardinality; think to a proximity integral, if needed.
         ,trapezia ); // f_ptr
     double sign = +1.0;
