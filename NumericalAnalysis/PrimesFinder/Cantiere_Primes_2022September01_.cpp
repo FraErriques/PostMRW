@@ -2006,7 +2006,7 @@ double Primes::Fourth_Term( double Xsoglia)
     RealIntegration::FunctionalForm trapezia = Fourth_Term_CoChain;
     double resTermFour = RealIntegration::trapezi(
         Xsoglia      // from
-        ,+9E+6       // until
+        ,Xsoglia+9E+6       // until
         ,+1E+5       // partition cardinality; think to a proximity integral, if needed.
         ,trapezia ); // f_ptr
     double sign = +1.0;

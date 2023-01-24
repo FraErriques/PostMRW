@@ -3,196 +3,284 @@
 	 mainFormulaPanel[0].i_root_index = 1
 	 mainFormulaPanel[0].MoebiusMu = 1
 	 mainFormulaPanel[0].correttivoMoebius = 1
-	 mainFormulaPanel[0].Xsoglia_i_root = 1.5e+06
-	 mainFormulaPanel[0].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 114263
-	 mainFormulaPanel[0].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -5608.03
+	 mainFormulaPanel[0].Xsoglia_i_root = 1.1e+09
+	 mainFormulaPanel[0].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 5.56639e+07
+	 mainFormulaPanel[0].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -45811.4
 	 mainFormulaPanel[0].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[0].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 1.47379e-14
-	 mainFormulaPanel[0].J_Xsoglia_i_root WITH MOEBIUS factor = 108654
-	 mainFormula res to root[0] = 108654
+	 mainFormulaPanel[0].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 3.20792e-22
+	 mainFormulaPanel[0].J_Xsoglia_i_root WITH MOEBIUS factor = 5.56181e+07
+	 mainFormula res to root[0] = 5.56181e+07
 ##########------end record----#########
 
 	 mainFormulaPanel[1].i_root_index = 2
 	 mainFormulaPanel[1].MoebiusMu = -1
 	 mainFormulaPanel[1].correttivoMoebius = -0.5
-	 mainFormulaPanel[1].Xsoglia_i_root = 1224.74
-	 mainFormulaPanel[1].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 209.778
-	 mainFormulaPanel[1].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -1020.87
+	 mainFormulaPanel[1].Xsoglia_i_root = 33166.2
+	 mainFormulaPanel[1].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 3597.84
+	 mainFormulaPanel[1].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -2778.19
 	 mainFormulaPanel[1].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[1].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 4.41013e-08
-	 mainFormulaPanel[1].J_Xsoglia_i_root WITH MOEBIUS factor = 405.892
-	 mainFormula res to root[1] = 109060
+	 mainFormulaPanel[1].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 4.17466e-11
+	 mainFormulaPanel[1].J_Xsoglia_i_root WITH MOEBIUS factor = -409.478
+	 mainFormula res to root[1] = 5.56177e+07
 ##########------end record----#########
 
 	 mainFormulaPanel[2].i_root_index = 3
 	 mainFormulaPanel[2].MoebiusMu = -1
 	 mainFormulaPanel[2].correttivoMoebius = -0.333333
-	 mainFormulaPanel[2].Xsoglia_i_root = 114.471
-	 mainFormulaPanel[2].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 33.2234
-	 mainFormulaPanel[2].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -718.159
+	 mainFormulaPanel[2].Xsoglia_i_root = 1032.28
+	 mainFormulaPanel[2].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 182.357
+	 mainFormulaPanel[2].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -1116.81
 	 mainFormulaPanel[2].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[2].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 9.60415e-06
-	 mainFormulaPanel[2].J_Xsoglia_i_root WITH MOEBIUS factor = 228.543
-	 mainFormula res to root[2] = 109288
+	 mainFormulaPanel[2].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 6.35951e-08
+	 mainFormulaPanel[2].J_Xsoglia_i_root WITH MOEBIUS factor = 311.715
+	 mainFormula res to root[2] = 5.5618e+07
 ##########------end record----#########
 
 
-	 calcolo Pi(J) non eseguito causa Mu_Moebius(4)== 0 correttivo Mu==0
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(4)== 0 correttivo Mu==0--------------------------
 
 
 	 mainFormulaPanel[4].i_root_index = 5
 	 mainFormulaPanel[4].MoebiusMu = -1
 	 mainFormulaPanel[4].correttivoMoebius = -0.2
-	 mainFormulaPanel[4].Xsoglia_i_root = 17.1877
-	 mainFormulaPanel[4].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 8.94261
-	 mainFormulaPanel[4].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -374.788
+	 mainFormulaPanel[4].Xsoglia_i_root = 64.31
+	 mainFormulaPanel[4].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 22.0095
+	 mainFormulaPanel[4].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -593.043
 	 mainFormulaPanel[4].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[4].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.00314582
-	 mainFormulaPanel[4].J_Xsoglia_i_root WITH MOEBIUS factor = 73.3072
-	 mainFormula res to root[4] = 109362
+	 mainFormulaPanel[4].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 4.75767e-05
+	 mainFormulaPanel[4].J_Xsoglia_i_root WITH MOEBIUS factor = 114.345
+	 mainFormula res to root[4] = 5.56181e+07
 ##########------end record----#########
 
 	 mainFormulaPanel[5].i_root_index = 6
 	 mainFormulaPanel[5].MoebiusMu = 1
 	 mainFormulaPanel[5].correttivoMoebius = 0.166667
-	 mainFormulaPanel[5].Xsoglia_i_root = 10.6991
-	 mainFormulaPanel[5].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 6.46481
-	 mainFormulaPanel[5].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -311.519
+	 mainFormulaPanel[5].Xsoglia_i_root = 32.1291
+	 mainFormulaPanel[5].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 13.6424
+	 mainFormulaPanel[5].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -457.95
 	 mainFormulaPanel[5].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[5].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.0156617
-	 mainFormulaPanel[5].J_Xsoglia_i_root WITH MOEBIUS factor = -50.9552
-	 mainFormula res to root[5] = 109311
+	 mainFormulaPanel[5].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.000404674
+	 mainFormulaPanel[5].J_Xsoglia_i_root WITH MOEBIUS factor = -74.1667
+	 mainFormula res to root[5] = 5.5618e+07
 ##########------end record----#########
 
 	 mainFormulaPanel[6].i_root_index = 7
 	 mainFormulaPanel[6].MoebiusMu = -1
 	 mainFormulaPanel[6].correttivoMoebius = -0.142857
-	 mainFormulaPanel[6].Xsoglia_i_root = 7.62603
-	 mainFormulaPanel[6].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 5.07179
-	 mainFormulaPanel[6].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -267.966
+	 mainFormulaPanel[6].Xsoglia_i_root = 19.5717
+	 mainFormulaPanel[6].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 9.76182
+	 mainFormulaPanel[6].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -395.461
 	 mainFormulaPanel[6].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[6].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.0508432
-	 mainFormulaPanel[6].J_Xsoglia_i_root WITH MOEBIUS factor = 37.6481
-	 mainFormula res to root[6] = 109348
+	 mainFormulaPanel[6].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.0020416
+	 mainFormulaPanel[6].J_Xsoglia_i_root WITH MOEBIUS factor = 55.1987
+	 mainFormula res to root[6] = 5.56181e+07
 ##########------end record----#########
 
 
-	 calcolo Pi(J) non eseguito causa Mu_Moebius(8)== 0 correttivo Mu==0
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(8)== 0 correttivo Mu==0--------------------------
 
 
 
-	 calcolo Pi(J) non eseguito causa Mu_Moebius(9)== 0 correttivo Mu==0
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(9)== 0 correttivo Mu==0--------------------------
 
 
 	 mainFormulaPanel[9].i_root_index = 10
 	 mainFormulaPanel[9].MoebiusMu = 1
 	 mainFormulaPanel[9].correttivoMoebius = 0.1
-	 mainFormulaPanel[9].Xsoglia_i_root = 4.14581
-	 mainFormulaPanel[9].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 3.07142
-	 mainFormulaPanel[9].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -195.581
+	 mainFormulaPanel[9].Xsoglia_i_root = 8.01935
+	 mainFormulaPanel[9].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 5.26302
+	 mainFormulaPanel[9].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -262.378
 	 mainFormulaPanel[9].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[9].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.471535
-	 mainFormulaPanel[9].J_Xsoglia_i_root WITH MOEBIUS factor = -19.2731
-	 mainFormula res to root[9] = 109329
+	 mainFormulaPanel[9].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.0425995
+	 mainFormulaPanel[9].J_Xsoglia_i_root WITH MOEBIUS factor = -25.7765
+	 mainFormula res to root[9] = 5.56181e+07
 ##########------end record----#########
 
 	 mainFormulaPanel[10].i_root_index = 11
 	 mainFormulaPanel[10].MoebiusMu = -1
 	 mainFormulaPanel[10].correttivoMoebius = -0.0909091
-	 mainFormulaPanel[10].Xsoglia_i_root = 3.64303
-	 mainFormulaPanel[10].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 2.70113
-	 mainFormulaPanel[10].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -177.767
+	 mainFormulaPanel[10].Xsoglia_i_root = 6.63659
+	 mainFormulaPanel[10].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 4.56771
+	 mainFormulaPanel[10].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -252.794
 	 mainFormulaPanel[10].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[10].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.778619
-	 mainFormulaPanel[10].J_Xsoglia_i_root WITH MOEBIUS factor = 15.9073
-	 mainFormula res to root[10] = 109345
+	 mainFormulaPanel[10].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.0832587
+	 mainFormulaPanel[10].J_Xsoglia_i_root WITH MOEBIUS factor = 22.6215
+	 mainFormula res to root[10] = 5.56181e+07
 ##########------end record----#########
 
 
-	 calcolo Pi(J) non eseguito causa Mu_Moebius(12)== 0 correttivo Mu==0
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(12)== 0 correttivo Mu==0--------------------------
 
 
 	 mainFormulaPanel[12].i_root_index = 13
 	 mainFormulaPanel[12].MoebiusMu = -1
 	 mainFormulaPanel[12].correttivoMoebius = -0.0769231
-	 mainFormulaPanel[12].Xsoglia_i_root = 2.98596
-	 mainFormulaPanel[12].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 2.15078
-	 mainFormulaPanel[12].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -151.496
+	 mainFormulaPanel[12].Xsoglia_i_root = 4.96011
+	 mainFormulaPanel[12].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 3.60974
+	 mainFormulaPanel[12].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -201.854
 	 mainFormulaPanel[12].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[12].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 1.74039
-	 mainFormulaPanel[12].J_Xsoglia_i_root WITH MOEBIUS factor = 11.4075
-	 mainFormula res to root[12] = 109356
+	 mainFormulaPanel[12].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.240049
+	 mainFormulaPanel[12].J_Xsoglia_i_root WITH MOEBIUS factor = 15.2844
+	 mainFormula res to root[12] = 5.56181e+07
 ##########------end record----#########
 
 	 mainFormulaPanel[13].i_root_index = 14
 	 mainFormulaPanel[13].MoebiusMu = 1
 	 mainFormulaPanel[13].correttivoMoebius = 0.0714286
-	 mainFormulaPanel[13].Xsoglia_i_root = 2.76153
-	 mainFormulaPanel[13].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.93802
-	 mainFormulaPanel[13].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -148.3
+	 mainFormulaPanel[13].Xsoglia_i_root = 4.42399
+	 mainFormulaPanel[13].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 3.26265
+	 mainFormulaPanel[13].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -208.219
 	 mainFormulaPanel[13].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[13].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 2.4211
-	 mainFormulaPanel[13].J_Xsoglia_i_root WITH MOEBIUS factor = -10.331
-	 mainFormula res to root[13] = 109346
+	 mainFormulaPanel[13].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.368348
+	 mainFormulaPanel[13].J_Xsoglia_i_root WITH MOEBIUS factor = -14.6629
+	 mainFormula res to root[13] = 5.56181e+07
 ##########------end record----#########
 
 	 mainFormulaPanel[14].i_root_index = 15
 	 mainFormulaPanel[14].MoebiusMu = 1
 	 mainFormulaPanel[14].correttivoMoebius = 0.0666667
-	 mainFormulaPanel[14].Xsoglia_i_root = 2.58071
-	 mainFormulaPanel[14].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.75388
-	 mainFormulaPanel[14].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -139.661
+	 mainFormulaPanel[14].Xsoglia_i_root = 4.00645
+	 mainFormulaPanel[14].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 2.97223
+	 mainFormulaPanel[14].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -184.981
 	 mainFormulaPanel[14].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[14].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 3.2495
-	 mainFormulaPanel[14].J_Xsoglia_i_root WITH MOEBIUS factor = -9.02335
-	 mainFormula res to root[14] = 109337
+	 mainFormulaPanel[14].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 0.537691
+	 mainFormulaPanel[14].J_Xsoglia_i_root WITH MOEBIUS factor = -12.1443
+	 mainFormula res to root[14] = 5.56181e+07
 ##########------end record----#########
 
 
-	 calcolo Pi(J) non eseguito causa Mu_Moebius(16)== 0 correttivo Mu==0
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(16)== 0 correttivo Mu==0--------------------------
 
 
 	 mainFormulaPanel[16].i_root_index = 17
 	 mainFormulaPanel[16].MoebiusMu = -1
 	 mainFormulaPanel[16].correttivoMoebius = -0.0588235
-	 mainFormulaPanel[16].Xsoglia_i_root = 2.30834
-	 mainFormulaPanel[16].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.44858
-	 mainFormulaPanel[16].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -127.598
+	 mainFormulaPanel[16].Xsoglia_i_root = 3.40288
+	 mainFormulaPanel[16].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 2.51036
+	 mainFormulaPanel[16].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -173.163
 	 mainFormulaPanel[16].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[16].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 5.384
-	 mainFormulaPanel[16].J_Xsoglia_i_root WITH MOEBIUS factor = 7.14462
-	 mainFormula res to root[16] = 109344
+	 mainFormulaPanel[16].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 1.02072
+	 mainFormulaPanel[16].J_Xsoglia_i_root WITH MOEBIUS factor = 10.0191
+	 mainFormula res to root[16] = 5.56181e+07
 ##########------end record----#########
 
 
-	 calcolo Pi(J) non eseguito causa Mu_Moebius(18)== 0 correttivo Mu==0
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(18)== 0 correttivo Mu==0--------------------------
 
 
 	 mainFormulaPanel[18].i_root_index = 19
 	 mainFormulaPanel[18].MoebiusMu = -1
 	 mainFormulaPanel[18].correttivoMoebius = -0.0526316
-	 mainFormulaPanel[18].Xsoglia_i_root = 2.11377
-	 mainFormulaPanel[18].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.20302
-	 mainFormulaPanel[18].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -118.493
+	 mainFormulaPanel[18].Xsoglia_i_root = 2.99132
+	 mainFormulaPanel[18].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 2.15567
+	 mainFormulaPanel[18].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -151.208
 	 mainFormulaPanel[18].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
-	 mainFormulaPanel[18].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 8.20162
-	 mainFormulaPanel[18].J_Xsoglia_i_root WITH MOEBIUS factor = 5.77796
-	 mainFormula res to root[18] = 109350
+	 mainFormulaPanel[18].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 1.72744
+	 mainFormulaPanel[18].J_Xsoglia_i_root WITH MOEBIUS factor = 7.7904
+	 mainFormula res to root[18] = 5.56181e+07
 ##########------end record----#########
 
 
-	 calcolo Pi(J) non eseguito causa Mu_Moebius(20)== 0 correttivo Mu==0
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(20)== 0 correttivo Mu==0--------------------------
+
+
+	 mainFormulaPanel[20].i_root_index = 21
+	 mainFormulaPanel[20].MoebiusMu = 1
+	 mainFormulaPanel[20].correttivoMoebius = 0.047619
+	 mainFormulaPanel[20].Xsoglia_i_root = 2.6949
+	 mainFormulaPanel[20].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.87163
+	 mainFormulaPanel[20].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -148.825
+	 mainFormulaPanel[20].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
+	 mainFormulaPanel[20].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 2.68966
+	 mainFormulaPanel[20].J_Xsoglia_i_root WITH MOEBIUS factor = -6.90271
+	 mainFormula res to root[20] = 5.56181e+07
+##########------end record----#########
+
+	 mainFormulaPanel[21].i_root_index = 22
+	 mainFormulaPanel[21].MoebiusMu = 1
+	 mainFormulaPanel[21].correttivoMoebius = 0.0454545
+	 mainFormulaPanel[21].Xsoglia_i_root = 2.57616
+	 mainFormulaPanel[21].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.74907
+	 mainFormulaPanel[21].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -141.521
+	 mainFormulaPanel[21].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
+	 mainFormulaPanel[21].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 3.27491
+	 mainFormulaPanel[21].J_Xsoglia_i_root WITH MOEBIUS factor = -6.23593
+	 mainFormula res to root[21] = 5.56181e+07
+##########------end record----#########
+
+	 mainFormulaPanel[22].i_root_index = 23
+	 mainFormulaPanel[22].MoebiusMu = -1
+	 mainFormulaPanel[22].correttivoMoebius = -0.0434783
+	 mainFormulaPanel[22].Xsoglia_i_root = 2.47232
+	 mainFormulaPanel[22].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.63689
+	 mainFormulaPanel[22].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -136.438
+	 mainFormulaPanel[22].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
+	 mainFormulaPanel[22].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 3.9334
+	 mainFormulaPanel[22].J_Xsoglia_i_root WITH MOEBIUS factor = 5.72003
+	 mainFormula res to root[22] = 5.56181e+07
+##########------end record----#########
+
+
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(24)== 0 correttivo Mu==0--------------------------
 
 
 
-	 calcolo Pi(J) non eseguito causa sotto soglia: radice_21_ di 1.5e+06 == 1.96834
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(25)== 0 correttivo Mu==0--------------------------
+
+
+	 mainFormulaPanel[25].i_root_index = 26
+	 mainFormulaPanel[25].MoebiusMu = 1
+	 mainFormulaPanel[25].correttivoMoebius = 0.0384615
+	 mainFormulaPanel[25].Xsoglia_i_root = 2.22713
+	 mainFormulaPanel[25].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.34938
+	 mainFormulaPanel[25].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -134.591
+	 mainFormulaPanel[25].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
+	 mainFormulaPanel[25].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 6.37211
+	 mainFormulaPanel[25].J_Xsoglia_i_root WITH MOEBIUS factor = -4.90627
+	 mainFormula res to root[25] = 5.56181e+07
+##########------end record----#########
+
+
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(27)== 0 correttivo Mu==0--------------------------
+
+
+
+	 calcolo Pi(J) non eseguito causa Mu_Moebius(28)== 0 correttivo Mu==0--------------------------
+
+
+	 mainFormulaPanel[28].i_root_index = 29
+	 mainFormulaPanel[28].MoebiusMu = -1
+	 mainFormulaPanel[28].correttivoMoebius = -0.0344828
+	 mainFormulaPanel[28].Xsoglia_i_root = 2.05009
+	 mainFormulaPanel[28].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.11615
+	 mainFormulaPanel[28].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -111.774
+	 mainFormulaPanel[28].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
+	 mainFormulaPanel[28].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 9.54666
+	 mainFormulaPanel[28].J_Xsoglia_i_root WITH MOEBIUS factor = 3.51049
+	 mainFormula res to root[28] = 5.56181e+07
+##########------end record----#########
+
+	 mainFormulaPanel[29].i_root_index = 30
+	 mainFormulaPanel[29].MoebiusMu = -1
+	 mainFormulaPanel[29].correttivoMoebius = -0.0333333
+	 mainFormulaPanel[29].Xsoglia_i_root = 2.00161
+	 mainFormulaPanel[29].mainTerm_addendoUno_i_ WITHOUT MOEBIUS factor = 1.04748
+	 mainFormulaPanel[29].periodicTerm_addendoDue_i_WITHOUT MOEBIUS factor  = -121.977
+	 mainFormulaPanel[29].logConstantTerm_addendoTre_i_ WITHOUT MOEBIUS factor  = -0.693147
+	 mainFormulaPanel[29].lastRealIntegralTerm_addendoQuattro_i_ WITHOUT MOEBIUS factor  = 10.7758
+	 mainFormulaPanel[29].J_Xsoglia_i_root WITH MOEBIUS factor = 3.69491
+	 mainFormula res to root[29] = 5.56181e+07
+##########------end record----#########
+
+
+	 calcolo Pi(J) non eseguito causa sotto soglia: radice_31_ di 1.1e+09 == 1.9573
 
 
 
 	 ##########------start record TOTAL SUM OF SECTION per addendum WITH Moebius(n)/n----#########
-	 TOT logConstantTerm_addendoUno LogIntegral Real == 114145
-	 TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == -4794.8
-	 TOT logConstantTerm_addendoTre = 0.0351535
-	 TOT lastRealIntegralTerm_addendoQuattro = -0.521592
+	 TOT logConstantTerm_addendoUno LogIntegral Real == 5.5662e+07
+	 TOT periodicTerm_addendoDue ExpIntegralEi[Log[x^ro]] == -43952.9
+	 TOT logConstantTerm_addendoTre = 0.0211237
+	 TOT lastRealIntegralTerm_addendoQuattro = -0.448199
 	 ##########------end record TOTAL SUM OF SECTION  per addendum WITH Moebius(n)/n ----#########
 
