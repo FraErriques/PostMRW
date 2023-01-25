@@ -102,7 +102,7 @@ int main()
     //
     */
 
-    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
+    primes_Cantiere.Pi_of_J( (unsigned long long)10);
 
 
 
