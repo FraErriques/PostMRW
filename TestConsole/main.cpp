@@ -51,6 +51,7 @@ int main()
     //
     //------NB.------ Primes Cantiere
     Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
+    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000);
 //    for( int c=0; c<9; c++)
 //    {
 //        std::cout<<"\n\t current index = "<<c<<std::endl;
