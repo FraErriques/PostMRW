@@ -36,6 +36,7 @@
 /* used to create a documentation area or to group some functions
     multiline comment
     data...
+    Oss. on 2023.February.19 first build on Fedora.
 */
 
 void exampleOfFunctionInRegion(double par)
