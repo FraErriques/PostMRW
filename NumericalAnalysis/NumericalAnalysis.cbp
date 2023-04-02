@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="NumericalAnalysis" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/NumericalAnalysis" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-march=athlon64" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="../Common/bin/Debug/libCommon.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/NumericalAnalysis" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+				</Compiler>
+				<Linker>
+					<Add library="../Common/bin/Release/libCommon.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="Complex/Complex.cpp" />
+		<Unit filename="Complex/Complex.h" />
+		<Unit filename="ComplexMatrix/ComplexMatrix.cpp" />
+		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
+		<Unit filename="Integration/Complex_Integration.cpp" />
+		<Unit filename="Integration/Complex_Integration.h" />
+		<Unit filename="Integration/Integrate.cpp" />
+		<Unit filename="Integration/Integrate.h" />
+		<Unit filename="Integration/Integration.cpp" />
+		<Unit filename="Integration/Integration.h" />
+		<Unit filename="PrimesFinder/Cantiere_Primes_2022September01_.cpp" />
+		<Unit filename="PrimesFinder/Cantiere_Primes_2022September01_.h" />
+		<Unit filename="PrimesFinder/InternalAlgos.cpp" />
+		<Unit filename="PrimesFinder/InternalAlgos.h" />
+		<Unit filename="PrimesFinder/Primes.cpp" />
+		<Unit filename="PrimesFinder/Primes.h" />
+		<Unit filename="RealAnalysis/Real.cpp" />
+		<Unit filename="RealAnalysis/Real.h" />
+		<Unit filename="RealMatrix/RealMatrix.cpp" />
+		<Unit filename="RealMatrix/RealMatrix.h" />
+		<Unit filename="StringMatrix/StringMatrix.cpp" />
+		<Unit filename="StringMatrix/StringMatrix.h" />
+		<Unit filename="_doc/HOWTO.txt" />
+		<Unit filename="_doc/Integers_Z_documentation_.jpg" />
+		<Unit filename="_doc/Runge_Kutta_4_.bmp" />
+		<Unit filename="_doc/Runge–Kutta methods - Wikipedia, the free encyclopedia.mht" />
+		<Unit filename="_doc/ZetaZeroes_10^5_.txt" />
+		<Unit filename="common_data/common_data.h" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

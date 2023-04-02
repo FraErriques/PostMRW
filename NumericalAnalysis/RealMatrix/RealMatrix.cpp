@@ -334,8 +334,11 @@ RealMatrix   RealMatrix::inverse (void) const
 
    RealMatrix   trasp_cof = transpose (cof);
    double det_orig = det();   // det of original matrix
-   if (0.0==det_orig)
-      {throw Crash("a square matrix can be inverted only if NON SINGULAR");}
+   if( +1E-18>fabs(det_orig)
+      || std::isnan(det_orig)  )
+   {
+        throw Crash("a square matrix can be inverted only if NON SINGULAR");
+   }
    for (row=0; row<rows; row++)  // normalize the transposed of cofactor
       {
          for (col=0; col<rows; col++) // cols==rows !  square !
@@ -398,6 +401,15 @@ bool RealMatrix::insert (const double & what, const size_t row, const size_t col
    return true;
 }
 
+double RealMatrix::get_at (const size_t row, const size_t col) const// read at m[row][col]
+{
+   if ( row>=rows || col>=cols )
+   {
+       Crash crash("the required position is not present in the matrix.");
+       throw crash;
+   }
+   return m[row][col];
+}// get_at
 
 
 bool RealMatrix::readfile ( const char * where )

@@ -48,6 +48,7 @@ public:
    /// input-output /////////////////////////////////////////////////////////////////////////////////////////////
    void show   (size_t set_precision=4)                                             const;
    bool insert (const double & what, const size_t row, const size_t col);           // cannot be const
+   double get_at (const size_t row, const size_t col) const;// read at m[row][col]
 
 private:
    /// data ////////////////////////////////////////////////////////////////////////////////////////////////////////

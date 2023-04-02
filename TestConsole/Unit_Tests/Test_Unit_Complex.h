@@ -15,6 +15,18 @@ class Test_Unit_Complex
         static void test_Ctor_s_();
         static void test_AmpliTwist();
         static void ExpIntegralEi_test();
+        static void ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
+            Numerics::Complex z0
+            ,Numerics::Complex z1
+            ,unsigned long long n_trapezia );// #trapezia in the partition
+        static void ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann_test(
+            // no more -- Numerics::Complex z0  --fixed on minus_Infinity and Integral cached until log(sqrt(2)).
+            Numerics::Complex z1
+            ,unsigned long long n_trapezia );// #trapezia in the partition
+        static Numerics::Complex *ContourIntegral_AsScalar_JordanLinearAutoDetect_onExpIntegralEiCoChain_test(
+            Numerics::Complex z0
+            ,Numerics::Complex z1
+            ,unsigned long long n_trapezia );// #trapezia in the partition
 
     protected:
     private:
