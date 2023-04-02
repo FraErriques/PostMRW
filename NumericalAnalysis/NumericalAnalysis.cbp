@@ -37,6 +37,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="../Common/bin/Release/libCommon.a" />
+					<Add option="-s" />
 				</Linker>
 			</Target>
 		</Build>
