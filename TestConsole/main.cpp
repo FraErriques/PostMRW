@@ -109,11 +109,11 @@ int main()
 
 
 //    //------NB.------TEST Primes Cantiere & Production ------------------------------
-//    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
-//    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
-//    //
-//    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
-//    primes_unitTestProduction.Primes_Production_managementMethod();
+    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
+    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
+    //
+    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
+    primes_unitTestProduction.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------
