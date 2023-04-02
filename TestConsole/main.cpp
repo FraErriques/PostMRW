@@ -39,6 +39,7 @@ int main()
     Process::LogWrappers::SectionOpen("main", 0);
 
     Cantiere_Primes_2022September01_::Primes cantiere_Pr(20);
+    cantiere_Pr.SequentialCalcInterface(1000);
     Cantiere_Primes_2022September01_::Primes::SingleFactor * res =
         cantiere_Pr.IntegerDecomposition( 36);
     delete[] res;
