@@ -37,6 +37,7 @@
     multiline comment
     data...
     Oss. on 2023.February.19 first build on Fedora.
+    Oss. on 2023.April.05    aligned the branch WinPlatf to latest master::label. Done on host::Kronecker.
 */
 
 void exampleOfFunctionInRegion(double par)
