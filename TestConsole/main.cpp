@@ -32,6 +32,20 @@
 //-----unit test---------
 
 
+#pragma region alpha
+/* used to create a documentation area or to group some functions
+    multiline comment
+    data...
+    Oss. on 2023.February.19 first build on Fedora.
+    Oss. on 2023.April.05    aligned the branch WinPlatf to latest master::label. Done on host::Kronecker.
+*/
+
+void exampleOfFunctionInRegion(double par)
+{
+    return;
+}
+#pragma endregion alpha
+
 //---entry point-------------------------
 int main()
 {
@@ -39,11 +53,12 @@ int main()
     //
     //------NB.------ Primes Cantiere
     Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
-//    for( int c=9300; c<9320; c++)
+    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000);
+//    for( int c=0; c<9; c++)
 //    {
 //        std::cout<<"\n\t current index = "<<c<<std::endl;
 //        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
-//        std::cout<<"\n\t MoebiusMu = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
+//        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
 //        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
 //        if( nullptr!= factorization)
 //        {
@@ -53,7 +68,7 @@ int main()
 //        }// else skip a null factorization.
 //        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
 //    }
-
+/*
     std::string *s = new std::string("   to be trimmed, but not inside    ");
     std::string rambaldo = Common::StrManipul::trimBoth( *s);
     delete s;
@@ -85,18 +100,23 @@ int main()
     double zw_arg = zw.arg();
     Numerics::Complex zw_log = zw.LnC();
     Numerics::Complex *zw_Ei = Complex_Integration::ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann( zw_log, 999);
-    //
-    primes_Cantiere.Pi_of_J( 20);
     delete z_Ei;
     delete zw_Ei;
+    //
+    */
+
+
+    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
+
+
 
 
 //    //------NB.------TEST Primes Cantiere & Production ------------------------------
-//    Test_Unit_CantierePrimes primes_Cantiere(0);
-//    primes_Cantiere.Primes_Cantiere_managementMethod();
-//    //
-//    Test_Unit_Primes_Production_ primes_Production(80);
-//    primes_Production.Primes_Production_managementMethod();
+    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
+    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
+    //
+    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
+    primes_unitTestProduction.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------

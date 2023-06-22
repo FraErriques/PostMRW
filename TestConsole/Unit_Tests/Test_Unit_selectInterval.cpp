@@ -1,6 +1,8 @@
 #include <vector>
 #include "Test_Unit_selectInterval.h"
 
+using namespace std;
+
 Test_Unit_selectInterval::Test_Unit_selectInterval()
 {//ctor
 }//ctor

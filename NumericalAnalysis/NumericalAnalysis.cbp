@@ -14,9 +14,14 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-march=athlon64" />
 					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add library="../Common/bin/Debug/libCommon.a" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/NumericalAnalysis" prefix_auto="1" extension_auto="1" />
@@ -26,18 +31,20 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-O" />
 					<Add option="-Wall" />
-					<Add option="-O2" />
+					<Add option="-std=gnu++11" />
 				</Compiler>
 				<Linker>
+					<Add library="../Common/bin/Release/libCommon.a" />
 					<Add option="-s" />
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="ComplexMatrix/ComplexMatrix.cpp" />
-		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
 		<Unit filename="Complex/Complex.cpp" />
 		<Unit filename="Complex/Complex.h" />
+		<Unit filename="ComplexMatrix/ComplexMatrix.cpp" />
+		<Unit filename="ComplexMatrix/ComplexMatrix.h" />
 		<Unit filename="Integration/Complex_Integration.cpp" />
 		<Unit filename="Integration/Complex_Integration.h" />
 		<Unit filename="Integration/Integrate.cpp" />
