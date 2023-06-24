@@ -30,7 +30,7 @@ void Test_Unit_Primes_Production_::Primes_Production_managementMethod()
     {
         p_reader &= this->readBy_OperatorSquares( c);// ask Prime[n]
     }
-    std::cout<<"\n\n\n\t the final outcome _PRODUCTION_ is : "<< p_reader<<"\n\n";
+    std::cout<<"\n\n\n\t the final outcome _PRODUCTION_ is (one means test succeeded) : "<< p_reader<<"\n\n";
     std::cout<<"\n\n\n\t Strike Enter to continue\t";
     getchar();
     p_reader &= this->readSequentialDump_nextRec( 60);
