@@ -37,6 +37,7 @@
     multiline comment
     data...
     Oss. on 2023.February.19 first build on Fedora.
+    Oss. on 2023.April.05    aligned the branch WinPlatf to latest master::label. Done on host::Kronecker.
 */
 
 void exampleOfFunctionInRegion(double par)
@@ -49,10 +50,21 @@ void exampleOfFunctionInRegion(double par)
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
-    //
+
+//****** start test section******
+//    char *v = new char[55];
+//    memset(v,0,55);
+//    sprintf(v,"la nonna va al mare");
+//    v[54]=0;
+//    std::cout<< v <<std::endl;
+//    delete[] v;
+//****** end test section******/
+
     //------NB.------ Primes Cantiere
     Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
-    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000);
+    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000000);//10^6
+    primes_Cantiere.RandomCalcInterface( 999999, 1200000);//around 10^6
+
 //    for( int c=0; c<9; c++)
 //    {
 //        std::cout<<"\n\t current index = "<<c<<std::endl;
