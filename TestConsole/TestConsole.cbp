@@ -19,6 +19,7 @@
 					<Add directory="./" />
 					<Add directory="Unit_Tests" />
 					<Add directory="NumericalAnalysis/Integration" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -41,6 +42,7 @@
 					<Add directory="./" />
 					<Add directory="Unit_Tests" />
 					<Add directory="NumericalAnalysis/Integration" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -57,10 +59,10 @@
 			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Linker>
-		</Linker>
 		<Unit filename="Unit_Tests/Test_Unit_Complex.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_Complex.h" />
+		<Unit filename="Unit_Tests/Test_Unit_ExpIntegralEi.cpp" />
+		<Unit filename="Unit_Tests/Test_Unit_ExpIntegralEi.h" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.cpp" />
 		<Unit filename="Unit_Tests/Test_Unit_Logger.h" />
 		<Unit filename="Unit_Tests/Test_Unit_MonteCarlo.cpp" />
@@ -102,7 +104,6 @@
 		<Unit filename="_doc/treeData.txt" />
 		<Unit filename="_doc/writeVectorFieldR2Affine_.txt" />
 		<Unit filename="main.cpp" />
-		<Extensions>
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
