@@ -220,7 +220,7 @@ typedef Numerics::Complex (*fPtr_ComplexAsScalar_)(double,double);// the whole i
             //the JordanLinear equations are a pair, since they allow for a representation of all lines in the plane
             unsigned long long n );// #trapezia in the partition
 
-        /// the funcion pointer ti CoChain : complexAsScalar=ExpIntegralEi_CoChain;//---this fixes the CoChain. Specific method.
+        /// the function pointer to CoChain : complexAsScalar=ExpIntegralEi_CoChain;//---this fixes the CoChain. Specific method.
         Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
             // no more a parameter: Numerics::Complex z0, in ExpIntegralEi is fixed in -Infinity on Real_minus_axis.
             Numerics::Complex z1,

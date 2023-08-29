@@ -473,7 +473,7 @@ Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect(
 /// the differential is the angular coefficient. The methods that find the line layout are in RealAnalysis::linear_parametric(
 /// for vertical lines, the implementation is {x=t0,y=t}. For non-vertical ones {x=t,y=m*t+q}, t in [t1,t2]
 /// so  [t1,t2] is the pullback domain; it is identified by means of RealAnalysis::Real::parametricLinear_ante_image,here inlined.
-/// the funcion pointer ti CoChain : complexAsScalar=ExpIntegralEi_CoChain;//---this fixes the CoChain. Specific method.
+/// the function pointer to CoChain : complexAsScalar=ExpIntegralEi_CoChain;//---this fixes the CoChain. Specific method.
 Numerics::Complex * ContourIntegral_AsScalar_JordanLinearAutoDetect_ExpIntegralEiRiemann(
     // no more a parameter: Numerics::Complex z0, in ExpIntegralEi is fixed in -Infinity on Real_minus_axis.
     Numerics::Complex z1,
@@ -670,10 +670,10 @@ Numerics::Complex LogIntegral_CoChain( double x, double y)// ExpIntegralEi[Log[z
 {// the whole image, treated as an algebraic scalar.
     Numerics::Complex z( x,y);
     if( (z.Im()<+1.0E-15 && z.Re()<0.0)  // on branch-cut R_minus
-       || z.length()<+1.0E-15            // on the essential-singularity z=0
+// NOT singular there:  || z.length()<+1.0E-15            // on the essential-singularity z=0
        || (z-Numerics::Complex(+1.0,0.0)).length() <+1.0E-15 ) // on the essential-singularity z=1
     {
-        Crash crash("too near to the branch-cut R_minus or to one of the Essential-singularities {(0,0),(1,0)}");
+        Crash crash("too near to the branch-cut R_minus or to the Essential-singularity (1,0) ");
         throw crash;
     }// else continue.
     Numerics::Complex res( Numerics::Complex(+1.0,0.0) / z.LnC() );
