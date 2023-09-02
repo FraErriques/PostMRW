@@ -1839,6 +1839,7 @@ double Primes::PrincipalTerm( double Xsoglia)
     return sign * addendoUno;
 }
 
+
 double Primes::Periodic_Terms( int i_root_index, double Xsoglia_i_root)
 {
     double sign = -1.0;// sign of second_addend (i.e. periodic terms)

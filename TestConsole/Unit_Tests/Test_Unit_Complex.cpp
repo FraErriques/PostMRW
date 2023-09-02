@@ -87,6 +87,7 @@ double local_ordinate_Erf_bump( double t, double y0){return y0+sin(t);}
 double local_Dabscissa_Erf_bump( double t){return -sin(t);}
 double local_Dordinate_Erf_bump( double t){return +cos(t);}
 
+// Integrate[Exp[-z^2]dz {z,(0,0),(1,0)}]
 void Test_Unit_Complex::similErf_test()
 {
     // CoChain f(z)==Exp[-z^2] called similErf
@@ -166,7 +167,9 @@ void Test_Unit_Complex::similErf_test()
 }// similErf_test
 
 
-
+// caratteristica di questo test e' di ricevere a parametro i punti estremi della catena e non le equazioni
+// parametriche; le equazioni parametriche della catena vengono ricavate, come congiungenti lineari dei punti
+// estremi.
 void Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
 Numerics::Complex z0
 ,Numerics::Complex z1
