@@ -47,6 +47,7 @@ void exampleOfFunctionInRegion(double par)
 #pragma endregion alpha
 
 //---entry point-------------------------
+//---last performed test on WinPlatf branch was on 2023.October.27 : result==ALL PASSED.
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
