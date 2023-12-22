@@ -66,21 +66,21 @@ int main()
     bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000000);//10^6
     primes_Cantiere.RandomCalcInterface( 999999, 1200000);//around 10^6
 
-//    for( int c=0; c<9; c++)
-//    {
-//        std::cout<<"\n\t current index = "<<c<<std::endl;
-//        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
-//        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
-//        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
-//        if( nullptr!= factorization)
-//        {
-//            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
-//            delete[] factorization;
-//            factorization = nullptr;
-//        }// else skip a null factorization.
-//        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
-//    }
-/*
+    for( int c=0; c<9; c++)
+    {
+        std::cout<<"\n\t current index = "<<c<<std::endl;
+        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
+        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
+        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
+        if( nullptr!= factorization)
+        {
+            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
+            delete[] factorization;
+            factorization = nullptr;
+        }// else skip a null factorization.
+        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
+    }
+
     std::string *s = new std::string("   to be trimmed, but not inside    ");
     std::string rambaldo = Common::StrManipul::trimBoth( *s);
     delete s;
@@ -115,10 +115,10 @@ int main()
     delete z_Ei;
     delete zw_Ei;
     //
-    */
 
 
-    //primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
+
+    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
 
 
 
