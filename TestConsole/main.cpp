@@ -48,6 +48,7 @@ void exampleOfFunctionInRegion(double par)
 
 //---entry point-------------------------
 //---last performed test on WinPlatf branch was on 2023.October.27 : result==ALL PASSED.
+//---last performed test on WinPlatf branch was on 2024.January.19 : result==ALL PASSED.
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
