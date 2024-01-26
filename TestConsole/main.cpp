@@ -47,8 +47,9 @@ void exampleOfFunctionInRegion(double par)
 #pragma endregion alpha
 
 //---entry point-------------------------
-//---last performed test on WinPlatf branch was on 2023.October.27 : result==ALL PASSED.
-//---last performed test on WinPlatf branch was on 2024.January.19 : result==ALL PASSED.
+//--- test on WinPlatf branch was on 2023.October.27 : result==ALL PASSED.
+//--- test on WinPlatf branch was on 2024.January.19 : result==ALL PASSED.
+//--- test on WinPlatf branch was on 2024.January.26 : result==ALL PASSED.
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
@@ -60,6 +61,7 @@ int main()
     v[54]=0;
     std::cout<< v <<std::endl;
     delete[] v;
+    v = nullptr;
 //****** end test section******/
 
     //------NB.------ Primes Cantiere
