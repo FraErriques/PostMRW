@@ -52,7 +52,8 @@ void Test_Unit_CantierePrimes::Primes_Cantiere_managementMethod()
     {
         reader &= this->readBy_OperatorSquares( c);// ask "n" in Prime[n]
     }
-    std::cout<<"\n\n\n\t the final outcome _CANTIERE_ is (one means test succeeded) : "<< reader<<"\n\n";
+    std::cout<<"\n\n\n\t the final outcome _CANTIERE_ is (one means test succeeded) : "<< reader
+        <<"\t Strike Enter to leave\t\n\n";
     getchar();
     //bool reader;
     reader = this->readSequentialDump_nextRec( 60);
