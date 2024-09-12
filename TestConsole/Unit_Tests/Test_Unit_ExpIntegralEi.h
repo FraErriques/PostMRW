@@ -3,8 +3,8 @@
 
 
 /* Scope and purpose:
-    after Hadamard factorization, we have a Zeta(s) expressed in five addends;
-    such representation of Zeta(s) has to be used in the equation (1/s)*Log[Zeta(s)]=Integrate[J[x]*x^(-s-1),{x,0,*Infinity]
+    after Hadamard factorization, we have a Zeta, of the complex variable s=:sigma+I*t, expressed in five addends;
+    such representation of Zeta[s] has to be used in the equation (1/s)*Log[Zeta(s)]=Integrate[J[x]*x^(-s-1),{x,0,*Infinity]
     The need to have an explicit representation of J[x] leads us to do the inverse Mellin Transform, on each of the five addenda.
     After some(complex) calculations, the addends remain only four; the first two of them involve the LogIntegral.
     The first one on the positive real semi-axis.
@@ -21,6 +21,8 @@ class Test_ExpIntegralEi
         Test_ExpIntegralEi();
         /** Default destructor */
         virtual ~Test_ExpIntegralEi();
+        // interface to access the test
+        interfaceTo_ExpIntegralEi();
 
     protected:
 
