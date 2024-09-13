@@ -3,7 +3,7 @@
 
 Test_ExpIntegralEi::Test_ExpIntegralEi()
 {
-    //    Complex_Integration::Integrate_equi_trapezium_ComplexImageAsScalar() TODO
+
 }//ctor
 
 Test_ExpIntegralEi::~Test_ExpIntegralEi()
@@ -13,5 +13,5 @@ Test_ExpIntegralEi::~Test_ExpIntegralEi()
 
 Test_ExpIntegralEi::interfaceTo_ExpIntegralEi()
 {
-
+    //    Complex_Integration::Integrate_equi_trapezium_ComplexImageAsScalar() TODO
 }

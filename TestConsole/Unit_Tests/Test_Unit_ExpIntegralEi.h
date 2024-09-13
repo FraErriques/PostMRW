@@ -13,6 +13,8 @@
     The LogIntegral[x^ro] is suitable to be transformed into ExpIntegralEi[ro*Log[x]].
     Due to this reason, and to the convenience of this last form in NumericalAnalysis, this class is created,
     for the necessary tests.
+    Oss.
+    verificare l'uguaglianza fra i percorsi con LogIntegral ed ExpIntegralEi, secondo il diffeomorfismo che li lega.
 */
 class Test_ExpIntegralEi
 {
