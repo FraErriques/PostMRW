@@ -47,6 +47,7 @@ void exampleOfFunctionInRegion(double par)
 #pragma endregion alpha
 
 //--test performed on Weierstrass on 2024.may.28
+//--test performed on branch-master machine Huygens on 2026.Jan.13
 //---entry point-------------------------
 int main()
 {
