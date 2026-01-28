@@ -51,6 +51,7 @@ void exampleOfFunctionInRegion(double par)
 //--- test on WinPlatf branch was on 2024.January.19 : result==ALL PASSED.
 //--- test on WinPlatf branch was on 2024.January.26 : result==ALL PASSED.
 //--- test on WinPlatf ITBZOW1069 2026.January.13 : result==ALL PASSED.
+//--- test on WinPlatf ITBZOW1069 2026.January.28 from MSYS2::mingw : result==ALL PASSED
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
