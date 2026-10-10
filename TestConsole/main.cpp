@@ -50,7 +50,7 @@ void exampleOfFunctionInRegion(double par)
 //--test performed on branch-master machine Huygens on 2026.Jan.13
 //---entry point-------------------------
 int main()
-{
+{// test Riemann new 2026 October 10 ---------
     Process::LogWrappers::SectionOpen("main", 0);
 
 //****** start test section******
