@@ -47,7 +47,12 @@ void exampleOfFunctionInRegion(double par)
 #pragma endregion alpha
 
 //---entry point-------------------------
-//---last performed test on WinPlatf branch was on 2023.October.27 : result==ALL PASSED.
+//--- test on WinPlatf branch was on 2023.October.27 : result==ALL PASSED.
+//--- test on WinPlatf branch was on 2024.January.19 : result==ALL PASSED.
+//--- test on WinPlatf branch was on 2024.January.26 : result==ALL PASSED.
+//--- test on WinPlatf ITBZOW1069 2026.January.13 : result==ALL PASSED.
+//--- test on WinPlatf ITBZOW1069 2026.January.28 from MSYS2::mingw : result==ALL PASSED
+//--- test on WinPlatf ITBZOW1069 2026.March.18 from MSYS2::mingw g++.exe (Rev13, Built by MSYS2 project) 15.2.0
 int main()
 {
     Process::LogWrappers::SectionOpen("main", 0);
@@ -59,6 +64,7 @@ int main()
     v[54]=0;
     std::cout<< v <<std::endl;
     delete[] v;
+    v = nullptr;
 //****** end test section******/
 
     //------NB.------ Primes Cantiere
@@ -66,21 +72,21 @@ int main()
     bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000000);//10^6
     primes_Cantiere.RandomCalcInterface( 999999, 1200000);//around 10^6
 
-//    for( int c=0; c<9; c++)
-//    {
-//        std::cout<<"\n\t current index = "<<c<<std::endl;
-//        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
-//        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
-//        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
-//        if( nullptr!= factorization)
-//        {
-//            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
-//            delete[] factorization;
-//            factorization = nullptr;
-//        }// else skip a null factorization.
-//        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
-//    }
-/*
+    for( int c=0; c<9; c++)
+    {
+        std::cout<<"\n\t current index = "<<c<<std::endl;
+        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
+        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
+        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
+        if( nullptr!= factorization)
+        {
+            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
+            delete[] factorization;
+            factorization = nullptr;
+        }// else skip a null factorization.
+        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
+    }
+
     std::string *s = new std::string("   to be trimmed, but not inside    ");
     std::string rambaldo = Common::StrManipul::trimBoth( *s);
     delete s;
@@ -115,10 +121,10 @@ int main()
     delete z_Ei;
     delete zw_Ei;
     //
-    */
 
 
-    //primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
+
+    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
 
 
 
