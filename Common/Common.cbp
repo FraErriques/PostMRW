@@ -45,6 +45,7 @@
 		<Unit filename="BinaryTree/BinaryTree.h" />
 		<Unit filename="ConfigurationService/ConfigurationService.cpp" />
 		<Unit filename="ConfigurationService/ConfigurationService.h" />
+		<Unit filename="ConnectionProvider/ConnectionProviderPostgres.h" />
 		<Unit filename="Dictionary/MapOperation.cpp" />
 		<Unit filename="Dictionary/MapOperation.h" />
 		<Unit filename="Dictionary/TheNode.cpp" />
@@ -52,6 +53,7 @@
 		<Unit filename="Exception/Exception_model.h" />
 		<Unit filename="LogFs_wrap/LogFs_wrap.cpp" />
 		<Unit filename="LogFs_wrap/LogFs_wrap.h" />
+		<Unit filename="LogSinkDb/LogSinkDb.h" />
 		<Unit filename="LogSinkFs/SinkFs.cpp" />
 		<Unit filename="LogSinkFs/SinkFs.h" />
 		<Unit filename="MonteCarlo/BaseConverter.cpp" />

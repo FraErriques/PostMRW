@@ -21,6 +21,8 @@
 #include "../NumericalAnalysis/RealMatrix/RealMatrix.h"
 #include "../NumericalAnalysis/Integration/Complex_Integration.h"
 #include "../Common/Dictionary/MapOperation.h"
+#include "../Common/ConnectionProvider/ConnectionProviderPostgres.h"
+#include "../Common/LogSinkDb/LogSinkDb.h"
 //-----unit test---------
 #include "Unit_Tests/Test_Unit_Primes_Cantiere_.h"
 #include "Unit_Tests/Test_Unit_Primes_Production_.h"
@@ -53,6 +55,22 @@ int main()
 {// test Riemann new 2026 October 10 ---------
     Process::LogWrappers::SectionOpen("main", 0);
 
+    try {
+        // Connection string pointing to Cantor and utilizing the logging schema search path
+        std::string conn_str = "postgresql://app_user:application-user@Cantor:5432/postgres?search_path=logging";
+
+        // Initialize log sink (automatically creates table 'venere' if missing)
+        LogSinkDb logger("venere", "Cantor", conn_str);
+
+        // Record a trace log
+        logger.trace("INF", "1", "main", "C++ logging engine initialized successfully.");
+
+        std::cout << "Trace logged successfully from C++!\n";
+    } catch (const std::exception& e) {
+        std::cerr << "Fatal error: " << e.what() << "\n";
+        return 1;
+    }
+
 //****** start test section******
 //    char *v = new char[55];
 //    memset(v,0,55);
@@ -63,9 +81,10 @@ int main()
 //****** end test section******/
 
     //------NB.------ Primes Cantiere
-    Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
-    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000000);//10^6
-    primes_Cantiere.RandomCalcInterface( 999999, 1200000);//around 10^6
+
+//    Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
+//    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000000);//10^6
+//    primes_Cantiere.RandomCalcInterface( 999999, 1200000);//around 10^6
 
 //    for( int c=0; c<9; c++)
 //    {
@@ -117,17 +136,17 @@ int main()
     delete zw_Ei;
     //
     */
-
-    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
-
-
-
-//    //------NB.------TEST Primes Cantiere & Production ------------------------------
-    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
-    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
-    //
-    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
-    primes_unitTestProduction.Primes_Production_managementMethod();
+//
+//    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
+//
+//
+//
+////    //------NB.------TEST Primes Cantiere & Production ------------------------------
+//    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
+//    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
+//    //
+//    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
+//    primes_unitTestProduction.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------
