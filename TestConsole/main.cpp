@@ -57,13 +57,13 @@ int main()
 
     try {
         // Connection string pointing to Cantor and utilizing the logging schema search path
-        std::string conn_str = "postgresql://app_user:application-user@Cantor:5432/postgres?search_path=logging";
+        std::string conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
 
         // Initialize log sink (automatically creates table 'venere' if missing)
-        LogSinkDb logger("venere", "Cantor", conn_str);
+        LogSinkDb logger("mercurio", "Cantor", conn_str);
 
         // Record a trace log
-        logger.trace("INF", "1", "main", "C++ logging engine initialized successfully.");
+        logger.trace("C/C++", "1", "main", "C++ logging engine initialized successfully.");
 
         std::cout << "Trace logged successfully from C++!\n";
     } catch (const std::exception& e) {
