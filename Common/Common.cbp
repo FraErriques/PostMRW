@@ -53,6 +53,7 @@
 		<Unit filename="BinaryTree/BinaryTree.h" />
 		<Unit filename="ConfigurationService/ConfigurationService.cpp" />
 		<Unit filename="ConfigurationService/ConfigurationService.h" />
+		<Unit filename="ConfigurationService/Xml_reader.h" />
 		<Unit filename="Dictionary/MapOperation.cpp" />
 		<Unit filename="Dictionary/MapOperation.h" />
 		<Unit filename="Dictionary/TheNode.cpp" />
