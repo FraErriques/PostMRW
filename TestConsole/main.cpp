@@ -21,6 +21,8 @@
 #include "../NumericalAnalysis/RealMatrix/RealMatrix.h"
 #include "../NumericalAnalysis/Integration/Complex_Integration.h"
 #include "../Common/Dictionary/MapOperation.h"
+#include "../Common/ConnectionProvider/ConnectionProviderPostgres.h"
+#include "../Common/LogSinkDb/LogSinkDb.h"
 //-----unit test---------
 #include "Unit_Tests/Test_Unit_Primes_Cantiere_.h"
 #include "Unit_Tests/Test_Unit_Primes_Production_.h"
@@ -46,47 +48,59 @@ void exampleOfFunctionInRegion(double par)
 }
 #pragma endregion alpha
 
+//--test performed on Weierstrass on 2024.may.28
+//--test performed on branch-master machine Huygens on 2026.Jan.13
 //---entry point-------------------------
-//--- test on WinPlatf branch was on 2023.October.27 : result==ALL PASSED.
-//--- test on WinPlatf branch was on 2024.January.19 : result==ALL PASSED.
-//--- test on WinPlatf branch was on 2024.January.26 : result==ALL PASSED.
-//--- test on WinPlatf ITBZOW1069 2026.January.13 : result==ALL PASSED.
-//--- test on WinPlatf ITBZOW1069 2026.January.28 from MSYS2::mingw : result==ALL PASSED
-//--- test on WinPlatf ITBZOW1069 2026.March.18 from MSYS2::mingw g++.exe (Rev13, Built by MSYS2 project) 15.2.0
 int main()
-{
+{// test Riemann new 2026 October 10 ---------
     Process::LogWrappers::SectionOpen("main", 0);
 
+    try {
+        // Connection string pointing to Cantor and utilizing the logging schema search path
+        std::string conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
+
+        // Initialize log sink (automatically creates table 'venere' if missing)
+        LogSinkDb logger("mercurio", "Cantor", conn_str);
+
+        // Record a trace log
+        logger.trace("C/C++", "1", "main", "C++ logging engine initialized successfully.");
+
+        std::cout << "Trace logged successfully from C++!\n";
+    } catch (const std::exception& e) {
+        std::cerr << "Fatal error: " << e.what() << "\n";
+        return 1;
+    }
+
 //****** start test section******
-    char *v = new char[55];
-    memset(v,0,55);
-    sprintf(v,"la nonna va al mare");
-    v[54]=0;
-    std::cout<< v <<std::endl;
-    delete[] v;
-    v = nullptr;
+//    char *v = new char[55];
+//    memset(v,0,55);
+//    sprintf(v,"la nonna va al mare");
+//    v[54]=0;
+//    std::cout<< v <<std::endl;
+//    delete[] v;
 //****** end test section******/
 
     //------NB.------ Primes Cantiere
-    Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
-    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000000);//10^6
-    primes_Cantiere.RandomCalcInterface( 999999, 1200000);//around 10^6
 
-    for( int c=0; c<9; c++)
-    {
-        std::cout<<"\n\t current index = "<<c<<std::endl;
-        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
-        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
-        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
-        if( nullptr!= factorization)
-        {
-            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
-            delete[] factorization;
-            factorization = nullptr;
-        }// else skip a null factorization.
-        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
-    }
+//    Cantiere_Primes_2022September01_::Primes primes_Cantiere(0);
+//    bool seq_res = primes_Cantiere.SequentialCalcInterface( 1000000);//10^6
+//    primes_Cantiere.RandomCalcInterface( 999999, 1200000);//around 10^6
 
+//    for( int c=0; c<9; c++)
+//    {
+//        std::cout<<"\n\t current index = "<<c<<std::endl;
+//        std::cout<<"\n\t LiouvilleLambda = "<< primes_Cantiere.LiouvilleLambda( c) <<std::endl;
+//        std::cout<<"\n\t MoebiusMu("<<c<<") = "<< primes_Cantiere.MoebiusMu( c) <<std::endl;
+//        Cantiere_Primes_2022September01_::Primes::SingleFactor * factorization = primes_Cantiere.IntegerDecomposition( c);
+//        if( nullptr!= factorization)
+//        {
+//            primes_Cantiere.show_IntegerDecomposition_helper( factorization);
+//            delete[] factorization;
+//            factorization = nullptr;
+//        }// else skip a null factorization.
+//        std::cout<<"\n\t #################### END record #######################\n"<<std::endl;
+//    }
+/*
     std::string *s = new std::string("   to be trimmed, but not inside    ");
     std::string rambaldo = Common::StrManipul::trimBoth( *s);
     delete s;
@@ -121,20 +135,18 @@ int main()
     delete z_Ei;
     delete zw_Ei;
     //
-
-
-
-    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
-
-
-
-
-//    //------NB.------TEST Primes Cantiere & Production ------------------------------
-    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
-    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
-    //
-    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
-    primes_unitTestProduction.Primes_Production_managementMethod();
+    */
+//
+//    primes_Cantiere.Pi_of_J( (unsigned long long)1.1E+09);
+//
+//
+//
+////    //------NB.------TEST Primes Cantiere & Production ------------------------------
+//    Test_Unit_CantierePrimes primes_unitTestCantiere(0);
+//    primes_unitTestCantiere.Primes_Cantiere_managementMethod();
+//    //
+//    Test_Unit_Primes_Production_ primes_unitTestProduction(80);
+//    primes_unitTestProduction.Primes_Production_managementMethod();
 
 
     //--------------------------------------------------------------
