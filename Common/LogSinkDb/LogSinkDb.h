@@ -5,23 +5,31 @@
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
+#include <format> // C++20
 
 class LogSinkDb {
 private:
     ConnectionProviderPostgres provider;
     std::string log_table_name;
 
-    // Helper to generate current local time in "YYYY-MM-DD HH:MM:SS" format
-    std::string get_current_timestamp() {
-        auto now = std::chrono::system_clock::now();
-        std::time_t in_time_t = std::chrono::system_clock::to_time_t(now);
-        std::tm buf;
-        localtime_r(&in_time_t, &buf); // Thread-safe local time on Linux
+//    // Helper to generate current local time in "YYYY-MM-DD HH:MM:SS" format
+//    std::string get_current_timestamp() {
+//        auto now = std::chrono::system_clock::now();
+//        std::time_t in_time_t = std::chrono::system_clock::to_time_t(now);
+//        std::tm buf;
+//        localtime_r(&in_time_t, &buf); // Thread-safe local time on Linux
+//
+//        std::ostringstream ss;
+//        ss << std::put_time(&buf, "%Y-%m-%d %H:%M:%S");
+//        return ss.str();
+//    }
+//
+std::string get_current_timestamp() {
+    auto now = std::chrono::system_clock::now();
+    // Format directly to string using C++20 formatting
+    return std::format("{:%Y-%m-%d %H:%M:%S}", now);
+}
 
-        std::ostringstream ss;
-        ss << std::put_time(&buf, "%Y-%m-%d %H:%M:%S");
-        return ss.str();
-    }
 
 public:
     // Constructor: initializes connection and ensures log table exists via logging.create_log_table
