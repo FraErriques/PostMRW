@@ -164,6 +164,30 @@ int main()
 
 
 /* --------------cantina----------------------------
+NB.  call C-interface from other languages:
+#ifdef _WIN32
+    // Windows (MSVC or MinGW)
+    #ifdef BUILDING_DLL
+        #define EXPORT __declspec(dllexport)
+    #else
+        #define EXPORT __declspec(dllimport)
+    #endif
+#else
+    // Linux / macOS / Unix-like systems
+    #if __GNUC__ >= 4
+        #define EXPORT __attribute__((visibility("default")))
+    #else
+        #define EXPORT
+    #endif
+#endif
+
+// Now you can decorate your functions uniformly:
+extern "C" {
+    EXPORT double run_simulation(double param1, int iterations);
+}
+-----end of   call C-interface from other languages.
+
+
 //    Test_Unit_Complex::ContourIntegral_AsScalar_JordanLinearAutoDetect_test(
 //       Numerics::Complex(+2.0, +3.0)
 //       ,Numerics::Complex(+5.0, +7.0)
