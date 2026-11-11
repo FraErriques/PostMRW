@@ -61,6 +61,7 @@
 		<Unit filename="Exception/Exception_model.h" />
 		<Unit filename="LogFs_wrap/LogFs_wrap.cpp" />
 		<Unit filename="LogFs_wrap/LogFs_wrap.h" />
+		<Unit filename="LogSinkDb/LogSinkDb.h" />
 		<Unit filename="LogSinkFs/SinkFs.cpp" />
 		<Unit filename="LogSinkFs/SinkFs.h" />
 		<Unit filename="MonteCarlo/BaseConverter.cpp" />

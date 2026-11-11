@@ -4,21 +4,17 @@ describe here your configuration;
 secion-name
 and xPath :
     pugi::xml_node db = doc.child("database");
-    if (db) {
-        std::string server     = db.child("server").child_value();
-        std::string db_name    = db.child("database_name").child_value();
-        std::string schema     = db.child("schema_name").child_value();
-        std::string user       = db.child("user").child_value();
-        std::string password   = db.child("password").child_value();
+
 -->
 <SettingsLocationTemplate>
 
   <database>
       <server>ITFORS1011</server>
+      <port>5432</port>
       <db_name>logging</db_name>
-      <schema>logging</schema>
       <user>app_user</user>
       <password>application-user</password>
+      <schema>logging</schema>
   </database>
 
   <ID>MicrosoftNotepad6</ID>

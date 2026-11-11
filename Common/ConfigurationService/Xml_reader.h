@@ -64,6 +64,8 @@ Select **Build -> Rebuild** from the top menu to compile your code with PugiXML.
 #include <iostream>
 #include <string>
 #include "pugixml.hpp"
+// dbg
+#include "../LogSinkDb/LogSinkDb.h"
 
 /*
 <?xml version="1.0" encoding="utf-8"?>
@@ -71,10 +73,11 @@ Select **Build -> Rebuild** from the top menu to compile your code with PugiXML.
 
   <database>
       <server>ITFORS1011</server>
+      <port>logging</port>
       <db_name>logging</db_name>
-      <schema>logging</schema>
       <user>app_user</user>
       <password>application-user</password>
+      <schema>logging</schema>
   </database>
 
   <ID>MicrosoftNotepad6</ID>
@@ -109,17 +112,28 @@ void xml_config_read() {
     pugi::xml_node db = doc.select_node("//database").node();
     if (db) {
         std::string server     = db.child("server").child_value();
+        std::string port    = db.child("port").child_value();
         std::string db_name    = db.child("db_name").child_value();
-        std::string schema     = db.child("schema").child_value();
         std::string user       = db.child("user").child_value();
         std::string password   = db.child("password").child_value();
+        std::string schema     = db.child("schema").child_value();
 
         // Build a PostgreSQL connection string for libpqxx:
         std::string conn_str = "host=" + server +
+                               " port=" + port +
                                " dbname=" + db_name +
                                " user=" + user +
-                               " password=" + password;
-
+                               " password=" + password +
+                               " options=-csearch_path=" + schema;
+        // valid template is:
+        //std::string conn_str = "host=ITFORS1011 port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
+        // Initialize log-sink-db (automatically creates table 'mercurio' if missing)
+        LogSinkDb logger("mercurio", "ITFORS1011", conn_str);
+        for(int c=0; c<3;c++){
+            // Record a trace log
+            logger.trace("C/C++", "1", "main", "conn-str from PugiXml.");
+        }
+        logger.dispose();
         std::cout << "Connection string: " << conn_str << std::endl;
     }
 }
