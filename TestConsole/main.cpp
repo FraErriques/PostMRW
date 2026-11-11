@@ -169,6 +169,9 @@ int main()
 
 
 /* --------------cantina----------------------------
+
+// removed protection from GitHub::PostMRW::master branch.
+
 NB.  call C-interface from other languages:
 #ifdef _WIN32
     // Windows (MSVC or MinGW)
