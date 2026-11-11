@@ -65,6 +65,37 @@ Select **Build -> Rebuild** from the top menu to compile your code with PugiXML.
 #include <string>
 #include "pugixml.hpp"
 
+/*
+<?xml version="1.0" encoding="utf-8"?>
+<SettingsLocationTemplate>
+
+  <database>
+      <server>ITFORS1011</server>
+      <db_name>logging</db_name>
+      <schema>logging</schema>
+      <user>app_user</user>
+      <password>application-user</password>
+  </database>
+
+  <ID>MicrosoftNotepad6</ID>
+  <Version>1</Version>
+  <Processes>
+    <Process>
+      <Filename>NOTEPAD.EXE</Filename>
+      <ProductVersion>
+        <Major Minimum="6" Maximum="10" />
+      </ProductVersion>
+    </Process>
+  </Processes>
+  <Settings>
+    <Registry>
+      <Path>Software\Microsoft\Notepad</Path>
+    </Registry>
+  </Settings>
+
+</SettingsLocationTemplate>
+
+ */
 void xml_config_read() {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file("config.xml");
@@ -74,17 +105,12 @@ void xml_config_read() {
         return;
     }
 
-    // 1. Find host (similar to descendants().find(...) or child lookup)
-    // PugiXML supports direct child lookup or XPath queries
-    std::string host = doc.child("host").child_value();
-    std::cout << "host=" << host << std::endl;
-
     // 2. Extracting nested database config (matching your commented Rust code)
-    pugi::xml_node db = doc.child("database");
+    pugi::xml_node db = doc.select_node("//database").node();
     if (db) {
         std::string server     = db.child("server").child_value();
-        std::string db_name    = db.child("database_name").child_value();
-        std::string schema     = db.child("schema_name").child_value();
+        std::string db_name    = db.child("db_name").child_value();
+        std::string schema     = db.child("schema").child_value();
         std::string user       = db.child("user").child_value();
         std::string password   = db.child("password").child_value();
 

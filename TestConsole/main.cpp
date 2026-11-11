@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdarg.h>     /* va_list, va_start, va_arg, va_end */
 //
+#include "../Common/ConfigurationService/Xml_reader.h"
 #include "../Common/StringBuilder/StringBuilder.h"
 #include "../Common/Stream/stream_io_.h"
 #include "../Process/MonteCarlo_wrap/MonteCarlo_wrap.h"
@@ -56,23 +57,27 @@ int main()
     Process::LogWrappers::SectionOpen("main", 0);
 
     try {
+        // PugiXml
+        xml_config_read();
+
         // Connection string pointing to Cantor and utilizing the logging schema search path
         // std::string conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
         std::string conn_str = "host=ITFORS1011 port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
-
-        // Initialize log sink (automatically creates table 'venere' if missing)
-        LogSinkDb logger("mercurio", "ITFORS1011", conn_str);
-
-        for(int c=0; c<10;c++){
-            // Record a trace log
-            logger.trace("C/C++", "1", "main", "C++ logging engine initialized successfully.");
-        }
-
-        std::cout << "Trace logged successfully from C++!\n";
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << "\n";
         return 1;
     }
+//        // Initialize log sink (automatically creates table 'mercurio' if missing)
+//        LogSinkDb logger("mercurio", "ITFORS1011", conn_str);
+//        for(int c=0; c<10;c++){
+//            // Record a trace log
+//            logger.trace("C/C++", "1", "main", "C++ logging engine initialized successfully.");
+//        }
+//        std::cout << "Trace logged successfully from C++!\n";
+//    } catch (const std::exception& e) {
+//        std::cerr << "Fatal error: " << e.what() << "\n";
+//        return 1;
+//    }
 
 //****** start test section******
 //    char *v = new char[55];
