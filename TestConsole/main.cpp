@@ -59,8 +59,8 @@ int main()
     try {
         // PugiXml
         //xml_config_read();
-
-        agent_read_all_db();
+        //agent_read_all_db();
+        agent_fetch_single_connection();
 
         // Connection string pointing to Cantor and utilizing the logging schema search path
         // std::string conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";

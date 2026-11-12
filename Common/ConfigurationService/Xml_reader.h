@@ -182,3 +182,50 @@ void agent_read_all_db() {
         }// if
     }// for each xml-node
 }// read all of <database> entries. agent_read-all-db
+
+
+void agent_fetch_single_connection()
+{
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file("config.xml");
+
+    if (!result) {
+        std::cerr << "XML parse error: " << result.description() << std::endl;
+        return;
+    }
+    // Query directly using XPath to find the specific server node matching both criteria
+    pugi::xpath_node match = doc.select_node("//database/server[@name='Cantor' and db-model='PostgreSql']");
+
+    if (match) {// if Xpath results valid.
+        pugi::xml_node srv = match.node();
+
+        // Read attributes and child elements directly from the targeted node
+        std::string server_name = srv.attribute("name").value();
+        std::string db_model  = srv.child("db-model").child_value();
+        std::string port      = srv.child("port").child_value();
+        std::string db_name   = srv.child("db_name").child_value();
+        std::string user      = srv.child("user").child_value();
+        std::string password  = srv.child("password").child_value();
+        std::string schema    = srv.child("schema").child_value();
+
+        // Build the PostgreSQL connection string
+        std::string conn_str = "host=" + server_name +
+                               " port=" + port +
+                               " dbname=" + db_name +
+                               " user=" + user +
+                               " password=" + password +
+                               " options=-csearch_path=" + schema;
+
+        std::cout << "Loaded connection for target server: " << conn_str << "\n";
+
+        LogSinkDb logger("mercurio", server_name, conn_str);
+        for (int c = 0; c < 3; c++) {
+            logger.trace("C/C++", "1", "main", "PugiXml : specific connection via Xpath.");
+        }
+        logger.dispose();
+        std::cout << "Connection string: " << conn_str << std::endl;
+    }//if (match) {// if Xpath results valid.
+     else {
+        std::cerr << "Error: Specified server configuration not found in XML." << std::endl;
+    }// else invalid Xpath
+}//agent_fetch_single_connection()
