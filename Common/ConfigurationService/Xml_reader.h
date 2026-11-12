@@ -64,7 +64,41 @@ Select **Build -> Rebuild** from the top menu to compile your code with PugiXML.
 #include <iostream>
 #include <string>
 #include "pugixml.hpp"
+// dbg
+#include "../LogSinkDb/LogSinkDb.h"
 
+/*
+<?xml version="1.0" encoding="utf-8"?>
+<SettingsLocationTemplate>
+
+  <database>
+      <server>ITFORS1011</server>
+      <port>logging</port>
+      <db_name>logging</db_name>
+      <user>app_user</user>
+      <password>application-user</password>
+      <schema>logging</schema>
+  </database>
+
+  <ID>MicrosoftNotepad6</ID>
+  <Version>1</Version>
+  <Processes>
+    <Process>
+      <Filename>NOTEPAD.EXE</Filename>
+      <ProductVersion>
+        <Major Minimum="6" Maximum="10" />
+      </ProductVersion>
+    </Process>
+  </Processes>
+  <Settings>
+    <Registry>
+      <Path>Software\Microsoft\Notepad</Path>
+    </Registry>
+  </Settings>
+
+</SettingsLocationTemplate>
+
+ */
 void xml_config_read() {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file("config.xml");
@@ -74,26 +108,77 @@ void xml_config_read() {
         return;
     }
 
-    // 1. Find host (similar to descendants().find(...) or child lookup)
-    // PugiXML supports direct child lookup or XPath queries
-    std::string host = doc.child("host").child_value();
-    std::cout << "host=" << host << std::endl;
-
     // 2. Extracting nested database config (matching your commented Rust code)
-    pugi::xml_node db = doc.child("database");
+    pugi::xml_node db = doc.select_node("//database").node();
     if (db) {
         std::string server     = db.child("server").child_value();
-        std::string db_name    = db.child("database_name").child_value();
-        std::string schema     = db.child("schema_name").child_value();
+        std::string port    = db.child("port").child_value();
+        std::string db_name    = db.child("db_name").child_value();
         std::string user       = db.child("user").child_value();
         std::string password   = db.child("password").child_value();
+        std::string schema     = db.child("schema").child_value();
 
         // Build a PostgreSQL connection string for libpqxx:
         std::string conn_str = "host=" + server +
+                               " port=" + port +
                                " dbname=" + db_name +
                                " user=" + user +
-                               " password=" + password;
-
+                               " password=" + password +
+                               " options=-csearch_path=" + schema;
+        // valid template is:
+        //std::string conn_str = "host=ITFORS1011 port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
+        // Initialize log-sink-db (automatically creates table 'mercurio' if missing)
+        LogSinkDb logger("mercurio", "ITFORS1011", conn_str);
+        for(int c=0; c<3;c++){
+            // Record a trace log
+            logger.trace("C/C++", "1", "main", "conn-str from PugiXml.");
+        }
+        logger.dispose();
         std::cout << "Connection string: " << conn_str << std::endl;
     }
-}
+}//
+
+void agent_read_all_db() {
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file("config.xml");
+
+    if (!result) {
+        std::cerr << "XML parse error: " << result.description() << std::endl;
+        return;
+    }
+
+    // Iterate through each server instance inside the database block
+    for (pugi::xml_node srv : doc.child("database").children("server")) {
+        // Read the server name from the attribute
+        std::string server_name = srv.attribute("name").value();
+
+        // Read child elements relative to the current server node
+        std::string db_model  = srv.child("db-model").child_value();
+        std::string port      = srv.child("port").child_value();
+        std::string db_name   = srv.child("db_name").child_value();
+        std::string user      = srv.child("user").child_value();
+        std::string password  = srv.child("password").child_value();
+        std::string schema    = srv.child("schema").child_value();
+
+        // Build a PostgreSQL connection string for libpqxx:
+        std::string conn_str = "host=" + server_name +
+                               " port=" + port +
+                               " dbname=" + db_name +
+                               " user=" + user +
+                               " password=" + password +
+                               " options=-csearch_path=" + schema;
+
+        std::cout << "Loaded connection for server: " << conn_str << "\n";
+
+        if(server_name=="Cantor" && db_model=="PostgreSql")
+        {
+            LogSinkDb logger("mercurio", "Cantor", conn_str);
+            for(int c=0; c<3;c++){
+                // Record a trace log
+                logger.trace("C/C++", "1", "main", "conn-str from PugiXml.");
+            }
+            logger.dispose();
+            std::cout << "Connection string: " << conn_str << std::endl;
+        }// if
+    }// for each xml-node
+}// read all of <database> entries. agent_read-all-db

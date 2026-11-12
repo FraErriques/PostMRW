@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+describe here your configuration;
+
+secion-name
+
+and xPath :
+
+    pugi::xml_node db = doc.select_node("//database").node();
+    std::string port    = db.child("port").child_value();
+
+-->
+
+
+
+
+
+  <database>
+
+            <server name="ITFORS1011">
+                <db-model>MsSql</db-model>
+                <port>1433</port>
+                <db_name>logging</db_name>
+                <user>app_user</user>
+                <password>application-user</password>
+                <schema>logging</schema>
+            </server>
+
+            <server name="ITFORS1011">
+                <db-model>PostgreSql</db-model>
+                <port>5432</port>
+                <db_name>logging</db_name>
+                <user>app_user</user>
+                <password>application-user</password>
+                <schema>logging</schema>
+            </server>
+
+            <server name="Cantor">
+                <db-model>MsSql</db-model>
+                <port>1433</port>
+                <db_name>logging</db_name>
+                <user>app_user</user>
+                <password>application-user</password>
+                <schema>dbo</schema>
+            </server>
+
+            <server name="Cantor">
+                <db-model>PostgreSql</db-model>
+                <port>5432</port>
+                <db_name>logging</db_name>
+                <user>app_user</user>
+                <password>application-user</password>
+                <schema>logging</schema>
+            </server>
+
+  </database>
+
+
+
+<SettingsLocationTemplate>
+
+
+  <ID>MicrosoftNotepad6</ID>
+
+  <Version>1</Version>
+
+  <Processes>
+
+    <Process>
+
+      <Filename>NOTEPAD.EXE</Filename>
+
+      <ProductVersion>
+
+        <Major Minimum="6" Maximum="10" />
+
+      </ProductVersion>
+
+    </Process>
+
+  </Processes>
+
+  <Settings>
+
+    <Registry>
+
+      <Path>Software\Microsoft\Notepad</Path>
+
+    </Registry>
+
+  </Settings>
+
+
+
+</SettingsLocationTemplate>

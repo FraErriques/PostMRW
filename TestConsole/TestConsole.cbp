@@ -103,6 +103,7 @@
 		<Unit filename="_doc/test_writeFileByWords_.txt" />
 		<Unit filename="_doc/treeData.txt" />
 		<Unit filename="_doc/writeVectorFieldR2Affine_.txt" />
+		<Unit filename="config.xml" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
