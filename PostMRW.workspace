@@ -13,6 +13,6 @@
 		</Project>
 		<Project filename="TestConsole/TestConsole.cbp">
 			<Depends filename="Process/Process.cbp" />
-		</Project>		
+		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>
