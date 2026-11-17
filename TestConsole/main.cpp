@@ -57,14 +57,14 @@ int main()
     Process::LogWrappers::SectionOpen("main", 0);
 
     try {
-        // PugiXml
-        //xml_config_read();
-        //agent_read_all_db();
+        // tests for: PugiXml
+        // TODO adapt : xml_config_read();
+        agent_read_all_db();
         agent_fetch_single_connection();
 
         // Connection string pointing to Cantor and utilizing the logging schema search path
-        // std::string conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
-        std::string conn_str = "host=ITFORS1011 port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
+        std::string conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
+        //std::string conn_str = "host=ITFORS1011 port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << "\n";
         return 1;

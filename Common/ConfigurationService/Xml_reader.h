@@ -66,6 +66,8 @@ Select **Build -> Rebuild** from the top menu to compile your code with PugiXML.
 #include "pugixml.hpp"
 // dbg
 #include "../LogSinkDb/LogSinkDb.h"
+#include <thread>
+#include <chrono>
 
 /*
 <?xml version="1.0" encoding="utf-8"?>
@@ -79,24 +81,6 @@ Select **Build -> Rebuild** from the top menu to compile your code with PugiXML.
       <password>application-user</password>
       <schema>logging</schema>
   </database>
-
-  <ID>MicrosoftNotepad6</ID>
-  <Version>1</Version>
-  <Processes>
-    <Process>
-      <Filename>NOTEPAD.EXE</Filename>
-      <ProductVersion>
-        <Major Minimum="6" Maximum="10" />
-      </ProductVersion>
-    </Process>
-  </Processes>
-  <Settings>
-    <Registry>
-      <Path>Software\Microsoft\Notepad</Path>
-    </Registry>
-  </Settings>
-
-</SettingsLocationTemplate>
 
  */
 void xml_config_read() {
@@ -195,6 +179,7 @@ void agent_fetch_single_connection()
     }
     // Query directly using XPath to find the specific server node matching both criteria
     pugi::xpath_node match = doc.select_node("//database/server[@name='Cantor' and db-model='PostgreSql']");
+    //pugi::xpath_node match = doc.select_node("//database/server[@name='ITFORS1011' and db-model='PostgreSql']");
 
     if (match) {// if Xpath results valid.
         pugi::xml_node srv = match.node();
@@ -221,6 +206,7 @@ void agent_fetch_single_connection()
         LogSinkDb logger("mercurio", server_name, conn_str);
         for (int c = 0; c < 3; c++) {
             logger.trace("C/C++", "1", "main", "PugiXml : specific connection via Xpath.");
+            std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         }
         logger.dispose();
         std::cout << "Connection string: " << conn_str << std::endl;
