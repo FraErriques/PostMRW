@@ -57,9 +57,9 @@ int main()
     Process::LogWrappers::SectionOpen("main", 0);
 
     try {
-        // PugiXml
-        //xml_config_read();
-        //agent_read_all_db();
+        // tests for: PugiXml
+        // TODO adapt : xml_config_read();
+        agent_read_all_db();
         agent_fetch_single_connection();
 
         // Connection string pointing to Cantor and utilizing the logging schema search path

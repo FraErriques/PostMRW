@@ -11,7 +11,7 @@ Test_ExpIntegralEi::~Test_ExpIntegralEi()
     //dtor
 }
 
-Test_ExpIntegralEi::interfaceTo_ExpIntegralEi()
+void Test_ExpIntegralEi::interfaceTo_ExpIntegralEi()
 {
     //    Complex_Integration::Integrate_equi_trapezium_ComplexImageAsScalar() TODO
 }

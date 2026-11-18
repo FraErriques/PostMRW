@@ -24,7 +24,7 @@ class Test_ExpIntegralEi
         /** Default destructor */
         virtual ~Test_ExpIntegralEi();
         // interface to access the test
-        interfaceTo_ExpIntegralEi();
+        void interfaceTo_ExpIntegralEi();
 
     protected:
 
