@@ -185,7 +185,8 @@ void agent_fetch_single_connection()
         pugi::xml_node srv = match.node();
 
         // Read attributes and child elements directly from the targeted node
-        std::string server_name = srv.attribute("name").value();
+        std::string server_name = srv.attribute("name").value();//NB.attribute.
+        //
         std::string db_model  = srv.child("db-model").child_value();
         std::string port      = srv.child("port").child_value();
         std::string db_name   = srv.child("db_name").child_value();
