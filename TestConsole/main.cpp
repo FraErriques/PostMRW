@@ -52,6 +52,7 @@ void exampleOfFunctionInRegion(double par)
 //--test performed on Weierstrass on 2024.may.28
 //--test performed on branch-master machine Huygens on 2026.Jan.13
 //---entry point-------------------------
+// test on Riemann 2026-november-22
 int main()
 {// test Riemann new 2026 October 10 ---------
     Process::LogWrappers::SectionOpen("main", 0);
