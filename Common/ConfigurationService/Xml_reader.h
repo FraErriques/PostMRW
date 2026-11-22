@@ -204,7 +204,7 @@ void agent_fetch_single_connection()
         std::cout << "Loaded connection for target server: " << conn_str << "\n";
 
         LogSinkDb logger("mercurio", server_name, conn_str);
-        for (int c = 0; c < 3; c++) {
+        for (int c = 0; c < 9; c++) {
             logger.trace("C/C++", "1", "main", "PugiXml : specific connection via Xpath.");
             std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         }

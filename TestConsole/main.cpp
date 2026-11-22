@@ -57,6 +57,7 @@ int main()
 {// test Riemann new 2026 October 10 ---------
     Process::LogWrappers::SectionOpen("main", 0);
 
+    std::string conn_str("construction from null is not valid");// don't: = nullptr;
     try {
         // tests for: PugiXml
         // TODO adapt : xml_config_read();
@@ -64,23 +65,21 @@ int main()
         agent_fetch_single_connection();
 
         // Connection string pointing to Cantor and utilizing the logging schema search path
-        std::string conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
+        conn_str = "host=Cantor port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
         //std::string conn_str = "host=ITFORS1011 port=5432 dbname=logging user=app_user password=application-user options=-csearch_path=logging";
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << "\n";
         return 1;
     }
-//        // Initialize log sink (automatically creates table 'mercurio' if missing)
-//        LogSinkDb logger("mercurio", "ITFORS1011", conn_str);
-//        for(int c=0; c<10;c++){
-//            // Record a trace log
-//            logger.trace("C/C++", "1", "main", "C++ logging engine initialized successfully.");
-//        }
-//        std::cout << "Trace logged successfully from C++!\n";
-//    } catch (const std::exception& e) {
-//        std::cerr << "Fatal error: " << e.what() << "\n";
-//        return 1;
-//    }
+        // Initialize log sink (automatically creates table 'mercurio' if missing)
+        LogSinkDb logger("mercurio", "Cantor", conn_str);
+        for(int c=0; c<9;c++){
+            // Record a trace log
+            logger.trace("C/C++", "1", "main", "C++ logging engine initialized successfully.");
+            std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        }
+        std::cout << "Trace logged successfully from C++!\n";
+
 
 //****** start test section******
 //    char *v = new char[55];
